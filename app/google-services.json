@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "976546079344",
+    "firebase_url": "https://reading7-1cbff.firebaseio.com",
+    "project_id": "reading7-1cbff",
+    "storage_bucket": "reading7-1cbff.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:976546079344:android:ee7558ea9ab87db6c58ab5",
+        "android_client_info": {
+          "package_name": "com.reading7"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "976546079344-ivabondb6uo2pjtpp10p4l91mh3uqtlj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.reading7",
+            "certificate_hash": "66485c565a46f030af0407edabdc130a14c2a46e"
+          }
+        },
+        {
+          "client_id": "976546079344-u039st7pju80t8ruabtmqnihlrj05qhk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDn231kbgw-UpLvZ1T6_04p4NRCO77Onyc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "976546079344-u039st7pju80t8ruabtmqnihlrj05qhk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

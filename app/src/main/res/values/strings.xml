@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Reading7</string>
+
+    <string name="home">Home</string>
+    <string name="explore">Explore</string>
+    <string name="profile">Profile</string>
+
+    <string name="explore_title">הספריה</string>
+    <string name="search_hint">חפש ספר, סופר או חבר</string>
+
+    <string name="search_tab1">ספרים</string>
+    <string name="search_tab2">סופרים</string>
+    <string name="search_tab3">חברים</string>
+
+
+</resources>

@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LoginActivity"
+    android:background="@color/colorPrimaryDark">
+
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="50dp"
+        android:adjustViewBounds="true"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp"
+        android:src="@drawable/temp_logo" />
+
+    <LinearLayout
+        android:id="@+id/enter_details"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/details"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="10dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="invisible"
+        android:background="@color/white">
+
+        <ImageView
+            android:id="@+id/error4"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_marginRight="3dp"
+            android:src="@drawable/ic_error" />
+
+        <TextView
+            android:id="@+id/enter_details_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:text="הכנס פרטים"
+            android:textColor="@color/colorAccent"
+            android:textSize="12sp"
+            android:visibility="visible" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/already_logged"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/details"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="10dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="invisible">
+
+        <ImageView
+            android:id="@+id/error3"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_marginRight="3dp"
+            android:src="@drawable/ic_error" />
+
+        <TextView
+            android:id="@+id/already_logged_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:text="כבר מחובר"
+            android:textColor="@color/colorAccent"
+            android:textSize="12sp"
+            android:visibility="visible" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/no_internet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/details"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="10dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="invisible">
+
+        <ImageView
+            android:id="@+id/error2"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_marginRight="3dp"
+            android:src="@drawable/ic_no_wifi" />
+
+        <TextView
+            android:id="@+id/no_internet_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:text="אין אינטרנט"
+            android:textColor="@color/colorAccent"
+            android:textSize="12sp"
+            android:visibility="visible" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/wrong_details"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/details"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="10dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="invisible">
+
+        <ImageView
+            android:id="@+id/error6"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_marginRight="3dp"
+            android:src="@drawable/ic_error" />
+
+        <TextView
+            android:id="@+id/wrong_details_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:text="פרטי התחברות שגויים"
+            android:textColor="@color/colorAccent"
+            android:textSize="12sp"
+            android:visibility="visible" />
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:id="@+id/details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/logo"
+        android:orientation="vertical"
+        android:padding="30dp"
+
+        android:background="@color/white">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingBottom="5dp">
+
+
+            <EditText
+                android:id="@+id/email"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:background="@android:color/white"
+                android:hint="אימייל"
+                android:inputType="textEmailAddress"
+                android:backgroundTint="@color/grey"
+                android:lines="1"
+                android:maxLines="1"
+                android:paddingLeft="7dp"
+                android:singleLine="true" />
+
+            <ImageView
+                android:id="@+id/mail_icon"
+                android:layout_width="40dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="3dp"
+                android:background="@color/white"
+                android:src="@drawable/email" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingTop="5dp">
+
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:background="@android:color/white"
+                android:hint="סיסמה"
+                android:inputType="textPassword"
+                android:backgroundTint="@color/grey"
+                android:lines="1"
+                android:maxLines="1"
+                android:paddingLeft="7dp"
+                android:singleLine="true" />
+
+            <ImageView
+                android:id="@+id/password_icon"
+                android:layout_width="40dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="3dp"
+                android:background="@color/white"
+                android:src="@drawable/password" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/login_btn_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/details"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="-10dp"
+        android:elevation="20dp">
+
+        <Button
+            android:id="@+id/login_button"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:background="@color/colorAccent"
+            android:text="התחבר"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/signup_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/login_btn_layout"
+        android:background="@color/transparent"
+        android:gravity="center"
+        android:text="עדיין לא רשום? הירשם כעת"
+        android:textColor="@color/darkGrey" />
+
+    <LinearLayout
+        android:id="@+id/progress_background"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/details"
+        android:layout_marginTop="-10dp"
+        android:elevation="29dp"
+        android:gravity="center"
+        android:visibility="gone">
+
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/round_button_white" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/progress"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/details"
+        android:layout_marginTop="-10dp"
+        android:elevation="30dp"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+
+
+</RelativeLayout>
