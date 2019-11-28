@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#FFFFFF" />
+        </shape>
+    </item>
+
+    <item
+        android:gravity="center_horizontal"
+        android:top="-500dp"
+        android:height="950dp"
+        android:width="950dp">
+        <shape android:shape="oval" >
+            <solid android:color="@color/colorPrimaryDark"/>
+
+        </shape>
+    </item>
+
+
+    <item android:drawable="@drawable/books_background"/>
+
+
+    <item
+        android:gravity="center_horizontal"
+        android:top="-500dp"
+        android:height="950dp"
+        android:width="950dp">
+        <shape android:shape="oval" >
+            <solid android:color="@color/transparentPrimaryDark"/>
+
+        </shape>
+    </item>
+
+
+
+
+
+
+
+
+</layer-list>

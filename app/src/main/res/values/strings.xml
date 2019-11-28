@@ -1,16 +1,30 @@
 <resources>
     <string name="app_name">Reading7</string>
 
+    <!--Main-->
     <string name="home">Home</string>
     <string name="explore">Explore</string>
     <string name="profile">Profile</string>
 
+    <!--Explore-->
     <string name="explore_title">הספריה</string>
-    <string name="search_hint">חפש ספר, סופר או חבר</string>
 
+    <!--Search-->
     <string name="search_tab1">ספרים</string>
     <string name="search_tab2">סופרים</string>
     <string name="search_tab3">חברים</string>
+    <string name="search_hint">חפש ספר, סופר או חבר</string>
+
+    <!--Login-->
+    <string name="signup_suggestion">עדיין לא רשום? הצטרף כעת</string>
+    <string name="login">התחבר</string>
+    <string name="email">אימייל</string>
+    <string name="password">סיסמה</string>
+    <string name="enter_details">הכנס פרטים</string>
+    <string name="wrong_details">פרטי התחברות שגויים</string>
+    <string name="no_internet">אין חיבור לאינטרנט</string>
+    <string name="already_logged">משתמש זה מחובר במכשיר אחר</string>
+
 
 
 </resources>

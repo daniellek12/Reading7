@@ -10,6 +10,7 @@
     <color name="grey">#F7FAFB</color>
 
     <color name="transparent">#00ff0000</color>
+    <color name="transparentPrimaryDark">#DAFFC21C</color>
     <color name="black">#000000</color>
 
 </resources>

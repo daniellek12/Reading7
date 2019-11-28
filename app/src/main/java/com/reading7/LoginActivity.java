@@ -139,7 +139,8 @@ public class LoginActivity extends AppCompatActivity {
                                         || task.getException().getMessage().equals("The password is invalid or the user does not have a password."))
                                     findViewById(R.id.wrong_details).setVisibility(View.VISIBLE);
 
-                                else if(task.getException().getMessage().equals("A network error (such as timeout, interrupted connection or unreachable host) has occurred."))
+                                else if(task.getException().getMessage().equals("A network error (such as timeout, interrupted connection or unreachable host) has occurred.")
+                                        || task.getException().getMessage().equals("An internal error has occurred. [7:]"))
                                     findViewById(R.id.no_internet).setVisibility(View.VISIBLE);
 
 
@@ -161,11 +162,6 @@ public class LoginActivity extends AppCompatActivity {
     private void setUpSignupBtn(){
 
         Button signup = findViewById(R.id.signup_btn);
-//
-//        SpannableString spanStr = new SpannableString(getResources().getString(R.string.sign_up));
-//        spanStr.setSpan(new UnderlineSpan(), 0, spanStr.length(), 0);
-//        signup.setText(spanStr);
-
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -177,15 +173,11 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-
-
-
     private void disableClicks(){
 
         findViewById(R.id.email).setEnabled(false);
         findViewById(R.id.password).setEnabled(false);
         findViewById(R.id.signup_btn).setEnabled(false);
-
     }
 
     private void enableClicks(){
@@ -193,22 +185,21 @@ public class LoginActivity extends AppCompatActivity {
         findViewById(R.id.email).setEnabled(true);
         findViewById(R.id.password).setEnabled(true);
         findViewById(R.id.signup_btn).setEnabled(true);
-
     }
 
 
     private void showProgressBar(){
-        findViewById(R.id.login_btn_layout).setVisibility(View.GONE);
+        findViewById(R.id.login_button).setVisibility(View.GONE);
         disableClicks();
         findViewById(R.id.progress_background).setVisibility(View.VISIBLE);
-        findViewById(R.id.progress).setVisibility(View.VISIBLE);
+        findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
     }
 
     private void hideProgressBar(){
-        findViewById(R.id.login_btn_layout).setVisibility(View.VISIBLE);
+        findViewById(R.id.login_button).setVisibility(View.VISIBLE);
         enableClicks();
         findViewById(R.id.progress_background).setVisibility(View.GONE);
-        findViewById(R.id.progress).setVisibility(View.GONE);
+        findViewById(R.id.progressBar).setVisibility(View.GONE);
     }
 
 }
