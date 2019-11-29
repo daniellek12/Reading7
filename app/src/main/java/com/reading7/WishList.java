@@ -7,22 +7,38 @@ public class WishList implements Comparable {
     private String id;
     private String user_email;
     private String user_name;
-    private String user_city;
+    private String user_school;
     private int user_age;
     private String book_id;
-    private String book_name;
-    //another fields of book;
+    private String book_title;
+    private String image_url;
     private Timestamp adding_time;
 
-    public WishList(String id, String user_email, String user_name, String user_city, int user_age, String book_id, String book_name, Timestamp adding_time) {
+    public WishList(String id, String user_email, String user_name, String user_school, int user_age, String book_id, String book_name,String image_url, Timestamp adding_time) {
         this.id = id;
         this.user_email = user_email;
         this.user_name = user_name;
-        this.user_city = user_city;
+        this.user_school = user_school;
         this.user_age = user_age;
         this.book_id = book_id;
-        this.book_name = book_name;
+        this.book_title = book_name;
+        this.image_url = image_url;
         this.adding_time = adding_time;
+    }
+    public String getBook_title() {
+        return book_title;
+    }
+
+    public void setBook_title(String book_title) {
+        this.book_title = book_title;
+    }
+
+    public String getImage_url() {
+        return image_url;
+    }
+
+    public void setImage_url(String image_url) {
+        this.image_url = image_url;
     }
 
     public String getId() {
@@ -49,12 +65,12 @@ public class WishList implements Comparable {
         this.user_name = user_name;
     }
 
-    public String getUser_city() {
-        return user_city;
+    public String getUser_school() {
+        return user_school;
     }
 
-    public void setUser_city(String user_city) {
-        this.user_city = user_city;
+    public void setUser_school(String user_school) {
+        this.user_school = user_school;
     }
 
     public int getUser_age() {
@@ -73,13 +89,6 @@ public class WishList implements Comparable {
         this.book_id = book_id;
     }
 
-    public String getBook_name() {
-        return book_name;
-    }
-
-    public void setBook_name(String book_name) {
-        this.book_name = book_name;
-    }
 
     public Timestamp getAdding_time() {
         return adding_time;

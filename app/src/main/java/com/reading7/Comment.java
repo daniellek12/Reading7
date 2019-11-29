@@ -9,7 +9,7 @@ public class Comment implements Comparable {
     private String commenter_email;//key of user
     private String comment_content;
     private Timestamp comment_time; // time the comment published
-    private int likes_count; // NEED consult with team because im afraid it will load a lot of time each time user likes something
+    //private int likes_count; // NEED consult with team because im afraid it will load a lot of time each time user likes something
 
     //the following fields seems to be pointless because we can bring the information from
     //the user db with query on the commenter_email, but the query will take time and we are
@@ -18,20 +18,27 @@ public class Comment implements Comparable {
     //This fields will be all the data on the user we want to present
     private String commenter_name;
     private String commenter_age; // age or grade, depands on the User fields
-    private String commenter_city;
+    private String commenter_school_name;
 
-    public Comment(String comment_id, String review_id, String commenter_email, String comment_content, Timestamp comment_time, int likes_count, String commenter_name, String commenter_age, String commenter_city) {
+    public Comment(String comment_id, String review_id, String commenter_email, String comment_content, Timestamp comment_time, String commenter_name, String commenter_age, String commenter_school_name) {
         this.comment_id = comment_id;
         this.review_id = review_id;
         this.commenter_email = commenter_email;
         this.comment_content = comment_content;
         this.comment_time = comment_time;
-        this.likes_count = likes_count;
+        //this.likes_count = likes_count;
         this.commenter_name = commenter_name;
         this.commenter_age = commenter_age;
-        this.commenter_city = commenter_city;
+        this.commenter_school_name = commenter_school_name;
     }
 
+    public String getCommenter_school_name() {
+        return commenter_school_name;
+    }
+
+    public void setCommenter_school_name(String commenter_school_name) {
+        this.commenter_school_name = commenter_school_name;
+    }
 
     public String getComment_id() {
         return comment_id;
@@ -73,13 +80,6 @@ public class Comment implements Comparable {
         this.comment_time = comment_time;
     }
 
-    public int getLikes_count() {
-        return likes_count;
-    }
-
-    public void setLikes_count(int likes_count) {
-        this.likes_count = likes_count;
-    }
 
     public String getCommenter_name() {
         return commenter_name;
@@ -95,14 +95,6 @@ public class Comment implements Comparable {
 
     public void setCommenter_age(String commenter_age) {
         this.commenter_age = commenter_age;
-    }
-
-    public String getCommenter_city() {
-        return commenter_city;
-    }
-
-    public void setCommenter_city(String commenter_city) {
-        this.commenter_city = commenter_city;
     }
 
 

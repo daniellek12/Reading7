@@ -10,7 +10,7 @@ public class Review implements Comparable {
     private int rank; //1-5(number of stars)
     private String review_content; // NEED to decide whether we want to limit the length
     private Timestamp review_time;//time the review was published // note - constructor gets miliseconds(System.currentTimeMillis())
-    private int likes_count;
+    private int[] emojis_count;
     // instead array of comments, we will save collection of comments with the review_id
 
     //the following fields seems to be pointless because we can bring the information from
@@ -20,34 +20,60 @@ public class Review implements Comparable {
     //This fields will be all the data on the user we want to present
     private String reviewer_name;
     private String reviewer_age; // age or grade, depands on the User fields
-    private String reviewer_city;
-
-    public String getBook_name() {
-        return book_name;
-    }
-
-    public void setBook_name(String book_name) {
-        this.book_name = book_name;
-    }
-
-    //fields of book for Post class
-    private String book_name; // for PostClass
+    private String reviewer_school_name;
+    private String book_title;
+    private String image_url;
 
 
-    public Review(String review_id, String book_id, String reviewer_email, int rank, String review_content, Timestamp review_time, int likes_count, String reviewer_name, String reviewer_age, String reviewer_city, String book_name) {
+    public Review(String review_id, String book_id, String reviewer_email, int rank, String review_content, Timestamp review_time, int []emojis_count, String reviewer_name, String reviewer_age, String reviewer_school_name, String book_title, String image_url) {
         this.review_id = review_id;
         this.book_id = book_id;
         this.reviewer_email = reviewer_email;
         this.rank = rank;
         this.review_content = review_content;
         this.review_time = review_time;
-        this.likes_count = likes_count;
+        this.emojis_count = emojis_count;
         this.reviewer_name = reviewer_name;
         this.reviewer_age = reviewer_age;
-        this.reviewer_city = reviewer_city;
-        this.book_name = book_name;
-
+        this.reviewer_school_name = reviewer_school_name;
+        this.book_title = book_title;
+        this.image_url = image_url;
     }
+    public int[] getEmojis_count() {
+        return emojis_count;
+    }
+
+    public void setEmojis_count(int[] emojis_count) {
+        this.emojis_count = emojis_count;
+    }
+
+    public String getReviewer_school_name() {
+        return reviewer_school_name;
+    }
+
+    public void setReviewer_school_name(String reviewer_school_name) {
+        this.reviewer_school_name = reviewer_school_name;
+    }
+
+    public String getBook_title() {
+        return book_title;
+    }
+
+    public void setBook_title(String book_title) {
+        this.book_title = book_title;
+    }
+
+    public String getImage_url() {
+        return image_url;
+    }
+
+    public void setImage_url(String image_url) {
+        this.image_url = image_url;
+    }
+
+
+
+
 
     public String getBook_id() {
         return book_id;
@@ -96,13 +122,6 @@ public class Review implements Comparable {
         this.review_time = review_time;
     }
 
-    public int getLikes_count() {
-        return likes_count;
-    }
-
-    public void setLikes_count(int likes_count) {
-        this.likes_count = likes_count;
-    }
 
     public String getReviewer_name() {
         return reviewer_name;
@@ -120,13 +139,6 @@ public class Review implements Comparable {
         this.reviewer_age = reviewer_age;
     }
 
-    public String getReviewer_city() {
-        return reviewer_city;
-    }
-
-    public void setReviewer_city(String reviewer_city) {
-        this.reviewer_city = reviewer_city;
-    }
 
     @Override
     public int compareTo(Object o) {
