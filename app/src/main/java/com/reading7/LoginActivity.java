@@ -35,8 +35,6 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
-
-
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null)
             redirectAgain();
@@ -167,6 +165,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
                 startActivity(intent);
+                overridePendingTransition(0, 0);
                 finish();
             }
         });

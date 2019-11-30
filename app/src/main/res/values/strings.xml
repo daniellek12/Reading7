@@ -25,6 +25,23 @@
     <string name="no_internet">אין חיבור לאינטרנט</string>
     <string name="already_logged">משתמש זה מחובר במכשיר אחר</string>
 
+    <!--Signup-->
+    <string name="signup">הרשמה</string>
+    <string name="school_name">בית ספר</string>
+    <string name="age">תאריך לידה</string>
+    <string name="user_name">שם משתמש</string>
+    <string name="welcome">ברוכים הבאים</string>
+    <string name="illegal_name">אנא בחר שם משתמש שמורכב מאותיות בעברית</string>
+    <string name="illegal_email">כתובת האימייל לא חוקית</string>
+    <string name="illegal_password">אנא בחר סיסמה שמכילה 6 תווים לפחות</string>
+    <string name="illegal_age">אנא הכנס תאריך לידה</string>
+    <string name="illegal_school">שם בית הספר לא חוקי</string>
+    <string name="email_exists">כתובת האימייל כבר קיימת במערכת</string>
+
+
+
+
+
 
 
 </resources>

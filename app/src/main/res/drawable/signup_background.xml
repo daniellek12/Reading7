@@ -9,7 +9,7 @@
 
     <item
         android:gravity="center_horizontal"
-        android:top="-500dp"
+        android:top="-430dp"
         android:height="950dp"
         android:width="950dp">
         <shape android:shape="oval" >
@@ -22,7 +22,7 @@
 
     <item
         android:gravity="center_horizontal"
-        android:top="-500dp"
+        android:top="-430dp"
         android:height="950dp"
         android:width="950dp">
         <shape android:shape="oval" >
@@ -30,6 +30,5 @@
 
         </shape>
     </item>
-
 
 </layer-list>
