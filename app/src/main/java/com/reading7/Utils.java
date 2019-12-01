@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class Utils {
 
@@ -68,7 +69,8 @@ public class Utils {
 
 
         //System.out.println("Bye Adva!");
-        FirebaseFirestore db= FirebaseFirestore.getInstance();;
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        ;
 
         DocumentReference newBook = db.collection("Books").document();
         b.setId(newBook.getId());
@@ -82,8 +84,33 @@ public class Utils {
 
             }
         });
+    }
 
+    //Birthday = string of format "dd/mm/yyyy"
+    public static int calculateAge(String birthday) {
 
+        int day = Integer.parseInt(birthday.substring(0, 2));
+        int month = Integer.parseInt(birthday.substring(3, 5));
+        int year = Integer.parseInt(birthday.substring(6, 10));
+
+        Calendar today = Calendar.getInstance();
+        Calendar birth = Calendar.getInstance();
+
+        birth.set(year, month - 1, day); //month starts from 0
+
+        int age = today.get(Calendar.YEAR) - birth.get(Calendar.YEAR);
+        if (today.get(Calendar.DAY_OF_YEAR) < birth.get(Calendar.DAY_OF_YEAR))
+            age--;
+
+        return age;
     }
 }
+
+
+
+
+
+
+
+
 
