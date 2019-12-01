@@ -3,7 +3,7 @@ package com.reading7;
 import java.util.ArrayList;
 
 public class Book {
-    private int id;
+    private String id;
     private String title;
     private String image_url;
     private ArrayList<BookGenre> genres;
@@ -64,7 +64,7 @@ public class Book {
         YoungAdult
     }
 
-    public Book(int id, String title, String image, ArrayList<BookGenre> genres, String author, String publisher, int num_pages,int release_year, String summary){
+    public Book(String id, String title, String image, ArrayList<BookGenre> genres, String author, String publisher, int num_pages,int release_year, String summary){
         this.id = id;
         this.title = title;
         this.image_url = image;
@@ -73,9 +73,11 @@ public class Book {
         this.publisher = publisher;
         this.num_pages = num_pages;
         //this.avg_rating = 0;
+       this.release_year= release_year;
+       this.summary=summary;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -119,7 +121,7 @@ public class Book {
         this.summary = summary;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
