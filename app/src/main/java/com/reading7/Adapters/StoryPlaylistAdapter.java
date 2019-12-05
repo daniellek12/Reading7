@@ -14,14 +14,14 @@ import java.util.ArrayList;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHolder> {
+public class StoryPlaylistAdapter extends RecyclerView.Adapter<StoryPlaylistAdapter.ViewHolder> {
 
     private ArrayList<String> names; //TODO: should be a list of playlists
     private ArrayList<Integer> covers;
     private Context mContext;
 
 
-    public PlaylistAdapter(Context context, ArrayList<String> names, ArrayList<Integer> covers){
+    public StoryPlaylistAdapter(Context context, ArrayList<String> names, ArrayList<Integer> covers){
 
         this.names = names;
         this.covers = covers;

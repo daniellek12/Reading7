@@ -14,9 +14,9 @@
 
     <item
         android:gravity="center_horizontal"
-        android:top="110dp"
-        android:left="30dp"
-        android:right="30dp">
+        android:top="116dp"
+        android:left="35dp"
+        android:right="35dp">
 
         <shape android:shape="oval" >
             <solid android:color="@color/colorPrimary"/>
@@ -25,10 +25,10 @@
     </item>
 
     <item android:drawable="@drawable/badge"
-        android:top="125dp"
+        android:top="128dp"
         android:bottom="5dp"
-        android:left="37dp"
-        android:right="37dp"></item>
+        android:left="40dp"
+        android:right="40dp"/>
 
 
 </layer-list>

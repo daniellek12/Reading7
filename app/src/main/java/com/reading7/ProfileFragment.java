@@ -8,10 +8,16 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.reading7.Adapters.PlaylistAdapter;
+import com.reading7.Adapters.StoryPlaylistAdapter;
+
+import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class ProfileFragment extends Fragment {
     private FirebaseAuth mAuth;
@@ -27,10 +33,64 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
 
-        setUpLogOutBtn();
+        initLogOutBtn();
+        initWishlist();
+        initMyBookslist();
+
     }
 
-    private void setUpLogOutBtn(){
+    private ArrayList<Integer> getCovers() {
+
+        ArrayList<Integer> covers =new ArrayList<Integer>();
+        covers.add(1);
+        covers.add(2);
+        covers.add(3);
+        covers.add(4);
+        covers.add(5);
+        covers.add(6);
+        covers.add(7);
+        covers.add(8);
+        covers.add(9);
+        covers.add(10);
+        covers.add(11);
+        covers.add(12);
+        covers.add(13);
+        covers.add(14);
+        covers.add(15);
+        covers.add(16);
+        covers.add(17);
+        covers.add(18);
+        covers.add(19);
+        covers.add(20);
+        covers.add(21);
+        covers.add(22);
+        covers.add(23);
+        covers.add(24);
+
+        return covers;
+    }
+
+    private void initWishlist() {
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL,false);
+        RecyclerView wishlistRV = getActivity().findViewById(R.id.wishlistRV);
+        wishlistRV.setLayoutManager(layoutManager);
+        PlaylistAdapter adapter = new PlaylistAdapter(getActivity(),getCovers());
+        wishlistRV.setAdapter(adapter);
+    }
+
+    private void initMyBookslist() {
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL,false);
+        RecyclerView myBooksRV = getActivity().findViewById(R.id.myBooksRV);
+        myBooksRV.setLayoutManager(layoutManager);
+        PlaylistAdapter adapter = new PlaylistAdapter(getActivity(),getCovers());
+        myBooksRV.setAdapter(adapter);
+
+    }
+
+
+    private void initLogOutBtn(){
 
         final TextView logout = getActivity().findViewById(R.id.logout);
         logout.setOnClickListener(new View.OnClickListener() {

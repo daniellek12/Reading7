@@ -2,9 +2,10 @@ package com.reading7;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.icu.util.LocaleData;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -18,11 +19,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 import androidx.annotation.NonNull;
@@ -58,12 +56,11 @@ public class SignUpActivity extends AppCompatActivity {
                 User user = getUser();
                 signUpUser(user);
                 hideProgressBar();
-
             }
-
         });
 
         setupDatePicker();
+        setupSchoolsAutoComplete();
     }
 
     @Override
@@ -152,10 +149,7 @@ public class SignUpActivity extends AppCompatActivity {
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
 
-                if(myCalendar.after(Calendar.getInstance()))
-                    age_edit.setText("");
-
-                else age_edit.setText(sdf.format(myCalendar.getTime()));
+                age_edit.setText(sdf.format(myCalendar.getTime()));
             }
 
         };
@@ -163,9 +157,11 @@ public class SignUpActivity extends AppCompatActivity {
         age_edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new DatePickerDialog(SignUpActivity.this,R.style.MySpinnerDatePickerStyle, date,
+                DatePickerDialog dialog = new DatePickerDialog(SignUpActivity.this,R.style.MySpinnerDatePickerStyle, date,
                         myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                        myCalendar.get(Calendar.DAY_OF_MONTH));
+                dialog.getDatePicker().setMaxDate(System.currentTimeMillis() - 1000);
+                dialog.show();
             }
         });
     }
@@ -184,9 +180,19 @@ public class SignUpActivity extends AppCompatActivity {
         return age;
     }
 
+
+    private void setupSchoolsAutoComplete() {
+
+        String[] schools = getResources().getStringArray(R.array.schools);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, schools);
+        AutoCompleteTextView textView = findViewById(R.id.school_name_edit);
+        textView.setAdapter(adapter);
+
+    }
+
     private String getSchoolName() {
 
-        String school_name = ((EditText) findViewById(R.id.school_name_edit)).getText().toString();
+        String school_name = ((AutoCompleteTextView) findViewById(R.id.school_name_edit)).getText().toString();
 
         if (school_name.equals("") || !(school_name.matches("[\u0590-\u05fe]+(( )[\u0590-\u05fe]+)*")))
             return null;
