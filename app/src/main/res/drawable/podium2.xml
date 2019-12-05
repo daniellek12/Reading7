@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item
+        android:gravity="center_horizontal"
+        android:bottom="25dp">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/colorPrimary"/>
+            <corners android:radius="20dp"/>
+
+        </shape>
+    </item>
+
+    <item
+        android:gravity="center_horizontal"
+        android:top="110dp"
+        android:left="30dp"
+        android:right="30dp">
+
+        <shape android:shape="oval" >
+            <solid android:color="@color/colorPrimary"/>
+        </shape>
+
+    </item>
+
+    <item android:drawable="@drawable/badge"
+        android:top="125dp"
+        android:bottom="5dp"
+        android:left="37dp"
+        android:right="37dp"></item>
+
+
+</layer-list>
