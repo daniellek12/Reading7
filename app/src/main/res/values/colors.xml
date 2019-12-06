@@ -13,4 +13,7 @@
     <color name="transparentPrimaryDark">#DAFFC21C</color>
     <color name="black">#000000</color>
 
+    <color name="gold">#FCC200</color>
+    <color name="gold2">#FFDF00</color>
+
 </resources>
