@@ -5,122 +5,124 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="3dp"
     android:background="@color/white"
-    android:paddingTop="15dp">
+    android:layoutDirection="rtl">
 
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/coverCard"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profileImage"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
-        app:cardCornerRadius="15dp"
-        app:cardElevation="3dp">
-
-        <ImageView
-            android:id="@+id/coverImage"
-            android:layout_width="100dp"
-            android:layout_height="140dp"
-            android:background="@mipmap/cover1"
-            android:scaleType="fitXY" />
-
-    </androidx.cardview.widget.CardView>
-
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        android:elevation="3dp"
+        android:src="@mipmap/cover15" />
 
     <TextView
         android:id="@+id/userName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_toLeftOf="@+id/coverCard"
+        android:layout_marginTop="30dp"
+        android:layout_toLeftOf="@id/profileImage"
         android:text="אליאנה תדהר"
-        android:textColor="@color/black"
+        android:textSize="16sp"
         android:textStyle="bold" />
-
-
-    <LinearLayout
-        android:id="@+id/bookNameLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/userName"
-        android:layout_marginTop="5dp"
-        android:layout_toLeftOf="@+id/coverCard"
-        android:gravity="center"
-        android:layoutDirection="rtl">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="2dp"
-            android:layout_marginTop="2dp"
-            android:src="@drawable/book"
-            android:tint="@color/darkGrey" />
-
-        <TextView
-            android:id="@+id/bookName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="״משחקי הרעב התלקחות״"
-            android:textColor="@color/darkGrey" />
-    </LinearLayout>
-
-
-    <RatingBar
-        android:id="@+id/rating"
-        style="@style/Widget.AppCompat.RatingBar.Small"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/bookNameLayout"
-        android:layout_marginTop="10dp"
-        android:layout_toLeftOf="@+id/coverCard" />
-
-
-    <TextView
-        android:id="@+id/review"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/rating"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_toLeftOf="@+id/coverCard"
-        android:text="ספר מדהים!!!! חובה קריאה , אהבתי ממש
-אני לא רוצה לעשות לכם ספוילרים אבל הסוף מפתיע בטירוף רוצו לקרוא " />
-
 
     <TextView
         android:id="@+id/postTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/userName"
+        android:layout_marginRight="3dp"
+        android:layout_toLeftOf="@id/timeIcon"
+        android:text="לפני 3 ימים" />
+
+    <RatingBar
+        android:id="@+id/ratingBar"
+        style="@style/Widget.AppCompat.RatingBar.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rating"
         android:layout_alignParentLeft="true"
-        android:layout_marginLeft="10dp"
-        android:text="24.10.19"
-        android:textColor="@color/lightGrey" />
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="3dp"
+        android:stepSize=".5" />
+
+    <TextView
+        android:id="@+id/rating"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/bubble"
+        android:gravity="center"
+        android:paddingRight="10dp"
+        android:text="4.5"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/coverBackground"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_below="@id/ratingBar"
+        android:layout_marginTop="20dp"
+        android:alpha="0.3"
+        android:scaleType="centerCrop"
+        app:srcCompat="@mipmap/cover13" />
+
+    <ImageView
+        android:id="@+id/coverImage"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_below="@id/ratingBar"
+        android:layout_marginTop="20dp"
+        app:srcCompat="@mipmap/cover13" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/coverBackground"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        android:text="ספר מהמם ממש"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
+        android:text="ספר מדהים!!!! חובה קריאה , אהבתי ממש אני לא רוצה לעשות לכם ספוילרים אבל הסוף מפתיע בטירוף רוצו לקרוא " />
 
 
     <View
-        android:id="@+id/divider"
+        android:id="@+id/divider3"
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_below="@+id/coverCard"
-        android:layout_marginTop="10dp"
+        android:layout_height="1dp"
+        android:layout_below="@id/comment"
+        android:layout_marginTop="20dp"
         android:background="?android:attr/listDivider" />
-
 
     <LinearLayout
         android:id="@+id/likeLayout"
-        android:layout_below="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/divider3"
         android:layout_alignParentBottom="true"
         android:gravity="center"
         android:layoutDirection="rtl"
         android:orientation="horizontal"
         android:paddingLeft="30dp"
-        android:paddingTop="7dp"
+        android:paddingTop="10dp"
         android:paddingRight="30dp"
-        android:paddingBottom="7dp">
+        android:paddingBottom="10dp">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -216,5 +218,15 @@
 
 
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/timeIcon"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_below="@id/userName"
+        android:layout_marginTop="3dp"
+        android:layout_toLeftOf="@id/profileImage"
+        android:tint="@color/darkGrey"
+        app:srcCompat="@drawable/time" />
 
 </RelativeLayout>

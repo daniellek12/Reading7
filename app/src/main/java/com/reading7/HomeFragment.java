@@ -56,12 +56,12 @@ public class HomeFragment extends Fragment {
 
         ArrayList<Post> posts =new ArrayList<Post>();
 
-        posts.add(new Post((float)4, 1, "״גינגי״", "טל מוסרי", "11.09.19"));
-        posts.add(new Post((float)3, 2, "״הארי פוטר ואבן החכמים״", "אליאנה תדהר", "13.07.19"));
-        posts.add(new Post((float)2.4, 3, "״אשמת הכוכבים״", "עודד מנשה", "11.07.19"));
-        posts.add(new Post((float)1.5, 4, "״משחקי הרעב״", "אילן רוזנפלד", "04.06.19"));
-        posts.add(new Post((float)4.5, 5, "״גינגי תעלומת הילד המכשף״", "רוני מנדלבאום", "24.01.19"));
-        posts.add(new Post((float)5, 6, "״הנסיך הקטן״", "ימית סול", "03.12.18"));
+        posts.add(new Post((float)4, 1, "״גינגי״", "טל מוסרי", "לפני 3 שעות"));
+        posts.add(new Post((float)3, 2, "״הארי פוטר ואבן החכמים״", "אליאנה תדהר", "לפני 12 שעות"));
+        posts.add(new Post((float)2.4, 3, "״אשמת הכוכבים״", "עודד מנשה", "לפני 13 שעות"));
+        posts.add(new Post((float)1.5, 4, "״משחקי הרעב״", "אילן רוזנפלד", "לפני יום"));
+        posts.add(new Post((float)4.5, 5, "״גינגי תעלומת הילד המכשף״", "רוני מנדלבאום", "לפני יומיים"));
+        posts.add(new Post((float)5, 6, "״הנסיך הקטן״", "ימית סול", "לפני 6 ימים"));
 
         return posts;
     }

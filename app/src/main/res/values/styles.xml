@@ -14,20 +14,20 @@
         <item name="android:layoutDirection">rtl</item>
     </style>
 
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+
+    <!--DatePicker for signup activity-->
     <style name="MySpinnerDatePickerStyle" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:datePickerStyle">@style/MySpinnerDatePicker</item>
         <item name="colorAccent">@color/colorPrimaryDark</item>
-
     </style>
 
     <style name="MySpinnerDatePicker" parent="android:Widget.Material.DatePicker">
         <item name="android:datePickerMode">spinner</item>
     </style>
-
-
 
 </resources>
