@@ -1,14 +1,20 @@
 package com.reading7;
 
+import android.app.Activity;
 import android.content.Context;
+import android.net.Uri;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -103,6 +109,30 @@ public class Utils {
             age--;
 
         return age;
+    }
+
+    //use this when you want to load image of book to imageView, image_id is the name of the file in
+    //firebase storage, view is where you want to load the image, activity pass the current activity-probably this
+    public static void showImage(String image_id, final ImageView view, final Activity activity){
+        StorageReference mStorageRef;
+        mStorageRef = FirebaseStorage.getInstance().getReference("Images/"+image_id+".jpg");
+
+        mStorageRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if(task.isSuccessful())
+                {
+                    Glide.with(activity)
+                            .load(task.getResult())
+                            .into(view);
+
+                }
+                else {
+                    Toast.makeText(activity, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
     }
 }
 
