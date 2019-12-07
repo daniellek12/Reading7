@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.reading7.HomeFragment;
+import com.reading7.Post;
 import com.reading7.R;
 
 import java.util.ArrayList;
@@ -19,46 +19,15 @@ import java.util.ArrayList;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder>  {
+public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
 
-
-    ArrayList<HomeFragment.Post> posts; //TODO: should be the actual Post class
+    ArrayList<Post> posts;
     Context mContext;
 
-    public FeedAdapter(Context context, ArrayList<HomeFragment.Post> posts) {
-        this.posts = posts;
-        this.mContext = context;
-    }
+    /*************************************** View Holders *****************************************/
 
-    @NonNull
-    @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recommendation_post_item, viewGroup, false);
-        return new FeedAdapter.ViewHolder(view);
-    }
 
-    @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-
-        HomeFragment.Post post = posts.get(i);
-        viewHolder.ratingBar.setRating(post.rating);
-        viewHolder.rating.setText(String.format("%.1f", post.rating));
-        viewHolder.cover.setImageResource(mContext.getResources().getIdentifier("cover"+(i+1), "mipmap", mContext.getPackageName()));
-        viewHolder.coverBackground.setImageResource(mContext.getResources().getIdentifier("cover"+(i+1), "mipmap", mContext.getPackageName()));
-        viewHolder.userName.setText(post.userName);
-        viewHolder.postTime.setText(post.postTime);
-
-        //set ratingbar color
-        Drawable rating = viewHolder.ratingBar.getProgressDrawable();
-        rating.setColorFilter(Color.parseColor("#FFC21C"), PorterDuff.Mode.SRC_ATOP);
-    }
-
-    @Override
-    public int getItemCount() {
-        return posts.size();
-    }
-
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ReviewPostHolder extends RecyclerView.ViewHolder {
 
         RatingBar ratingBar;
         TextView rating;
@@ -67,7 +36,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder>  {
         TextView userName;
         TextView postTime;
 
-        public ViewHolder(@NonNull View itemView) {
+        public ReviewPostHolder(@NonNull View itemView) {
             super(itemView);
 
             ratingBar = itemView.findViewById(R.id.ratingBar);
@@ -79,4 +48,147 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder>  {
 
         }
     }
+
+    public class WishListPostHolder extends RecyclerView.ViewHolder {
+
+        ImageView cover;
+        TextView userName;
+        TextView postTime;
+        TextView bookName;
+
+        public WishListPostHolder(@NonNull View itemView) {
+            super(itemView);
+
+            cover = itemView.findViewById(R.id.coverImage);
+            userName =itemView.findViewById(R.id.userName);
+            bookName =itemView.findViewById(R.id.bookName);
+            postTime =itemView.findViewById(R.id.postTime);
+
+        }
+    }
+
+    //TODO: RecommedationPostHolder
+
+    //TODO: NewBookPostHolder
+
+    /**********************************************************************************************/
+
+
+    public FeedAdapter(Context context, ArrayList<Post> posts) {
+        this.posts = posts;
+        this.mContext = context;
+    }
+
+
+    @NonNull
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+
+        View view = null;
+        switch (viewType) {
+
+            case 0:
+                view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.review_post_item, viewGroup, false);
+                return new ReviewPostHolder(view);
+
+            case 1:
+                 view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.wishlist_post_item, viewGroup, false);
+                return new WishListPostHolder(view);
+
+            case 2:
+                //TODO: return new RecommendationPostHolder();
+
+            case 3:
+                //TODO: return new NewBookPostHolder();
+        }
+
+        return null;
+    }
+
+
+    @Override
+    public int getItemViewType(int i) {
+
+        switch (posts.get(i).getType()){
+            case Review: return 0;
+            case WishList: return 1;
+            case Recommendation: return 2;
+            case NewBook: return 3;
+        }
+
+        return -1;
+    }
+
+
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+
+        switch (viewHolder.getItemViewType()) {
+
+            case 0:
+                bindReview(viewHolder, i);
+                break;
+
+            case 1:
+                bindWishList(viewHolder, i);
+                break;
+
+            case 2:
+                //TODO: bindRecommendation
+                break;
+
+            case 3:
+                //TODO: bindNewBook
+                break;
+        }
+    }
+
+
+    @Override
+    public int getItemCount() {
+        return posts.size();
+    }
+
+
+    /*************************************** View Binders *****************************************/
+
+    private void bindReview(RecyclerView.ViewHolder viewHolder, int i) {
+
+        ReviewPostHolder holder = (ReviewPostHolder)viewHolder;
+
+        //Set ratingbar color
+        Drawable rating = holder.ratingBar.getProgressDrawable();
+        rating.setColorFilter(Color.parseColor("#FFC21C"), PorterDuff.Mode.SRC_ATOP);
+
+        Post post = posts.get(i);
+        holder.ratingBar.setRating(post.getRank());
+        holder.rating.setText(String.valueOf(post.getRank()));
+        holder.userName.setText(post.getUser_name());
+        //TODO: holder.postTime.setText(post.getPost_time());
+
+        //TODO: deal with profile  image
+        //TODO: load images correctly
+        holder.cover.setImageResource(mContext.getResources().getIdentifier("cover"+(i+1), "mipmap", mContext.getPackageName()));
+        holder.coverBackground.setImageResource(mContext.getResources().getIdentifier("cover"+(i+1), "mipmap", mContext.getPackageName()));
+    }
+
+    private void bindWishList(RecyclerView.ViewHolder viewHolder, int i) {
+
+        WishListPostHolder holder = (WishListPostHolder) viewHolder;
+
+        Post post = posts.get(i);
+
+        holder.userName.setText(post.getUser_name());
+        holder.bookName.setText(post.getBook_title());
+        //TODO: holder.postTime.setText(post.getPost_time());
+
+        //TODO: deal with profile  image
+        //TODO: load the images correctly
+        holder.cover.setImageResource(mContext.getResources().getIdentifier("cover"+(i+1), "mipmap", mContext.getPackageName()));
+
+    }
+
+    /**********************************************************************************************/
+
+
 }

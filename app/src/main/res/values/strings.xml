@@ -44,6 +44,7 @@
     <string name="first_place">1</string>
     <string name="second_place">2</string>
     <string name="third_place">3</string>
+    <string name="wishlist_post_title">הוסיף לרשימת המשאלות את הספר</string>
 
 
     <string-array name="schools">

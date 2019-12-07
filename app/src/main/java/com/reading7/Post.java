@@ -4,13 +4,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Random;
 
-enum PostType {
-    Review,
-    WishList,
-    NewBook,
-    Recommendation,
-}
-
 
 public class Post implements Comparable {
 
@@ -32,19 +25,14 @@ public class Post implements Comparable {
     //private Timestamp review_time;
     private int[] emojis_count;
     //private String reviewer_name;
-    //private String reviewer_age;
-    //private String reviewer_school_name;
     private String book_title;
     private String image_url;
-
 
 
     //****WishList****
     private String wishList_Id;
     private String user_email;
     private String user_name;
-    private String user_school;
-    private int user_age;
     //private String book_id;
     //private String book_title;
     //private String image_url;
@@ -67,7 +55,7 @@ public class Post implements Comparable {
 
 
 /*--------------------------Constructors--------------------*/
-public Post(String post_id, PostType type, Timestamp post_time, String review_id, String book_id, String reviewer_email, int rank, String review_content, int[] emojis_count, String reviewer_name, int reviewer_age, String reviewer_school_name, String book_title, String image_url) {
+public Post(String post_id, PostType type, Timestamp post_time, String review_id, String book_id, String reviewer_email, int rank, String review_content, int[] emojis_count, String reviewer_name, String book_title, String image_url) {
     this.post_id = post_id;
     this.type = type;
     this.post_time = post_time;
@@ -78,15 +66,13 @@ public Post(String post_id, PostType type, Timestamp post_time, String review_id
     this.review_content = review_content;
     this.emojis_count = emojis_count;
     this.user_name = reviewer_name;
-    this.user_age = reviewer_age;
-    this.user_school = reviewer_school_name;
     this.book_title = book_title;
     this.image_url = image_url;
 }
 
 
     //WishList
-    public Post(String post_id, PostType type, Timestamp post_time, String book_id, String book_title, String image_url, String wishList_Id, String user_email, String user_name, String user_city, int user_age) {
+    public Post(String post_id, PostType type, Timestamp post_time, String book_id, String book_title, String image_url, String wishList_Id, String user_email, String user_name) {
         this.post_id = post_id;
         this.type = type;
         this.post_time = post_time;
@@ -96,8 +82,6 @@ public Post(String post_id, PostType type, Timestamp post_time, String review_id
         this.wishList_Id = wishList_Id;
         this.user_email = user_email;
         this.user_name = user_name;
-        this.user_school = user_school;
-        this.user_age = user_age;
     }
 
 
@@ -185,7 +169,6 @@ public Post(String post_id, PostType type, Timestamp post_time, String review_id
         this.emojis_count = emojis_count;
     }
 
-
     public String getBook_title() {
         return book_title;
     }
@@ -224,22 +207,6 @@ public Post(String post_id, PostType type, Timestamp post_time, String review_id
 
     public void setUser_name(String user_name) {
         this.user_name = user_name;
-    }
-
-    public String getUser_school() {
-        return user_school;
-    }
-
-    public void setUser_school(String user_school) {
-        this.user_school = user_school;
-    }
-
-    public int getUser_age() {
-        return user_age;
-    }
-
-    public void setUser_age(int user_age) {
-        this.user_age = user_age;
     }
 
     public ArrayList<Book.BookGenre> getNew_book_genres() {

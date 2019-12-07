@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import com.reading7.Adapters.FeedAdapter;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
@@ -17,25 +18,25 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class HomeFragment extends Fragment {
 
-    //Fake class, just for testing
-    public class Post {
-
-        public Float rating;
-        public Integer cover;
-        public String bookName;
-        public String userName;
-        public String postTime;
-
-        public Post(Float rating, Integer cover, String bookName, String userName, String postTime){
-
-            this.bookName = bookName;
-            this.userName = userName;
-            this.cover = cover;
-            this.postTime = postTime;
-            this.rating = rating;
-        }
-
-    }
+//    //Fake class, just for testing
+//    public class Post {
+//
+//        public Float rating;
+//        public Integer cover;
+//        public String bookName;
+//        public String userName;
+//        public String postTime;
+//
+//        public Post(Float rating, Integer cover, String bookName, String userName, String postTime){
+//
+//            this.bookName = bookName;
+//            this.userName = userName;
+//            this.cover = cover;
+//            this.postTime = postTime;
+//            this.rating = rating;
+//        }
+//
+//    }
 
     @Nullable
     @Override
@@ -56,12 +57,24 @@ public class HomeFragment extends Fragment {
 
         ArrayList<Post> posts =new ArrayList<Post>();
 
-        posts.add(new Post((float)4, 1, "״גינגי״", "טל מוסרי", "לפני 3 שעות"));
-        posts.add(new Post((float)3, 2, "״הארי פוטר ואבן החכמים״", "אליאנה תדהר", "לפני 12 שעות"));
-        posts.add(new Post((float)2.4, 3, "״אשמת הכוכבים״", "עודד מנשה", "לפני 13 שעות"));
-        posts.add(new Post((float)1.5, 4, "״משחקי הרעב״", "אילן רוזנפלד", "לפני יום"));
-        posts.add(new Post((float)4.5, 5, "״גינגי תעלומת הילד המכשף״", "רוני מנדלבאום", "לפני יומיים"));
-        posts.add(new Post((float)5, 6, "״הנסיך הקטן״", "ימית סול", "לפני 6 ימים"));
+
+    // public Post(String post_id, PostType type, Timestamp post_time, String book_id, String book_title,
+        // String image_url, String wishList_Id, String user_email, String user_name) {
+
+
+            posts.add(new Post("1", PostType.Review, new Timestamp(System.currentTimeMillis()), "1", "1",
+                "mail", 3, "content", null, "עודד פז",
+                "ג׳ינג׳י", "1"));
+
+        posts.add(new Post("1", PostType.WishList, new Timestamp(System.currentTimeMillis()), "1", "הארי פוטר ואבן החכמים",
+                "1", "1", "mail","עודד פז"));
+
+//        posts.add(new Post((float)4, 1, "״גינגי״", "טל מוסרי", "לפני 3 שעות"));
+//        posts.add(new Post((float)3, 2, "״הארי פוטר ואבן החכמים״", "אליאנה תדהר", "לפני 12 שעות"));
+//        posts.add(new Post((float)2.4, 3, "״אשמת הכוכבים״", "עודד מנשה", "לפני 13 שעות"));
+//        posts.add(new Post((float)1.5, 4, "״משחקי הרעב״", "אילן רוזנפלד", "לפני יום"));
+//        posts.add(new Post((float)4.5, 5, "״גינגי תעלומת הילד המכשף״", "רוני מנדלבאום", "לפני יומיים"));
+//        posts.add(new Post((float)5, 6, "״הנסיך הקטן״", "ימית סול", "לפני 6 ימים"));
 
         return posts;
     }

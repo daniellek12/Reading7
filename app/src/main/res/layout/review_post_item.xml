@@ -22,11 +22,22 @@
         android:id="@+id/userName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="25dp"
         android:layout_toLeftOf="@id/profileImage"
         android:text="אליאנה תדהר"
+        android:textColor="@color/black"
         android:textSize="16sp"
         android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/timeIcon"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_below="@id/userName"
+        android:layout_marginTop="3dp"
+        android:layout_toLeftOf="@id/profileImage"
+        android:tint="@color/darkGrey"
+        app:srcCompat="@drawable/time" />
 
     <TextView
         android:id="@+id/postTime"
@@ -50,17 +61,17 @@
 
     <TextView
         android:id="@+id/rating"
-        android:layout_width="80dp"
+        android:layout_width="60dp"
         android:layout_height="40dp"
         android:layout_alignParentLeft="true"
-        android:layout_marginLeft="20dp"
+        android:layout_marginLeft="30dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/bubble"
         android:gravity="center"
         android:paddingRight="10dp"
         android:text="4.5"
         android:textColor="@color/white"
-        android:textSize="22sp"
+        android:textSize="20sp"
         android:textStyle="bold" />
 
     <ImageView
@@ -75,10 +86,12 @@
 
     <ImageView
         android:id="@+id/coverImage"
-        android:layout_width="match_parent"
+        android:layout_width="160dp"
         android:layout_height="200dp"
         android:layout_below="@id/ratingBar"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
+        android:scaleType="fitXY"
         app:srcCompat="@mipmap/cover13" />
 
     <TextView
@@ -89,6 +102,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginRight="20dp"
         android:text="ספר מהמם ממש"
+        android:textColor="@color/black"
         android:textStyle="bold" />
 
     <TextView
@@ -99,7 +113,8 @@
         android:layout_marginLeft="20dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="20dp"
-        android:text="ספר מדהים!!!! חובה קריאה , אהבתי ממש אני לא רוצה לעשות לכם ספוילרים אבל הסוף מפתיע בטירוף רוצו לקרוא " />
+        android:text="ספר מדהים!!!! חובה קריאה , אהבתי ממש אני לא רוצה לעשות לכם ספוילרים אבל הסוף מפתיע בטירוף רוצו לקרוא "
+        android:textColor="@color/black" />
 
 
     <View
@@ -132,19 +147,20 @@
 
             <ImageButton
                 android:id="@+id/likeBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
                 android:background="@color/transparent"
+                android:scaleType="fitXY"
                 android:src="@drawable/like"
-                android:tint="@color/lightGrey" />
+                android:tint="@color/darkGrey" />
 
             <TextView
                 android:id="@+id/likeNum"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="3dp"
+                android:layout_marginRight="5dp"
                 android:text="3"
-                android:textColor="@color/lightGrey" />
+                android:textColor="@color/darkGrey" />
         </LinearLayout>
 
         <LinearLayout
@@ -155,19 +171,20 @@
 
             <ImageButton
                 android:id="@+id/heartBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
                 android:background="@color/transparent"
-                android:src="@drawable/heart"
-                android:tint="@color/lightGrey" />
+                android:scaleType="fitXY"
+                android:src="@drawable/hollow_heart"
+                android:tint="@color/darkGrey" />
 
             <TextView
                 android:id="@+id/heartNum"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="3dp"
+                android:layout_marginRight="5dp"
                 android:text="100"
-                android:textColor="@color/lightGrey" />
+                android:textColor="@color/darkGrey" />
         </LinearLayout>
 
         <LinearLayout
@@ -178,19 +195,20 @@
 
             <ImageButton
                 android:id="@+id/happyBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
                 android:background="@color/transparent"
+                android:scaleType="fitXY"
                 android:src="@drawable/happy"
-                android:tint="@color/lightGrey" />
+                android:tint="@color/darkGrey" />
 
             <TextView
                 android:id="@+id/happyNum"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="3dp"
+                android:layout_marginRight="5dp"
                 android:text="16"
-                android:textColor="@color/lightGrey" />
+                android:textColor="@color/darkGrey" />
         </LinearLayout>
 
         <LinearLayout
@@ -201,32 +219,23 @@
 
             <ImageButton
                 android:id="@+id/sadBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
                 android:background="@color/transparent"
                 android:src="@drawable/sad"
-                android:tint="@color/lightGrey" />
+                android:tint="@color/darkGrey"
+                android:scaleType="fitXY" />
 
             <TextView
                 android:id="@+id/sadNum"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="3dp"
+                android:layout_marginRight="5dp"
                 android:text="74"
-                android:textColor="@color/lightGrey" />
+                android:textColor="@color/darkGrey" />
         </LinearLayout>
 
 
     </LinearLayout>
-
-    <ImageView
-        android:id="@+id/timeIcon"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
-        android:layout_below="@id/userName"
-        android:layout_marginTop="3dp"
-        android:layout_toLeftOf="@id/profileImage"
-        android:tint="@color/darkGrey"
-        app:srcCompat="@drawable/time" />
 
 </RelativeLayout>

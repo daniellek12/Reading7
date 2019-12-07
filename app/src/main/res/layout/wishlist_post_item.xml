@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="3dp"
+    android:background="@color/white"
+    android:layoutDirection="rtl">
+
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profileImage"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        android:elevation="3dp"
+        android:src="@mipmap/cover15" />
+
+    <TextView
+        android:id="@+id/userName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:layout_toLeftOf="@id/profileImage"
+        android:text="אליאנה תדהר"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/timeIcon"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_below="@id/userName"
+        android:layout_marginTop="3dp"
+        android:layout_toLeftOf="@id/profileImage"
+        android:tint="@color/darkGrey"
+        app:srcCompat="@drawable/time" />
+
+    <TextView
+        android:id="@+id/postTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/userName"
+        android:layout_marginRight="3dp"
+        android:layout_marginBottom="20dp"
+        android:layout_toLeftOf="@id/timeIcon"
+        android:text="לפני 3 ימים" />
+
+    <ImageView
+        android:id="@+id/coverImage"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_below="@id/postTime"
+        android:layout_centerHorizontal="true"
+        android:scaleType="centerCrop"
+        app:srcCompat="@mipmap/cover18" />
+
+    <ImageView
+        android:id="@+id/heart"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_below="@id/coverImage"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="-17dp"
+        android:elevation="5dp"
+        android:tint="@color/white"
+        app:srcCompat="@drawable/heart" />
+
+    <ImageView
+        android:id="@+id/heart2"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_below="@id/coverImage"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="-15dp"
+        android:elevation="5dp"
+        app:srcCompat="@drawable/heart" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/heart"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:text="@string/wishlist_post_title" />
+
+    <TextView
+        android:id="@+id/bookName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="10dp"
+        android:text="״הארי פוטר ואבן החכמים״"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+
+</RelativeLayout>
