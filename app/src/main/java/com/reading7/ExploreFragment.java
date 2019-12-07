@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.reading7.Adapters.ExploreAdapter;
-import com.reading7.Adapters.PlaylistAdapter;
+import com.reading7.Adapters.StoryPlaylistAdapter;
 
 import java.util.ArrayList;
 
@@ -130,7 +130,7 @@ public class ExploreFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL,false);
         RecyclerView playlistsRV = getActivity().findViewById(R.id.playlistsRV);
         playlistsRV.setLayoutManager(layoutManager);
-        PlaylistAdapter adapter = new PlaylistAdapter(getActivity(),getPlaylistsNames(),getCovers());
+        StoryPlaylistAdapter adapter = new StoryPlaylistAdapter(getActivity(),getPlaylistsNames(),getCovers());
         playlistsRV.setAdapter(adapter);
     }
 
@@ -141,7 +141,7 @@ public class ExploreFragment extends Fragment {
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                                             @Override
                                             public int getSpanSize(int position) {
-                                                // 5 is the sum of items in one repeated section
+                                                // 11 is the sum of items in one repeated section
                                                 switch (position % 11) {
                                                     // first two items span 3 columns each
                                                     case 0:

@@ -260,7 +260,7 @@
     </LinearLayout>
 
 
-        <EditText
+        <AutoCompleteTextView
             android:id="@+id/school_name_edit"
             android:layout_width="match_parent"
             android:layout_height="40dp"

@@ -1,6 +1,9 @@
 package com.reading7.Adapters;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +33,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder>  {
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.post_item, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recommendation_post_item, viewGroup, false);
         return new FeedAdapter.ViewHolder(view);
     }
 
@@ -39,10 +42,15 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder>  {
 
         HomeFragment.Post post = posts.get(i);
         viewHolder.ratingBar.setRating(post.rating);
+        viewHolder.rating.setText(String.format("%.1f", post.rating));
         viewHolder.cover.setImageResource(mContext.getResources().getIdentifier("cover"+(i+1), "mipmap", mContext.getPackageName()));
+        viewHolder.coverBackground.setImageResource(mContext.getResources().getIdentifier("cover"+(i+1), "mipmap", mContext.getPackageName()));
         viewHolder.userName.setText(post.userName);
-        viewHolder.bookName.setText(post.bookName);
         viewHolder.postTime.setText(post.postTime);
+
+        //set ratingbar color
+        Drawable rating = viewHolder.ratingBar.getProgressDrawable();
+        rating.setColorFilter(Color.parseColor("#FFC21C"), PorterDuff.Mode.SRC_ATOP);
     }
 
     @Override
@@ -53,17 +61,19 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder>  {
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         RatingBar ratingBar;
+        TextView rating;
         ImageView cover;
-        TextView bookName;
+        ImageView coverBackground;
         TextView userName;
         TextView postTime;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            ratingBar = itemView.findViewById(R.id.rating);
+            ratingBar = itemView.findViewById(R.id.ratingBar);
+            rating = itemView.findViewById(R.id.rating);
             cover = itemView.findViewById(R.id.coverImage);
-            bookName = itemView.findViewById(R.id.bookName);
+            coverBackground = itemView.findViewById(R.id.coverBackground);
             userName =itemView.findViewById(R.id.userName);
             postTime =itemView.findViewById(R.id.postTime);
 

@@ -14,25 +14,29 @@ import java.util.ArrayList;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHolder> {
+public class StoryPlaylistAdapter extends RecyclerView.Adapter<StoryPlaylistAdapter.ViewHolder> {
 
-    private ArrayList<Integer> covers; //TODO: should be a list of books
+    private ArrayList<String> names; //TODO: should be a list of playlists
+    private ArrayList<Integer> covers;
     private Context mContext;
 
 
-    public PlaylistAdapter(Context context, ArrayList<Integer> covers){
+    public StoryPlaylistAdapter(Context context, ArrayList<String> names, ArrayList<Integer> covers){
 
+        this.names = names;
         this.covers = covers;
         this.mContext = context;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
+        TextView playlistName;
         ImageView cover;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
+            playlistName = itemView.findViewById(R.id.playlistName);
             cover = itemView.findViewById(R.id.coverImage);
         }
     }
@@ -41,7 +45,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
 
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.playlist_item, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.story_playlist_item, viewGroup, false);
         return new ViewHolder(view);
     }
 
@@ -49,12 +53,13 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
 
+        viewHolder.playlistName.setText(names.get(i));
         viewHolder.cover.setImageResource(mContext.getResources().getIdentifier("cover"+(i+1), "mipmap", mContext.getPackageName()));
     }
 
     @Override
     public int getItemCount() {
-        return covers.size();
+        return names.size();
     }
 
 }
