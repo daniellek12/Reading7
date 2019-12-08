@@ -30,66 +30,61 @@ import java.util.Calendar;
 public class Utils {
 
     public static void convertTxtToBook(final Context context) throws IOException {
-        //System.out.println("Hello Adva!");
-
-//        File file = new File("lion.txt");
-        //File file = new File(".");
-
-        //System.out.println(file.getPath());
-        InputStream is = context.getAssets().open("lion.txt");
-        BufferedReader br = new BufferedReader(new InputStreamReader(is, Charset.forName("Windows-1255")));
-
-        String st = "";
-        String title = "";
-        String image_url = "";
-        ArrayList<Book.BookGenre> genres;
-        String author = "";
-        String publisher = "";
-        String summary = "";
-
-        while ((st = br.readLine()) != null) {
-
-            if (st.startsWith("Title: ")) {
-                String[] sst = st.split("Title: ");
-                title = sst[1];
-            }
-            if (st.startsWith("Image URL: ")) {
-                String[] sst = st.split("Image URL: ");
-                image_url = sst[1];
-            }
-            if (st.startsWith("Author: ")) {
-                String[] sst = st.split("Author: ");
-                author = sst[1];
-            }
-            if (st.startsWith("Publisher: ")) {
-                String[] sst = st.split("Publisher: ");
-                publisher = sst[1];
-            }
-            if (st.startsWith("Description: ")) {
-                String[] sst = st.split("Description: ");
-                summary = sst[1];
-            }
-        }
-
-        Book b = new Book("", title, image_url, new ArrayList<Book.BookGenre>(), author, publisher, -1, -1, summary);
-
-
-        //System.out.println("Bye Adva!");
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        ;
+       for(String name:context.getAssets().list("")){
+            if(!(name.contains(".")))
+                continue;
+           InputStream is = context.getAssets().open(name);
+           BufferedReader br = new BufferedReader(new InputStreamReader(is, Charset.forName("Windows-1255")));
 
-        DocumentReference newBook = db.collection("Books").document();
-        b.setId(newBook.getId());
-        newBook.set(b).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    //Toast.makeText(LoginActivity, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+           String st = "";
+           String title = "";
+           String image_url = "";
+           ArrayList<Book.BookGenre> genres;
+           String author = "";
+           String publisher = "";
+           String summary = "";
 
-                }
+           while ((st = br.readLine()) != null) {
 
-            }
-        });
+               if (st.startsWith("Title: ")) {
+                   String[] sst = st.split("Title: ");
+                   title = sst[1];
+               }
+               if (st.startsWith("Image URL: ")) {
+                   String[] sst = st.split("Image URL: ");
+                   image_url = sst[1];
+               }
+               if (st.startsWith("Author: ")) {
+                   String[] sst = st.split("Author: ");
+                   author = sst[1];
+               }
+               if (st.startsWith("Publisher: ")) {
+                   String[] sst = st.split("Publisher: ");
+                   publisher = sst[1];
+               }
+               if (st.startsWith("Description: ")) {
+                   String[] sst = st.split("Description: ");
+                   summary = sst[1];
+               }
+           }
+
+           Book b = new Book("", title, image_url, new ArrayList<Book.BookGenre>(), author, publisher, -1, -1, summary);
+
+           DocumentReference newBook = db.collection("Books").document();
+           b.setId(newBook.getId());
+           newBook.set(b).addOnCompleteListener(new OnCompleteListener<Void>() {
+               @Override
+               public void onComplete(@NonNull Task<Void> task) {
+                   if (task.isSuccessful()) {
+                       //Toast.makeText(LoginActivity, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+
+                   }
+
+               }
+           });
+       }
+
     }
 
     //Birthday = string of format "dd/mm/yyyy"
