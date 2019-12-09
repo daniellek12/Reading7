@@ -3,13 +3,17 @@ package com.reading7;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
-import android.widget.ArrayAdapter;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -18,9 +22,13 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.reading7.Adapters.AutoCompleteSchoolsAdapter;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 import androidx.annotation.NonNull;
@@ -30,6 +38,15 @@ import androidx.appcompat.app.AppCompatActivity;
 public class SignUpActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
+
+    /*----- For schools autocomplete -----*/
+    private AutoCompleteSchoolsAdapter adapter;
+    private List<String> filtered;
+    private List<String> schools;
+    private EditText school_edit;
+    private String school;
+    private ListView autoCompleteList;
+    private View dummy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +76,14 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
 
-        setupDatePicker();
+
+        school = null;
+        school_edit = findViewById(R.id.school_name_edit);
+        autoCompleteList = findViewById(R.id.autoCompleteList);
+        dummy = findViewById(R.id.dummy);
         setupSchoolsAutoComplete();
+
+        setupDatePicker();
     }
 
     @Override
@@ -92,7 +115,7 @@ public class SignUpActivity extends AppCompatActivity {
         }
 
         int age = getAge();
-        if(age == 0) {
+        if(age <= 0) {
             findViewById(R.id.illegal_age).setVisibility(View.VISIBLE);
             return null;
         }
@@ -183,23 +206,103 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void setupSchoolsAutoComplete() {
 
-        String[] schools = getResources().getStringArray(R.array.schools);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, schools);
-        AutoCompleteTextView textView = findViewById(R.id.school_name_edit);
-        textView.setAdapter(adapter);
+        schools = Arrays.asList(getResources().getStringArray(R.array.schools));
+        filtered = new ArrayList<>();
 
+        school_edit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) { alterAutocompleteAdapter(); }
+            @Override
+            public void afterTextChanged(Editable arg0) { }
+            @Override
+            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) { }
+        });
+
+        adapter = new AutoCompleteSchoolsAdapter(this, filtered);
+        autoCompleteList.setAdapter(adapter);
+        alterAutocompleteAdapter();
+
+        autoCompleteList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long l) {
+
+                school = filtered.get(position);
+                school_edit.setText(school);
+
+                dummy.setVisibility(View.GONE);
+                autoCompleteList.setVisibility(View.GONE);
+
+                //close the keyboard
+                InputMethodManager imm = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+
+                school_edit.clearFocus();
+            }
+        });
+
+        dummy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                autoCompleteList.setVisibility(View.GONE);
+                dummy.setVisibility(View.GONE);
+
+            }
+        });
+
+        school_edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                autoCompleteList.setVisibility(View.VISIBLE);
+                dummy.setVisibility(View.VISIBLE);
+            }
+        });
+
+        school_edit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if(b){
+                    autoCompleteList.setVisibility(View.VISIBLE);
+                    dummy.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+    }
+
+    private void alterAutocompleteAdapter(){
+
+        filtered.clear();
+        adapter.notifyDataSetChanged();
+
+        if (!school_edit.getText().toString().isEmpty()) {
+            for (int i = 0; i < schools.size(); i++) {
+                if (schools.get(i).contains(school_edit.getText().toString()))
+                    filtered.add(schools.get(i));
+                adapter.notifyDataSetChanged();
+            }
+        }
+
+        if(filtered.isEmpty()){
+            autoCompleteList.setVisibility(View.GONE);
+            dummy.setVisibility(View.GONE);
+        }
+
+        else {
+            autoCompleteList.setVisibility(View.VISIBLE);
+            dummy.setVisibility(View.VISIBLE);
+        }
     }
 
     private String getSchoolName() {
 
-        String school_name = ((AutoCompleteTextView) findViewById(R.id.school_name_edit)).getText().toString();
+        String school_name = ((EditText) findViewById(R.id.school_name_edit)).getText().toString();
+        schools = Arrays.asList(getResources().getStringArray(R.array.schools));
 
-        if (school_name.equals("") || !(school_name.matches("[\u0590-\u05fe]+(( )[\u0590-\u05fe]+)*")))
+        if (school_name.equals("") || !(school_name.matches("[\u0590-\u05fe]+(( )[\u0590-\u05fe]+)*"))
+                || !schools.contains(school_name))
             return null;
 
         return school_name;
     }
-
 
     private void signUpUser(final User user) {
 

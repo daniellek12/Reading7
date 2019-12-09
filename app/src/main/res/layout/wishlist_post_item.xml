@@ -55,6 +55,54 @@
         android:layout_height="100dp"
         android:layout_below="@id/postTime"
         android:layout_centerHorizontal="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:scaleType="centerCrop"
+        app:srcCompat="@mipmap/cover18" />
+
+    <ImageView
+        android:id="@+id/coverImage2"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_below="@id/postTime"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_toLeftOf="@id/coverImage"
+        android:alpha="0.1"
+        android:scaleType="centerCrop"
+        app:srcCompat="@mipmap/cover18" />
+
+    <ImageView
+        android:id="@+id/coverImage4"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_below="@id/postTime"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="5dp"
+        android:layout_toRightOf="@id/coverImage"
+        android:alpha="0.1"
+        android:scaleType="centerCrop"
+        app:srcCompat="@mipmap/cover18" />
+
+    <ImageView
+        android:id="@+id/coverImage3"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_below="@id/postTime"
+        android:layout_marginTop="20dp"
+        android:layout_toLeftOf="@id/coverImage2"
+        android:alpha="0.1"
+        android:scaleType="centerCrop"
+        app:srcCompat="@mipmap/cover18" />
+
+    <ImageView
+        android:id="@+id/coverImage5"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_below="@id/postTime"
+        android:layout_marginTop="20dp"
+        android:layout_toRightOf="@id/coverImage4"
+        android:alpha="0.1"
         android:scaleType="centerCrop"
         app:srcCompat="@mipmap/cover18" />
 
@@ -67,7 +115,7 @@
         android:layout_marginTop="-17dp"
         android:elevation="5dp"
         android:tint="@color/white"
-        app:srcCompat="@drawable/heart" />
+        app:srcCompat="@drawable/heart_colored" />
 
     <ImageView
         android:id="@+id/heart2"
@@ -77,7 +125,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="-15dp"
         android:elevation="5dp"
-        app:srcCompat="@drawable/heart" />
+        app:srcCompat="@drawable/heart_colored" />
 
     <TextView
         android:id="@+id/title"

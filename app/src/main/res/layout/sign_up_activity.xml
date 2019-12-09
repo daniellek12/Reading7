@@ -260,7 +260,7 @@
     </LinearLayout>
 
 
-        <AutoCompleteTextView
+        <EditText
             android:id="@+id/school_name_edit"
             android:layout_width="match_parent"
             android:layout_height="40dp"
@@ -281,7 +281,7 @@
             android:drawableStart="@drawable/school_hat"
             android:drawableLeft="@drawable/school_hat"
             android:drawableTint="@color/transparentPrimaryDark"
-            android:drawablePadding="10dp"/>
+            android:drawablePadding="10dp" />
 
     <LinearLayout
         android:id="@+id/illegal_school_name"
@@ -379,6 +379,30 @@
         android:layout_marginTop="500dp"
         android:elevation="11dp"
         android:visibility="gone"/>
+
+    <View
+        android:id="@+id/dummy"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@+id/ac_layout"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_above="@+id/school_name_edit">
+
+        <ListView
+            android:id="@+id/autoCompleteList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="58dp"
+            android:layout_marginRight="58dp"
+            android:background="@color/white"
+            android:elevation="10dp" />
+    </RelativeLayout>
+
 
 </RelativeLayout>
 
