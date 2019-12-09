@@ -49,6 +49,7 @@
     <string name="first_place">1</string>
     <string name="second_place">2</string>
     <string name="third_place">3</string>
+    <string name="recent_searches">חיפושים אחרונים</string>
 
     <string-array name="schools">
         <item>נווה-מדבר , אבו גווייעד (שבט)</item>

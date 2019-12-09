@@ -6,9 +6,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -203,7 +201,6 @@ public class SignUpActivity extends AppCompatActivity {
         return age;
     }
 
-
     private void setupSchoolsAutoComplete() {
 
         schools = Arrays.asList(getResources().getStringArray(R.array.schools));
@@ -232,10 +229,7 @@ public class SignUpActivity extends AppCompatActivity {
                 dummy.setVisibility(View.GONE);
                 autoCompleteList.setVisibility(View.GONE);
 
-                //close the keyboard
-                InputMethodManager imm = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-
+                Utils.closeKeyboard(SignUpActivity.this);
                 school_edit.clearFocus();
             }
         });
