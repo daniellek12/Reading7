@@ -17,4 +17,31 @@
     <color name="gold">#FCC200</color>
     <color name="gold2">#FFDF00</color>
 
+
+    <!--Avatar Colors-->
+    <color name="skin1">#FFDBAC</color>
+    <color name="skin2">#F1C27D</color>
+    <color name="skin3">#E0AC69</color>
+    <color name="skin4">#C68642</color>
+    <color name="skin5">#8D5524</color>
+
+    <color name="eyes1">#231F20</color>
+    <color name="eyes2">#80461B</color>
+    <color name="eyes3">#27AE60</color>
+    <color name="eyes4">#95B8E3</color>
+    <color name="eyes5">#B0BEC5</color>
+
+    <color name="hair1">#231F20</color>
+    <color name="hair2">#5E321F</color>
+    <color name="hair3">#9C7248</color>
+    <color name="hair4">#DF6320</color>
+    <color name="hair5">#FFCC47</color>
+
+    <color name="shirt1">#FED557</color>
+    <color name="shirt2">#A1C837</color>
+    <color name="shirt3">#45B6FE</color>
+    <color name="shirt4">#9969C7</color>
+    <color name="shirt5">#F47DBB</color>
+
+
 </resources>

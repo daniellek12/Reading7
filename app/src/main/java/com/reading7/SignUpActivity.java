@@ -82,6 +82,13 @@ public class SignUpActivity extends AppCompatActivity {
         setupSchoolsAutoComplete();
 
         setupDatePicker();
+
+        findViewById(R.id.profile_image).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openEditAvatarDialog();
+            }
+        });
     }
 
     @Override
@@ -90,6 +97,13 @@ public class SignUpActivity extends AppCompatActivity {
         startActivity(intent);
         overridePendingTransition(0, 0);
         finish();
+    }
+
+    public void openEditAvatarDialog(){
+
+        EditAvatarDialog editAvatarDialog = new EditAvatarDialog();
+        editAvatarDialog.show(getSupportFragmentManager(), "edit avatar dialog");
+
     }
 
     private User getUser() {
@@ -208,7 +222,9 @@ public class SignUpActivity extends AppCompatActivity {
 
         school_edit.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) { alterAutocompleteAdapter(); }
+            public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+                alterAutocompleteAdapter();
+            }
             @Override
             public void afterTextChanged(Editable arg0) { }
             @Override

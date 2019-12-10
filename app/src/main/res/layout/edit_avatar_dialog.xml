@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:layoutDirection="rtl"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/image"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:elevation="10dp"
+        android:src="@drawable/avatar_layout"
+        app:civ_border_color="@color/white"
+        app:civ_border_width="2dp" />
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/image"
+        android:layout_marginTop="20dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/skinLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/skinTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/skin_color"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <RadioGroup
+                    android:id="@+id/skinButtons"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/skinTitle"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:layoutDirection="rtl"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/skin1"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="20dp"
+                        android:background="@drawable/rounded_button"
+                        android:backgroundTint="@color/skin1"
+                        android:button="@color/transparent" />
+
+                    <RadioButton
+                        android:id="@+id/skin2"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="20dp"
+                        android:background="@drawable/rounded_button"
+                        android:backgroundTint="@color/skin2"
+                        android:button="@color/transparent" />
+
+                    <RadioButton
+                        android:id="@+id/skin3"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="20dp"
+                        android:background="@drawable/rounded_button"
+                        android:backgroundTint="@color/skin3"
+                        android:button="@color/transparent" />
+
+                    <RadioButton
+                        android:id="@+id/skin4"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="20dp"
+                        android:background="@drawable/rounded_button"
+                        android:backgroundTint="@color/skin4"
+                        android:button="@color/transparent" />
+
+                    <RadioButton
+                        android:id="@+id/skin5"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/rounded_button"
+                        android:backgroundTint="@color/skin5"
+                        android:button="@color/transparent" />
+
+
+                </RadioGroup>
+
+             </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/hairLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/skinLayout"
+                android:layout_marginTop="20dp">
+
+                <TextView
+                    android:id="@+id/hairTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hair_color"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <RadioGroup
+                    android:id="@+id/hairButtons"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/hairTitle"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:layoutDirection="rtl"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/hair1"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="20dp"
+                        android:background="@drawable/rounded_button"
+                        android:backgroundTint="@color/hair1"
+                        android:button="@color/transparent" />
+
+                    <RadioButton
+                        android:id="@+id/hair2"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="20dp"
+                        android:background="@drawable/rounded_button"
+                        android:backgroundTint="@color/hair2"
+                        android:button="@color/transparent" />
+
+                    <RadioButton
+                        android:id="@+id/hair3"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="20dp"
+                        android:background="@drawable/rounded_button"
+                        android:backgroundTint="@color/hair3"
+                        android:button="@color/transparent" />
+
+                    <RadioButton
+                        android:id="@+id/hair4"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="20dp"
+                        android:background="@drawable/rounded_button"
+                        android:backgroundTint="@color/hair4"
+                        android:button="@color/transparent" />
+
+                    <RadioButton
+                        android:id="@+id/hair5"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/rounded_button"
+                        android:backgroundTint="@color/hair5"
+                        android:button="@color/transparent" />
+
+                </RadioGroup>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/eyesLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/hairLayout"
+                android:layout_marginTop="20dp">
+
+                <TextView
+                    android:id="@+id/eyesTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/eye_color"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <RadioGroup
+                    android:id="@+id/eyesButtons"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/eyesTitle"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:layoutDirection="rtl"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/eyes1"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="20dp"
+                        android:background="@drawable/rounded_button"
+                        android:backgroundTint="@color/eyes1"
+                        android:button="@color/transparent" />
+
+                    <RadioButton
+                        android:id="@+id/eyes2"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="20dp"
+                        android:background="@drawable/rounded_button"
+                        android:backgroundTint="@color/eyes2"
+                        android:button="@color/transparent" />
+
+                    <RadioButton
+                        android:id="@+id/eyes3"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="20dp"
+                        android:background="@drawable/rounded_button"
+                        android:backgroundTint="@color/eyes3"
+                        android:button="@color/transparent" />
+
+                    <RadioButton
+                        android:id="@+id/eyes4"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="20dp"
+                        android:background="@drawable/rounded_button"
+                        android:backgroundTint="@color/eyes4"
+                        android:button="@color/transparent" />
+
+                    <RadioButton
+                        android:id="@+id/eyes5"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/rounded_button"
+                        android:backgroundTint="@color/eyes5"
+                        android:button="@color/transparent" />
+
+                </RadioGroup>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/shirtLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/eyesLayout"
+                android:layout_marginTop="20dp">
+
+                <TextView
+                    android:id="@+id/shirtTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/shirt_color"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <RadioGroup
+                    android:id="@+id/shirtButtons"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/shirtTitle"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:layoutDirection="rtl"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/shirt1"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="20dp"
+                        android:background="@drawable/rounded_button"
+                        android:backgroundTint="@color/shirt1"
+                        android:button="@color/transparent" />
+
+                    <RadioButton
+                        android:id="@+id/shirt2"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="20dp"
+                        android:background="@drawable/rounded_button"
+                        android:backgroundTint="@color/shirt2"
+                        android:button="@color/transparent" />
+
+                    <RadioButton
+                        android:id="@+id/shirt3"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="20dp"
+                        android:background="@drawable/rounded_button"
+                        android:backgroundTint="@color/shirt3"
+                        android:button="@color/transparent" />
+
+                    <RadioButton
+                        android:id="@+id/shirt4"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="20dp"
+                        android:background="@drawable/rounded_button"
+                        android:backgroundTint="@color/shirt4"
+                        android:button="@color/transparent" />
+
+                    <RadioButton
+                        android:id="@+id/shirt5"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/rounded_button"
+                        android:backgroundTint="@color/shirt5"
+                        android:button="@color/transparent" />
+
+                </RadioGroup>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</RelativeLayout>
