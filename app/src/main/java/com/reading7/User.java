@@ -19,8 +19,8 @@ public class User {
         this.full_name = "";
         this.email = "";
         this.birth_date = "";
-        followers = new ArrayList<>();
-        following = new ArrayList<>();
+        followers = new ArrayList<String>();
+        following = new ArrayList<String>();
         last_searches = new LinkedList<String>();
     }
 
