@@ -15,15 +15,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.reading7.BookFragment;
 import com.reading7.HomeFragment;
 import com.reading7.R;
+import com.reading7.Review;
 
 import java.util.ArrayList;
 
 public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.ViewHolder> {
 
-    ArrayList<BookFragment.Review> reviews; //TODO: should be the actual Review class
+    ArrayList<Review> reviews; //TODO: should be the actual Review class
     Context mContext;
 
-    public ReviewListAdapter(Context context, ArrayList<BookFragment.Review> reviews) {
+    public ReviewListAdapter(Context context, ArrayList<Review> reviews) {
         this.reviews = reviews;
         this.mContext = context;
     }
@@ -38,11 +39,11 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull ReviewListAdapter.ViewHolder viewHolder, int i) {
 
-        BookFragment.Review review = reviews.get(i);
-        viewHolder.ratingBar.setRating(review.rating);
-        viewHolder.userName.setText(review.userName);
-        viewHolder.postTime.setText(review.postTime);
-        viewHolder.reviewContent.setText((review.content));
+        Review review = reviews.get(i);
+        viewHolder.ratingBar.setRating(review.getRank());
+        viewHolder.userName.setText(review.getReviewer_name());
+        viewHolder.postTime.setText(review.getReview_time().toString());
+        viewHolder.reviewContent.setText((review.getReview_content()));
     }
 
     @Override

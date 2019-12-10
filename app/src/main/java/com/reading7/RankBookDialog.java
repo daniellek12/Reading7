@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,7 +35,7 @@ public class RankBookDialog extends AppCompatDialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         super.onCreateDialog(savedInstanceState);
         final String book_id = getArguments().getString("book_id");
-        final String book_title = getArguments().getString("book_name");
+        final String book_title = getArguments().getString("book_title");
 
 
         db = FirebaseFirestore.getInstance();
@@ -62,10 +63,18 @@ public class RankBookDialog extends AppCompatDialogFragment {
                                                                     if (task.isSuccessful()) {
 
                                                                     }
+
                                                                 }
+
+
+
                                                             }
 
+
                 );
+
+
+
             }
         }).setNegativeButton("בטל", new DialogInterface.OnClickListener() {
             @Override

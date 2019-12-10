@@ -38,14 +38,14 @@ public class HomeFragment extends Fragment {
         ArrayList<Post> posts =new ArrayList<Post>();
 
         posts.add(new Post("1", PostType.Review, new Timestamp(System.currentTimeMillis()), "1", "1",
-                "mail", 3, "content", null, "עודד פז",
+                "mail", 3,"title", "content", 0, "עודד פז",
                 "ג׳ינג׳י"));
 
         posts.add(new Post("1", PostType.WishList, new Timestamp(System.currentTimeMillis()), "1", "הארי פוטר ואבן החכמים",
                 "1", "1", "mail","נועה קירל"));
 
         posts.add(new Post("2", PostType.Review, new Timestamp(System.currentTimeMillis()), "2", "2",
-                "mail2", 4, "content", null, "אליאנה תדהר",
+                "mail2", 4, "title","content", 0, "אליאנה תדהר",
                 "אשמת הכוכבים"));
 
 //        posts.add(new Post((float)4, 1, "״גינגי״", "טל מוסרי", "לפני 3 שעות"));
