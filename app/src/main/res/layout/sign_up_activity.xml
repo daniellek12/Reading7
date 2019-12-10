@@ -26,11 +26,10 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="80dp"
         android:elevation="5dp"
-        android:scaleType="centerCrop"
         android:src="@drawable/round_user"
         app:civ_border_color="@color/white"
         app:civ_border_width="2dp"
-        app:civ_circle_background_color="@color/white" />
+        app:civ_circle_background_color="@color/white"/>
 
     <EditText
         android:id="@+id/name_edit"
@@ -90,29 +89,29 @@
     </LinearLayout>
 
 
-        <EditText
-            android:id="@+id/email_edit"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_below="@id/name_edit"
-            android:layout_marginBottom="10dp"
-            android:layout_marginRight="40dp"
-            android:layout_marginLeft="40dp"
-            android:background="@drawable/edittext_background"
-            android:inputType="textEmailAddress"
-            android:lines="1"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:textSize="14sp"
-            android:hint="@string/email"
-            android:paddingLeft="10dp"
-            android:paddingRight="15dp"
-            android:textAlignment="viewStart"
-            android:gravity="center_vertical|start"
-            android:drawableStart="@drawable/email"
-            android:drawableLeft="@drawable/email"
-            android:drawableTint="@color/transparentPrimaryDark"
-            android:drawablePadding="10dp"/>
+    <EditText
+        android:id="@+id/email_edit"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/name_edit"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginLeft="40dp"
+        android:background="@drawable/edittext_background"
+        android:inputType="textEmailAddress"
+        android:lines="1"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textSize="14sp"
+        android:hint="@string/email"
+        android:paddingLeft="10dp"
+        android:paddingRight="15dp"
+        android:textAlignment="viewStart"
+        android:gravity="center_vertical|start"
+        android:drawableStart="@drawable/email"
+        android:drawableLeft="@drawable/email"
+        android:drawableTint="@color/transparentPrimaryDark"
+        android:drawablePadding="10dp"/>
 
     <LinearLayout
         android:id="@+id/illegal_mail"
@@ -146,29 +145,29 @@
     </LinearLayout>
 
 
-        <EditText
-            android:id="@+id/password_edit"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_below="@id/email_edit"
-            android:layout_marginBottom="10dp"
-            android:layout_marginRight="40dp"
-            android:layout_marginLeft="40dp"
-            android:background="@drawable/edittext_background"
-            android:inputType="textPassword"
-            android:lines="1"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:textSize="14sp"
-            android:hint="@string/password"
-            android:paddingLeft="10dp"
-            android:paddingRight="15dp"
-            android:textAlignment="viewStart"
-            android:gravity="center_vertical|start"
-            android:drawableStart="@drawable/password"
-            android:drawableLeft="@drawable/password"
-            android:drawableTint="@color/transparentPrimaryDark"
-            android:drawablePadding="10dp"/>
+    <EditText
+        android:id="@+id/password_edit"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/email_edit"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginLeft="40dp"
+        android:background="@drawable/edittext_background"
+        android:inputType="textPassword"
+        android:lines="1"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textSize="14sp"
+        android:hint="@string/password"
+        android:paddingLeft="10dp"
+        android:paddingRight="15dp"
+        android:textAlignment="viewStart"
+        android:gravity="center_vertical|start"
+        android:drawableStart="@drawable/password"
+        android:drawableLeft="@drawable/password"
+        android:drawableTint="@color/transparentPrimaryDark"
+        android:drawablePadding="10dp"/>
 
 
     <LinearLayout
@@ -261,6 +260,63 @@
     </LinearLayout>
 
 
+<<<<<<< HEAD
+=======
+    <!--        <EditText-->
+    <!--            android:id="@+id/school_name_edit"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="40dp"-->
+    <!--            android:layout_below="@id/age_edit"-->
+    <!--            android:layout_marginRight="40dp"-->
+    <!--            android:layout_marginLeft="40dp"-->
+    <!--            android:background="@drawable/edittext_background"-->
+    <!--            android:inputType="text"-->
+    <!--            android:lines="1"-->
+    <!--            android:maxLines="1"-->
+    <!--            android:singleLine="true"-->
+    <!--            android:textSize="14sp"-->
+    <!--            android:hint="@string/school_name"-->
+    <!--            android:paddingLeft="10dp"-->
+    <!--            android:paddingRight="15dp"-->
+    <!--            android:textAlignment="viewStart"-->
+    <!--            android:gravity="center_vertical|start"-->
+    <!--            android:drawableStart="@drawable/school_hat"-->
+    <!--            android:drawableLeft="@drawable/school_hat"-->
+    <!--            android:drawableTint="@color/transparentPrimaryDark"-->
+    <!--            android:drawablePadding="10dp" />-->
+
+    <!--    <LinearLayout-->
+    <!--        android:id="@+id/illegal_school_name"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_below="@+id/signup_btn"-->
+    <!--        android:layout_centerHorizontal="true"-->
+    <!--        android:layout_gravity="right"-->
+    <!--        android:layout_marginTop="10dp"-->
+    <!--        android:layout_marginRight="5dp"-->
+    <!--        android:gravity="center_vertical"-->
+    <!--        android:orientation="horizontal"-->
+    <!--        android:visibility="invisible">-->
+
+    <!--        <ImageView-->
+    <!--            android:id="@+id/error5"-->
+    <!--            android:layout_width="14dp"-->
+    <!--            android:layout_height="14dp"-->
+    <!--            android:layout_marginLeft="3dp"-->
+    <!--            android:src="@drawable/ic_error" />-->
+
+    <!--        <TextView-->
+    <!--            android:id="@+id/illegal_school_name_txt"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_gravity="right"-->
+    <!--            android:text="@string/illegal_school"-->
+    <!--            android:textColor="@color/colorAccent"-->
+    <!--            android:textSize="12sp"-->
+    <!--            android:visibility="visible" />-->
+    <!--    </LinearLayout>-->
+
+>>>>>>> caf1cbbc4ebbd0a16def9261478b15775077f5b6
     <LinearLayout
         android:id="@+id/email_exists"
         android:layout_width="wrap_content"
@@ -352,4 +408,3 @@
 
 
 </RelativeLayout>
-

@@ -44,7 +44,6 @@ public class LoginActivity extends AppCompatActivity {
 
         setUpLoginBtn();
         setUpSignupBtn();
-
     }
 
     protected void redirectAgain() {
