@@ -32,9 +32,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import static com.reading7.Utils.calculateAge;
-
-public class ProfileFragment extends Fragment {
+public class PublicProfileFragment extends Fragment {
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
@@ -70,21 +68,12 @@ public class ProfileFragment extends Fragment {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        User user = new User();
 
                         TextView userName = getActivity().findViewById(R.id.userName);
                         userName.setText(document.getData().get("full_name").toString());
 
                         TextView userAge = getActivity().findViewById(R.id.age);
-                        userAge.setText("גיל: "+ calculateAge(document.getData().get("birth_date").toString()));
-
-                        TextView followers = getActivity().findViewById(R.id.followers);
-                        ArrayList<String> arr = (ArrayList<String>)document.getData().get("followers");
-                        followers.setText(Integer.toString(arr.size()));
-
-                        TextView following = getActivity().findViewById(R.id.following);
-                        arr = (ArrayList<String>)document.getData().get("following");
-                        following.setText(Integer.toString(arr.size()));
+                        userAge.setText("בת "+ document.getData().get("age").toString());
                     }
 
                     else Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
