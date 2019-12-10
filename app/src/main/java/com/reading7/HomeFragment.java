@@ -39,14 +39,14 @@ public class HomeFragment extends Fragment {
 
         posts.add(new Post("1", PostType.Review, new Timestamp(System.currentTimeMillis()), "1", "1",
                 "mail", 3, "content", null, "עודד פז",
-                "ג׳ינג׳י", "1"));
+                "ג׳ינג׳י"));
 
         posts.add(new Post("1", PostType.WishList, new Timestamp(System.currentTimeMillis()), "1", "הארי פוטר ואבן החכמים",
                 "1", "1", "mail","נועה קירל"));
 
         posts.add(new Post("2", PostType.Review, new Timestamp(System.currentTimeMillis()), "2", "2",
                 "mail2", 4, "content", null, "אליאנה תדהר",
-                "אשמת הכוכבים", "4"));
+                "אשמת הכוכבים"));
 
 //        posts.add(new Post((float)4, 1, "״גינגי״", "טל מוסרי", "לפני 3 שעות"));
 //        posts.add(new Post((float)3, 2, "״הארי פוטר ואבן החכמים״", "אליאנה תדהר", "לפני 12 שעות"));

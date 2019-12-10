@@ -11,16 +11,16 @@ public class User {
     private String email; //user's email
     private String birth_date; //user's birth date
 
-    private ArrayList<Integer> followers; //ids list of the followers
-    private ArrayList<Integer> following; //ids list of the following
+    private ArrayList<String> followers; //Emails list of the followers
+    private ArrayList<String> following; //Emails list of the following
     private Queue<String> last_searches;
 
     public User(){
         this.full_name = "";
         this.email = "";
         this.birth_date = "";
-        followers = new ArrayList<>();
-        following = new ArrayList<>();
+        followers = new ArrayList<String>();
+        following = new ArrayList<String>();
         last_searches = new LinkedList<String>();
     }
 
@@ -28,6 +28,9 @@ public class User {
         this.full_name = full_name;
         this.email = email;
         this.birth_date = birth_date;
+        followers = new ArrayList<>();
+        following = new ArrayList<>();
+        last_searches = new LinkedList<String>();
     }
 
     public String getFull_name() {
@@ -42,11 +45,11 @@ public class User {
         return email;
     }
 
-    public ArrayList<Integer> getfollowers() {
+    public ArrayList<String> getfollowers() {
         return followers;
     }
 
-    public ArrayList<Integer> getfollowing() {
+    public ArrayList<String> getfollowing() {
         return following;
     }
 
@@ -64,9 +67,9 @@ public class User {
         this.full_name = full_name;
     }
 
-    public void setfollowers(ArrayList<Integer> followers) { this.followers = followers; }
+    public void setfollowers(ArrayList<String> followers) { this.followers = followers; }
 
-    public void setfollowing(ArrayList<Integer> following) { this.following = following; }
+    public void setfollowing(ArrayList<String> following) { this.following = following; }
 
     public void setLast_searches(Queue<String> last_searches) { this.last_searches = last_searches; }
 }
