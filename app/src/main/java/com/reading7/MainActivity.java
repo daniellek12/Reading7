@@ -24,10 +24,25 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    public boolean loadPublicProfileFragment(Fragment fragment, String user_email) {
 
-    public boolean loadFragment(Fragment fragment){
+        if (fragment != null && user_email != null) {
+            ((PublicProfileFragment)fragment).setUser(user_email);
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragmant_container, fragment)
+                    .addToBackStack(fragment.getClass().toString())
+                    .commit();
+            return true;
+        }
 
-        if(fragment != null){
+        return false;
+    }
+
+
+    public boolean loadFragment(Fragment fragment) {
+
+        if (fragment != null) {
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.fragmant_container, fragment)
@@ -64,22 +79,22 @@ public class MainActivity extends AppCompatActivity
         int index = getSupportFragmentManager().getBackStackEntryCount() - 1;
         FragmentManager.BackStackEntry backEntry = getSupportFragmentManager().getBackStackEntryAt(index);
 
-        switch (menuItem.getItemId()){
+        switch (menuItem.getItemId()) {
 
             case R.id.navigation_home:
-                if(backEntry.getName().equals("class com.reading7.HomeFragment"))
+                if (backEntry.getName().equals("class com.reading7.HomeFragment"))
                     return true;
                 fragment = new HomeFragment();
                 break;
 
             case R.id.navigation_explore:
-                if(backEntry.getName().equals("class com.reading7.ExploreFragment"))
+                if (backEntry.getName().equals("class com.reading7.ExploreFragment"))
                     return true;
                 fragment = new ExploreFragment();
                 break;
 
             case R.id.navigation_profile:
-                if(backEntry.getName().equals("class com.reading7.ProfileFragment"))
+                if (backEntry.getName().equals("class com.reading7.ProfileFragment"))
                     return true;
                 fragment = new ProfileFragment();
                 break;

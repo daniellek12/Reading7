@@ -32,10 +32,13 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import static com.reading7.Utils.calculateAge;
+
 public class PublicProfileFragment extends Fragment {
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
+    private String user_email;
 
 
     @Nullable
@@ -43,24 +46,26 @@ public class PublicProfileFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
-        return inflater.inflate(R.layout.profile_fragment, null);
+        return inflater.inflate(R.layout.fragment_public_profile, null);
     }
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
 
         getUserInformation();
-        initLogOutBtn();
         initWishlist();
         initMyBookslist();
 
     }
 
+    public void setUser(String user_email){
+        this.user_email = user_email;
+    }
     private void getUserInformation() {
 
-        FirebaseUser mUser = mAuth.getCurrentUser();
-        DocumentReference userRef = db.collection("Users").document(mUser.getEmail());
+        DocumentReference userRef = db.collection("Users").document(this.user_email);
 
         userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -68,12 +73,21 @@ public class PublicProfileFragment extends Fragment {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
+                        User user = new User();
 
                         TextView userName = getActivity().findViewById(R.id.userName);
                         userName.setText(document.getData().get("full_name").toString());
 
                         TextView userAge = getActivity().findViewById(R.id.age);
-                        userAge.setText("בת "+ document.getData().get("age").toString());
+                        userAge.setText("גיל: "+ calculateAge(document.getData().get("birth_date").toString()));
+
+                        TextView followers = getActivity().findViewById(R.id.followers);
+                        ArrayList<String> arr = (ArrayList<String>)document.getData().get("followers");
+                        followers.setText(Integer.toString(arr.size()));
+
+                        TextView following = getActivity().findViewById(R.id.following);
+                        arr = (ArrayList<String>)document.getData().get("following");
+                        following.setText(Integer.toString(arr.size()));
                     }
 
                     else Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
@@ -84,6 +98,7 @@ public class PublicProfileFragment extends Fragment {
             }
         });
     }
+
 
     private ArrayList<Integer> getCovers() {
 
@@ -133,29 +148,6 @@ public class PublicProfileFragment extends Fragment {
         PlaylistAdapter adapter = new PlaylistAdapter(getActivity(),getCovers());
         myBooksRV.setAdapter(adapter);
 
-    }
-
-
-    private void initLogOutBtn(){
-
-        final TextView logout = getActivity().findViewById(R.id.logout);
-        logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                disableClicks();
-                logout.setVisibility(View.GONE);
-                getActivity().findViewById(R.id.progressBar2).setVisibility(View.VISIBLE);
-                signOut();
-            }
-        });
-    }
-
-    private void signOut(){
-        mAuth.signOut();
-        Intent intent = new Intent(getActivity(), LoginActivity.class);
-        startActivity(intent);
-        getActivity().finish();
     }
 
     private void disableClicks() {
