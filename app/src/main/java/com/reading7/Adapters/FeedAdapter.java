@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
 
     ArrayList<Post> posts;
@@ -156,6 +158,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
 
 
     /*************************************** View Binders *****************************************/
+
 
     private void bindReview(RecyclerView.ViewHolder viewHolder, int i) {
 
