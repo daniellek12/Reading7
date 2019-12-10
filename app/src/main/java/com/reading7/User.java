@@ -34,6 +34,12 @@ public class User {
         this.full_name = full_name;
         this.email = email;
         this.birth_date = birth_date;
+        this.followers = new ArrayList<>();
+        this.following = new ArrayList<>();
+        this.last_searches = new ArrayList<>();
+        this.favourite_books = new Book[3];
+        this.favourite_genres = new ArrayList<>();
+        this.liked_reviews = new ArrayList<>();
     }
 
     public User(String full_name, String email, String birth_date, ArrayList<String> followers, ArrayList<String> following, ArrayList<String> last_searches, Book[] favourite_books, ArrayList<String> favourite_genres, ArrayList<String> liked_reviews) {
