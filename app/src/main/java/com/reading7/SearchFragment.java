@@ -35,6 +35,7 @@ public class SearchFragment extends Fragment {
 
     }
 
+
     private void initSearchView(){
 
         androidx.appcompat.widget.SearchView searchView = getActivity().findViewById(R.id.searchView);
@@ -53,6 +54,7 @@ public class SearchFragment extends Fragment {
 
     }
 
+
     private void initBackButton() {
 
         ImageButton backButton = getActivity().findViewById(R.id.backButton);
@@ -66,6 +68,7 @@ public class SearchFragment extends Fragment {
         });
 
     }
+
 
     private void initTabsViewPager() {
 

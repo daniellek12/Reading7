@@ -26,10 +26,11 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="80dp"
         android:elevation="5dp"
+        android:scaleType="centerCrop"
         android:src="@drawable/round_user"
         app:civ_border_color="@color/white"
         app:civ_border_width="2dp"
-        app:civ_circle_background_color="@color/white"/>
+        app:civ_circle_background_color="@color/white" />
 
     <EditText
         android:id="@+id/name_edit"

@@ -1,15 +1,28 @@
 package com.reading7;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.reading7.Adapters.PlaylistAdapter;
-import com.reading7.Adapters.StoryPlaylistAdapter;
 
 import java.util.ArrayList;
 
@@ -20,12 +33,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class ProfileFragment extends Fragment {
+
     private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
         return inflater.inflate(R.layout.profile_fragment, null);
     }
 
@@ -33,10 +50,39 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
 
+        getUserInformation();
         initLogOutBtn();
         initWishlist();
         initMyBookslist();
 
+    }
+
+    private void getUserInformation() {
+
+        FirebaseUser mUser = mAuth.getCurrentUser();
+        DocumentReference userRef = db.collection("Users").document(mUser.getEmail());
+
+        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+
+                        TextView userName = getActivity().findViewById(R.id.userName);
+                        userName.setText(document.getData().get("full_name").toString());
+
+                        TextView userAge = getActivity().findViewById(R.id.age);
+                        userAge.setText("בת "+ document.getData().get("age").toString());
+                    }
+
+                    else Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+
+                }
+
+                else Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private ArrayList<Integer> getCovers() {
@@ -110,7 +156,6 @@ public class ProfileFragment extends Fragment {
         Intent intent = new Intent(getActivity(), LoginActivity.class);
         startActivity(intent);
         getActivity().finish();
-        return;
     }
 
     private void disableClicks() {

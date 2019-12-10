@@ -45,11 +45,6 @@ public class LoginActivity extends AppCompatActivity {
         setUpLoginBtn();
         setUpSignupBtn();
 
-        try {
-          Utils.convertTxtToBook(this.getApplicationContext());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     protected void redirectAgain() {
