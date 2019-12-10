@@ -86,11 +86,23 @@
 
         </LinearLayout>
 
+        <Button
+            android:id="@+id/edit"
+            android:layout_width="200dp"
+            android:layout_height="35dp"
+            android:layout_below="@+id/profileDetails"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/rounded_button"
+            android:text="@string/edit_profile_string"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
         <LinearLayout
             android:id="@+id/countersLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/profileDetails"
+            android:layout_below="@+id/edit"
             android:layout_marginTop="20dp"
             android:background="@color/white"
             android:gravity="center"

@@ -32,7 +32,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class ProfileFragment extends Fragment {
+public class PublicProfileFragment extends Fragment {
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
@@ -50,40 +50,40 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
 
-//        getUserInformation();
+        getUserInformation();
         initLogOutBtn();
         initWishlist();
         initMyBookslist();
 
     }
 
-//    private void getUserInformation() {
-//
-//        FirebaseUser mUser = mAuth.getCurrentUser();
-//        DocumentReference userRef = db.collection("Users").document(mUser.getEmail());
-//
-//        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                if (task.isSuccessful()) {
-//                    DocumentSnapshot document = task.getResult();
-//                    if (document.exists()) {
-//
-//                        TextView userName = getActivity().findViewById(R.id.userName);
-//                        userName.setText(document.getData().get("full_name").toString());
-//
-//                        TextView userAge = getActivity().findViewById(R.id.age);
-//                        userAge.setText("בת "+ document.getData().get("age").toString());
-//                    }
-//
-//                    else Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-//
-//                }
-//
-//                else Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
+    private void getUserInformation() {
+
+        FirebaseUser mUser = mAuth.getCurrentUser();
+        DocumentReference userRef = db.collection("Users").document(mUser.getEmail());
+
+        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+
+                        TextView userName = getActivity().findViewById(R.id.userName);
+                        userName.setText(document.getData().get("full_name").toString());
+
+                        TextView userAge = getActivity().findViewById(R.id.age);
+                        userAge.setText("בת "+ document.getData().get("age").toString());
+                    }
+
+                    else Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+
+                }
+
+                else Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
     private ArrayList<Integer> getCovers() {
 
