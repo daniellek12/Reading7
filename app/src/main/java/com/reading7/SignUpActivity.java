@@ -37,15 +37,6 @@ public class SignUpActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
 
-    /*----- For schools autocomplete -----*/
-    private AutoCompleteSchoolsAdapter adapter;
-    private List<String> filtered;
-    private List<String> schools;
-    private EditText school_edit;
-    private String school;
-    private ListView autoCompleteList;
-    private View dummy;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,13 +64,6 @@ public class SignUpActivity extends AppCompatActivity {
                 hideProgressBar();
             }
         });
-
-
-        school = null;
-        school_edit = findViewById(R.id.school_name_edit);
-        autoCompleteList = findViewById(R.id.autoCompleteList);
-        dummy = findViewById(R.id.dummy);
-//        setupSchoolsAutoComplete();
 
         setupDatePicker();
     }
@@ -181,104 +165,6 @@ public class SignUpActivity extends AppCompatActivity {
         });
     }
 
-//    private int getAge() {
-//
-//        String str_age = ((EditText) findViewById(R.id.age_edit)).getText().toString();
-//
-//        if (str_age.equals(""))
-//            return 0;
-//
-//        int age = Utils.calculateAge(str_age);
-//        if (age <= 0)
-//            return 0;
-//
-//        return age;
-//    }
-
-//    private void setupSchoolsAutoComplete() {
-//
-//        schools = Arrays.asList(getResources().getStringArray(R.array.schools));
-//        filtered = new ArrayList<>();
-//
-//        school_edit.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) { alterAutocompleteAdapter(); }
-//            @Override
-//            public void afterTextChanged(Editable arg0) { }
-//            @Override
-//            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) { }
-//        });
-//
-//        adapter = new AutoCompleteSchoolsAdapter(this, filtered);
-//        autoCompleteList.setAdapter(adapter);
-//        alterAutocompleteAdapter();
-//
-//        autoCompleteList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long l) {
-//
-//                school = filtered.get(position);
-//                school_edit.setText(school);
-//
-//                dummy.setVisibility(View.GONE);
-//                autoCompleteList.setVisibility(View.GONE);
-//
-//                Utils.closeKeyboard(SignUpActivity.this);
-//                school_edit.clearFocus();
-//            }
-//        });
-//
-//        dummy.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                autoCompleteList.setVisibility(View.GONE);
-//                dummy.setVisibility(View.GONE);
-//
-//            }
-//        });
-//
-//        school_edit.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                autoCompleteList.setVisibility(View.VISIBLE);
-//                dummy.setVisibility(View.VISIBLE);
-//            }
-//        });
-//
-//        school_edit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View view, boolean b) {
-//                if(b){
-//                    autoCompleteList.setVisibility(View.VISIBLE);
-//                    dummy.setVisibility(View.VISIBLE);
-//                }
-//            }
-//        });
-//    }
-
-//    private void alterAutocompleteAdapter(){
-//
-//        filtered.clear();
-//        adapter.notifyDataSetChanged();
-//
-//        if (!school_edit.getText().toString().isEmpty()) {
-//            for (int i = 0; i < schools.size(); i++) {
-//                if (schools.get(i).contains(school_edit.getText().toString()))
-//                    filtered.add(schools.get(i));
-//                adapter.notifyDataSetChanged();
-//            }
-//        }
-//
-//        if(filtered.isEmpty()){
-//            autoCompleteList.setVisibility(View.GONE);
-//            dummy.setVisibility(View.GONE);
-//        }
-//
-//        else {
-//            autoCompleteList.setVisibility(View.VISIBLE);
-//            dummy.setVisibility(View.VISIBLE);
-//        }
-//    }
 
     private String getBirthDate () {
         String birth_date = ((EditText) findViewById(R.id.birth_date_edit)).getText().toString();
