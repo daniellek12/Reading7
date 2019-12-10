@@ -17,10 +17,8 @@ public class Comment implements Comparable {
     //too much times, from our experience, the best solution is to save the fields for Comment too.
     //This fields will be all the data on the user we want to present
     private String commenter_name;
-    private String commenter_age; // age or grade, depands on the User fields
-    private String commenter_school_name;
 
-    public Comment(String comment_id, String review_id, String commenter_email, String comment_content, Timestamp comment_time, String commenter_name, String commenter_age, String commenter_school_name) {
+    public Comment(String comment_id, String review_id, String commenter_email, String comment_content, Timestamp comment_time, String commenter_name) {
         this.comment_id = comment_id;
         this.review_id = review_id;
         this.commenter_email = commenter_email;
@@ -28,17 +26,10 @@ public class Comment implements Comparable {
         this.comment_time = comment_time;
         //this.likes_count = likes_count;
         this.commenter_name = commenter_name;
-        this.commenter_age = commenter_age;
-        this.commenter_school_name = commenter_school_name;
+
     }
 
-    public String getCommenter_school_name() {
-        return commenter_school_name;
-    }
 
-    public void setCommenter_school_name(String commenter_school_name) {
-        this.commenter_school_name = commenter_school_name;
-    }
 
     public String getComment_id() {
         return comment_id;
@@ -89,13 +80,7 @@ public class Comment implements Comparable {
         this.commenter_name = commenter_name;
     }
 
-    public String getCommenter_age() {
-        return commenter_age;
-    }
 
-    public void setCommenter_age(String commenter_age) {
-        this.commenter_age = commenter_age;
-    }
 
 
     @Override

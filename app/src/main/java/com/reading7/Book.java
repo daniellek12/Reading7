@@ -10,7 +10,7 @@ public class Book {
     private String publisher;
     private int num_pages;
     private String description;
-    private double avg_rating;
+    private float avg_rating;
     private int num_readers;
 
 
@@ -70,11 +70,11 @@ public class Book {
         this.description = description;
     }
 
-    public double getAvg_rating() {
+    public float getAvg_rating() {
         return avg_rating;
     }
 
-    public void setAvg_rating(double avg_rating) {
+    public void setAvg_rating(float avg_rating) {
         this.avg_rating = avg_rating;
     }
 
@@ -86,7 +86,7 @@ public class Book {
         this.num_readers = num_readers;
     }
 
-    public Book(String id, String title, ArrayList<String> genres, String author, String publisher, int num_pages, String description, int avg_rating, int num_readers) {
+    public Book(String id, String title, ArrayList<String> genres, String author, String publisher, int num_pages, String description, float avg_rating, int num_readers) {
         this.id = id;
         this.title = title;
         this.genres = genres;
