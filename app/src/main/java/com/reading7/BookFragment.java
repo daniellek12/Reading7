@@ -70,6 +70,7 @@ public class BookFragment extends Fragment {
             }
         });
         initReviews();
+        getBookInformation();
     }
 
     public Book getBook() {
@@ -101,30 +102,38 @@ public class BookFragment extends Fragment {
 
     private void getBookInformation() {
 
-        TextView textViewgeners = getActivity().findViewById(R.id.genres);
+        TextView textViewgeners = (TextView) getActivity().findViewById(R.id.genres);
         String geners = "";
         int first=0;
         for(String s:mBook.getGenres()) {
             if (first == 1)
                 geners += ", " + s;
             else
+            {
                 first = 1;
+                geners += s;
+
+            }
         }
         textViewgeners.setText(geners);
 
-       RatingBar rankRatingBar = getActivity().findViewById(R.id.ratingBar);
+       RatingBar rankRatingBar = (RatingBar) getActivity().findViewById(R.id.ratingBar);
         rankRatingBar.setRating(mBook.getAvg_rating());
 
-        TextView textViewAuthor = getActivity().findViewById(R.id.author_field);
+        TextView textViewAuthor = (TextView) getActivity().findViewById(R.id.author_field);
         textViewAuthor.setText(mBook.getAuthor());
 
-        TextView textViewPublisher = getActivity().findViewById(R.id.publisher_field);
+        TextView textViewPublisher = (TextView)getActivity().findViewById(R.id.publisher_field);
         textViewPublisher.setText(mBook.getPublisher());
 
-        TextView textViewPages = getActivity().findViewById(R.id.pages_field);
-        textViewPages.setText(mBook.getNum_pages());
+        TextView textViewPages = (TextView)getActivity().findViewById(R.id.pages_field);
+        textViewPages.setText(Integer.toString(mBook.getNum_pages()));
 
+        TextView textViewTitle = (TextView)getActivity().findViewById(R.id.book_name);
+        textViewTitle.setText(mBook.getTitle());
 
+        ImageView coverImage = (ImageView) getActivity().findViewById(R.id.coverImage);
+        Utils.showImage(mBook.getTitle(),coverImage,getActivity());
     }
 
 
