@@ -123,9 +123,9 @@ public class Utils {
 
     //use this when you want to load image of book to imageView, image_id is the name of the file in
     //firebase storage, view is where you want to load the image, activity pass the current activity-probably this
-    public static void showImage(String image_id, final ImageView view, final Activity activity) {
+    public static void showImage(String imageFileName, final ImageView view, final Activity activity) {
         StorageReference mStorageRef;
-        mStorageRef = FirebaseStorage.getInstance().getReference("Images/" + image_id + ".jpg");
+        mStorageRef = FirebaseStorage.getInstance().getReference("Images/" + imageFileName + ".jpg");
 
         mStorageRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
             @Override
