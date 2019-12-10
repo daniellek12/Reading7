@@ -8,6 +8,9 @@ public class Review implements Comparable {
     private String book_id; //key for book
     private String reviewer_email; //key for user
     private int rank; //1-5(number of stars)
+
+
+    private String review_title;
     private String review_content; // NEED to decide whether we want to limit the length
     private Timestamp review_time;//time the review was published // note - constructor gets miliseconds(System.currentTimeMillis())
     private int[] emojis_count;
@@ -25,11 +28,12 @@ public class Review implements Comparable {
     private String image_url;
 
 
-    public Review(String review_id, String book_id, String reviewer_email, int rank, String review_content, Timestamp review_time, int []emojis_count, String reviewer_name, String reviewer_age, String reviewer_school_name, String book_title, String image_url) {
+    public Review(String review_id, String book_id, String reviewer_email, int rank,String review_title, String review_content, Timestamp review_time, int []emojis_count, String reviewer_name, String reviewer_age, String reviewer_school_name, String book_title, String image_url) {
         this.review_id = review_id;
         this.book_id = book_id;
         this.reviewer_email = reviewer_email;
         this.rank = rank;
+        this.review_title=review_title;
         this.review_content = review_content;
         this.review_time = review_time;
         this.emojis_count = emojis_count;
@@ -139,6 +143,14 @@ public class Review implements Comparable {
         this.reviewer_age = reviewer_age;
     }
 
+
+    public String getReview_title() {
+        return review_title;
+    }
+
+    public void setReview_title(String review_title) {
+        this.review_title = review_title;
+    }
 
     @Override
     public int compareTo(Object o) {

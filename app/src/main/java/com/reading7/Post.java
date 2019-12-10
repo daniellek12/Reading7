@@ -21,6 +21,10 @@ public class Post implements Comparable {
     private String book_id;
     private String reviewer_email;
     private int rank;
+
+
+
+    private String review_title;
     private String review_content;
     //private Timestamp review_time;
     private int[] emojis_count;
@@ -54,12 +58,13 @@ public class Post implements Comparable {
 
 
 /*--------------------------Constructors--------------------*/
-public Post(String post_id, PostType type, Timestamp post_time, String review_id, String book_id, String reviewer_email, int rank, String review_content, int[] emojis_count, String reviewer_name, String book_title) {
+public Post(String post_id, PostType type, Timestamp post_time, String review_id, String book_id, String reviewer_email, int rank,String review_title, String review_content, int[] emojis_count, String reviewer_name, String book_title) {
     this.post_id = post_id;
     this.type = type;
     this.post_time = post_time;
     this.review_id = review_id;
     this.book_id = book_id;
+    this.review_title = review_title;
     this.reviewer_email = reviewer_email;
     this.review_content = review_content;
     this.emojis_count = emojis_count;
@@ -128,6 +133,14 @@ public Post(String post_id, PostType type, Timestamp post_time, String review_id
     public String getBook_id() {
         return book_id;
     }
+    public String getReview_title() {
+        return review_title;
+    }
+
+    public void setReview_title(String review_title) {
+        this.review_title = review_title;
+    }
+
 
     public void setBook_id(String book_id) {
         this.book_id = book_id;
