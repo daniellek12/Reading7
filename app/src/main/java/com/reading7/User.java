@@ -1,60 +1,59 @@
 package com.reading7;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 public class User {
 
     private String full_name; //user's name
     private String email; //user's email
-    private int age; //user's age
-    private String school_name; //user's school name
+    private String birth_date; //user's birth date
 
-    private List<Integer> followers; //ids list of the followers
-    private List<Integer> following; //ids list of the following
+    private ArrayList<Integer> followers; //ids list of the followers
+    private ArrayList<Integer> following; //ids list of the following
+    private Queue<String> last_searches;
 
     public User(){
         this.full_name = "";
         this.email = "";
-        this.age = 0;
-        this.school_name = "";
+        this.birth_date = "";
         followers = new ArrayList<>();
         following = new ArrayList<>();
+        last_searches = new LinkedList<String>();
     }
 
-    public User(String full_name, String email, int age, String school_name){
+    public User(String full_name, String email, String birth_date){
         this.full_name = full_name;
         this.email = email;
-        this.age = age;
-        this.school_name = school_name;
+        this.birth_date = birth_date;
     }
 
     public String getFull_name() {
         return full_name;
     }
 
-    public int getAge() {
-        return age;
+    public String getBirth_date() {
+        return birth_date;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public String getSchool_name() {
-        return school_name;
-    }
-
-    public List<Integer> getfollowers() {
+    public ArrayList<Integer> getfollowers() {
         return followers;
     }
 
-    public List<Integer> getfollowing() {
+    public ArrayList<Integer> getfollowing() {
         return following;
     }
 
-    public void setAge(int age) {
-        this.age = age;
+    public Queue<String> getLast_searches() { return last_searches; }
+
+    public void setBirth_date(String birth_date) {
+        this.birth_date = birth_date;
     }
 
     public void setEmail(String email) {
@@ -65,11 +64,9 @@ public class User {
         this.full_name = full_name;
     }
 
-    public void setSchool_name(String school_name) {
-        this.school_name = school_name;
-    }
+    public void setfollowers(ArrayList<Integer> followers) { this.followers = followers; }
 
-    public void setfollowers(List<Integer> followers) { this.followers = followers; }
+    public void setfollowing(ArrayList<Integer> following) { this.following = following; }
 
-    public void setfollowing(List<Integer> following) { this.following = following; }
+    public void setLast_searches(Queue<String> last_searches) { this.last_searches = last_searches; }
 }
