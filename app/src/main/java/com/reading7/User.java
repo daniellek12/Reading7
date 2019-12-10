@@ -7,8 +7,7 @@ public class User {
 
     private String full_name; //user's name
     private String email; //user's email
-    private String birth_date; //user's age
-    private String school_name; //user's school name
+    private String birth_date; //user's birth date
 
     private List<Integer> followers; //ids list of the followers
     private List<Integer> following; //ids list of the following
@@ -17,16 +16,14 @@ public class User {
         this.full_name = "";
         this.email = "";
         this.birth_date = "";
-        this.school_name = "";
         followers = new ArrayList<>();
         following = new ArrayList<>();
     }
 
-    public User(String full_name, String email, int age, String school_name){
+    public User(String full_name, String email, String birth_date){
         this.full_name = full_name;
         this.email = email;
         this.birth_date = birth_date;
-        this.school_name = school_name;
     }
 
     public String getFull_name() {
@@ -39,10 +36,6 @@ public class User {
 
     public String getEmail() {
         return email;
-    }
-
-    public String getSchool_name() {
-        return school_name;
     }
 
     public List<Integer> getfollowers() {
@@ -63,10 +56,6 @@ public class User {
 
     public void setFull_name(String full_name) {
         this.full_name = full_name;
-    }
-
-    public void setSchool_name(String school_name) {
-        this.school_name = school_name;
     }
 
     public void setfollowers(List<Integer> followers) { this.followers = followers; }

@@ -79,7 +79,7 @@ public class SignUpActivity extends AppCompatActivity {
         school_edit = findViewById(R.id.school_name_edit);
         autoCompleteList = findViewById(R.id.autoCompleteList);
         dummy = findViewById(R.id.dummy);
-        setupSchoolsAutoComplete();
+//        setupSchoolsAutoComplete();
 
         setupDatePicker();
     }
@@ -112,19 +112,13 @@ public class SignUpActivity extends AppCompatActivity {
             return null;
         }
 
-        int age = getAge();
-        if(age <= 0) {
-            findViewById(R.id.illegal_age).setVisibility(View.VISIBLE);
+        String birth_date = getBirthDate();
+        if(birth_date == null) {
+            findViewById(R.id.illegal_birth_date).setVisibility(View.VISIBLE);
             return null;
         }
 
-        String school_name = getSchoolName();
-        if(school_name == null) {
-            findViewById(R.id.illegal_school_name).setVisibility(View.VISIBLE);
-            return null;
-        }
-
-        return new User(name, email, age, school_name);
+        return new User(name, email, birth_date);
     }
 
     private String getName() {
@@ -158,7 +152,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void setupDatePicker() {
 
-        final EditText age_edit = findViewById(R.id.age_edit);
+        final EditText birth_date_edit = findViewById(R.id.birth_date_edit);
         final Calendar myCalendar = Calendar.getInstance();
 
         final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
@@ -170,12 +164,12 @@ public class SignUpActivity extends AppCompatActivity {
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
 
-                age_edit.setText(sdf.format(myCalendar.getTime()));
+                birth_date_edit.setText(sdf.format(myCalendar.getTime()));
             }
 
         };
 
-        age_edit.setOnClickListener(new View.OnClickListener() {
+        birth_date_edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 DatePickerDialog dialog = new DatePickerDialog(SignUpActivity.this,R.style.MySpinnerDatePickerStyle, date,
@@ -187,116 +181,113 @@ public class SignUpActivity extends AppCompatActivity {
         });
     }
 
-    private int getAge() {
+//    private int getAge() {
+//
+//        String str_age = ((EditText) findViewById(R.id.age_edit)).getText().toString();
+//
+//        if (str_age.equals(""))
+//            return 0;
+//
+//        int age = Utils.calculateAge(str_age);
+//        if (age <= 0)
+//            return 0;
+//
+//        return age;
+//    }
 
-        String str_age = ((EditText) findViewById(R.id.age_edit)).getText().toString();
+//    private void setupSchoolsAutoComplete() {
+//
+//        schools = Arrays.asList(getResources().getStringArray(R.array.schools));
+//        filtered = new ArrayList<>();
+//
+//        school_edit.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) { alterAutocompleteAdapter(); }
+//            @Override
+//            public void afterTextChanged(Editable arg0) { }
+//            @Override
+//            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) { }
+//        });
+//
+//        adapter = new AutoCompleteSchoolsAdapter(this, filtered);
+//        autoCompleteList.setAdapter(adapter);
+//        alterAutocompleteAdapter();
+//
+//        autoCompleteList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long l) {
+//
+//                school = filtered.get(position);
+//                school_edit.setText(school);
+//
+//                dummy.setVisibility(View.GONE);
+//                autoCompleteList.setVisibility(View.GONE);
+//
+//                Utils.closeKeyboard(SignUpActivity.this);
+//                school_edit.clearFocus();
+//            }
+//        });
+//
+//        dummy.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                autoCompleteList.setVisibility(View.GONE);
+//                dummy.setVisibility(View.GONE);
+//
+//            }
+//        });
+//
+//        school_edit.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                autoCompleteList.setVisibility(View.VISIBLE);
+//                dummy.setVisibility(View.VISIBLE);
+//            }
+//        });
+//
+//        school_edit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View view, boolean b) {
+//                if(b){
+//                    autoCompleteList.setVisibility(View.VISIBLE);
+//                    dummy.setVisibility(View.VISIBLE);
+//                }
+//            }
+//        });
+//    }
 
-        if (str_age.equals(""))
-            return 0;
+//    private void alterAutocompleteAdapter(){
+//
+//        filtered.clear();
+//        adapter.notifyDataSetChanged();
+//
+//        if (!school_edit.getText().toString().isEmpty()) {
+//            for (int i = 0; i < schools.size(); i++) {
+//                if (schools.get(i).contains(school_edit.getText().toString()))
+//                    filtered.add(schools.get(i));
+//                adapter.notifyDataSetChanged();
+//            }
+//        }
+//
+//        if(filtered.isEmpty()){
+//            autoCompleteList.setVisibility(View.GONE);
+//            dummy.setVisibility(View.GONE);
+//        }
+//
+//        else {
+//            autoCompleteList.setVisibility(View.VISIBLE);
+//            dummy.setVisibility(View.VISIBLE);
+//        }
+//    }
 
-        int age = Utils.calculateAge(str_age);
-        if (age <= 0)
-            return 0;
-
-        return age;
-    }
-
-    private void setupSchoolsAutoComplete() {
-
-        schools = Arrays.asList(getResources().getStringArray(R.array.schools));
-        filtered = new ArrayList<>();
-
-        school_edit.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) { alterAutocompleteAdapter(); }
-            @Override
-            public void afterTextChanged(Editable arg0) { }
-            @Override
-            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) { }
-        });
-
-        adapter = new AutoCompleteSchoolsAdapter(this, filtered);
-        autoCompleteList.setAdapter(adapter);
-        alterAutocompleteAdapter();
-
-        autoCompleteList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long l) {
-
-                school = filtered.get(position);
-                school_edit.setText(school);
-
-                dummy.setVisibility(View.GONE);
-                autoCompleteList.setVisibility(View.GONE);
-
-                Utils.closeKeyboard(SignUpActivity.this);
-                school_edit.clearFocus();
-            }
-        });
-
-        dummy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                autoCompleteList.setVisibility(View.GONE);
-                dummy.setVisibility(View.GONE);
-
-            }
-        });
-
-        school_edit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                autoCompleteList.setVisibility(View.VISIBLE);
-                dummy.setVisibility(View.VISIBLE);
-            }
-        });
-
-        school_edit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                if(b){
-                    autoCompleteList.setVisibility(View.VISIBLE);
-                    dummy.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-    }
-
-    private void alterAutocompleteAdapter(){
-
-        filtered.clear();
-        adapter.notifyDataSetChanged();
-
-        if (!school_edit.getText().toString().isEmpty()) {
-            for (int i = 0; i < schools.size(); i++) {
-                if (schools.get(i).contains(school_edit.getText().toString()))
-                    filtered.add(schools.get(i));
-                adapter.notifyDataSetChanged();
-            }
+    private String getBirthDate () {
+        String birth_date = ((EditText) findViewById(R.id.birth_date_edit)).getText().toString();
+        if (birth_date.equals("")){
+            return "";
         }
-
-        if(filtered.isEmpty()){
-            autoCompleteList.setVisibility(View.GONE);
-            dummy.setVisibility(View.GONE);
-        }
-
-        else {
-            autoCompleteList.setVisibility(View.VISIBLE);
-            dummy.setVisibility(View.VISIBLE);
-        }
+        return birth_date;
     }
 
-    private String getSchoolName() {
-
-        String school_name = ((EditText) findViewById(R.id.school_name_edit)).getText().toString();
-        schools = Arrays.asList(getResources().getStringArray(R.array.schools));
-
-        if (school_name.equals("") || !(school_name.matches("[\u0590-\u05fe]+(( )[\u0590-\u05fe]+)*"))
-                || !schools.contains(school_name))
-            return null;
-
-        return school_name;
-    }
 
     private void signUpUser(final User user) {
 
@@ -348,22 +339,22 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void disableClicks(){
 
-        findViewById(R.id.school_name_edit).setEnabled(false);
+//        findViewById(R.id.school_name_edit).setEnabled(false);
         findViewById(R.id.name_edit).setEnabled(false);
         findViewById(R.id.password_edit).setEnabled(false);
         findViewById(R.id.email_edit).setEnabled(false);
-        findViewById(R.id.age_edit).setEnabled(false);
+        findViewById(R.id.birth_date_edit).setEnabled(false);
         findViewById(R.id.backBtn).setEnabled(false);
 
     }
 
     private void enableClicks(){
 
-        findViewById(R.id.school_name_edit).setEnabled(true);
+//        findViewById(R.id.school_name_edit).setEnabled(true);
         findViewById(R.id.name_edit).setEnabled(true);
         findViewById(R.id.password_edit).setEnabled(true);
         findViewById(R.id.email_edit).setEnabled(true);
-        findViewById(R.id.age_edit).setEnabled(true);
+        findViewById(R.id.birth_date_edit).setEnabled(true);
         findViewById(R.id.backBtn).setEnabled(true);
 
     }
@@ -372,8 +363,8 @@ public class SignUpActivity extends AppCompatActivity {
         findViewById(R.id.illegal_mail).setVisibility(View.INVISIBLE);
         findViewById(R.id.illegal_password).setVisibility(View.INVISIBLE);
         findViewById(R.id.illegal_name).setVisibility(View.INVISIBLE);
-        findViewById(R.id.illegal_school_name).setVisibility(View.INVISIBLE);
-        findViewById(R.id.illegal_age).setVisibility(View.INVISIBLE);
+//        findViewById(R.id.illegal_school_name).setVisibility(View.INVISIBLE);
+        findViewById(R.id.illegal_birth_date).setVisibility(View.INVISIBLE);
         findViewById(R.id.email_exists).setVisibility(View.INVISIBLE);
     }
 
