@@ -7,21 +7,50 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.SearchView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.reading7.Adapters.SearchAdapter;
 import com.reading7.Adapters.TabsPagerAdapter;
+
+import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 
-public class SearchFragment extends Fragment {
+public class SearchFragment extends Fragment implements SearchView.OnQueryTextListener{
+
+    private FirebaseFirestore db;
+
+    ListView list;
+    SearchAdapter adapter;
+    SearchView searchView;
+    ArrayList<Book> books = new ArrayList<Book>();
+    ViewPager viewPager;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        db = FirebaseFirestore.getInstance();
+        viewPager = getActivity().findViewById(R.id.viewPager);
+        searchView = getActivity().findViewById(R.id.searchView);
+        setBooks();
+        //books = getBooks();
+        //list = (RecyclerView)getActivity().findViewById(R.id.listview);
+
         return inflater.inflate(R.layout.search_fragment, null);
     }
 
@@ -86,4 +115,33 @@ public class SearchFragment extends Fragment {
         tabs.setupWithViewPager(viewPager);
     }
 
+    private void setBooks() {
+
+        ArrayList<Book> arr = new ArrayList<Book>();
+
+        CollectionReference requestCollectionRef = db.collection("Books");
+        requestCollectionRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                for(QueryDocumentSnapshot document: task.getResult()){
+                    Book book = document.toObject(Book.class);
+                    books.add(book);
+                }
+
+                adapter = new SearchAdapter(getContext(),books);
+            }
+        });
+    }
+
+
+    @Override
+    public boolean onQueryTextSubmit(String s) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String s) {
+        return false;
+    }
 }

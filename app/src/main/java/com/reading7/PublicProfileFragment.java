@@ -1,28 +1,26 @@
 package com.reading7;
 
-import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.reading7.Adapters.PlaylistAdapter;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.reading7.Adapters.ReadShelfAdapter;
 
 import java.util.ArrayList;
 
@@ -38,7 +36,9 @@ public class PublicProfileFragment extends Fragment {
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
+    private ArrayList<Review> usersReviews;
     private String user_email;
+    private User user;
 
 
     @Nullable
@@ -46,12 +46,13 @@ public class PublicProfileFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
-        return inflater.inflate(R.layout.fragment_public_profile, null);
+        usersReviews = new ArrayList<>();
+        return inflater.inflate(R.layout.public_profile_fragment, null);
     }
 
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         getUserInformation();
@@ -60,9 +61,10 @@ public class PublicProfileFragment extends Fragment {
 
     }
 
-    public void setUser(String user_email){
+    public void setUser(String user_email) {
         this.user_email = user_email;
     }
+
     private void getUserInformation() {
 
         DocumentReference userRef = db.collection("Users").document(this.user_email);
@@ -73,28 +75,37 @@ public class PublicProfileFragment extends Fragment {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        User user = new User();
 
-                        TextView userName = getActivity().findViewById(R.id.userName);
-                        userName.setText(document.getData().get("full_name").toString());
 
-                        TextView userAge = getActivity().findViewById(R.id.age);
-                        userAge.setText("גיל: "+ calculateAge(document.getData().get("birth_date").toString()));
+                        String userName = document.getData().get("full_name").toString();
+                        ((TextView) getActivity().findViewById(R.id.userName)).setText(userName);
 
-                        TextView followers = getActivity().findViewById(R.id.followers);
-                        ArrayList<String> arr = (ArrayList<String>)document.getData().get("followers");
-                        followers.setText(Integer.toString(arr.size()));
+                        String birthDate = document.getData().get("birth_date").toString();
+                        ((TextView) getActivity().findViewById(R.id.age)).setText("גיל: " + calculateAge(birthDate));
 
-                        TextView following = getActivity().findViewById(R.id.following);
-                        arr = (ArrayList<String>)document.getData().get("following");
-                        following.setText(Integer.toString(arr.size()));
-                    }
+                        ArrayList<String> followers = (ArrayList<String>) document.getData().get("followers");
+                        ((TextView) getActivity().findViewById(R.id.followers)).setText(Integer.toString(followers.size()));
 
-                    else Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        ArrayList<String> following = (ArrayList<String>) document.getData().get("following");
+                        ((TextView) getActivity().findViewById(R.id.following)).setText(Integer.toString(following.size()));
 
-                }
+                        Book[] favouriteBooks = (Book[]) document.getData().get("favourite_books");
 
-                else Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        ArrayList<String> lastSearches = (ArrayList<String>) document.getData().get("last_searches");
+
+                        ArrayList<String> favouriteGenres = (ArrayList<String>) document.getData().get("favourite_genres");
+
+                        ArrayList<String> likedReviews = (ArrayList<String>) document.getData().get("liked_reviews");
+
+
+                        user = new User(userName, user_email, birthDate, followers, following, lastSearches,
+                                favouriteBooks, favouriteGenres, likedReviews);
+
+                        initFollowButton();
+                    } else
+                        Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                } else
+                    Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -102,7 +113,7 @@ public class PublicProfileFragment extends Fragment {
 
     private ArrayList<Integer> getCovers() {
 
-        ArrayList<Integer> covers =new ArrayList<Integer>();
+        ArrayList<Integer> covers = new ArrayList<Integer>();
         covers.add(1);
         covers.add(2);
         covers.add(3);
@@ -131,32 +142,97 @@ public class PublicProfileFragment extends Fragment {
         return covers;
     }
 
-    private void initWishlist() {
+    private void initFollowButton() {
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL,false);
+        Button follow = getActivity().findViewById(R.id.follow);
+        final String follow_string = getResources().getString(R.string.follow_button);
+        final String unfollow_string = getResources().getString(R.string.unfollow_button);
+
+        final FirebaseUser user_me = mAuth.getCurrentUser();
+
+        if (user.getFollowers().contains(user_me.getEmail())) {
+            follow.setText(unfollow_string);
+            follow.setBackgroundTintList(getResources().getColorStateList(R.color.colorPrimary));
+
+        } else {
+            follow.setText(follow_string);
+            follow.setBackgroundTintList(getResources().getColorStateList(R.color.colorAccent));
+        }
+
+        follow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Button follow = getActivity().findViewById(R.id.follow);
+                if (follow.getText().equals(follow_string)) {
+
+                    if (user_me.getEmail().equals(user.getEmail()))
+                        throw new AssertionError("YOU CANT FOLLOW YOURSELF!!!!");
+
+                    follow.setText(unfollow_string);
+                    follow.setBackgroundTintList(getResources().getColorStateList(R.color.colorPrimary));
+
+                    DocumentReference userRef = db.collection("Users").document(user_me.getEmail());
+                    userRef.update("following", FieldValue.arrayUnion(user.getEmail()));
+
+                    userRef = db.collection("Users").document(user.getEmail());
+                    userRef.update("followers", FieldValue.arrayUnion(user_me.getEmail()));
+
+                } else {
+
+                    follow.setText(follow_string);
+                    follow.setBackgroundTintList(getResources().getColorStateList(R.color.colorAccent));
+
+                    DocumentReference userRef = db.collection("Users").document(user_me.getEmail());
+                    userRef.update("following", FieldValue.arrayRemove(user.getEmail()));
+
+                    userRef = db.collection("Users").document(user.getEmail());
+                    userRef.update("followers", FieldValue.arrayRemove(user_me.getEmail()));
+                }
+
+            }
+        });
+    }
+
+    private void initWishlist() {
+        getUserReviews();
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         RecyclerView wishlistRV = getActivity().findViewById(R.id.wishlistRV);
         wishlistRV.setLayoutManager(layoutManager);
-        PlaylistAdapter adapter = new PlaylistAdapter(getActivity(),getCovers());
+        ReadShelfAdapter adapter = new ReadShelfAdapter(usersReviews, getActivity());
         wishlistRV.setAdapter(adapter);
     }
 
     private void initMyBookslist() {
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL,false);
+        getUserReviews();
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         RecyclerView myBooksRV = getActivity().findViewById(R.id.myBooksRV);
         myBooksRV.setLayoutManager(layoutManager);
-        PlaylistAdapter adapter = new PlaylistAdapter(getActivity(),getCovers());
+        ReadShelfAdapter adapter = new ReadShelfAdapter(usersReviews, getActivity());
         myBooksRV.setAdapter(adapter);
 
     }
 
     private void disableClicks() {
-        //getActivity().findViewById(R.id.settings).setEnabled(false);
-        getActivity().findViewById(R.id.logout).setEnabled(false);
+
     }
 
     private void enableClicks() {
-        //getActivity().findViewById(R.id.settings).setEnabled(true);
-        getActivity().findViewById(R.id.logout).setEnabled(true);
+
+    }
+
+    private void getUserReviews() {
+        FirebaseUser mUser = mAuth.getCurrentUser();
+        CollectionReference collection = db.collection("Reviews");
+        Query query = collection.whereEqualTo("reviwer_email", mUser.getEmail());
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                        usersReviews.add(doc.toObject(Review.class));
+                    }
+                }
+            }
+        });
     }
 }

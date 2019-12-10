@@ -94,9 +94,23 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/rounded_button"
-                android:text="עקוב "
+                android:text="עקוב"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
+
+<!--            <Button-->
+<!--                android:id="@+id/unfollow"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="35dp"-->
+<!--                android:layout_below="@+id/profileDetails"-->
+<!--                android:layout_centerHorizontal="true"-->
+<!--                android:layout_marginTop="15dp"-->
+<!--                android:background="@drawable/rounded_button"-->
+<!--                android:backgroundTint="@color/colorPrimary"-->
+<!--                android:text="@string/unfollow_button"-->
+<!--                android:textColor="@color/white"-->
+<!--                android:textSize="18sp"-->
+<!--                android:visibility="gone" />-->
 
             <LinearLayout
                 android:id="@+id/countersLayout"

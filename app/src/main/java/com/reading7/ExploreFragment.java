@@ -5,10 +5,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.reading7.Adapters.ExploreAdapter;
 import com.reading7.Adapters.StoryPlaylistAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,9 +27,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class ExploreFragment extends Fragment {
 
+    List<Book> lstBooks ;
+    ExploreAdapter myAdapter;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         return inflater.inflate(R.layout.explore_fragment, null);
     }
 
@@ -37,11 +48,13 @@ public class ExploreFragment extends Fragment {
                 ((MainActivity)getActivity()).loadBookFragment(new BookFragment(),b);
             }
         });
-
+        lstBooks = new ArrayList<>();
         initPlaylists();
         initExplore();
         initAppBar();
     }
+
+
 
 
 
@@ -175,8 +188,36 @@ public class ExploreFragment extends Fragment {
         RecyclerView exploreRV = getActivity().findViewById(R.id.exploreRV);
         exploreRV.setLayoutManager(layoutManager);
 
-        ExploreAdapter adapter = new ExploreAdapter(getActivity(),getRatings(), getCovers());
-        exploreRV.setAdapter(adapter);
+        myAdapter = new ExploreAdapter(getContext(),getActivity(),lstBooks);
+        exploreRV.setAdapter(myAdapter);
+        getBooks();
 
+
+    }
+
+
+    public void getBooks(){
+
+        lstBooks.clear();
+        final List<Book> newlist = new ArrayList<>();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference requestCollectionRef = db.collection("Books");
+
+        Query requestQuery = requestCollectionRef.limit(5);
+
+        requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        newlist.add(document.toObject(Book.class));
+                    }
+                    lstBooks.addAll(newlist);
+                    myAdapter.notifyDataSetChanged();
+
+                }
+            }
+        });
     }
 }
