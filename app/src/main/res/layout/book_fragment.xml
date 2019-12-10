@@ -15,6 +15,8 @@
         android:layout_height="15dp"
         android:background="@color/colorPrimaryDark"/>
 
+
+
     <ImageView
         android:id="@+id/coverImage"
         android:layout_width="wrap_content"
@@ -197,5 +199,12 @@
         android:layout_marginTop="10dp"
         android:background="@color/colorPrimaryDark"
         android:elevation="10dp" />
+
+    <Button
+        android:id="@+id/button_read"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="קראתי"
+        />
 
 </RelativeLayout>

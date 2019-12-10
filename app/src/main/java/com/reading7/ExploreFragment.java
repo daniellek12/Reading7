@@ -29,6 +29,15 @@ public class ExploreFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        getActivity().findViewById(R.id.notifications).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                    Book b = new Book("id","title",new ArrayList<String>(),"author","publisher",2,"summary",3,3);
+                ((MainActivity)getActivity()).loadBookFragment(new BookFragment(),b);
+            }
+        });
+
         initPlaylists();
         initExplore();
         initAppBar();
@@ -165,7 +174,9 @@ public class ExploreFragment extends Fragment {
 
         RecyclerView exploreRV = getActivity().findViewById(R.id.exploreRV);
         exploreRV.setLayoutManager(layoutManager);
+
         ExploreAdapter adapter = new ExploreAdapter(getActivity(),getRatings(), getCovers());
         exploreRV.setAdapter(adapter);
+
     }
 }

@@ -45,7 +45,7 @@ public class HomeFragment extends Fragment {
                 "1", "1", "mail","נועה קירל"));
 
         posts.add(new Post("2", PostType.Review, new Timestamp(System.currentTimeMillis()), "2", "2",
-                "mail2", 4, "content", null, "אליאנה תדהר",
+                "mail2", 4, "title","content", 0, "אליאנה תדהר",
                 "אשמת הכוכבים"));
 
 //        posts.add(new Post((float)4, 1, "״גינגי״", "טל מוסרי", "לפני 3 שעות"));

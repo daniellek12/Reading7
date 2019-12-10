@@ -21,9 +21,13 @@ public class Post implements Comparable {
     private String book_id;
     private String reviewer_email;
     private int rank;
+
+
+
+    private String review_title;
     private String review_content;
     //private Timestamp review_time;
-    private int[] emojis_count;
+    private int likes_count;
     //private String reviewer_name;
     private String book_title;
 
@@ -54,15 +58,16 @@ public class Post implements Comparable {
 
 
 /*--------------------------Constructors--------------------*/
-public Post(String post_id, PostType type, Timestamp post_time, String review_id, String book_id, String reviewer_email, int rank, String review_content, int[] emojis_count, String reviewer_name, String book_title) {
+public Post(String post_id, PostType type, Timestamp post_time, String review_id, String book_id, String reviewer_email, int rank,String review_title, String review_content, int likes_count, String reviewer_name, String book_title) {
     this.post_id = post_id;
     this.type = type;
     this.post_time = post_time;
     this.review_id = review_id;
     this.book_id = book_id;
+    this.review_title = review_title;
     this.reviewer_email = reviewer_email;
     this.review_content = review_content;
-    this.emojis_count = emojis_count;
+    this.likes_count = likes_count;
     this.user_name = reviewer_name;
     this.book_title = book_title;
     this.rank =rank;
@@ -128,6 +133,14 @@ public Post(String post_id, PostType type, Timestamp post_time, String review_id
     public String getBook_id() {
         return book_id;
     }
+    public String getReview_title() {
+        return review_title;
+    }
+
+    public void setReview_title(String review_title) {
+        this.review_title = review_title;
+    }
+
 
     public void setBook_id(String book_id) {
         this.book_id = book_id;
@@ -157,12 +170,12 @@ public Post(String post_id, PostType type, Timestamp post_time, String review_id
         this.review_content = review_content;
     }
 
-    public int[] getEmojis_count() {
-        return emojis_count;
+    public int getLikes_count() {
+        return likes_count;
     }
 
-    public void setEmojis_count(int[] emojis_count) {
-        this.emojis_count = emojis_count;
+    public void setLikes_count_count(int likes_count) {
+        this.likes_count = likes_count;
     }
 
     public String getBook_title() {

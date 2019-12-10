@@ -54,6 +54,22 @@ public class MainActivity extends AppCompatActivity
         return false;
     }
 
+    public boolean loadBookFragment(Fragment fragment, Book book){
+
+        if(fragment != null && book != null){
+
+            ((BookFragment)fragment).setBook(book);
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragmant_container, fragment)
+                    .addToBackStack(fragment.getClass().toString())
+                    .commit();
+            return true;
+        }
+
+        return false;
+    }
+
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
