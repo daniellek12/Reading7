@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,6 +54,7 @@ public class ProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         getUserInformation();
+        initEditBtn();
         initLogOutBtn();
         initWishlist();
         initMyBookslist();
@@ -146,6 +148,18 @@ public class ProfileFragment extends Fragment {
 
     }
 
+    private void initEditBtn(){
+
+        final Button edit_btn = getActivity().findViewById(R.id.edit);
+        edit_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                disableClicks();
+                Toast.makeText(getContext(), "EDIT PROFILE", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
     private void initLogOutBtn(){
 

@@ -38,7 +38,7 @@ public class HomeFragment extends Fragment {
         ArrayList<Post> posts =new ArrayList<Post>();
 
         posts.add(new Post("1", PostType.Review, new Timestamp(System.currentTimeMillis()), "1", "1",
-                "mail", 3, "content", null, "עודד פז",
+                "adva@gmail.com", 3, "content", null, "עודד פז",
                 "ג׳ינג׳י"));
 
         posts.add(new Post("1", PostType.WishList, new Timestamp(System.currentTimeMillis()), "1", "הארי פוטר ואבן החכמים",

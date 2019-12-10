@@ -14,7 +14,9 @@ import android.widget.RadioGroup;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.reading7.MainActivity;
 import com.reading7.Post;
+import com.reading7.PublicProfileFragment;
 import com.reading7.R;
 
 import java.util.ArrayList;
@@ -40,8 +42,8 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
         ImageView coverBackground;
         TextView userName;
         TextView postTime;
-
         RadioGroup likeButtons;
+        CircleImageView profileImage;
 
         public ReviewPostHolder(@NonNull View itemView) {
             super(itemView);
@@ -53,6 +55,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
             userName = itemView.findViewById(R.id.userName);
             postTime = itemView.findViewById(R.id.postTime);
             likeButtons = itemView.findViewById(R.id.likeButtons);
+            profileImage = itemView.findViewById(R.id.profileImage);
         }
     }
 
@@ -168,7 +171,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
         Drawable rating = holder.ratingBar.getProgressDrawable();
         rating.setColorFilter(Color.parseColor("#FFC21C"), PorterDuff.Mode.SRC_ATOP);
 
-        Post post = posts.get(i);
+        final Post post = posts.get(i);
         holder.ratingBar.setRating(post.getRank());
         holder.rating.setText(String.valueOf(post.getRank()));
         holder.userName.setText(post.getUser_name());
@@ -180,6 +183,12 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
         holder.coverBackground.setImageResource(mContext.getResources().getIdentifier("cover"+(i+1), "mipmap", mContext.getPackageName()));
 
         setLikeButtons(holder);
+        holder.profileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((MainActivity)mContext).loadPublicProfileFragment(new PublicProfileFragment(), post.getReviewer_email());
+            }
+        });
 
     }
 

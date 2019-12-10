@@ -92,9 +92,9 @@
                 android:layout_height="35dp"
                 android:layout_below="@+id/profileDetails"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="500dp"
+                android:layout_marginTop="15dp"
                 android:background="@drawable/rounded_button"
-                android:text="follow!"
+                android:text="עקוב "
                 android:textColor="@color/white"
                 android:textSize="18sp" />
 
