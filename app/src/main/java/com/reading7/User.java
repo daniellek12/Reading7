@@ -16,6 +16,7 @@ public class User {
     private Queue<String> last_searches;
     private Book[] favourite_books; // top books to view on profile
     private ArrayList<String> favourite_genres;
+    private ArrayList<String> liked_reviews;
 
     public User() {
         this.full_name = "";
@@ -26,6 +27,7 @@ public class User {
         this.last_searches = new LinkedList<>();
         this.favourite_books = new Book[3];
         this.favourite_genres = new ArrayList<>();
+
     }
 
     public User(String full_name, String email, String birth_date) {
