@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 
 public class Utils {
@@ -34,16 +35,19 @@ public class Utils {
        for(String name:context.getAssets().list("")){
             if(!(name.contains(".")))
                 continue;
-           InputStream is = context.getAssets().open(name);
-           BufferedReader br = new BufferedReader(new InputStreamReader(is, Charset.forName("Windows-1255")));
 
-           String st = "";
+           InputStream is = context.getAssets().open(name);
+           BufferedReader br = new BufferedReader(new InputStreamReader(is, Charset.forName("utf-16")));
+
+           String st = "-1";
            String title = "";
-           String image_url = "";
-           ArrayList<Book.BookGenre> genres;
+           String num_pages = "-1";
+           ArrayList<String> genres;
            String author = "";
            String publisher = "";
            String summary = "";
+           String geners="";
+           ArrayList<String> genersarray = new ArrayList<String>();
 
            while ((st = br.readLine()) != null) {
 
@@ -51,9 +55,9 @@ public class Utils {
                    String[] sst = st.split("Title: ");
                    title = sst[1];
                }
-               if (st.startsWith("Image URL: ")) {
-                   String[] sst = st.split("Image URL: ");
-                   image_url = sst[1];
+               if (st.startsWith("Num Pages: ")) {
+                   String[] sst = st.split("Num Pages: ");
+                   num_pages = sst[1];
                }
                if (st.startsWith("Author: ")) {
                    String[] sst = st.split("Author: ");
@@ -67,9 +71,15 @@ public class Utils {
                    String[] sst = st.split("Description: ");
                    summary = sst[1];
                }
+               if (st.startsWith("Genres: ")) {
+                   String[] sst = st.split("Genres: ");
+                   geners = sst[1];
+                    genersarray = new ArrayList<String>(Arrays.asList(geners.split(", ", -1)));
+               }
            }
 
-           Book b = new Book("", title, image_url, new ArrayList<Book.BookGenre>(), author, publisher, -1, -1, summary);
+
+           Book b = new Book("", title, genersarray, author, publisher, Integer.parseInt(num_pages), summary, 0,0);
 
            DocumentReference newBook = db.collection("Books").document();
            b.setId(newBook.getId());
@@ -78,6 +88,9 @@ public class Utils {
                public void onComplete(@NonNull Task<Void> task) {
                    if (task.isSuccessful()) {
                        //Toast.makeText(LoginActivity, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+
+                   }
+                   else{
 
                    }
 
