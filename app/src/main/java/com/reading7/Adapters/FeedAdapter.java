@@ -7,7 +7,10 @@ import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -36,6 +39,8 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
         TextView userName;
         TextView postTime;
 
+        RadioGroup likeButtons;
+
         public ReviewPostHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -43,9 +48,9 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
             rating = itemView.findViewById(R.id.rating);
             cover = itemView.findViewById(R.id.coverImage);
             coverBackground = itemView.findViewById(R.id.coverBackground);
-            userName =itemView.findViewById(R.id.userName);
-            postTime =itemView.findViewById(R.id.postTime);
-
+            userName = itemView.findViewById(R.id.userName);
+            postTime = itemView.findViewById(R.id.postTime);
+            likeButtons = itemView.findViewById(R.id.likeButtons);
         }
     }
 
@@ -154,7 +159,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
 
     private void bindReview(RecyclerView.ViewHolder viewHolder, int i) {
 
-        ReviewPostHolder holder = (ReviewPostHolder)viewHolder;
+        final ReviewPostHolder holder = (ReviewPostHolder)viewHolder;
 
         //Set ratingbar color
         Drawable rating = holder.ratingBar.getProgressDrawable();
@@ -170,6 +175,39 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
         //TODO: load images correctly
         holder.cover.setImageResource(mContext.getResources().getIdentifier("cover"+(i+1), "mipmap", mContext.getPackageName()));
         holder.coverBackground.setImageResource(mContext.getResources().getIdentifier("cover"+(i+1), "mipmap", mContext.getPackageName()));
+
+        setLikeButtons(holder);
+
+    }
+
+
+    private void setLikeButtons(final ReviewPostHolder holder){
+         //TODO: update the corresponding counter
+
+        holder.likeButtons.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
+            int prev = -1;
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int checked) {
+
+                if(prev != -1){
+
+                    RadioButton prevBtn = radioGroup.findViewById(prev);
+                    prevBtn.setText(String.valueOf(Integer.parseInt(prevBtn.getText().toString())-1));
+
+                    if(prev==checked) {
+                        prevBtn.setChecked(false);
+                        prev = -1;
+                        return;
+                    }
+                }
+
+                RadioButton btn = radioGroup.findViewById(checked);
+                btn.setText(String.valueOf(Integer.parseInt(btn.getText().toString())+1));
+                prev = checked;
+            }
+        });
+
     }
 
     private void bindWishList(RecyclerView.ViewHolder viewHolder, int i) {

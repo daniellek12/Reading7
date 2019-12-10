@@ -18,26 +18,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class HomeFragment extends Fragment {
 
-//    //Fake class, just for testing
-//    public class Post {
-//
-//        public Float rating;
-//        public Integer cover;
-//        public String bookName;
-//        public String userName;
-//        public String postTime;
-//
-//        public Post(Float rating, Integer cover, String bookName, String userName, String postTime){
-//
-//            this.bookName = bookName;
-//            this.userName = userName;
-//            this.cover = cover;
-//            this.postTime = postTime;
-//            this.rating = rating;
-//        }
-//
-//    }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -57,17 +37,16 @@ public class HomeFragment extends Fragment {
 
         ArrayList<Post> posts =new ArrayList<Post>();
 
-
-    // public Post(String post_id, PostType type, Timestamp post_time, String book_id, String book_title,
-        // String image_url, String wishList_Id, String user_email, String user_name) {
-
-
-            posts.add(new Post("1", PostType.Review, new Timestamp(System.currentTimeMillis()), "1", "1",
+        posts.add(new Post("1", PostType.Review, new Timestamp(System.currentTimeMillis()), "1", "1",
                 "mail", 3, "content", null, "עודד פז",
                 "ג׳ינג׳י", "1"));
 
         posts.add(new Post("1", PostType.WishList, new Timestamp(System.currentTimeMillis()), "1", "הארי פוטר ואבן החכמים",
-                "1", "1", "mail","עודד פז"));
+                "1", "1", "mail","נועה קירל"));
+
+        posts.add(new Post("2", PostType.Review, new Timestamp(System.currentTimeMillis()), "2", "2",
+                "mail2", 4, "content", null, "אליאנה תדהר",
+                "אשמת הכוכבים", "4"));
 
 //        posts.add(new Post((float)4, 1, "״גינגי״", "טל מוסרי", "לפני 3 שעות"));
 //        posts.add(new Post((float)3, 2, "״הארי פוטר ואבן החכמים״", "אליאנה תדהר", "לפני 12 שעות"));

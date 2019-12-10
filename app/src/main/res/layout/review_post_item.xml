@@ -125,12 +125,15 @@
         android:layout_marginTop="20dp"
         android:background="?android:attr/listDivider" />
 
-    <LinearLayout
+
+  <!--  <LinearLayout
         android:id="@+id/likeLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/divider3"
         android:layout_alignParentBottom="true"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="-1dp"
         android:gravity="center"
         android:layoutDirection="rtl"
         android:orientation="horizontal"
@@ -175,7 +178,7 @@
                 android:layout_height="18dp"
                 android:background="@color/transparent"
                 android:scaleType="fitXY"
-                android:src="@drawable/hollow_heart"
+                android:src="@drawable/heart"
                 android:tint="@color/darkGrey" />
 
             <TextView
@@ -222,9 +225,8 @@
                 android:layout_width="18dp"
                 android:layout_height="18dp"
                 android:background="@color/transparent"
-                android:src="@drawable/sad"
-                android:tint="@color/darkGrey"
-                android:scaleType="fitXY" />
+                android:scaleType="fitXY"
+                android:src="@drawable/sad" />
 
             <TextView
                 android:id="@+id/sadNum"
@@ -236,6 +238,64 @@
         </LinearLayout>
 
 
-    </LinearLayout>
+    </LinearLayout> -->
+
+
+    <RadioGroup
+        android:id="@+id/likeButtons"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/divider3"
+        android:gravity="center"
+        android:layoutDirection="rtl"
+        android:orientation="horizontal"
+        android:paddingTop="7dp"
+        android:paddingBottom="7dp">
+
+        <RadioButton
+            android:id="@+id/like"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:button="@drawable/like_selector"
+            android:paddingStart="10dp"
+            android:text="74"
+            android:textColor="@color/darkGrey" />
+
+
+        <RadioButton
+            android:id="@+id/heart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:button="@drawable/heart_selector"
+            android:paddingStart="10dp"
+            android:text="74"
+            android:textColor="@color/darkGrey" />
+
+
+        <RadioButton
+            android:id="@+id/happy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:button="@drawable/happy_selector"
+            android:paddingStart="10dp"
+            android:text="74"
+            android:textColor="@color/darkGrey" />
+
+        <RadioButton
+            android:id="@+id/sad"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:allowUndo="true"
+            android:button="@drawable/sad_selector"
+            android:paddingStart="10dp"
+            android:text="74"
+            android:textColor="@color/darkGrey" />
+
+
+    </RadioGroup>
+
 
 </RelativeLayout>

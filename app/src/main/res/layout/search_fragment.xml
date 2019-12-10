@@ -2,7 +2,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:layoutDirection="rtl">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -47,7 +48,7 @@
             app:tabMode="fixed"
             android:background="@color/white"
             app:tabIndicatorColor="@color/colorPrimaryDark"
-            android:layoutDirection="ltr">
+            android:layoutDirection="rtl">
 
         </com.google.android.material.tabs.TabLayout>
 
@@ -55,11 +56,11 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.viewpager.widget.ViewPager
+    <com.duolingo.open.rtlviewpager.RtlViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:layoutDirection="rtl" />
+        />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

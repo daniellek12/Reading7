@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
@@ -36,30 +35,25 @@ public class SearchFragment extends Fragment {
 
     }
 
+
     private void initSearchView(){
 
         androidx.appcompat.widget.SearchView searchView = getActivity().findViewById(R.id.searchView);
         searchView.setIconifiedByDefault(false);
         searchView.requestFocus();
 
-        //open keyboard
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(getContext().INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+        Utils.openKeyboard(getContext());
 
         //remove underline
         View v = getActivity().findViewById(androidx.appcompat.R.id.search_plate);
         v.setBackgroundColor(getActivity().getResources().getColor(R.color.transparent));
-
-        //remove close button
-        ImageView closeBtn = (ImageView)searchView.findViewById(R.id.search_close_btn);
-        closeBtn.setEnabled(false);
-        closeBtn.setImageDrawable(null);
 
         //remove search icon
         ImageView searchViewIcon = (ImageView)searchView.findViewById(androidx.appcompat.R.id.search_mag_icon);
         ((ViewGroup)searchViewIcon.getParent()).removeView(searchViewIcon);
 
     }
+
 
     private void initBackButton() {
 
@@ -68,14 +62,13 @@ public class SearchFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                //close keyboard
-                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(getContext().INPUT_METHOD_SERVICE);
-                imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+                Utils.closeKeyboard(getContext());
                 getActivity().onBackPressed();
             }
         });
 
     }
+
 
     private void initTabsViewPager() {
 
@@ -91,7 +84,6 @@ public class SearchFragment extends Fragment {
 
         TabLayout tabs = getActivity().findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
-        viewPager.setCurrentItem(2);
     }
 
 }

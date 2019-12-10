@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
                 android:layout_marginLeft="16dp"
-                android:src="@drawable/heart"
+                android:src="@drawable/heart_colored"
                 android:tint="@color/darkGrey"
                 android:visibility="visible" />
 
