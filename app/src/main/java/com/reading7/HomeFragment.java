@@ -35,17 +35,17 @@ public class HomeFragment extends Fragment {
 
     private ArrayList<Post> getPosts() {
 
-        ArrayList<Post> posts =new ArrayList<Post>();
+        ArrayList<Post> posts = new ArrayList<Post>();
 
         posts.add(new Post("1", PostType.Review, new Timestamp(System.currentTimeMillis()), "1", "1",
-                "adva@gmail.com", 3, "content", null, "עודד פז",
+                "adva@gmail.com", 3, "title", "content", 0, "עודד פז",
                 "ג׳ינג׳י"));
 
         posts.add(new Post("1", PostType.WishList, new Timestamp(System.currentTimeMillis()), "1", "הארי פוטר ואבן החכמים",
-                "1", "1", "mail","נועה קירל"));
+                "1", "1", "mail", "נועה קירל"));
 
         posts.add(new Post("2", PostType.Review, new Timestamp(System.currentTimeMillis()), "2", "2",
-                "mail2", 4, "title","content", 0, "אליאנה תדהר",
+                "mail2", 4, "title", "content", 0, "אליאנה תדהר",
                 "אשמת הכוכבים"));
 
 //        posts.add(new Post((float)4, 1, "״גינגי״", "טל מוסרי", "לפני 3 שעות"));
@@ -60,10 +60,10 @@ public class HomeFragment extends Fragment {
 
     private void initPosts() {
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL,false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         RecyclerView postsRV = getActivity().findViewById(R.id.posts);
         postsRV.setLayoutManager(layoutManager);
-        FeedAdapter adapter = new FeedAdapter(getActivity(),getPosts());
+        FeedAdapter adapter = new FeedAdapter(getActivity(), getPosts());
         postsRV.setAdapter(adapter);
 
     }
