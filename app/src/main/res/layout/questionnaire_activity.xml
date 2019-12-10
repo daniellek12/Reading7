@@ -4,8 +4,76 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/signup_background"
     tools:context=".QuestionnaireActivity"
     android:layoutDirection="rtl">
 
-    
+    <TextView
+        android:id="@+id/questionnaire_title"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginBottom="25dp"
+        android:drawablePadding="10dp"
+        android:drawableTint="@color/transparentPrimaryDark"
+        android:foregroundGravity="center"
+        android:gravity="center|center_vertical"
+        android:hint="שאלון העדפות"
+        android:inputType="text"
+        android:lines="1"
+        android:maxLength="25"
+        android:maxLines="1"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:singleLine="true"
+        android:textSize="20sp">
+
+    </TextView>
+
+    <AutoCompleteTextView
+        android:id="@+id/best_book"
+        android:layout_below="@id/questionnaire_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="AutoCompleteTextView"
+        android:layout_centerHorizontal="true"/>
+
+    <AutoCompleteTextView
+        android:id="@+id/second_book"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="AutoCompleteTextView"
+        android:layout_below="@+id/best_book"
+        android:layout_centerHorizontal="true"/>
+
+    <AutoCompleteTextView
+        android:id="@+id/third_book"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="AutoCompleteTextView"
+        android:layout_below="@+id/second_book"
+        android:layout_centerHorizontal="true"/>
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_below="@+id/third_book"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp" />
+
+    <Button
+        android:id="@+id/submit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/spinner"
+        android:background="@color/colorAccent"
+        android:text="סיימתי">
+
+    </Button>
+
+
 </RelativeLayout>

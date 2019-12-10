@@ -193,7 +193,8 @@ public class SignUpActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
-                                Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+//                                Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+                                Intent intent = new Intent(SignUpActivity.this, QuestionnaireActivity.class);
                                 intent.putExtra("NEW_USER", true);
                                 startActivity(intent);
                                 finish();
