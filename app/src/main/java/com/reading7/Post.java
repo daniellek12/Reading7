@@ -26,7 +26,6 @@ public class Post implements Comparable {
     private int[] emojis_count;
     //private String reviewer_name;
     private String book_title;
-    private String image_url;
 
 
     //****WishList****
@@ -39,7 +38,7 @@ public class Post implements Comparable {
     //private Timestamp adding_time;
 
     //****New Book****
-    private ArrayList<Book.BookGenre> new_book_genres;
+    private ArrayList<String> new_book_genres;
     //private String book_id;
     //private String book_title;
     //private String image_url;
@@ -55,19 +54,18 @@ public class Post implements Comparable {
 
 
 /*--------------------------Constructors--------------------*/
-public Post(String post_id, PostType type, Timestamp post_time, String review_id, String book_id, String reviewer_email, int rank, String review_content, int[] emojis_count, String reviewer_name, String book_title, String image_url) {
+public Post(String post_id, PostType type, Timestamp post_time, String review_id, String book_id, String reviewer_email, int rank, String review_content, int[] emojis_count, String reviewer_name, String book_title) {
     this.post_id = post_id;
     this.type = type;
     this.post_time = post_time;
     this.review_id = review_id;
     this.book_id = book_id;
     this.reviewer_email = reviewer_email;
-    this.rank = rank;
     this.review_content = review_content;
     this.emojis_count = emojis_count;
     this.user_name = reviewer_name;
     this.book_title = book_title;
-    this.image_url = image_url;
+    this.rank =rank;
 }
 
 
@@ -78,7 +76,6 @@ public Post(String post_id, PostType type, Timestamp post_time, String review_id
         this.post_time = post_time;
         this.book_id = book_id;
         this.book_title = book_title;
-        this.image_url = image_url;
         this.wishList_Id = wishList_Id;
         this.user_email = user_email;
         this.user_name = user_name;
@@ -86,14 +83,13 @@ public Post(String post_id, PostType type, Timestamp post_time, String review_id
 
 
     //Recommendation + New Book Post
-    public Post(String post_id, PostType type, Timestamp post_time, String book_id, String book_title, String image_url, ArrayList<Book.BookGenre> new_book_genres) {
+    public Post(String post_id, PostType type, Timestamp post_time, String book_id, String book_title, String image_url, ArrayList<String> new_book_genres) {
         this.post_id = post_id;
         this.type = type;
         this.post_time = post_time;
         this.book_id = book_id;
         this.book_title = book_title;
-        this.image_url = image_url;
-        this.new_book_genres = new_book_genres;
+        //this.new_book_genres = new_book_genres;
     }
  /*--------------------------End Constructors--------------------*/
 
@@ -177,13 +173,6 @@ public Post(String post_id, PostType type, Timestamp post_time, String review_id
         this.book_title = book_title;
     }
 
-    public String getImage_url() {
-        return image_url;
-    }
-
-    public void setImage_url(String image_url) {
-        this.image_url = image_url;
-    }
 
     public String getWishList_Id() {
         return wishList_Id;
@@ -209,11 +198,11 @@ public Post(String post_id, PostType type, Timestamp post_time, String review_id
         this.user_name = user_name;
     }
 
-    public ArrayList<Book.BookGenre> getNew_book_genres() {
+    public ArrayList<String> getNew_book_genres() {
         return new_book_genres;
     }
 
-    public void setNew_book_genres(ArrayList<Book.BookGenre> new_book_genres) {
+    public void setNew_book_genres(ArrayList<String> new_book_genres) {
         this.new_book_genres = new_book_genres;
     }
 
