@@ -1,24 +1,16 @@
 package com.reading7;
 
-import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -46,7 +38,7 @@ public class PublicProfileFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
-        return inflater.inflate(R.layout.fragment_public_profile, null);
+        return inflater.inflate(R.layout.public_profile_fragment, null);
     }
 
 
@@ -55,6 +47,7 @@ public class PublicProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         getUserInformation();
+        initFollowButton();
         initWishlist();
         initMyBookslist();
 
@@ -63,6 +56,7 @@ public class PublicProfileFragment extends Fragment {
     public void setUser(String user_email){
         this.user_email = user_email;
     }
+
     private void getUserInformation() {
 
         DocumentReference userRef = db.collection("Users").document(this.user_email);
@@ -99,7 +93,6 @@ public class PublicProfileFragment extends Fragment {
         });
     }
 
-
     private ArrayList<Integer> getCovers() {
 
         ArrayList<Integer> covers =new ArrayList<Integer>();
@@ -129,6 +122,13 @@ public class PublicProfileFragment extends Fragment {
         covers.add(24);
 
         return covers;
+    }
+
+    private void initFollowButton() {
+
+        Button follow = getActivity().findViewById(R.id.follow);
+
+
     }
 
     private void initWishlist() {
