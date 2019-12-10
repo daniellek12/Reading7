@@ -13,6 +13,7 @@ public class Book {
     private float avg_rating;
     private int num_readers;
 
+    public Book() {}
 
     public String getId() {
         return id;
