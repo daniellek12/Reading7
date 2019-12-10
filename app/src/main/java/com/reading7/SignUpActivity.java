@@ -37,15 +37,6 @@ public class SignUpActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
 
-    /*----- For schools autocomplete -----*/
-    private AutoCompleteSchoolsAdapter adapter;
-    private List<String> filtered;
-    private List<String> schools;
-    private EditText school_edit;
-    private String school;
-    private ListView autoCompleteList;
-    private View dummy;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,21 +65,7 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
 
-
-        school = null;
-        school_edit = findViewById(R.id.school_name_edit);
-        autoCompleteList = findViewById(R.id.autoCompleteList);
-        dummy = findViewById(R.id.dummy);
-//        setupSchoolsAutoComplete();
-
         setupDatePicker();
-
-        findViewById(R.id.profile_image).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openEditAvatarDialog();
-            }
-        });
     }
 
     @Override
@@ -97,13 +74,6 @@ public class SignUpActivity extends AppCompatActivity {
         startActivity(intent);
         overridePendingTransition(0, 0);
         finish();
-    }
-
-    public void openEditAvatarDialog(){
-
-        EditAvatarDialog editAvatarDialog = new EditAvatarDialog();
-        editAvatarDialog.show(getSupportFragmentManager(), "edit avatar dialog");
-
     }
 
     private User getUser() {
@@ -195,18 +165,120 @@ public class SignUpActivity extends AppCompatActivity {
         });
     }
 
-<<<<<<< HEAD
-    private int getAge() {
 
-        String str_age = ((EditText) findViewById(R.id.age_edit)).getText().toString();
-
-        if (str_age.equals(""))
-            return 0;
-
-        int age = Utils.calculateAge(str_age);
-        if (age <= 0)
-            return 0;
-
-        return age;
+    private String getBirthDate () {
+        String birth_date = ((EditText) findViewById(R.id.birth_date_edit)).getText().toString();
+        if (birth_date.equals("")){
+            return "";
+        }
+        return birth_date;
     }
 
+
+    private void signUpUser(final User user) {
+
+        if (user == null) return;
+
+        String password = ((EditText) findViewById(R.id.password_edit)).getText().toString();
+        mAuth.createUserWithEmailAndPassword(user.getEmail(), password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    mAuth = FirebaseAuth.getInstance();
+
+                    DocumentReference newUser = db.collection("Users").document(user.getEmail());
+
+                    newUser.set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+                                intent.putExtra("NEW_USER", true);
+                                startActivity(intent);
+                                finish();
+                            }
+
+                            else Toast.makeText(SignUpActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                } else {
+
+                    if (task.getException().getMessage().equals("The email address is badly formatted."))
+                        findViewById(R.id.illegal_mail).setVisibility(View.VISIBLE);
+
+                    if (task.getException().getMessage().equals("The given password is invalid. [ Password should be at least 6 characters ]"))
+                        findViewById(R.id.illegal_password).setVisibility(View.VISIBLE);
+
+                    if (task.getException().getMessage().equals("The email address is already in use by another account."))
+                        findViewById(R.id.email_exists).setVisibility(View.VISIBLE);
+
+                    else Toast.makeText(SignUpActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+
+                    hideProgressBar();
+                }
+            }
+        });
+
+    }
+
+    private void disableClicks(){
+
+//        findViewById(R.id.school_name_edit).setEnabled(false);
+        findViewById(R.id.name_edit).setEnabled(false);
+        findViewById(R.id.password_edit).setEnabled(false);
+        findViewById(R.id.email_edit).setEnabled(false);
+        findViewById(R.id.birth_date_edit).setEnabled(false);
+        findViewById(R.id.backBtn).setEnabled(false);
+
+    }
+
+    private void enableClicks(){
+
+//        findViewById(R.id.school_name_edit).setEnabled(true);
+        findViewById(R.id.name_edit).setEnabled(true);
+        findViewById(R.id.password_edit).setEnabled(true);
+        findViewById(R.id.email_edit).setEnabled(true);
+        findViewById(R.id.birth_date_edit).setEnabled(true);
+        findViewById(R.id.backBtn).setEnabled(true);
+
+    }
+
+    private void dissapearErrorMsgs() {
+        findViewById(R.id.illegal_mail).setVisibility(View.INVISIBLE);
+        findViewById(R.id.illegal_password).setVisibility(View.INVISIBLE);
+        findViewById(R.id.illegal_name).setVisibility(View.INVISIBLE);
+//        findViewById(R.id.illegal_school_name).setVisibility(View.INVISIBLE);
+        findViewById(R.id.illegal_birth_date).setVisibility(View.INVISIBLE);
+        findViewById(R.id.email_exists).setVisibility(View.INVISIBLE);
+    }
+
+//    private void shake(View view){
+//
+//        Animation shake;
+//        if(view instanceof TextView)
+//            shake = AnimationUtils.loadAnimation(this, R.anim.shake_text);
+//
+//        else shake = AnimationUtils.loadAnimation(this, R.anim.shake_animation);
+//
+//        view.startAnimation(shake);
+//    }
+
+    private void showProgressBar(){
+
+        disableClicks();
+        findViewById(R.id.signup_btn).setVisibility(View.INVISIBLE);
+        findViewById(R.id.progress_background).setVisibility(View.VISIBLE);
+        findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+    }
+
+    private void hideProgressBar(){
+
+        findViewById(R.id.progress_background).setVisibility(View.GONE);
+        findViewById(R.id.progressBar).setVisibility(View.GONE);
+        findViewById(R.id.signup_btn).setVisibility(View.VISIBLE);
+        enableClicks();
+    }
+
+}
