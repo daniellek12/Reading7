@@ -13,7 +13,7 @@ public class User {
 
     private ArrayList<String> followers; //Emails list of the followers
     private ArrayList<String> following; //Emails list of the following
-    private Queue<String> last_searches;
+    private ArrayList<String> last_searches;
     private Book[] favourite_books; // top books to view on profile
     private ArrayList<String> favourite_genres;
     private ArrayList<String> liked_reviews;
@@ -24,80 +24,99 @@ public class User {
         this.birth_date = "";
         this.followers = new ArrayList<>();
         this.following = new ArrayList<>();
-        this.last_searches = new LinkedList<>();
+        this.last_searches = new ArrayList<>();
         this.favourite_books = new Book[3];
         this.favourite_genres = new ArrayList<>();
-
+        this.liked_reviews = new ArrayList<>();
     }
 
     public User(String full_name, String email, String birth_date) {
         this.full_name = full_name;
         this.email = email;
         this.birth_date = birth_date;
-        this.followers = new ArrayList<>();
-        this.following = new ArrayList<>();
-        this.last_searches = new LinkedList<>();
-        this.favourite_books = new Book[3];
-        this.favourite_genres = new ArrayList<>();
     }
 
-    public User(String full_name, String email, String birth_date, ArrayList<String> followers, ArrayList<String> following, Queue<String> last_searches) {
+    public User(String full_name, String email, String birth_date, ArrayList<String> followers, ArrayList<String> following, ArrayList<String> last_searches, Book[] favourite_books, ArrayList<String> favourite_genres, ArrayList<String> liked_reviews) {
         this.full_name = full_name;
         this.email = email;
         this.birth_date = birth_date;
         this.followers = followers;
         this.following = following;
         this.last_searches = last_searches;
-//        this.favourite_books = new Book[3];
-//        this.favourite_genres = new ArrayList<>();
-        //TODO add this fields ^^
+        this.favourite_books = favourite_books;
+        this.favourite_genres = favourite_genres;
+        this.liked_reviews = liked_reviews;
     }
 
     public String getFull_name() {
         return full_name;
     }
 
-    public String getBirth_date() {
-        return birth_date;
+    public void setFull_name(String full_name) {
+        this.full_name = full_name;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public ArrayList<String> getfollowers() {
-        return followers;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public ArrayList<String> getfollowing() {
-        return following;
-    }
-
-    public Queue<String> getLast_searches() {
-        return last_searches;
+    public String getBirth_date() {
+        return birth_date;
     }
 
     public void setBirth_date(String birth_date) {
         this.birth_date = birth_date;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public ArrayList<String> getFollowers() {
+        return followers;
     }
 
-    public void setFull_name(String full_name) {
-        this.full_name = full_name;
-    }
-
-    public void setfollowers(ArrayList<String> followers) {
+    public void setFollowers(ArrayList<String> followers) {
         this.followers = followers;
     }
 
-    public void setfollowing(ArrayList<String> following) {
+    public ArrayList<String> getFollowing() {
+        return following;
+    }
+
+    public void setFollowing(ArrayList<String> following) {
         this.following = following;
     }
 
-    public void setLast_searches(Queue<String> last_searches) {
+    public ArrayList<String> getLast_searches() {
+        return last_searches;
+    }
+
+    public void setLast_searches(ArrayList<String> last_searches) {
         this.last_searches = last_searches;
+    }
+
+    public Book[] getFavourite_books() {
+        return favourite_books;
+    }
+
+    public void setFavourite_books(Book[] favourite_books) {
+        this.favourite_books = favourite_books;
+    }
+
+    public ArrayList<String> getFavourite_genres() {
+        return favourite_genres;
+    }
+
+    public void setFavourite_genres(ArrayList<String> favourite_genres) {
+        this.favourite_genres = favourite_genres;
+    }
+
+    public ArrayList<String> getLiked_reviews() {
+        return liked_reviews;
+    }
+
+    public void setLiked_reviews(ArrayList<String> liked_reviews) {
+        this.liked_reviews = liked_reviews;
     }
 }
