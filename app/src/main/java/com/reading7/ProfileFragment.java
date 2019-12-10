@@ -1,29 +1,26 @@
 package com.reading7;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.reading7.Adapters.PlaylistAdapter;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.reading7.Adapters.ReadShelfAdapter;
 
 import java.util.ArrayList;
 
@@ -39,6 +36,7 @@ public class ProfileFragment extends Fragment {
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
+    private ArrayList<Review> usersReviews;
 
 
     @Nullable
@@ -46,11 +44,12 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+        usersReviews = new ArrayList<>();
         return inflater.inflate(R.layout.profile_fragment, null);
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         getUserInformation();
@@ -78,29 +77,27 @@ public class ProfileFragment extends Fragment {
                         userName.setText(document.getData().get("full_name").toString());
 
                         TextView userAge = getActivity().findViewById(R.id.age);
-                        userAge.setText("גיל: "+ calculateAge(document.getData().get("birth_date").toString()));
+                        userAge.setText("גיל: " + calculateAge(document.getData().get("birth_date").toString()));
 
                         TextView followers = getActivity().findViewById(R.id.followers);
-                        ArrayList<String> arr = (ArrayList<String>)document.getData().get("followers");
+                        ArrayList<String> arr = (ArrayList<String>) document.getData().get("followers");
                         followers.setText(Integer.toString(arr.size()));
 
                         TextView following = getActivity().findViewById(R.id.following);
-                        arr = (ArrayList<String>)document.getData().get("following");
+                        arr = (ArrayList<String>) document.getData().get("following");
                         following.setText(Integer.toString(arr.size()));
-                    }
+                    } else
+                        Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
 
-                    else Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-
-                }
-
-                else Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                } else
+                    Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private ArrayList<Integer> getCovers() {
 
-        ArrayList<Integer> covers =new ArrayList<Integer>();
+        ArrayList<Integer> covers = new ArrayList<Integer>();
         covers.add(1);
         covers.add(2);
         covers.add(3);
@@ -130,25 +127,25 @@ public class ProfileFragment extends Fragment {
     }
 
     private void initWishlist() {
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL,false);
+        getUserReviews();
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         RecyclerView wishlistRV = getActivity().findViewById(R.id.wishlistRV);
         wishlistRV.setLayoutManager(layoutManager);
-        PlaylistAdapter adapter = new PlaylistAdapter(getActivity(),getCovers());
+        ReadShelfAdapter adapter = new ReadShelfAdapter(usersReviews, getActivity());
         wishlistRV.setAdapter(adapter);
     }
 
     private void initMyBookslist() {
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL,false);
+        getUserReviews();
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         RecyclerView myBooksRV = getActivity().findViewById(R.id.myBooksRV);
         myBooksRV.setLayoutManager(layoutManager);
-        PlaylistAdapter adapter = new PlaylistAdapter(getActivity(),getCovers());
+        ReadShelfAdapter adapter = new ReadShelfAdapter(usersReviews, getActivity());
         myBooksRV.setAdapter(adapter);
 
     }
 
-    private void initEditBtn(){
+    private void initEditBtn() {
 
         final Button edit_btn = getActivity().findViewById(R.id.edit);
         edit_btn.setOnClickListener(new View.OnClickListener() {
@@ -161,7 +158,7 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    private void initLogOutBtn(){
+    private void initLogOutBtn() {
 
         final TextView logout = getActivity().findViewById(R.id.logout);
         logout.setOnClickListener(new View.OnClickListener() {
@@ -176,7 +173,7 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    private void signOut(){
+    private void signOut() {
         mAuth.signOut();
         Intent intent = new Intent(getActivity(), LoginActivity.class);
         startActivity(intent);
@@ -191,5 +188,21 @@ public class ProfileFragment extends Fragment {
     private void enableClicks() {
         //getActivity().findViewById(R.id.settings).setEnabled(true);
         getActivity().findViewById(R.id.logout).setEnabled(true);
+    }
+
+    private void getUserReviews() {
+        FirebaseUser mUser = mAuth.getCurrentUser();
+        CollectionReference collection =  db.collection("Reviews");
+        Query query = collection.whereEqualTo("reviwer_email", mUser.getEmail());
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for (QueryDocumentSnapshot doc : task.getResult()){
+                        usersReviews.add(doc.toObject(Review.class));
+                    }
+                }
+            }
+        });
     }
 }

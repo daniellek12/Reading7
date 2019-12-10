@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,10 +19,14 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.reading7.Adapters.PlaylistAdapter;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.reading7.Adapters.ReadShelfAdapter;
 
 import java.util.ArrayList;
 
@@ -38,6 +42,7 @@ public class PublicProfileFragment extends Fragment {
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
+    private ArrayList<Review> usersReviews;
     private String user_email;
 
 
@@ -46,7 +51,8 @@ public class PublicProfileFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
-        return inflater.inflate(R.layout.fragment_public_profile, null);
+        usersReviews = new ArrayList<>();
+        return inflater.inflate(R.layout.public_profile_fragment, null);
     }
 
 
@@ -55,6 +61,7 @@ public class PublicProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         getUserInformation();
+        initFollowButton();
         initWishlist();
         initMyBookslist();
 
@@ -63,6 +70,7 @@ public class PublicProfileFragment extends Fragment {
     public void setUser(String user_email){
         this.user_email = user_email;
     }
+
     private void getUserInformation() {
 
         DocumentReference userRef = db.collection("Users").document(this.user_email);
@@ -131,21 +139,28 @@ public class PublicProfileFragment extends Fragment {
         return covers;
     }
 
-    private void initWishlist() {
+    private void initFollowButton() {
 
+        Button follow = getActivity().findViewById(R.id.follow);
+
+
+    }
+
+    private void initWishlist() {
+        getUserReviews();
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL,false);
         RecyclerView wishlistRV = getActivity().findViewById(R.id.wishlistRV);
         wishlistRV.setLayoutManager(layoutManager);
-        PlaylistAdapter adapter = new PlaylistAdapter(getActivity(),getCovers());
+        ReadShelfAdapter adapter = new ReadShelfAdapter(usersReviews, getActivity());
         wishlistRV.setAdapter(adapter);
     }
 
     private void initMyBookslist() {
-
+        getUserReviews();
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL,false);
         RecyclerView myBooksRV = getActivity().findViewById(R.id.myBooksRV);
         myBooksRV.setLayoutManager(layoutManager);
-        PlaylistAdapter adapter = new PlaylistAdapter(getActivity(),getCovers());
+        ReadShelfAdapter adapter = new ReadShelfAdapter(usersReviews, getActivity());
         myBooksRV.setAdapter(adapter);
 
     }
@@ -158,5 +173,21 @@ public class PublicProfileFragment extends Fragment {
     private void enableClicks() {
         //getActivity().findViewById(R.id.settings).setEnabled(true);
         getActivity().findViewById(R.id.logout).setEnabled(true);
+    }
+
+    private void getUserReviews() {
+        FirebaseUser mUser = mAuth.getCurrentUser();
+        CollectionReference collection =  db.collection("Reviews");
+        Query query = collection.whereEqualTo("reviwer_email", mUser.getEmail());
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for (QueryDocumentSnapshot doc : task.getResult()){
+                        usersReviews.add(doc.toObject(Review.class));
+                    }
+                }
+            }
+        });
     }
 }
