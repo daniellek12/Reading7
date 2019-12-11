@@ -14,7 +14,7 @@ public class User {
     private ArrayList<String> followers; //Emails list of the followers
     private ArrayList<String> following; //Emails list of the following
     private ArrayList<String> last_searches;
-    private Book[] favourite_books; // top books to view on profile
+    private ArrayList<String> favourite_books; // top books to view on profile
     private ArrayList<String> favourite_genres;
     private ArrayList<String> liked_reviews;
 
@@ -25,7 +25,7 @@ public class User {
         this.followers = new ArrayList<>();
         this.following = new ArrayList<>();
         this.last_searches = new ArrayList<>();
-        this.favourite_books = new Book[3];
+        this.favourite_books = new ArrayList<>();
         this.favourite_genres = new ArrayList<>();
         this.liked_reviews = new ArrayList<>();
     }
@@ -37,12 +37,12 @@ public class User {
         this.followers = new ArrayList<>();
         this.following = new ArrayList<>();
         this.last_searches = new ArrayList<>();
-        this.favourite_books = new Book[3];
+        this.favourite_books = new ArrayList<>();
         this.favourite_genres = new ArrayList<>();
         this.liked_reviews = new ArrayList<>();
     }
 
-    public User(String full_name, String email, String birth_date, ArrayList<String> followers, ArrayList<String> following, ArrayList<String> last_searches, Book[] favourite_books, ArrayList<String> favourite_genres, ArrayList<String> liked_reviews) {
+    public User(String full_name, String email, String birth_date, ArrayList<String> followers, ArrayList<String> following, ArrayList<String> last_searches, ArrayList<String> favourite_books, ArrayList<String> favourite_genres, ArrayList<String> liked_reviews) {
         this.full_name = full_name;
         this.email = email;
         this.birth_date = birth_date;
@@ -102,11 +102,11 @@ public class User {
         this.last_searches = last_searches;
     }
 
-    public Book[] getFavourite_books() {
+    public ArrayList<String> getFavourite_books() {
         return favourite_books;
     }
 
-    public void setFavourite_books(Book[] favourite_books) {
+    public void setFavourite_books(ArrayList<String> favourite_books) {
         this.favourite_books = favourite_books;
     }
 

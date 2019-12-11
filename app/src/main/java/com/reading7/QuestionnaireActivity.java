@@ -56,6 +56,10 @@ public class QuestionnaireActivity extends AppCompatActivity {
         QuestionnaireAdapter myAdapter = new QuestionnaireAdapter(QuestionnaireActivity.this, 0,
                 list);
         spinner.setAdapter(myAdapter);
+
+
+
+//        ((Spinner)findViewById(R.id.spinner)).getSelectedItem();
     }
 
 
