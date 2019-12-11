@@ -13,6 +13,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.reading7.MultiSpinner;
 import com.reading7.R;
 
@@ -52,10 +57,8 @@ public class QuestionnaireAdapter extends ArrayAdapter<MultiSpinner> {
             LayoutInflater layoutInflator = LayoutInflater.from(mContext);
             convertView = layoutInflator.inflate(R.layout.spinner_item, null);
             holder = new ViewHolder();
-            holder.mTextView = (TextView) convertView
-                    .findViewById(R.id.text);
-            holder.mCheckBox = (CheckBox) convertView
-                    .findViewById(R.id.checkbox);
+            holder.mTextView = (TextView) convertView.findViewById(R.id.text);
+            holder.mCheckBox = (CheckBox) convertView.findViewById(R.id.checkbox);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -81,7 +84,8 @@ public class QuestionnaireAdapter extends ArrayAdapter<MultiSpinner> {
                 int getPosition = (Integer) buttonView.getTag();
 
                 if (!isFromView) {
-                    listState.get(position).setSelected(isChecked);
+//                    listState.get(position).setSelected(isChecked);
+                    listState.get(getPosition).setSelected(isChecked);
                 }
             }
         });
