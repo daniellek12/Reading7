@@ -28,12 +28,16 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class RankBookDialog extends AppCompatDialogFragment {
 
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
+    private Review mReview;
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -50,6 +54,25 @@ public class RankBookDialog extends AppCompatDialogFragment {
         final RatingBar rateStar = (RatingBar) view.findViewById(R.id.ratingBar);
         final EditText titleText = (EditText) view.findViewById(R.id.FeedbackTitle);
         final EditText contentText = (EditText) view.findViewById(R.id.FeedbackContent);
+        mReview = null;
+        CollectionReference requestCollectionRef = db.collection("Reviews");
+        Query requestQuery = requestCollectionRef.whereEqualTo("reviewer_email",mAuth.getCurrentUser().getEmail()).whereEqualTo("book_id",book_id);
+        requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                     @Override
+                                                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                         if (task.isSuccessful()) {
+                                                             for (QueryDocumentSnapshot document : task.getResult()) {
+                                                                 mReview = document.toObject(Review.class);
+                                                             }
+                                                            if(mReview!= null){
+                                                                rateStar.setRating(mReview.getRank());
+                                                                titleText.setText(mReview.getReview_title());
+                                                                contentText.setText(mReview.getReview_content());
+                                                            }
+
+                                                         }
+                                                     }
+                                                 });
 
 
         builder.setView(view).setPositiveButton("הוסף ביקורת", new DialogInterface.OnClickListener() {
@@ -64,17 +87,20 @@ public class RankBookDialog extends AppCompatDialogFragment {
                 requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
+
+                        if (task.isSuccessful()){
+                            DocumentReference newReview = db.collection("Reviews").document();
+                            if(mReview==null){
                             User user = new User();
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 user = document.toObject(User.class);
                             }
 
 
-                            Review review = new Review("", book_id, mAuth.getCurrentUser().getEmail(), rank, review_title, review_content, Timestamp.now(), user.getFull_name(), book_title);
-                            DocumentReference newReview = db.collection("Reviews").document();
-                            review.setReview_id(newReview.getId());
-                            newReview.set(review).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            mReview = new Review("", book_id, mAuth.getCurrentUser().getEmail(), rank, review_title, review_content, Timestamp.now(), user.getFull_name(), book_title);
+                            mReview.setReview_id(newReview.getId());
+
+                            newReview.set(mReview).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                             @Override
                                                                             public void onComplete(@NonNull Task<Void> task) {
                                                                                 if (task.isSuccessful()) {
@@ -89,10 +115,27 @@ public class RankBookDialog extends AppCompatDialogFragment {
 
                             );
 
+                            }
+                        else{
 
+                            DocumentReference ref = db.collection("Reviews").document(mReview.getReview_id());
+                            Map<String, Object> updates = new HashMap<String,Object>();
+
+                            updates.put("rank", rank);
+                            updates.put("review_title",review_title);
+                            updates.put("review_content",review_content);
+                            ref.update(updates).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful()){
+
+                                    }
+                                }
+                            });
                         }
+
                     }
-        });}}).setNegativeButton("בטל", new DialogInterface.OnClickListener() {
+        }});}}).setNegativeButton("בטל", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
