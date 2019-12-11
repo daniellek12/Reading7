@@ -1,28 +1,27 @@
 package com.reading7;
 
-import java.sql.Timestamp;
+
+import com.google.firebase.Timestamp;
 
 public class WishList implements Comparable {
 
     private String id;
     private String user_email;
     private String user_name;
-    private String user_school;
-    private int user_age;
     private String book_id;
     private String book_title;
-    private String image_url;
     private Timestamp adding_time;
 
-    public WishList(String id, String user_email, String user_name, String user_school, int user_age, String book_id, String book_name,String image_url, Timestamp adding_time) {
+    public WishList(){
+
+    }
+
+    public WishList(String id, String user_email, String user_name, String book_id, String book_name, Timestamp adding_time) {
         this.id = id;
         this.user_email = user_email;
         this.user_name = user_name;
-        this.user_school = user_school;
-        this.user_age = user_age;
         this.book_id = book_id;
         this.book_title = book_name;
-        this.image_url = image_url;
         this.adding_time = adding_time;
     }
     public String getBook_title() {
@@ -31,14 +30,6 @@ public class WishList implements Comparable {
 
     public void setBook_title(String book_title) {
         this.book_title = book_title;
-    }
-
-    public String getImage_url() {
-        return image_url;
-    }
-
-    public void setImage_url(String image_url) {
-        this.image_url = image_url;
     }
 
     public String getId() {
@@ -63,22 +54,6 @@ public class WishList implements Comparable {
 
     public void setUser_name(String user_name) {
         this.user_name = user_name;
-    }
-
-    public String getUser_school() {
-        return user_school;
-    }
-
-    public void setUser_school(String user_school) {
-        this.user_school = user_school;
-    }
-
-    public int getUser_age() {
-        return user_age;
-    }
-
-    public void setUser_age(int user_age) {
-        this.user_age = user_age;
     }
 
     public String getBook_id() {

@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -61,7 +63,7 @@ public class BookFragment extends Fragment {
     public void
     onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Button rankBtn = mActivity.findViewById(R.id.button_read);
+        ImageButton rankBtn =mActivity.findViewById(R.id.button_read);
         rankBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -76,6 +78,53 @@ public class BookFragment extends Fragment {
 
             }
         });
+
+        ImageButton wishListBtn =mActivity.findViewById(R.id.button_wishlist);
+        wishListBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CollectionReference requestCollectionRef = db.collection("Users");
+                Query requestQuery = requestCollectionRef.whereEqualTo("email",mAuth.getCurrentUser().getEmail());
+                requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            User user = new User();
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                user = document.toObject(User.class);
+                            }
+
+
+                            WishList wlist = new WishList("", user.getEmail(), user.getFull_name(), mBook.getId(), mBook.getTitle(), Timestamp.now());
+                            DocumentReference newWish = db.collection("Wishlist").document();
+                            wlist.setId(newWish.getId());
+                            newWish.set(wlist).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                            @Override
+                                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                                if (task.isSuccessful()) {
+                                                                                    //getBookReviews();
+                                                                                }
+
+                                                                            }
+                                                                        }
+                            );
+
+                        }
+                    }
+                });
+            }
+        });
+
+        final ImageButton openSummaryBtn = mActivity.findViewById(R.id.summary_button);
+        openSummaryBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TextView mSummary = mActivity.findViewById(R.id.summary);
+                mSummary.setMaxLines(Integer.MAX_VALUE);
+                mSummary.setEllipsize(null);
+            }
+        });
+
         lstReviews= new ArrayList<>();
         initReviews();
         getBookInformation();
@@ -110,8 +159,6 @@ public class BookFragment extends Fragment {
             }
         });
     }
-
-
 
     private void initReviews() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL,false);

@@ -21,6 +21,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.reading7.Adapters.ReadShelfAdapter;
+import com.reading7.Adapters.WishListAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +39,10 @@ public class ProfileFragment extends Fragment {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private List<Review> usersReviews;
-    private ReadShelfAdapter adapter;
+    private List<WishList> usersWishList;
+    private ReadShelfAdapter adapterReviews;
+    private WishListAdapter adapterWishList;
+
     private User curr_user;
 
 
@@ -54,6 +58,7 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         usersReviews = new ArrayList<>();
+        usersWishList = new ArrayList<>();
         getUserInformation();
 
 
@@ -85,11 +90,14 @@ public class ProfileFragment extends Fragment {
                         TextView following = getActivity().findViewById(R.id.following);
                         arr = (ArrayList<String>) document.getData().get("following");
                         following.setText(Integer.toString(arr.size()));
+
                         initEditBtn();
                         initLogOutBtn();
                         initWishlist();
                         initMyBookslist();
                         getUserReviews();
+                        getUserWishList();
+
                     } else
                         Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
 
@@ -135,8 +143,8 @@ public class ProfileFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         RecyclerView wishlistRV = getActivity().findViewById(R.id.wishlistRV);
         wishlistRV.setLayoutManager(layoutManager);
-        adapter = new ReadShelfAdapter(usersReviews, getActivity());
-        wishlistRV.setAdapter(adapter);
+        adapterWishList = new WishListAdapter(usersWishList, getActivity());
+        wishlistRV.setAdapter(adapterWishList);
     }
 
     private void initMyBookslist() {
@@ -144,8 +152,8 @@ public class ProfileFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         RecyclerView myBooksRV = getActivity().findViewById(R.id.myBooksRV);
         myBooksRV.setLayoutManager(layoutManager);
-        adapter = new ReadShelfAdapter(usersReviews, getActivity());
-        myBooksRV.setAdapter(adapter);
+        adapterReviews = new ReadShelfAdapter(usersReviews, getActivity());
+        myBooksRV.setAdapter(adapterReviews);
 
     }
 
@@ -195,19 +203,40 @@ public class ProfileFragment extends Fragment {
     }
 
     private void getUserReviews() {
-        final List<Review> newlist= new ArrayList<>();
+        final List<Review> newlist = new ArrayList<>();
         FirebaseUser mUser = mAuth.getCurrentUser();
-        CollectionReference collection =  db.collection("Reviews");
+        CollectionReference collection = db.collection("Reviews");
         Query query = collection.whereEqualTo("reviewer_email", mAuth.getCurrentUser().getEmail());
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()){
-                    for (QueryDocumentSnapshot doc : task.getResult()){
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
                         newlist.add(doc.toObject(Review.class));
                     }
                     usersReviews.addAll(newlist);
-                    adapter.notifyDataSetChanged();
+                    adapterReviews.notifyDataSetChanged();
+                    TextView reviews_num = getActivity().findViewById(R.id.recommendations);
+                    reviews_num.setText(Integer.toString(usersReviews.size()));
+                }
+            }
+        });
+    }
+
+    private void getUserWishList() {
+        final List<WishList> newlist = new ArrayList<>();
+        FirebaseUser mUser = mAuth.getCurrentUser();
+        CollectionReference collection = db.collection("Wishlist");
+        Query query = collection.whereEqualTo("user_email", mAuth.getCurrentUser().getEmail());
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                        newlist.add(doc.toObject(WishList.class));
+                    }
+                    usersWishList.addAll(newlist);
+                    adapterWishList.notifyDataSetChanged();
 
                 }
             }

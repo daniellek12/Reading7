@@ -5,6 +5,9 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.reading7.Book;
@@ -17,51 +20,94 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder> {
+public class SearchAdapter extends BaseAdapter implements Filterable {
 
     private ArrayList<Book> books;
+    private ArrayList<Book> original;
     private Context mContext;
 
 
-    public SearchAdapter(Context context, ArrayList<Book> books){
+    public SearchAdapter(Context context, ArrayList<Book> books) {
 
         this.books = books;
         this.mContext = context;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    @Override
+    public int getCount() {
+        return books.size();
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return books.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+
+    public class ViewHolder {
 
         CircleImageView cover;
         TextView title;
+    }
 
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
+    public Filter getFilter() {
+        return new Filter() {
 
-            cover = itemView.findViewById(R.id.coverImage);
-            title = itemView.findViewById(R.id.title);
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                final FilterResults oReturn = new FilterResults();
+                final ArrayList<Book> results = new ArrayList<Book>();
+                if (original == null)
+                    original = books;
+                if (constraint != null) {
+                    if (original != null && original.size() > 0) {
+                        for (final Book book : original) {
+                            if (book.getTitle().contains(constraint.toString()))
+                                results.add(book);
+                        }
+                    }
+                    oReturn.values = results;
+                }
+                return oReturn;
+            }
+
+            @SuppressWarnings("unchecked")
+            @Override
+            protected void publishResults(CharSequence constraint,
+                                          FilterResults results) {
+                books = (ArrayList<Book>) results.values;
+                notifyDataSetChanged();
+            }
+        };
+    }
+
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+
+        ViewHolder holder;
+        if (convertView == null) {
+
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.search_item, parent, false);
+            holder = new ViewHolder();
+            holder.title = convertView.findViewById(R.id.title);
+            holder.cover = convertView.findViewById(R.id.cover);
+            convertView.setTag(holder);
+
+        } else {
+            holder = (ViewHolder) convertView.getTag();
         }
-    }
 
-    @NonNull
-    @Override
-    public SearchAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        holder.title.setText(books.get(position).getTitle());
+        Utils.showImage(books.get(position).getTitle(), holder.cover, (Activity) mContext);
 
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.search_item, viewGroup, false);
-        return new SearchAdapter.ViewHolder(view);
-    }
+        return convertView;
 
-
-    @Override
-    public void onBindViewHolder(@NonNull SearchAdapter.ViewHolder viewHolder, int i) {
-
-        Book book = books.get(i);
-        Utils.showImage(book.getTitle(), viewHolder.cover, (Activity)mContext);
-        viewHolder.title.setText(book.getTitle());
-    }
-
-    @Override
-    public int getItemCount() {
-        return books.size();
     }
 
 }

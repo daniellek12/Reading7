@@ -9,202 +9,305 @@
     app:cardElevation="0dp"
     android:layoutDirection="rtl">
 
-
-    <View
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="15dp"
-        android:background="@color/colorPrimaryDark"/>
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/profile_background">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="15dp"
+            android:background="@color/colorPrimaryDark"/>
 
 
 
-    <ImageView
-        android:id="@+id/coverImage"
-        android:layout_width="wrap_content"
-        android:layout_height="200dp"
-        android:background="@drawable/yellow_books_background"
-        android:scaleType="centerInside"
-        app:srcCompat="@mipmap/cover2"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp" />
-
-    <TextView
-        android:id="@+id/book_name"
-        android:text="הארי פוטר ואבן החכמים"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/coverImage"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="8dp"
-        android:elevation="2dp"
-        android:stepSize=".5"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        android:textSize="20sp" />
-
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_alignBottom="@+id/coverImage"
-        android:layout_centerHorizontal="true"
-        android:alpha="0.8"
-        app:srcCompat="@color/white" />
-
-    <TextView
-        android:id="@+id/genres"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/imageView2"
-        android:text="נוער, פנטזיה"
-        android:layout_marginTop="10dp"
-        android:gravity="center"/>
-
-    <RatingBar
-        android:id="@+id/ratingBar"
-        style="@style/Widget.AppCompat.RatingBar.Indicator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/genres"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="2dp"
-        android:progressTint="@color/gold"
-        android:secondaryProgressTint="@color/gold2"
-        android:indeterminateTint="@color/gold2"
-        android:elevation="5dp"
-        android:stepSize=".5"
-        android:scaleX=".7"
-        android:scaleY=".7"
-        android:rating="3.5"/>
-
-    <LinearLayout
-        android:id="@+id/author_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_below="@id/ratingBar"
-        android:layout_marginTop="5dp"
-        android:layout_marginRight="15dp"
-        android:layout_alignParentRight="true"
-        android:layoutDirection="rtl">
+        <ImageView
+            android:id="@+id/coverImage"
+            android:layout_width="wrap_content"
+            android:layout_height="200dp"
+            android:background="@drawable/yellow_books_background"
+            android:scaleType="centerInside"
+            app:srcCompat="@mipmap/cover2"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp" />
 
         <TextView
-            android:id="@+id/author"
-            android:layout_width="0dp"
+            android:id="@+id/book_name"
+            android:text="הארי פוטר ואבן החכמים"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/coverImage"
             android:layout_centerHorizontal="true"
-            android:layout_weight="1"
-            android:textColor="@color/darkGrey"
-            android:textSize="14sp"
+            android:layout_marginBottom="8dp"
+            android:elevation="2dp"
+            android:stepSize=".5"
+            android:textColor="@color/black"
             android:textStyle="bold"
-            android:text="הסופר:"/>
+            android:textSize="20sp" />
 
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_alignBottom="@+id/coverImage"
+            android:layout_centerHorizontal="true"
+            android:alpha="0.8"
+            app:srcCompat="@color/white" />
 
         <TextView
-            android:id="@+id/author_field"
-            android:layout_width="0dp"
+            android:id="@+id/genres"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:layout_centerHorizontal="true"
-            android:textColor="@color/darkGrey"
-            android:textSize="14sp"
-            android:text="ג'יי קיי רולינג"/>
+            android:layout_below="@id/imageView2"
+            android:text="נוער, פנטזיה"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="25dp"
+            android:gravity="right"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@id/coverImage"
+            android:gravity="left"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="15dp">
+
+        <LinearLayout
+            android:id="@+id/like"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layoutDirection="rtl"
+            android:orientation="vertical"
+            android:gravity="left"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="15dp"
+            android:layout_below="@id/coverImage">
+
+            <ImageButton
+                android:id="@+id/button_wishlist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/heart_red_28dp"
+                android:background="@color/white"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="בא לי לקרוא"/>
 
         </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/publisher_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_below="@id/author_layout"
-        android:layout_marginTop="7dp"
-        android:layout_marginRight="15dp"
-        android:layout_alignParentRight="true"
-        android:layoutDirection="rtl">
-
-        <TextView
-            android:id="@+id/publisher"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_weight="1"
-            android:textColor="@color/darkGrey"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:text="הוצאה:"/>
+            android:layoutDirection="rtl"
+            android:orientation="vertical"
+            android:layout_marginLeft="15dp"
+            android:layout_toRightOf="@+id/like"
+            android:layout_marginRight="5dp"
+            android:layout_below="@id/coverImage">
 
+            <ImageButton
+                android:id="@+id/button_read"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/star_black_28dp"
+                android:background="@color/white"/>
 
-        <TextView
-            android:id="@+id/publisher_field"
-            android:layout_width="0dp"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="קראתי"/>
+
+        </LinearLayout>
+
+        </LinearLayout>
+
+        <RatingBar
+            android:id="@+id/ratingBar"
+            style="@style/Widget.AppCompat.RatingBar.Indicator"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:layout_centerHorizontal="true"
-            android:textColor="@color/darkGrey"
-            android:textSize="14sp"
-            android:text="פרוזה"/>
+            android:layout_below="@+id/genres"
+            android:layout_marginTop="2dp"
+            android:progressTint="@color/gold"
+            android:secondaryProgressTint="@color/gold2"
+            android:indeterminateTint="@color/gold2"
+            android:elevation="5dp"
+            android:stepSize=".5"
+            android:scaleX=".7"
+            android:scaleY=".7"
+            android:rating="3.5"
+            android:layout_alignParentRight="true" />
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/pages_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_below="@id/publisher_layout"
-        android:layout_marginTop="7dp"
-        android:layout_marginRight="15dp"
-        android:layout_alignParentRight="true"
-        android:layoutDirection="rtl">
-
-        <TextView
-            android:id="@+id/pages"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:id="@+id/author_layout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_weight="1"
-            android:textColor="@color/darkGrey"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:text="מספר עמודים:"/>
+            android:orientation="horizontal"
+            android:layout_below="@id/ratingBar"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="15dp"
+            android:layout_alignParentRight="true"
+            android:layoutDirection="rtl">
+
+            <TextView
+                android:id="@+id/author"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_weight="1"
+                android:textColor="@color/darkGrey"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:text="הסופר:"/>
 
 
-        <TextView
-            android:id="@+id/pages_field"
-            android:layout_width="0dp"
+            <TextView
+                android:id="@+id/author_field"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:layout_centerHorizontal="true"
+                android:textColor="@color/darkGrey"
+                android:textSize="14sp"
+                android:text="ג'יי קיי רולינג"/>
+
+            </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/publisher_layout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:layout_centerHorizontal="true"
-            android:textColor="@color/darkGrey"
-            android:textSize="14sp"
-            android:text="318"/>
+            android:orientation="horizontal"
+            android:layout_below="@id/author_layout"
+            android:layout_marginTop="7dp"
+            android:layout_marginRight="15dp"
+            android:layout_alignParentRight="true"
+            android:layoutDirection="rtl">
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/publisher"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_weight="1"
+                android:textColor="@color/darkGrey"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:text="הוצאה:"/>
 
-    <View
-        android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@id/pages_layout"
-        android:layout_marginTop="10dp"
-        android:background="@color/colorPrimary" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/reviews"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:paddingBottom="2dp"
-        android:layout_below="@id/pages_layout"
-        android:layout_marginTop="10dp"
-        android:background="@color/colorPrimaryDark"
-        android:elevation="10dp" />
+            <TextView
+                android:id="@+id/publisher_field"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:layout_centerHorizontal="true"
+                android:textColor="@color/darkGrey"
+                android:textSize="14sp"
+                android:text="פרוזה"/>
 
-    <Button
-        android:id="@+id/button_read"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="קראתי"
-        />
+        </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/pages_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@id/publisher_layout"
+            android:layout_marginTop="7dp"
+            android:layout_marginRight="15dp"
+            android:layout_alignParentRight="true"
+            android:layoutDirection="rtl">
+
+            <TextView
+                android:id="@+id/pages"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_weight="1"
+                android:textColor="@color/darkGrey"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:text="מספר עמודים:"/>
+
+
+            <TextView
+                android:id="@+id/pages_field"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:layout_centerHorizontal="true"
+                android:textColor="@color/darkGrey"
+                android:textSize="14sp"
+                android:text="318"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/summary_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@id/pages_layout"
+            android:layout_marginTop="7dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_alignParentRight="true"
+            android:layoutDirection="rtl">
+
+            <TextView
+                android:id="@+id/summary"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:layoutDirection="rtl"
+                android:layout_weight="8"
+                android:text="המזון שאנו אוכלים אמור לספק לגוף האדם את רוב הויטמינים החיוניים להתפתחותו ולשמירה על בריאותו. במציאות של החיים
+המודרניים דרישת הגוף לויטמינים נחוצה יותר בשל החשיפה למזהמים סביבתיים שלא היו בעבר ובשל תזונה לא מאוזנת. לדוגמה:
+רתמת זיהום האוויר מעשן כלי התחבורה, כגון מכוניות, משאיות ואופנועים, גדלה בכל שנה יותר ויותר. גם קרינה סלולרית מוג ב
+רת מטלפונים אלחוטיים שלא היו בעבר וקרינה אלקטרומגנטית מאנטנות הנמצאות כמעט בכל מקום אפשרי בארצנו מגבירות את
+רמת זיהום האוויר ופוגעים בבריאותנו. דוגמה אחרת היא עשן הסיגריות והפסולת שאנו משליכים ליד ביתנו."/>
+
+            <ImageButton
+                android:id="@+id/summary_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/arrow_drop_down"
+                android:background="@color/white"
+                android:paddingVertical="10dp"/>
+
+        </LinearLayout>
+
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/summary_layout"
+            android:layout_marginTop="10dp"
+            android:background="@color/colorPrimary" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/reviews"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:layout_below="@id/summary_layout"
+            android:layout_marginTop="10dp"
+            android:background="@color/colorPrimaryDark"
+            android:elevation="10dp" />
+
+        </RelativeLayout>
+    </androidx.core.widget.NestedScrollView>
 </RelativeLayout>
