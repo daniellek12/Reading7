@@ -73,17 +73,6 @@
                     android:textColor="@color/lightGrey"
                     android:textSize="14sp" />
 
-                <TextView
-                    android:id="@+id/school"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginRight="5dp"
-                    android:gravity="center"
-                    android:text="מתיכון הדרים, פתח תקווה"
-                    android:textColor="@color/lightGrey"
-                    android:textSize="14sp" />
-
             </LinearLayout>
 
             <Button
@@ -98,19 +87,6 @@
                 android:textColor="@color/white"
                 android:textSize="18sp" />
 
-<!--            <Button-->
-<!--                android:id="@+id/unfollow"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="35dp"-->
-<!--                android:layout_below="@+id/profileDetails"-->
-<!--                android:layout_centerHorizontal="true"-->
-<!--                android:layout_marginTop="15dp"-->
-<!--                android:background="@drawable/rounded_button"-->
-<!--                android:backgroundTint="@color/colorPrimary"-->
-<!--                android:text="@string/unfollow_button"-->
-<!--                android:textColor="@color/white"-->
-<!--                android:textSize="18sp"-->
-<!--                android:visibility="gone" />-->
 
             <LinearLayout
                 android:id="@+id/countersLayout"
@@ -368,15 +344,6 @@
                 android:text="@string/my_wishlist"
                 android:textColor="@color/colorAccent" />
 
-            <TextView
-                android:id="@+id/wishlistTitle2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/divider1"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="20dp"
-                android:text="@string/edit"
-                android:textColor="@color/darkGrey" />
 
 
             <androidx.recyclerview.widget.RecyclerView
@@ -413,15 +380,6 @@
                 android:text="@string/my_books"
                 android:textColor="@color/colorAccent" />
 
-            <TextView
-                android:id="@+id/mybooksTitle2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/divider2"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="20dp"
-                android:text="@string/edit"
-                android:textColor="@color/darkGrey" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/myBooksRV"

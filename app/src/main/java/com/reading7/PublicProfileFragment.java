@@ -54,11 +54,9 @@ public class PublicProfileFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         getUserInformation();
         initWishlist();
         initMyBookslist();
-
     }
 
     public void setUser(String user_email) {
