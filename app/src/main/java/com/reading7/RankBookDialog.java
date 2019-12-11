@@ -44,6 +44,8 @@ public class RankBookDialog extends AppCompatDialogFragment {
         super.onCreateDialog(savedInstanceState);
         final String book_id = getArguments().getString("book_id");
         final String book_title = getArguments().getString("book_title");
+        final float currAvg = getArguments().getFloat("avg");
+        final int numOfRaters = getArguments().getInt("countRaters");
 
 
         db = FirebaseFirestore.getInstance();
@@ -81,6 +83,8 @@ public class RankBookDialog extends AppCompatDialogFragment {
                 final int rank = (int) rateStar.getRating();
                 final String review_title = titleText.getText().toString();
                 final String review_content = contentText.getText().toString();
+                final float newAvg =  ((numOfRaters*currAvg)+rank)/(numOfRaters+1);
+
 
                 CollectionReference requestCollectionRef = db.collection("Users");
                 Query requestQuery = requestCollectionRef.whereEqualTo("email",mAuth.getCurrentUser().getEmail());
@@ -104,7 +108,7 @@ public class RankBookDialog extends AppCompatDialogFragment {
                                                                             @Override
                                                                             public void onComplete(@NonNull Task<Void> task) {
                                                                                 if (task.isSuccessful()) {
-                                                                                    //getBookReviews();
+                                                                                    UpdateBook(newAvg,book_id);
                                                                                 }
 
                                                                             }
@@ -119,7 +123,7 @@ public class RankBookDialog extends AppCompatDialogFragment {
                         else{
 
                             DocumentReference ref = db.collection("Reviews").document(mReview.getReview_id());
-                            Map<String, Object> updates = new HashMap<String,Object>();
+                            final Map<String, Object> updates = new HashMap<String,Object>();
 
                             updates.put("rank", rank);
                             updates.put("review_title",review_title);
@@ -128,7 +132,7 @@ public class RankBookDialog extends AppCompatDialogFragment {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if(task.isSuccessful()){
-
+                                        UpdateBook(newAvg,book_id);
                                     }
                                 }
                             });
@@ -144,5 +148,22 @@ public class RankBookDialog extends AppCompatDialogFragment {
 
         return builder.create();
     }
+
+    public void UpdateBook(final float newAvg,String book_id){
+
+        DocumentReference ref = db.collection("Books").document(book_id);
+        final Map<String, Object> updates = new HashMap<String,Object>();
+
+
+        ref.update("avg_rating",newAvg).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+
+                }
+            }
+        });
+    }
+
 
 }
