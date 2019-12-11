@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,6 +73,8 @@ public class BookFragment extends Fragment {
                 Bundle args = new Bundle();
                 args.putString("book_id",mBook.getId() );
                 args.putString("book_title",mBook.getTitle());
+                args.putFloat("avg", mBook.getAvg_rating());
+                args.putInt("countRaters", lstReviews.size());
 
                 dialog.setArguments(args);
                 dialog.show(getActivity().getSupportFragmentManager(), "example dialog");
@@ -112,20 +115,12 @@ public class BookFragment extends Fragment {
                         }
                     }
                 });
-            }
-        });
-
-        final ImageButton openSummaryBtn = mActivity.findViewById(R.id.summary_button);
-        openSummaryBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                TextView mSummary = mActivity.findViewById(R.id.summary);
-                mSummary.setMaxLines(Integer.MAX_VALUE);
-                mSummary.setEllipsize(null);
+                Toast.makeText(getActivity(), "הספר נוסף לרשימת המשאלות שלי", Toast.LENGTH_SHORT).show();
             }
         });
 
         lstReviews= new ArrayList<>();
+        initOpenSummary();
         initReviews();
         getBookInformation();
         getBookReviews();
@@ -155,6 +150,45 @@ public class BookFragment extends Fragment {
                     adapter.notifyDataSetChanged();
 
 
+                }
+            }
+        });
+    }
+
+    private void initOpenSummary(){
+
+        final ImageButton openSummaryBtn = mActivity.findViewById(R.id.summary_button);
+        openSummaryBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TextView mSummary = mActivity.findViewById(R.id.summary);
+                if (mSummary.getEllipsize() == TextUtils.TruncateAt.END){
+                    mSummary.setMaxLines(Integer.MAX_VALUE);
+                    mSummary.setEllipsize(null);
+                    openSummaryBtn.setImageResource(R.drawable.arrow_drop_up);
+                }
+                else if (mSummary.getEllipsize() == null){
+                    mSummary.setMaxLines(2);
+                    mSummary.setEllipsize(TextUtils.TruncateAt.END);
+                    openSummaryBtn.setImageResource(R.drawable.arrow_drop_down);
+                }
+            }
+        });
+
+        final TextView mSummary = mActivity.findViewById(R.id.summary);
+        mSummary.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TextView mSummary = mActivity.findViewById(R.id.summary);
+                if (mSummary.getEllipsize() == TextUtils.TruncateAt.END){
+                    mSummary.setMaxLines(Integer.MAX_VALUE);
+                    mSummary.setEllipsize(null);
+                    openSummaryBtn.setImageResource(R.drawable.arrow_drop_up);
+                }
+                else if (mSummary.getEllipsize() == null){
+                    mSummary.setMaxLines(2);
+                    mSummary.setEllipsize(TextUtils.TruncateAt.END);
+                    openSummaryBtn.setImageResource(R.drawable.arrow_drop_down);
                 }
             }
         });
@@ -203,6 +237,9 @@ public class BookFragment extends Fragment {
 
         ImageView coverImage = (ImageView) getActivity().findViewById(R.id.coverImage);
         Utils.showImage(mBook.getTitle(),coverImage,getActivity());
+
+        TextView textViewSummary = (TextView)getActivity().findViewById(R.id.summary);
+        textViewSummary.setText(mBook.getDescription());
     }
 
 

@@ -72,6 +72,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_below="@id/coverImage"
+            android:layout_marginTop="7dp"
             android:gravity="left"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="15dp">
@@ -272,11 +273,7 @@
                 android:layout_marginTop="7dp"
                 android:layoutDirection="rtl"
                 android:layout_weight="8"
-                android:text="המזון שאנו אוכלים אמור לספק לגוף האדם את רוב הויטמינים החיוניים להתפתחותו ולשמירה על בריאותו. במציאות של החיים
-המודרניים דרישת הגוף לויטמינים נחוצה יותר בשל החשיפה למזהמים סביבתיים שלא היו בעבר ובשל תזונה לא מאוזנת. לדוגמה:
-רתמת זיהום האוויר מעשן כלי התחבורה, כגון מכוניות, משאיות ואופנועים, גדלה בכל שנה יותר ויותר. גם קרינה סלולרית מוג ב
-רת מטלפונים אלחוטיים שלא היו בעבר וקרינה אלקטרומגנטית מאנטנות הנמצאות כמעט בכל מקום אפשרי בארצנו מגבירות את
-רמת זיהום האוויר ופוגעים בבריאותנו. דוגמה אחרת היא עשן הסיגריות והפסולת שאנו משליכים ליד ביתנו."/>
+                android:clickable="true"/>
 
             <ImageButton
                 android:id="@+id/summary_button"

@@ -33,6 +33,7 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
         this.mContext = context;
     }
 
+
     @Override
     public int getCount() {
         return books.size();
@@ -54,6 +55,7 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
         CircleImageView cover;
         TextView title;
     }
+
 
     public Filter getFilter() {
         return new Filter() {
@@ -107,7 +109,6 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
         Utils.showImage(books.get(position).getTitle(), holder.cover, (Activity) mContext);
 
         return convertView;
-
     }
 
 }

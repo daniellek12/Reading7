@@ -65,6 +65,7 @@ public class ExploreFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 ((MainActivity)getActivity()).loadFragment(new SearchFragment());
+                Utils.openKeyboard(getContext());
             }
         });
 

@@ -16,7 +16,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.reading7.Adapters.SearchAdapter;
@@ -67,7 +66,7 @@ public class SearchFragment extends Fragment implements androidx.appcompat.widge
         searchView.setIconifiedByDefault(false);
         searchView.requestFocus();
 
-        Utils.openKeyboard(getContext());
+        //Utils.openKeyboard(getContext());
 
         //remove underline
         View v = getActivity().findViewById(androidx.appcompat.R.id.search_plate);
