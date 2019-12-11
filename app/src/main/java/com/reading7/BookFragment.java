@@ -24,13 +24,18 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.reading7.Adapters.FeedAdapter;
 import com.reading7.Adapters.ReviewListAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.reading7.Utils.calculateAge;
 
@@ -41,6 +46,8 @@ public class BookFragment extends Fragment {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private Book mBook;
+    private List<Review>lstReviews;
+    private ReviewListAdapter adapter;
 
 
     @Override
@@ -69,8 +76,10 @@ public class BookFragment extends Fragment {
 
             }
         });
+        lstReviews= new ArrayList<>();
         initReviews();
         getBookInformation();
+        getBookReviews();
     }
 
     public Book getBook() {
@@ -80,23 +89,36 @@ public class BookFragment extends Fragment {
     public void setBook(Book Book) {
         this.mBook = Book;
     }
-    private ArrayList<String> getReviews() {
-        ArrayList<String> reviews = new ArrayList<>();
 
-        //reviews.add(new Review("רותם סלע", (float)5, "11.06.19", "אחד הטובים שקראתי! מומלץ בטירוף!!"));
-        //reviews.add(new Review("משה פרץ", (float)3.5, "11.12.18", "סביר פלוס עם סוף מפתיע"));
-        //reviews.add(new Review("רוני דלומי", (float)1, "11.06.18", "וואלה לא משהו, הייתי רוצה שהסופר יפרט יותר בחלק מהקטעים..."));
-        //reviews.add(new Review("עומר אדם", (float)4.5, "11.12.17", "אחד הטובים שקראתי! מומלץ בטירוף!!"));
+    private void getBookReviews() {
+        final List<Review> newlist = new ArrayList<Review>();
+        CollectionReference collection =  db.collection("Reviews");
+        Query query = collection.whereEqualTo("book_id", mBook.getId());
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for (QueryDocumentSnapshot doc : task.getResult()){
+                        newlist.add(doc.toObject(Review.class));
+                    }
 
-        return reviews;
+                    lstReviews.addAll(newlist);
+                    adapter.notifyDataSetChanged();
+
+
+                }
+            }
+        });
     }
+
+
 
     private void initReviews() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL,false);
         RecyclerView postsRV = getActivity().findViewById(R.id.reviews);
         postsRV.setLayoutManager(layoutManager);
-        //ReviewListAdapter adapter = new ReviewListAdapter(getActivity(), getReviews());
-        //postsRV.setAdapter(adapter);
+        adapter = new ReviewListAdapter(getActivity(),lstReviews);
+        postsRV.setAdapter(adapter);
 
     }
 

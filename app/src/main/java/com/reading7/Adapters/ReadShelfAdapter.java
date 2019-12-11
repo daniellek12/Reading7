@@ -12,18 +12,19 @@ import com.reading7.Review;
 import com.reading7.Utils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class ReadShelfAdapter extends RecyclerView.Adapter<ReadShelfAdapter.ViewHolder> {
 
-    private ArrayList<Review> usersReviews;
+    private List<Review> usersReviews;
     private Context mContext;
     private Activity currentActivity;
 
 
-    public ReadShelfAdapter(ArrayList<Review> reviews, Activity activity){
+    public ReadShelfAdapter(List<Review> reviews, Activity activity){
         this.usersReviews = reviews;
         this.mContext = activity.getApplicationContext();
         this.currentActivity = activity;

@@ -17,14 +17,18 @@ import com.reading7.HomeFragment;
 import com.reading7.R;
 import com.reading7.Review;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.ViewHolder> {
 
-    ArrayList<Review> reviews; //TODO: should be the actual Review class
+    List<Review> reviews; //TODO: should be the actual Review class
     Context mContext;
 
-    public ReviewListAdapter(Context context, ArrayList<Review> reviews) {
+    public ReviewListAdapter(Context context, List<Review> reviews) {
         this.reviews = reviews;
         this.mContext = context;
     }
@@ -42,7 +46,11 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
         Review review = reviews.get(i);
         viewHolder.ratingBar.setRating(review.getRank());
         viewHolder.userName.setText(review.getReviewer_name());
-        viewHolder.postTime.setText(review.getReview_time().toString());
+        Date date = review.getReview_time().toDate();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm");
+        String strDate = dateFormat.format(date);
+
+        viewHolder.postTime.setText(strDate);
         viewHolder.reviewContent.setText((review.getReview_content()));
     }
 
