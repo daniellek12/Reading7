@@ -127,7 +127,13 @@ public class RankBookDialog extends AppCompatDialogFragment {
                             updates.put("rank", rank);
                             updates.put("review_title",review_title);
                             updates.put("review_content",review_content);
-                            final float newAvg =  ((numOfRaters*currAvg)+rank-mReview.getRank())/(numOfRaters);
+                            final float newAvg;
+                            if (numOfRaters == 0){
+                                newAvg = 0;
+                            }
+                            else{
+                                newAvg =  ((numOfRaters*currAvg)+rank-mReview.getRank())/(numOfRaters);
+                            }
 
                                 ref.update(updates).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
