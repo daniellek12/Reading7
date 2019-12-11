@@ -83,7 +83,6 @@ public class RankBookDialog extends AppCompatDialogFragment {
                 final int rank = (int) rateStar.getRating();
                 final String review_title = titleText.getText().toString();
                 final String review_content = contentText.getText().toString();
-                final float newAvg =  ((numOfRaters*currAvg)+rank)/(numOfRaters+1);
 
 
                 CollectionReference requestCollectionRef = db.collection("Users");
@@ -103,8 +102,8 @@ public class RankBookDialog extends AppCompatDialogFragment {
 
                             mReview = new Review("", book_id, mAuth.getCurrentUser().getEmail(), rank, review_title, review_content, Timestamp.now(), user.getFull_name(), book_title);
                             mReview.setReview_id(newReview.getId());
-
-                            newReview.set(mReview).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            final float newAvg =  ((numOfRaters*currAvg)+rank)/(numOfRaters+1);
+                                newReview.set(mReview).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                             @Override
                                                                             public void onComplete(@NonNull Task<Void> task) {
                                                                                 if (task.isSuccessful()) {
@@ -128,7 +127,9 @@ public class RankBookDialog extends AppCompatDialogFragment {
                             updates.put("rank", rank);
                             updates.put("review_title",review_title);
                             updates.put("review_content",review_content);
-                            ref.update(updates).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            final float newAvg =  ((numOfRaters*currAvg)+rank-mReview.getRank())/(numOfRaters);
+
+                                ref.update(updates).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if(task.isSuccessful()){
