@@ -21,6 +21,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.reading7.Adapters.ReadShelfAdapter;
+import com.reading7.Adapters.WishListAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,9 +39,9 @@ public class ProfileFragment extends Fragment {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private List<Review> usersReviews;
-    private List<Review> usersWishList;
+    private List<WishList> usersWishList;
     private ReadShelfAdapter adapterReviews;
-    private ReadShelfAdapter adapterWishList;
+    private WishListAdapter adapterWishList;
 
     private User curr_user;
 
@@ -142,7 +143,7 @@ public class ProfileFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         RecyclerView wishlistRV = getActivity().findViewById(R.id.wishlistRV);
         wishlistRV.setLayoutManager(layoutManager);
-        adapterWishList = new ReadShelfAdapter(usersWishList, getActivity());
+        adapterWishList = new WishListAdapter(usersWishList, getActivity());
         wishlistRV.setAdapter(adapterWishList);
     }
 
@@ -223,16 +224,16 @@ public class ProfileFragment extends Fragment {
     }
 
     private void getUserWishList() {
-        final List<Review> newlist = new ArrayList<>();
+        final List<WishList> newlist = new ArrayList<>();
         FirebaseUser mUser = mAuth.getCurrentUser();
         CollectionReference collection = db.collection("Wishlist");
-        Query query = collection.whereEqualTo("reviewer_email", mAuth.getCurrentUser().getEmail());
+        Query query = collection.whereEqualTo("user_email", mAuth.getCurrentUser().getEmail());
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot doc : task.getResult()) {
-                        newlist.add(doc.toObject(Review.class));
+                        newlist.add(doc.toObject(WishList.class));
                     }
                     usersWishList.addAll(newlist);
                     adapterWishList.notifyDataSetChanged();
