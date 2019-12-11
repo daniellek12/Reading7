@@ -239,7 +239,7 @@ public class PublicProfileFragment extends Fragment {
     private void getUserReviews() {
         FirebaseUser mUser = mAuth.getCurrentUser();
         CollectionReference collection = db.collection("Reviews");
-        Query query = collection.whereEqualTo("reviwer_email", mUser.getEmail());
+        Query query = collection.whereEqualTo("reviewer_email", mUser.getEmail());
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
