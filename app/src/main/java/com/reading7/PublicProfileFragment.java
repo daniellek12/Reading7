@@ -87,7 +87,7 @@ public class PublicProfileFragment extends Fragment {
                         ArrayList<String> following = (ArrayList<String>) document.getData().get("following");
                         ((TextView) getActivity().findViewById(R.id.following)).setText(Integer.toString(following.size()));
 
-                        Book[] favouriteBooks = (Book[]) document.getData().get("favourite_books");
+                        ArrayList<String> favouriteBooks = (ArrayList<String>) document.getData().get("favourite_books");
 
                         ArrayList<String> lastSearches = (ArrayList<String>) document.getData().get("last_searches");
 
