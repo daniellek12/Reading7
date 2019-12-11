@@ -186,7 +186,25 @@ public class PublicProfileFragment extends Fragment {
                     userRef = db.collection("Users").document(user.getEmail());
                     userRef.update("followers", FieldValue.arrayRemove(user_me.getEmail()));
                 }
+                //update screen correctly!
+                DocumentReference userRef = db.collection("Users").document(user.getEmail());
 
+                userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+
+                                ArrayList<String> followers = (ArrayList<String>) document.getData().get("followers");
+                                ((TextView) getActivity().findViewById(R.id.followers)).setText(Integer.toString(followers.size()));
+
+                            } else
+                                Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        } else
+                            Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
     }
