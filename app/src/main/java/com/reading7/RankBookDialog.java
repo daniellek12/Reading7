@@ -21,8 +21,12 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -51,32 +55,44 @@ public class RankBookDialog extends AppCompatDialogFragment {
         builder.setView(view).setPositiveButton("הוסף ביקורת", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                int rank = (int) rateStar.getRating();
-                String review_title = titleText.getText().toString();
-                String review_content = contentText.getText().toString();
-                Review review = new Review("", book_id, mAuth.getCurrentUser().getEmail(), rank, review_title, review_content, Timestamp.now(), mAuth.getCurrentUser().getDisplayName(), book_title);
-                DocumentReference newReview = db.collection("Reviews").document();
-                review.setReview_id(newReview.getId());
-                newReview.set(review).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                @Override
-                                                                public void onComplete(@NonNull Task<Void> task) {
-                                                                    if (task.isSuccessful()) {
+                final int rank = (int) rateStar.getRating();
+                final String review_title = titleText.getText().toString();
+                final String review_content = contentText.getText().toString();
 
-                                                                    }
-
-                                                                }
-
-
-
-                                                            }
+                CollectionReference requestCollectionRef = db.collection("Users");
+                Query requestQuery = requestCollectionRef.whereEqualTo("email",mAuth.getCurrentUser().getEmail());
+                requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            User user = new User();
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                user = document.toObject(User.class);
+                            }
 
 
-                );
+                            Review review = new Review("", book_id, mAuth.getCurrentUser().getEmail(), rank, review_title, review_content, Timestamp.now(), user.getFull_name(), book_title);
+                            DocumentReference newReview = db.collection("Reviews").document();
+                            review.setReview_id(newReview.getId());
+                            newReview.set(review).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                            @Override
+                                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                                if (task.isSuccessful()) {
+                                                                                    //getBookReviews();
+                                                                                }
+
+                                                                            }
 
 
+                                                                        }
 
-            }
-        }).setNegativeButton("בטל", new DialogInterface.OnClickListener() {
+
+                            );
+
+
+                        }
+                    }
+        });}}).setNegativeButton("בטל", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 

@@ -31,6 +31,7 @@ public class Review implements Comparable {
         this.likes_count = likes_count;
     }
 
+    public Review(){}
     public Review(String review_id, String book_id, String reviewer_email, int rank, String review_title, String review_content, Timestamp review_time, String reviewer_name, String book_title) {
         this.review_id = review_id;
         this.book_id = book_id;
