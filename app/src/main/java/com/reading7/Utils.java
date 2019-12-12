@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
+import android.text.TextUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -125,7 +126,6 @@ public class Utils {
 
     //use this when you want to load image of book to imageView, image_id is the name of the file in
     //firebase storage, view is where you want to load the image, activity pass the current activity-probably this
-    @RequiresApi(api = Build.VERSION_CODES.O)//TODO is it OK? (Rotem)
     public static String convertTitle(String t){
         int l = t.length();
         String[] r = new String[l];
@@ -133,9 +133,8 @@ public class Utils {
             char c = t.charAt(i);
             r[i] = Integer.toString((int)c);
         }
-        return String.join(" ", r);
+        return TextUtils.join(" ", r);
     }
-    @RequiresApi(api = Build.VERSION_CODES.O)
     public static void showImage(String imageFileName, final ImageView view, final Activity activity) {
         StorageReference mStorageRef;
         mStorageRef = FirebaseStorage.getInstance().getReference("images/" + convertTitle(imageFileName) + ".jpg");
