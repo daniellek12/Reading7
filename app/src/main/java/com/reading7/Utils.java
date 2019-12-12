@@ -3,12 +3,15 @@ package com.reading7;
 import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
+import android.os.Build;
+import android.text.TextUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -80,7 +83,7 @@ public class Utils {
                     genersarray = new ArrayList<String>(Arrays.asList(geners.split(", ", -1)));
                 }
             }
-
+            final String t = title;
 
             Book b = new Book("", title, genersarray, author, publisher, Integer.parseInt(num_pages), summary, 0, 0);
 
@@ -93,7 +96,7 @@ public class Utils {
                         //Toast.makeText(LoginActivity, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
 
                     } else {
-
+                        throw new AssertionError(t);
                     }
 
                 }
@@ -123,9 +126,18 @@ public class Utils {
 
     //use this when you want to load image of book to imageView, image_id is the name of the file in
     //firebase storage, view is where you want to load the image, activity pass the current activity-probably this
+    public static String convertTitle(String t){
+        int l = t.length();
+        String[] r = new String[l];
+        for (int i = 0; i < l ; i++){
+            char c = t.charAt(i);
+            r[i] = Integer.toString((int)c);
+        }
+        return TextUtils.join(" ", r);
+    }
     public static void showImage(String imageFileName, final ImageView view, final Activity activity) {
         StorageReference mStorageRef;
-        mStorageRef = FirebaseStorage.getInstance().getReference("Images/" + imageFileName + ".jpg");
+        mStorageRef = FirebaseStorage.getInstance().getReference("images/" + convertTitle(imageFileName) + ".jpg");
 
         mStorageRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
             @Override

@@ -3,9 +3,12 @@ package com.reading7;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.DocumentsContract;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -22,8 +25,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.reading7.Adapters.AutoCompleteAdapter;
 import com.reading7.Adapters.QuestionnaireAdapter;
 import com.reading7.Adapters.SearchAdapter;
+
+import org.w3c.dom.Document;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +39,7 @@ public class QuestionnaireActivity extends AppCompatActivity {
     private ArrayList<MultiSpinner> list = new ArrayList<>();
     private ArrayList<Book> favourite_books = new ArrayList<>();
     private ArrayList<Book> books = new ArrayList<Book>();
-    ArrayAdapter<String> adapter;
+    AutoCompleteAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,13 +79,34 @@ public class QuestionnaireActivity extends AppCompatActivity {
                     Book book = document.toObject(Book.class);
                     books.add(book);
                 }
+                adapter = new AutoCompleteAdapter(QuestionnaireActivity.this, books);
+                AutoCompleteTextView edit_text = findViewById(R.id.auto_complete);
+                edit_text.setAdapter(adapter);
+                edit_text.setThreshold(1);
             }
         });
 
-        AutoCompleteTextView edit_text = findViewById(R.id.auto_complete);
-        final String[] books_arr = (String []) books.toArray();
-        edit_text.setAdapter(adapter);
-        edit_text.setThreshold(1);
+        final AutoCompleteTextView edit_text =(AutoCompleteTextView) findViewById(R.id.auto_complete);
+//        edit_text.getOnItemSelectedListener(new AdapterView.OnItemClickListener(){
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                String selectedItem;
+//                selectedItem = adapter.getItem(position).toString();
+//                CollectionReference collection = FirebaseFirestore.getInstance().collection("Books");
+//                Query query = collection.whereEqualTo("book_name", selectedItem);
+//                query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+////                        if(task.isSuccessful()){
+////                            for (QueryDocumentSnapshot document : task.getResult()) {
+////                                Book book = document.toObject(Book.class);
+////                                /* favourite_books.add(book); */
+////                            }
+////                        }
+//                    }
+//                });
+//            }
+//        });
 
 
 
@@ -108,6 +135,8 @@ public class QuestionnaireActivity extends AppCompatActivity {
         QuestionnaireAdapter myAdapter = new QuestionnaireAdapter(QuestionnaireActivity.this, 0,
                 list);
         spinner.setAdapter(myAdapter);
+
+
 
 
     }

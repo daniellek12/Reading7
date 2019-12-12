@@ -34,13 +34,15 @@
 
     <AutoCompleteTextView
         android:id="@+id/auto_complete"
-        android:layout_below="@id/questionnaire_title"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="בחר ספר מועדף"
-        android:completionThreshold="1"
+        android:layout_below="@id/questionnaire_title"
+        android:layout_centerHorizontal="true"
         android:completionHint="בחר ספר מועדף"
-        android:layout_centerHorizontal="true"/>
+        android:completionThreshold="1"
+        android:foregroundGravity="center"
+        android:gravity="center"
+        android:hint="בחר ספר מועדף" />
 
 
 

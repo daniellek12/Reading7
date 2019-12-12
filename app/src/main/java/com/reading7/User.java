@@ -125,4 +125,17 @@ public class User {
     public void setLiked_reviews(ArrayList<String> liked_reviews) {
         this.liked_reviews = liked_reviews;
     }
+<<<<<<< HEAD
+=======
+
+    public void remove_like(String id) {
+        this.liked_reviews.remove(id);
+    }
+
+    public void add_like(String id) {
+        this.liked_reviews.add(id);
+    }
+
+
+>>>>>>> fde1480fa0e3d8f850c926d079a3a862844501ea
 }

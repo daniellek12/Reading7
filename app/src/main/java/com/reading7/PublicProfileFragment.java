@@ -74,7 +74,6 @@ public class PublicProfileFragment extends Fragment {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
 
-
                         String userName = document.getData().get("full_name").toString();
                         ((TextView) getActivity().findViewById(R.id.userName)).setText(userName);
 
@@ -101,7 +100,7 @@ public class PublicProfileFragment extends Fragment {
 
                         initFollowButton();
                     } else
-                        Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Account does not exist", Toast.LENGTH_SHORT).show();
                 } else
                     Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
             }
