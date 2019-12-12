@@ -68,35 +68,43 @@ public class HomeFragment extends Fragment {
                     if (document.exists()) {
                         ArrayList<String> following = (ArrayList<String>) document.getData().get("following");
                         CollectionReference collection = db.collection("Reviews");
-                        Query query = collection.whereIn("reviewer_email", following);
                         CollectionReference collection_wishlist = db.collection("Wishlist");
-                        final Query query_wishlist = collection_wishlist.whereIn("user_email", following);
 
-                        // now we have the reviews we wish to display in feed
-                        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    for (QueryDocumentSnapshot doc : task.getResult()) {
-                                        posts.add(new Post(doc.toObject(Review.class)));
+                        // FIXED BUG if the users has no following
+                        if (following.size() > 0) {
+                            Query query = collection.whereIn("reviewer_email", following);
+                            final Query query_wishlist = collection_wishlist.whereIn("user_email", following);
+
+                            // now we have the reviews we wish to display in feed
+                            query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        for (QueryDocumentSnapshot doc : task.getResult()) {
+                                            posts.add(new Post(doc.toObject(Review.class)));
+                                        }
                                     }
+                                    query_wishlist.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<QuerySnapshot> tasky) {
+                                            if (tasky.isSuccessful()) {
+                                                for (QueryDocumentSnapshot doc : tasky.getResult()) {
+                                                    posts.add(new Post(doc.toObject(WishList.class)));
+                                                }
+                                            }
+                                            Collections.sort(posts, new Post.SortByDate());
+                                            FeedAdapter adapter = new FeedAdapter(getActivity(), posts);
+                                            postsRV.setAdapter(adapter);
+                                        }
+                                    });
                                 }
-                                query_wishlist.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                   @Override
-                                   public void onComplete(@NonNull Task<QuerySnapshot> tasky) {
-                                       if (tasky.isSuccessful()) {
-                                           for (QueryDocumentSnapshot doc : tasky.getResult()) {
-                                               posts.add(new Post(doc.toObject(WishList.class)));
-                                           }
-                                       }
-                                       Collections.sort(posts, new Post.SortByDate());
-                                       FeedAdapter adapter = new FeedAdapter(getActivity(), posts);
-                                       postsRV.setAdapter(adapter);
-                                   }
-                               });
-                            }
-                        });
-                        // create posts according to reviews)
+                            });
+                            // create posts according to reviews)
+                        } else {
+                            FeedAdapter adapter = new FeedAdapter(getActivity(), posts);
+                            postsRV.setAdapter(adapter);
+                        }
+
                     }
                 }
             }
