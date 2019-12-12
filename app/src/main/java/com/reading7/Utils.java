@@ -138,7 +138,7 @@ public class Utils {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public static void showImage(String imageFileName, final ImageView view, final Activity activity) {
         StorageReference mStorageRef;
-        mStorageRef = FirebaseStorage.getInstance().getReference("Images/" + convertTitle(imageFileName) + ".jpg");
+        mStorageRef = FirebaseStorage.getInstance().getReference("images/" + convertTitle(imageFileName) + ".jpg");
 
         mStorageRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
             @Override
