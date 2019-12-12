@@ -1,7 +1,9 @@
 package com.reading7;
 
-import java.sql.Timestamp;
+import com.google.firebase.Timestamp;
+
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Random;
 
 
@@ -14,7 +16,7 @@ public class Post implements Comparable {
 
     //instead of using Polymorphism and dynamic cast,
     // i decided to save a lot more fields, because im afraid that dynamic cast will cause overhead
-    // i prefer to save a lot of data instead of getting slower performence.
+    // i prefer to save a lot of data instead of getting slower performance.
 
     //****Review****
     private String review_id;
@@ -58,38 +60,67 @@ public class Post implements Comparable {
 
 
 /*--------------------------Constructors--------------------*/
-public Post(String post_id, PostType type, Timestamp post_time, String review_id, String book_id, String reviewer_email, int rank,String review_title, String review_content, int likes_count, String reviewer_name, String book_title) {
-    this.post_id = post_id;
-    this.type = type;
-    this.post_time = post_time;
-    this.review_id = review_id;
-    this.book_id = book_id;
-    this.review_title = review_title;
-    this.reviewer_email = reviewer_email;
-    this.review_content = review_content;
-    this.likes_count = likes_count;
-    this.user_name = reviewer_name;
-    this.book_title = book_title;
-    this.rank =rank;
+//public Post(String post_id, PostType type, Timestamp post_time, String review_id, String book_id, String reviewer_email, int rank, String review_title, String review_content, int likes_count, String reviewer_name, String book_title) {
+//    this.post_id = post_id;
+//    this.type = type;
+//    this.post_time = post_time;
+//    this.review_id = review_id;
+//    this.book_id = book_id;
+//    this.review_title = review_title;
+//    this.reviewer_email = reviewer_email;
+//    this.review_content = review_content;
+//    this.likes_count = likes_count;
+//    this.user_name = reviewer_name;
+//    this.book_title = book_title;
+//    this.rank =rank;
+//}
+
+public Post(Review review) {
+    this.type = PostType.Review;
+    this.review_id = review.getReview_id();
+
+    this.post_time = review.getReview_time();
+
+    this.book_id = review.getBook_id();
+    this.book_title = review.getBook_title();
+
+    this.reviewer_email = review.getReviewer_email();
+    this.user_name = review.getReviewer_name();
+    this.review_content = review.getReview_content();
+    this.review_title = review.getReview_title();
+
+    this.likes_count = review.getLikes_count();
+    this.rank = review.getRank();
+
+}
+
+public Post(WishList wishList) {
+    this.type = PostType.WishList;
+    this.wishList_Id = wishList.getId();
+
+    this.post_time = wishList.getAdding_time();
+    this.book_id = wishList.getBook_id();
+    this.book_title = wishList.getBook_title();
+    this.user_email = wishList.getUser_email();
+    this.user_name = wishList.getUser_name();
 }
 
 
     //WishList
-    public Post(String post_id, PostType type, Timestamp post_time, String book_id, String book_title, String image_url, String wishList_Id, String user_email, String user_name) {
-        this.post_id = post_id;
-        this.type = type;
-        this.post_time = post_time;
-        this.book_id = book_id;
-        this.book_title = book_title;
-        this.wishList_Id = wishList_Id;
-        this.user_email = user_email;
-        this.user_name = user_name;
-    }
+//    public Post(String post_id, PostType type, Timestamp post_time, String book_id, String book_title, String image_url, String wishList_Id, String user_email, String user_name) {
+//        this.post_id = post_id;
+//        this.type = type;
+//        this.post_time = post_time;
+//        this.book_id = book_id;
+//        this.book_title = book_title;
+//        this.wishList_Id = wishList_Id;
+//        this.user_email = user_email;
+//        this.user_name = user_name;
+//    }
 
 
     //Recommendation + New Book Post
     public Post(String post_id, PostType type, Timestamp post_time, String book_id, String book_title, String image_url, ArrayList<String> new_book_genres) {
-        this.post_id = post_id;
         this.type = type;
         this.post_time = post_time;
         this.book_id = book_id;
@@ -186,7 +217,6 @@ public Post(String post_id, PostType type, Timestamp post_time, String review_id
         this.book_title = book_title;
     }
 
-
     public String getWishList_Id() {
         return wishList_Id;
     }
@@ -229,4 +259,13 @@ public Post(String post_id, PostType type, Timestamp post_time, String review_id
         }
         return (post_time.compareTo(((Post)o).post_time));
     }
+
+    static class SortByDate implements Comparator<Post>
+    {
+        public int compare(Post a, Post b)
+        {
+            return -a.post_time.compareTo(b.post_time); // reverse, because newer posts are more relevant
+        }
+    }
+
 }

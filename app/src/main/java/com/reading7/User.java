@@ -126,5 +126,13 @@ public class User {
         this.liked_reviews = liked_reviews;
     }
 
+    public void remove_like(String id) {
+        this.liked_reviews.remove(id);
+    }
+
+    public void add_like(String id) {
+        this.liked_reviews.add(id);
+    }
+
 
 }
