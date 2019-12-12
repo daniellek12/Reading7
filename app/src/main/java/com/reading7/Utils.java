@@ -41,7 +41,20 @@ public class Utils {
         for (String name : context.getAssets().list("")) {
             if (!(name.contains(".")))
                 continue;
-
+            if (name.contains("huangli.idf")){
+                continue;
+            }
+            if (name.contains("operators.dat")){
+                continue;
+            }if (name.contains("pinyinindex.idf")){
+                continue;
+            }if (name.contains("tel_uniqid_len8.dat")){
+                continue;
+            }if (name.contains("telocation.idf")){
+                continue;
+            }if (name.contains("xiaomi_mobile.dat")){
+                continue;
+            }
             InputStream is = context.getAssets().open(name);
             BufferedReader br = new BufferedReader(new InputStreamReader(is, Charset.forName("utf-16")));
 
@@ -86,7 +99,9 @@ public class Utils {
             final String t = title;
 
             Book b = new Book("", title, genersarray, author, publisher, Integer.parseInt(num_pages), summary, 0, 0);
-
+            if (b.getTitle().equals("")){
+                throw new AssertionError(name);
+            }
             DocumentReference newBook = db.collection("Books").document();
             b.setId(newBook.getId());
             newBook.set(b).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -126,16 +141,17 @@ public class Utils {
 
     //use this when you want to load image of book to imageView, image_id is the name of the file in
     //firebase storage, view is where you want to load the image, activity pass the current activity-probably this
-    public static String convertTitle(String t){
+    public static String convertTitle(String t) {
         int l = t.length();
         String[] r = new String[l];
-        for (int i = 0; i < l ; i++){
+        for (int i = 0; i < l; i++) {
             char c = t.charAt(i);
-            r[i] = Integer.toString((int)c);
+            r[i] = Integer.toString((int) c);
         }
         return TextUtils.join(" ", r);
     }
-    public static void showImage(String imageFileName, final ImageView view, final Activity activity) {
+
+    public static void showImage(final String imageFileName, final ImageView view, final Activity activity) {
         StorageReference mStorageRef;
         mStorageRef = FirebaseStorage.getInstance().getReference("images/" + convertTitle(imageFileName) + ".jpg");
 
@@ -148,6 +164,7 @@ public class Utils {
                             .into(view);
 
                 } else {
+//                    throw new AssertionError("OPPS".concat(imageFileName));
                     Toast.makeText(activity, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
