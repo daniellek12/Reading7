@@ -1,27 +1,15 @@
 package com.reading7;
 
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
 
 import com.duolingo.open.rtlviewpager.RtlViewPager;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.reading7.Adapters.SearchAdapter;
 import com.reading7.Adapters.TabsPagerAdapter;
-
-import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,19 +19,12 @@ import androidx.viewpager.widget.ViewPager;
 
 public class SearchFragment extends Fragment implements androidx.appcompat.widget.SearchView.OnQueryTextListener {
 
-    private FirebaseFirestore db;
-
-    ListView list;
-    SearchAdapter adapter;
     androidx.appcompat.widget.SearchView searchView;
-    ArrayList<Book> books = new ArrayList<Book>();
     RtlViewPager viewPager;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        db = FirebaseFirestore.getInstance();
         return inflater.inflate(R.layout.search_fragment, null);
     }
 
@@ -54,10 +35,9 @@ public class SearchFragment extends Fragment implements androidx.appcompat.widge
         viewPager = getActivity().findViewById(R.id.viewPager);
         searchView = getActivity().findViewById(R.id.searchView);
 
-        setBooks();
+        initTabsViewPager();
         initSearchView();
         initBackButton();
-        initTabsViewPager();
     }
 
 
@@ -66,16 +46,15 @@ public class SearchFragment extends Fragment implements androidx.appcompat.widge
         searchView.setIconifiedByDefault(false);
         searchView.requestFocus();
 
-        //Utils.openKeyboard(getContext());
-
         //remove underline
         View v = getActivity().findViewById(androidx.appcompat.R.id.search_plate);
         v.setBackgroundColor(getActivity().getResources().getColor(R.color.transparent));
 
         //remove search icon
-        ImageView searchViewIcon = (ImageView) searchView.findViewById(androidx.appcompat.R.id.search_mag_icon);
-        ((ViewGroup) searchViewIcon.getParent()).removeView(searchViewIcon);
+        ImageView searchViewIcon = searchView.findViewById(androidx.appcompat.R.id.search_mag_icon);
+        ((ViewGroup)searchViewIcon.getParent()).removeView(searchViewIcon);
 
+        searchView.setOnQueryTextListener(this);
     }
 
 
@@ -85,12 +64,10 @@ public class SearchFragment extends Fragment implements androidx.appcompat.widge
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 Utils.closeKeyboard(getContext());
                 getActivity().onBackPressed();
             }
         });
-
     }
 
 
@@ -100,56 +77,89 @@ public class SearchFragment extends Fragment implements androidx.appcompat.widge
 
         //TODO: change this to real fragments
         tabsPagerAdapter.addFragment(new SearchBooksFragment(), "ספרים");
-        tabsPagerAdapter.addFragment(new SearchBooksFragment(), "סופרים");
-        tabsPagerAdapter.addFragment(new SearchBooksFragment(), "חברים");
+        tabsPagerAdapter.addFragment(new SearchAuthorsFragment(), "סופרים");
+        tabsPagerAdapter.addFragment(new SearchFriendsFragment(), "חברים");
 
-        ViewPager viewPager = getActivity().findViewById(R.id.viewPager);
+        final ViewPager viewPager = getActivity().findViewById(R.id.viewPager);
         viewPager.setAdapter(tabsPagerAdapter);
 
         TabLayout tabs = getActivity().findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
+
     }
 
-    private void setBooks() {
 
-        CollectionReference requestCollectionRef = db.collection("Books");
-        requestCollectionRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+    public void initViewPagerOnPageChanged() {
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-                for (QueryDocumentSnapshot document : task.getResult()) {
-                    Book book = document.toObject(Book.class);
-                    books.add(book);
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+                String s = searchView.getQuery().toString();
+                switch (position){
+                    case 0:
+                        ((SearchBooksFragment)((TabsPagerAdapter)viewPager.getAdapter()).getItem(position)).onQueryTextChange(s);
+                        break;
+                    case 1:
+                        ((SearchAuthorsFragment)((TabsPagerAdapter)viewPager.getAdapter()).getItem(position)).onQueryTextChange(s);
+                        break;
+                    case 2:
+                        ((SearchFriendsFragment)((TabsPagerAdapter)viewPager.getAdapter()).getItem(position)).onQueryTextChange(s);
+                        break;
                 }
+            }
 
-                adapter = new SearchAdapter(getActivity(), books);
-                SearchBooksFragment frag = (SearchBooksFragment) viewPager.getAdapter().instantiateItem(viewPager, 0);
-                list = frag.getView().findViewById(R.id.listView);
-                list.setAdapter(adapter);
-                searchView.setOnQueryTextListener(SearchFragment.this);
+            @Override
+            public void onPageScrollStateChanged(int state) {
 
             }
         });
+
     }
 
 
     @Override
     public boolean onQueryTextSubmit(String s) {
 
-        SearchAdapter searchAdapter = (SearchAdapter)list.getAdapter();
-        Filter filter = searchAdapter.getFilter();
+        Fragment frag = ((TabsPagerAdapter)viewPager.getAdapter()).getItem(viewPager.getCurrentItem());
+        switch (viewPager.getCurrentItem()) {
 
-        filter.filter(s);
+            case 0:
+                ((SearchBooksFragment)frag).onQueryTextChange(s);
+                break;
+            case 1:
+                ((SearchAuthorsFragment)frag).onQueryTextChange(s);
+                break;
+            case 2:
+                ((SearchFriendsFragment)frag).onQueryTextChange(s);
+                break;
+        }
         return true;
+
     }
 
     @Override
     public boolean onQueryTextChange(String s) {
 
-        SearchAdapter searchAdapter = (SearchAdapter)list.getAdapter();
-        Filter filter = searchAdapter.getFilter();
+        Fragment frag = ((TabsPagerAdapter)viewPager.getAdapter()).getItem(viewPager.getCurrentItem());
+        switch (viewPager.getCurrentItem()) {
 
-        filter.filter(s);
+            case 0:
+                ((SearchBooksFragment)frag).onQueryTextChange(s);
+                break;
+            case 1:
+                ((SearchAuthorsFragment)frag).onQueryTextChange(s);
+                break;
+            case 2:
+                ((SearchFriendsFragment)frag).onQueryTextChange(s);
+                break;
+        }
         return true;
     }
+
 }

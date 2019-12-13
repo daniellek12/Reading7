@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layoutDirection="rtl"
-    android:padding="10dp">
+    android:padding="10dp"
+    android:id="@+id/container">
 
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -21,9 +22,20 @@
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
+        android:layout_marginTop="5dp"
         android:layout_marginRight="10dp"
         android:layout_toLeftOf="@+id/cover"
-        android:text="TextView" />
+        android:text="TextView"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/author"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:layout_marginRight="10dp"
+        android:layout_toLeftOf="@id/cover"
+        android:text="TextView"
+        android:textSize="12sp" />
 
 </RelativeLayout>

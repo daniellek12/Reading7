@@ -5,6 +5,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
 import android.text.TextUtils;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -210,7 +211,10 @@ public class Utils {
     public static void closeKeyboard(Context context) {
 
         InputMethodManager imm = (InputMethodManager) context.getSystemService(context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+        View view = ((Activity)context).getCurrentFocus();
+        if(view == null)
+            view = new View((Activity)context);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     public static void openKeyboard(Context context) {

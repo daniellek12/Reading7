@@ -267,8 +267,8 @@ public class BookFragment extends Fragment
         TextView textViewTitle = (TextView) getActivity().findViewById(R.id.book_name);
         textViewTitle.setText(mBook.getTitle());
 
-        ImageView coverImage = (ImageView) getActivity().findViewById(R.id.coverImage);
-        Utils.showImage(mBook.getTitle(), coverImage, getActivity());
+        ImageView coverImage = (ImageView) getActivity().findViewById(R.id.bookCoverImage);
+        Utils.showImage(mBook.getTitle(),coverImage,mActivity);
 
         TextView textViewSummary = (TextView) getActivity().findViewById(R.id.summary);
         textViewSummary.setText(mBook.getDescription());

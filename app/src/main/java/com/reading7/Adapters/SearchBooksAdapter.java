@@ -8,26 +8,28 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.reading7.Book;
+import com.reading7.BookFragment;
+import com.reading7.MainActivity;
 import com.reading7.R;
+import com.reading7.SearchBooksFragment;
 import com.reading7.Utils;
 
 import java.util.ArrayList;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class SearchAdapter extends BaseAdapter implements Filterable {
+public class SearchBooksAdapter extends BaseAdapter implements Filterable {
 
     private ArrayList<Book> books;
     private ArrayList<Book> original;
     private Context mContext;
 
 
-    public SearchAdapter(Context context, ArrayList<Book> books) {
+    public SearchBooksAdapter(Context context, ArrayList<Book> books) {
 
         this.books = books;
         this.mContext = context;
@@ -52,8 +54,10 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
 
     public class ViewHolder {
 
+        RelativeLayout container;
         CircleImageView cover;
         TextView title;
+        TextView author;
     }
 
 
@@ -90,14 +94,16 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
 
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
 
         ViewHolder holder;
         if (convertView == null) {
 
             convertView = LayoutInflater.from(mContext).inflate(R.layout.search_item, parent, false);
             holder = new ViewHolder();
+            holder.container = convertView.findViewById(R.id.container);
             holder.title = convertView.findViewById(R.id.title);
+            holder.author = convertView.findViewById(R.id.author);
             holder.cover = convertView.findViewById(R.id.cover);
             convertView.setTag(holder);
 
@@ -106,7 +112,16 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
         }
 
         holder.title.setText(books.get(position).getTitle());
+        holder.author.setText(books.get(position).getAuthor());
         Utils.showImage(books.get(position).getTitle(), holder.cover, (Activity) mContext);
+
+        holder.container.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((MainActivity)mContext).loadBookFragment(new BookFragment(), books.get(position));
+                Utils.closeKeyboard(mContext);
+            }
+        });
 
         return convertView;
     }
