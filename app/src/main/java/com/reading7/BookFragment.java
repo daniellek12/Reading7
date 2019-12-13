@@ -86,38 +86,53 @@ public class BookFragment extends Fragment {
         wishListBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CollectionReference requestCollectionRef = db.collection("Users");
-                Query requestQuery = requestCollectionRef.whereEqualTo("email", mAuth.getCurrentUser().getEmail());
+                CollectionReference requestCollectionRef = db.collection("Wishlist");
+                Query requestQuery = requestCollectionRef.whereEqualTo("user_email", mAuth.getCurrentUser().getEmail()).whereEqualTo("book_id",mBook.getId());
                 requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            User user = new User();
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                user = document.toObject(User.class);
+
+                            if(!(task.getResult().isEmpty())){
+                                Toast.makeText(getActivity(), "הספר כבר נמצא ברשימת המשאלות שלי", Toast.LENGTH_SHORT).show();
+
                             }
+                            else{
+
+                                CollectionReference requestCollectionRef = db.collection("Users");
+                                Query requestQuery = requestCollectionRef.whereEqualTo("email", mAuth.getCurrentUser().getEmail());
+                                requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            User user = new User();
+                                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                                user = document.toObject(User.class);
+                                            }
 
 
-                            WishList wlist = new WishList("", user.getEmail(), user.getFull_name(), mBook.getId(), mBook.getTitle(), Timestamp.now());
-                            DocumentReference newWish = db.collection("Wishlist").document();
-                            wlist.setId(newWish.getId());
-                            newWish.set(wlist).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                         @Override
-                                                                         public void onComplete(@NonNull Task<Void> task) {
-                                                                             if (task.isSuccessful()) {
-                                                                                 //getBookReviews();
-                                                                             }
+                                            WishList wlist = new WishList("", user.getEmail(), user.getFull_name(), mBook.getId(), mBook.getTitle(), Timestamp.now());
+                                            DocumentReference newWish = db.collection("Wishlist").document();
+                                            wlist.setId(newWish.getId());
+                                            newWish.set(wlist).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                                         @Override
+                                                                                         public void onComplete(@NonNull Task<Void> task) {
+                                                                                             if (task.isSuccessful()) {
+                                                                                                 //getBookReviews();
+                                                                                             }
 
-                                                                         }
-                                                                     }
-                            );
+                                                                                         }
+                                                                                     }
+                                            );
 
-                        }
-                    }
-                });
-                Toast.makeText(getActivity(), "הספר נוסף לרשימת המשאלות שלי", Toast.LENGTH_SHORT).show();
-            }
-        });
+                                        }
+                                    }
+                                });
+                                Toast.makeText(getActivity(), "הספר נוסף לרשימת המשאלות שלי", Toast.LENGTH_SHORT).show();
+                            }
+                        }}});
+                            }});
+
 
         lstReviews = new ArrayList<>();
         initOpenSummary();
