@@ -51,6 +51,7 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
         String strDate = dateFormat.format(date);
 
         viewHolder.postTime.setText(strDate);
+        viewHolder.reviewTitle.setText(review.getReview_title());
         viewHolder.reviewContent.setText((review.getReview_content()));
     }
 
@@ -64,6 +65,7 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
         RatingBar ratingBar;
         TextView userName;
         TextView postTime;
+        TextView reviewTitle;
         TextView reviewContent;
 
         public ViewHolder(@NonNull View itemView) {
@@ -72,6 +74,7 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
             ratingBar = itemView.findViewById(R.id.rating);
             userName = itemView.findViewById(R.id.userName);
             postTime = itemView.findViewById(R.id.postTime);
+            reviewTitle = itemView.findViewById(R.id.review_title);
             reviewContent = itemView.findViewById(R.id.review);
         }
     }

@@ -60,7 +60,7 @@
 
         <TextView
             android:id="@+id/genres"
-            android:layout_width="match_parent"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/imageView2"
             android:text="נוער, פנטזיה"
@@ -86,7 +86,7 @@
             android:orientation="vertical"
             android:gravity="left"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="15dp"
+            android:layout_marginLeft="10dp"
             android:layout_below="@id/bookCoverImage">
 
             <ImageButton
@@ -109,7 +109,7 @@
             android:layout_height="wrap_content"
             android:layoutDirection="rtl"
             android:orientation="vertical"
-            android:layout_marginLeft="15dp"
+            android:layout_marginLeft="10dp"
             android:layout_toRightOf="@+id/like"
             android:layout_marginRight="5dp"
             android:layout_below="@id/bookCoverImage">
@@ -147,6 +147,19 @@
             android:scaleY=".7"
             android:rating="3.5"
             android:layout_alignParentRight="true" />
+
+        <TextView
+            android:id="@+id/ratingNum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/ratingBar"
+            android:layout_below="@id/genres"
+            android:layout_marginTop="11dp"
+            android:layout_marginRight="-15dp"
+            android:text="3.555555"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:maxLength="3"/>
 
         <LinearLayout
             android:id="@+id/author_layout"
