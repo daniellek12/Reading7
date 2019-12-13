@@ -2,6 +2,7 @@ package com.reading7;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -38,12 +39,14 @@ import com.reading7.Adapters.FeedAdapter;
 import com.reading7.Adapters.ReviewListAdapter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static com.reading7.Utils.calculateAge;
 
 
-public class BookFragment extends Fragment {
+public class BookFragment extends Fragment
+{
 
     Activity mActivity;
     private FirebaseAuth mAuth;
@@ -51,11 +54,16 @@ public class BookFragment extends Fragment {
     private Book mBook;
     private List<Review> lstReviews;
     private ReviewListAdapter adapter;
+    private int countRaters;
+    private RatingBar rankRatingBar;
+    private TextView ratingNum;
+
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mAuth = FirebaseAuth.getInstance();
+        countRaters=0;
         db = FirebaseFirestore.getInstance();
         return inflater.inflate(R.layout.book_fragment, container, false);
     }
@@ -64,6 +72,7 @@ public class BookFragment extends Fragment {
     public void
     onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        final Fragment curr = this;
         ImageButton rankBtn = mActivity.findViewById(R.id.button_read);
         rankBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,10 +83,13 @@ public class BookFragment extends Fragment {
                 args.putString("book_id", mBook.getId());
                 args.putString("book_title", mBook.getTitle());
                 args.putFloat("avg", mBook.getAvg_rating());
-                args.putInt("countRaters", lstReviews.size());
+                args.putInt("countRaters", countRaters);
 
                 dialog.setArguments(args);
+                dialog.setTargetFragment(curr, 202);
                 dialog.show(getActivity().getSupportFragmentManager(), "example dialog");
+
+
 
             }
         });
@@ -158,10 +170,15 @@ public class BookFragment extends Fragment {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot doc : task.getResult()) {
-                        newlist.add(doc.toObject(Review.class));
+                        countRaters++;
+                        Review rev = doc.toObject(Review.class);
+                        if(rev.getReview_title().equals("")&&rev.getReview_content().equals(""))
+                            continue;
+                        newlist.add(rev);
                     }
 
                     lstReviews.addAll(newlist);
+                    Collections.sort(lstReviews,Collections.reverseOrder());
                     adapter.notifyDataSetChanged();
 
 
@@ -232,10 +249,10 @@ public class BookFragment extends Fragment {
         }
         textViewgeners.setText(geners);
 
-        RatingBar rankRatingBar = (RatingBar) getActivity().findViewById(R.id.ratingBar);
+        rankRatingBar = (RatingBar)getActivity().findViewById(R.id.ratingBar);
         rankRatingBar.setRating(mBook.getAvg_rating());
 
-        TextView ratingNum = (TextView) getActivity().findViewById(R.id.ratingNum);
+       ratingNum = (TextView) getActivity().findViewById(R.id.ratingNum);
         ratingNum.setText(Float.toString(mBook.getAvg_rating()));
 
         TextView textViewAuthor = (TextView) getActivity().findViewById(R.id.author_field);
@@ -263,5 +280,24 @@ public class BookFragment extends Fragment {
         super.onAttach(context);
         mActivity = (Activity) context;
     }
+
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Make sure fragment codes match up
+        if (requestCode == 202) {
+            float avg = data.getFloatExtra(
+                    "avg", 0);
+            rankRatingBar.setRating(avg);
+            ratingNum.setText(Float.toString(avg));
+            lstReviews.clear();
+            getBookReviews();//overhead
+
+        }
+    }
+
+    /*@Override
+    public void applyAvg(float newAvg) {
+        rankRatingBar.setRating(newAvg);
+    }*/
 
 }

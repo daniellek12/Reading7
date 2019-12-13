@@ -2,7 +2,9 @@ package com.reading7;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
@@ -38,6 +40,9 @@ public class RankBookDialog extends AppCompatDialogFragment {
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
     private Review mReview;
+    private View view;
+    RatingBar avg;
+    //private RankBookDialogListener listener;
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -50,9 +55,10 @@ public class RankBookDialog extends AppCompatDialogFragment {
 
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
+        RatingBar avg=(RatingBar) getActivity().findViewById(R.id.ratingBar);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.rank_book_dialog, null);
+        view = inflater.inflate(R.layout.rank_book_dialog, null);
         final RatingBar rateStar = (RatingBar) view.findViewById(R.id.ratingBar);
         final EditText titleText = (EditText) view.findViewById(R.id.FeedbackTitle);
         final EditText contentText = (EditText) view.findViewById(R.id.FeedbackContent);
@@ -129,8 +135,9 @@ public class RankBookDialog extends AppCompatDialogFragment {
                             updates.put("review_content",review_content);
                             final float newAvg;
                             if (numOfRaters == 0){
-                                newAvg = 0;
+                                newAvg = rank;
                             }
+
                             else{
                                 newAvg =  ((numOfRaters*currAvg)+rank-mReview.getRank())/(numOfRaters);
                             }
@@ -159,18 +166,47 @@ public class RankBookDialog extends AppCompatDialogFragment {
     public void UpdateBook(final float newAvg,String book_id){
 
         DocumentReference ref = db.collection("Books").document(book_id);
-        final Map<String, Object> updates = new HashMap<String,Object>();
-
 
         ref.update("avg_rating",newAvg).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
+                    //listener.applyAvg(newAvg);
+                    sendResult(202,newAvg);
 
                 }
             }
         });
     }
+
+    private void sendResult(int REQUEST_CODE,float newAvg) {
+        Intent intent = new Intent();
+        intent.putExtra("avg",newAvg);
+        getTargetFragment().onActivityResult(
+                getTargetRequestCode(), REQUEST_CODE, intent);
+    }
+
+
+
+  /*  @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try {
+            listener = (RankBookDialogListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() +
+                    "must implement ExampleDialogListener");
+        }
+    }
+
+
+    public interface RankBookDialogListener {
+        void applyAvg(float newAvg);
+    }*/
+
+
+
 
 
 }
