@@ -90,9 +90,8 @@
 -->
 
     <ListView
-        android:id="@+id/listView"
+        android:id="@+id/booksListView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:tag="listView"/>
+        android:layout_height="match_parent" />
 
 </RelativeLayout>

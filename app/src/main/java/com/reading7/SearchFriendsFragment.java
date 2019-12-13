@@ -1,6 +1,11 @@
 package com.reading7;
 
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,23 +18,20 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.reading7.Adapters.SearchBooksAdapter;
+import com.reading7.Adapters.SearchFriendsAdapter;
 
 import java.util.ArrayList;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
-public class SearchBooksFragment extends Fragment implements androidx.appcompat.widget.SearchView.OnQueryTextListener {
+public class SearchFriendsFragment extends Fragment implements androidx.appcompat.widget.SearchView.OnQueryTextListener {
 
-    SearchBooksAdapter adapter;
-    private ArrayList<Book> books = new ArrayList<Book>();
+    private SearchFriendsAdapter adapter;
+    private ArrayList<User> users = new ArrayList<User>();
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.search_books_fragment, null);
+        return inflater.inflate(R.layout.search_friends_fragment, null);
     }
 
     @Override
@@ -42,7 +44,7 @@ public class SearchBooksFragment extends Fragment implements androidx.appcompat.
 
     private void initListView() {
 
-        final ListView list = getActivity().findViewById(R.id.booksListView);
+        final ListView list = getActivity().findViewById(R.id.usersListView);
 
         if(adapter != null){
             list.setAdapter(adapter);
@@ -50,25 +52,21 @@ public class SearchBooksFragment extends Fragment implements androidx.appcompat.
             return;
         }
 
-        CollectionReference requestBooksRef = FirebaseFirestore.getInstance().collection("Books");
-        requestBooksRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        CollectionReference requestUsersRef = FirebaseFirestore.getInstance().collection("Users");
+        requestUsersRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
                 for (QueryDocumentSnapshot document : task.getResult()) {
-                    Book book = document.toObject(Book.class);
-
-                    if(!books.contains(book))
-                        books.add(book);
+                    User user = document.toObject(User.class);
+                    users.add(user);
                 }
 
-                adapter = new SearchBooksAdapter(getContext(), books);
+                adapter = new SearchFriendsAdapter(getContext(), users);
                 list.setAdapter(adapter);
                 onQueryTextChange(((androidx.appcompat.widget.SearchView)getActivity().findViewById(R.id.searchView)).getQuery().toString());
             }
         });
-
-        ((SearchFragment)getParentFragment()).initViewPagerOnPageChanged();
     }
 
     @Override
@@ -84,5 +82,4 @@ public class SearchBooksFragment extends Fragment implements androidx.appcompat.
         filter.filter(string);
         return true;
     }
-
 }

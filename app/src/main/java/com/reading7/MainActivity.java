@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity
             ((PublicProfileFragment)fragment).setUser(user_email);
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.fragmant_container, fragment)
+                    .add(R.id.fragmant_container, fragment)
                     .addToBackStack(fragment.getClass().toString())
                     .commit();
             return true;
@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity
         return false;
     }
 
+
     public boolean loadBookFragment(Fragment fragment, Book book){
 
         if(fragment != null && book != null){
@@ -61,7 +62,24 @@ public class MainActivity extends AppCompatActivity
             ((BookFragment)fragment).setBook(book);
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.fragmant_container, fragment)
+                    .add(R.id.fragmant_container, fragment)
+                    .addToBackStack(fragment.getClass().toString())
+                    .commit();
+            return true;
+        }
+
+        return false;
+    }
+
+
+    public boolean loadAuthorFragment(Fragment fragment, String author_name){
+
+        if(fragment != null && author_name != null){
+
+            ((AuthorFragment)fragment).setAuthor(author_name);
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.fragmant_container, fragment)
                     .addToBackStack(fragment.getClass().toString())
                     .commit();
             return true;
