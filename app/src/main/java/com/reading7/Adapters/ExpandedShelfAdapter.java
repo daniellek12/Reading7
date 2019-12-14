@@ -83,6 +83,8 @@ public class ExpandedShelfAdapter extends RecyclerView.Adapter<ExpandedShelfAdap
     public void onBindViewHolder(@NonNull final ExpandedShelfAdapter.ViewHolder holder, final int position) {
 
         Utils.showImage(bookNames.get(position), holder.cover, (Activity)mContext);
+        holder.cover.setAlpha((float)1);
+        holder.checked.setVisibility(View.GONE);
 
         if(!editMode) {
             holder.cover.setOnClickListener(new View.OnClickListener() {

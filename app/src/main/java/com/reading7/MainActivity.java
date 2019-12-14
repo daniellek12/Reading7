@@ -154,5 +154,4 @@ public class MainActivity extends AppCompatActivity
         bottomNavigationView.getMenu().findItem(R.id.navigation_profile).setEnabled(true);
     }
 
-
 }

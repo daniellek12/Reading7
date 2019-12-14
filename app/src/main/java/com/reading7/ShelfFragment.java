@@ -18,6 +18,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.reading7.Adapters.ExpandedShelfAdapter;
+import com.reading7.Adapters.WishListAdapter;
 
 import java.util.ArrayList;
 
