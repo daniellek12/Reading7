@@ -20,25 +20,8 @@ public class MainActivity extends AppCompatActivity
 
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(this);
-        loadFragment(new HomeFragment());
+        loadFragment(new ExploreFragment());
     }
-
-
-    public boolean loadPublicProfileFragment(Fragment fragment, String user_email) {
-
-        if (fragment != null && user_email != null) {
-            ((PublicProfileFragment)fragment).setUser(user_email);
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .add(R.id.fragmant_container, fragment)
-                    .addToBackStack(fragment.getClass().toString())
-                    .commit();
-            return true;
-        }
-
-        return false;
-    }
-
 
     public boolean loadFragment(Fragment fragment) {
 
@@ -72,6 +55,22 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    public boolean loadPublicProfileFragment(Fragment fragment, String user_email) {
+
+        if (fragment != null && user_email != null) {
+            ((PublicProfileFragment)fragment).setUser(user_email);
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.fragmant_container, fragment)
+                    .addToBackStack(fragment.getClass().toString())
+                    .commit();
+            return true;
+        }
+
+        return false;
+    }
+
+
     public boolean loadAuthorFragment(Fragment fragment, String author_name){
 
         if(fragment != null && author_name != null){
@@ -87,6 +86,7 @@ public class MainActivity extends AppCompatActivity
 
         return false;
     }
+
 
 
     @Override
