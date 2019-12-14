@@ -23,8 +23,10 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.reading7.Adapters.ReadShelfAdapter;
 import com.reading7.Adapters.WishListAdapter;
+import com.reading7.Objects.Review;
+import com.reading7.Objects.User;
+import com.reading7.Objects.WishList;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +37,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import static com.reading7.Utils.calculateAge;
-import static com.reading7.Utils.convertTxtToBook;
 
 public class ProfileFragment extends Fragment {
 

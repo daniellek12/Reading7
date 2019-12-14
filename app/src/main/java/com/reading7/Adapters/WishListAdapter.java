@@ -2,7 +2,6 @@ package com.reading7.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,11 +19,9 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.reading7.R;
-import com.reading7.Review;
 import com.reading7.Utils;
-import com.reading7.WishList;
+import com.reading7.Objects.WishList;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;

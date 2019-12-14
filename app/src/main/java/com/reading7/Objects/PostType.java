@@ -1,4 +1,4 @@
-package com.reading7;
+package com.reading7.Objects;
 
 public enum PostType {
     Review,

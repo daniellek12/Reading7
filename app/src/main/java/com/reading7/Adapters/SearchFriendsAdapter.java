@@ -10,11 +10,10 @@ import android.widget.Filterable;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.reading7.BookFragment;
 import com.reading7.MainActivity;
 import com.reading7.PublicProfileFragment;
 import com.reading7.R;
-import com.reading7.User;
+import com.reading7.Objects.User;
 import com.reading7.Utils;
 
 import java.util.ArrayList;

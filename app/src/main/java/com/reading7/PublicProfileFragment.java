@@ -21,6 +21,8 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.reading7.Adapters.ReadShelfAdapter;
+import com.reading7.Objects.Review;
+import com.reading7.Objects.User;
 
 import java.util.ArrayList;
 

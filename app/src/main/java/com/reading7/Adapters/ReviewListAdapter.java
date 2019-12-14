@@ -5,7 +5,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -13,17 +12,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.reading7.BookFragment;
-import com.reading7.HomeFragment;
 import com.reading7.MainActivity;
 import com.reading7.ProfileFragment;
 import com.reading7.PublicProfileFragment;
 import com.reading7.R;
-import com.reading7.Review;
+import com.reading7.Objects.Review;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.reading7;
+package com.reading7.Objects;
 
 import com.google.firebase.Timestamp;
 
@@ -260,7 +260,7 @@ public Post(WishList wishList) {
         return (post_time.compareTo(((Post)o).post_time));
     }
 
-    static class SortByDate implements Comparator<Post>
+    public static class SortByDate implements Comparator<Post>
     {
         public int compare(Post a, Post b)
         {

@@ -32,6 +32,10 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.reading7.Adapters.ReviewListAdapter;
+import com.reading7.Objects.Book;
+import com.reading7.Objects.Review;
+import com.reading7.Objects.User;
+import com.reading7.Objects.WishList;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -13,10 +13,10 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.reading7.Adapters.ExploreAdapter;
 import com.reading7.Adapters.StoryPlaylistAdapter;
+import com.reading7.Objects.Book;
 
 import java.util.ArrayList;
 import java.util.List;
