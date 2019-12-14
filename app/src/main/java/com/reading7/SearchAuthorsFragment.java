@@ -71,6 +71,7 @@ public class SearchAuthorsFragment extends Fragment implements androidx.appcompa
 
     @Override
     public boolean onQueryTextSubmit(String string) {
+        if(adapter == null) return false;
         Filter filter = adapter.getFilter();
         filter.filter(string);
         return true;
@@ -78,6 +79,7 @@ public class SearchAuthorsFragment extends Fragment implements androidx.appcompa
 
     @Override
     public boolean onQueryTextChange(String string) {
+        if(adapter == null) return false;
         Filter filter = adapter.getFilter();
         filter.filter(string);
         return true;

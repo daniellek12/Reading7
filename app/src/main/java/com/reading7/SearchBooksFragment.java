@@ -73,6 +73,7 @@ public class SearchBooksFragment extends Fragment implements androidx.appcompat.
 
     @Override
     public boolean onQueryTextSubmit(String string) {
+        if(adapter == null) return false;
         Filter filter = adapter.getFilter();
         filter.filter(string);
         return true;
@@ -80,6 +81,7 @@ public class SearchBooksFragment extends Fragment implements androidx.appcompat.
 
     @Override
     public boolean onQueryTextChange(String string) {
+        if(adapter == null) return false;
         Filter filter = adapter.getFilter();
         filter.filter(string);
         return true;
