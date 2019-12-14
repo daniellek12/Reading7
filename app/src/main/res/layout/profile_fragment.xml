@@ -343,7 +343,7 @@
             android:text="@string/my_wishlist"
             android:textColor="@color/colorAccent" />
 
-        <TextView
+        <Button
             android:id="@+id/wishlistTitle2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

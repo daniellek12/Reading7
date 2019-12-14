@@ -44,6 +44,7 @@ public class ProfileFragment extends Fragment {
     private List<WishList> usersWishList;
     private ReadShelfAdapter adapterReviews;
     private WishListAdapter adapterWishList;
+    private boolean pressed;
 
     private User curr_user;
 
@@ -53,6 +54,7 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+        pressed=false;
 
 
         return inflater.inflate(R.layout.profile_fragment, null);
@@ -146,10 +148,38 @@ public class ProfileFragment extends Fragment {
     private void initWishlist() {
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-        RecyclerView wishlistRV = getActivity().findViewById(R.id.wishlistRV);
+        final RecyclerView wishlistRV = getActivity().findViewById(R.id.wishlistRV);
         wishlistRV.setLayoutManager(layoutManager);
-        adapterWishList = new WishListAdapter(usersWishList, getActivity());
+        adapterWishList = new WishListAdapter(usersWishList, getActivity(), false);
         wishlistRV.setAdapter(adapterWishList);
+        final Button edit = getActivity().findViewById(R.id.wishlistTitle2);
+
+        edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(pressed) {
+                    edit.setText("עריכה");
+                    pressed = !pressed;
+                    //all items in adapter should have the delete button
+                    adapterWishList = new WishListAdapter(usersWishList, getActivity(),false);
+                    wishlistRV.setAdapter(adapterWishList);
+
+                }
+                else {
+                    edit.setText("בטל עריכה");
+                    pressed = !pressed;
+                    //all items in adapter should have the delete button
+                    adapterWishList = new WishListAdapter(usersWishList, getActivity(),true);
+                    wishlistRV.setAdapter(adapterWishList);
+
+
+                }
+
+
+
+            }
+        });
+
     }
 
     private void initMyBookslist() {
