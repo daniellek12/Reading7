@@ -17,17 +17,5 @@
             android:background="@mipmap/cover1"
             android:scaleType="centerCrop" />
 
-        <ImageView
-            android:id="@+id/deleteBtn"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginRight="5dp"
-            android:background="@drawable/round_button_white"
-            android:elevation="5dp"
-            android:src="@drawable/delete"
-            android:tint="@android:color/holo_red_dark" />
-
-
 
 </androidx.cardview.widget.CardView>

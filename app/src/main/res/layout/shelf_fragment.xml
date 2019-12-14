@@ -17,7 +17,28 @@
         android:background="@color/white"
         android:gravity="top"
         app:layout_scrollFlags="scroll|enterAlways|snap"
-        android:elevation="10dp">
+        android:elevation="10dp"
+        android:layoutDirection="rtl">
+
+        <ImageView
+            android:id="@+id/editShelfButton"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="left"
+            android:layout_marginLeft="16dp"
+            android:src="@drawable/edit"
+            android:tint="@color/darkGrey"
+            android:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/deleteButton"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="left"
+            android:layout_marginLeft="16dp"
+            android:src="@drawable/delete"
+            android:tint="@color/darkGrey"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/toolbar_title"
@@ -30,7 +51,7 @@
             android:textSize="16sp" />
 
         <ImageView
-            android:id="@+id/af_backButton"
+            android:id="@+id/backButton"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_gravity="right"
@@ -39,11 +60,21 @@
             android:tint="@color/darkGrey"
             android:visibility="visible" />
 
+        <ImageView
+            android:id="@+id/closeButton"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="right"
+            android:layout_marginRight="16dp"
+            android:src="@drawable/close"
+            android:tint="@color/darkGrey"
+            android:visibility="gone" />
+
     </androidx.appcompat.widget.Toolbar>
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/playlistRV"
+        android:id="@+id/shelfRV"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/toolbar"

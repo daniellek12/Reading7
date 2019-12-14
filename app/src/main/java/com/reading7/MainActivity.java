@@ -6,6 +6,8 @@ import android.view.MenuItem;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.reading7.Objects.Book;
 
+import java.util.ArrayList;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -89,6 +91,21 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    public boolean loadShelfFragment(Fragment fragment){
+
+        if(fragment != null){
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.fragmant_container, fragment)
+                    .addToBackStack(fragment.getClass().toString())
+                    .commit();
+            return true;
+        }
+
+        return false;
+    }
+
+
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -120,6 +137,21 @@ public class MainActivity extends AppCompatActivity
         }
 
         return loadFragment(fragment);
+    }
+
+
+    public void disableBottomNavigation(){
+        BottomNavigationView bottomNavigationView = findViewById(R.id.navigation);
+        bottomNavigationView.getMenu().findItem(R.id.navigation_home).setEnabled(false);
+        bottomNavigationView.getMenu().findItem(R.id.navigation_explore).setEnabled(false);
+        bottomNavigationView.getMenu().findItem(R.id.navigation_profile).setEnabled(false);
+    }
+
+    public void enableBottomNavigation(){
+        BottomNavigationView bottomNavigationView = findViewById(R.id.navigation);
+        bottomNavigationView.getMenu().findItem(R.id.navigation_home).setEnabled(true);
+        bottomNavigationView.getMenu().findItem(R.id.navigation_explore).setEnabled(true);
+        bottomNavigationView.getMenu().findItem(R.id.navigation_profile).setEnabled(true);
     }
 
 

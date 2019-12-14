@@ -29,45 +29,35 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHolder> {
 
+    private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
     private List<WishList> usersList;
     private Context mContext;
-    private Activity currentActivity;
-    private FirebaseAuth mAuth;
-    private FirebaseFirestore db;
-    private boolean flagEdit;
 
 
-    public WishListAdapter(List<WishList> list, Activity activity, boolean flag){
+    public WishListAdapter(List<WishList> list, Context context){
+        this.mAuth = FirebaseAuth.getInstance();
+        this.db = FirebaseFirestore.getInstance();
         this.usersList = list;
-        this.mContext = activity.getApplicationContext();
-        this.currentActivity = activity;
-        this.flagEdit= flag;
-
+        this.mContext = context;
     }
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView cover;
-        ImageView delete_button;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             cover = itemView.findViewById(R.id.coverImage);
-            delete_button = itemView.findViewById(R.id.deleteBtn);
-            if(flagEdit == false)
-                delete_button.setVisibility(View.INVISIBLE);
-            else
-                delete_button.setVisibility(View.VISIBLE);
         }
     }
+
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         LayoutInflater mInflater = LayoutInflater.from(mContext);
         View view = mInflater.inflate(R.layout.playlist_item, viewGroup,false);
-        mAuth = FirebaseAuth.getInstance();
-        db = FirebaseFirestore.getInstance();
         return new WishListAdapter.ViewHolder(view);
     }
 
@@ -76,15 +66,9 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
 
         final String book_name = usersList.get(i).getBook_title();
-        Utils.showImage(book_name, viewHolder.cover, currentActivity);
-        viewHolder.delete_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        Utils.showImage(book_name, viewHolder.cover, (Activity)mContext);
 
-                deleteWishList(book_name);
-
-            }
-        });
+        //TODO: on item click load the matching bookFragment
     }
 
 
@@ -117,6 +101,7 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
             }
         });
     }
+
 
     @Override
     public int getItemCount() {

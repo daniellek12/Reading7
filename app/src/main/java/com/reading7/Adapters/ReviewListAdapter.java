@@ -75,6 +75,7 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
         return reviews.size();
     }
 
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         RatingBar ratingBar;
