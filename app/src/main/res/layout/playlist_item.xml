@@ -7,28 +7,27 @@
     android:foreground="?android:attr/selectableItemBackground"
     cardview:cardBackgroundColor="@color/transparent"
     cardview:cardElevation="5dp"
-    cardview:cardCornerRadius="20dp">
+    cardview:cardCornerRadius="20dp"
+    android:layoutDirection="rtl">
 
-        <LinearLayout
-            android:id="@+id/layout"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:orientation="vertical">
         <ImageView
             android:id="@+id/coverImage"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="match_parent"
             android:background="@mipmap/cover1"
             android:scaleType="centerCrop" />
 
         <ImageView
             android:id="@+id/deleteBtn"
-            android:layout_width="73dp"
-            android:layout_height="50dp"
-            android:text="delete"
-            />
-        </LinearLayout>
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/round_button_white"
+            android:elevation="5dp"
+            android:src="@drawable/delete"
+            android:tint="@android:color/holo_red_dark" />
+
 
 
 </androidx.cardview.widget.CardView>
