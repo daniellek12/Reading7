@@ -57,8 +57,8 @@ public class ExpandedShelfAdapter extends RecyclerView.Adapter<ExpandedShelfAdap
             cover = itemView.findViewById(R.id.coverImage);
             checked = itemView.findViewById(R.id.checked);
         }
-
     }
+
 
     public ExpandedShelfAdapter(Context context, List<String> bookNames, ShelfFragment.ShelfType type) {
 
@@ -82,11 +82,11 @@ public class ExpandedShelfAdapter extends RecyclerView.Adapter<ExpandedShelfAdap
     @Override
     public void onBindViewHolder(@NonNull final ExpandedShelfAdapter.ViewHolder holder, final int position) {
 
-        Utils.showImage(bookNames.get(position), holder.cover, (Activity)mContext);
-        holder.cover.setAlpha((float)1);
+        Utils.showImage(bookNames.get(position), holder.cover, (Activity) mContext);
+        holder.cover.setAlpha((float) 1);
         holder.checked.setVisibility(View.GONE);
 
-        if(!editMode) {
+        if (!editMode) {
             holder.cover.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -104,17 +104,15 @@ public class ExpandedShelfAdapter extends RecyclerView.Adapter<ExpandedShelfAdap
                     });
                 }
             });
-        }
-
-        else {
+        } else {
 
             holder.cover.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
-                    if(toDelete.contains(bookNames.get(position))){
+                    if (toDelete.contains(bookNames.get(position))) {
                         toDelete.remove(bookNames.get(position));
-                        holder.cover.setAlpha((float)1);
+                        holder.cover.setAlpha((float) 1);
                         holder.checked.setVisibility(View.GONE);
                     } else {
                         toDelete.add(bookNames.get(position));
@@ -134,23 +132,27 @@ public class ExpandedShelfAdapter extends RecyclerView.Adapter<ExpandedShelfAdap
     }
 
 
-    public void setEditMode(boolean edit_mode){
+    public void setEditMode(boolean edit_mode) {
         this.editMode = edit_mode;
-        if(!edit_mode)
+        if (!edit_mode)
             toDelete.clear();
         notifyDataSetChanged();
     }
 
 
     public void deleteItems() {
-        if(!toDelete.isEmpty()) {
+        if (!toDelete.isEmpty()) {
 
-           switch (this.type){
+            switch (this.type) {
 
-               case WISHLIST:
-                   deleteWishlists();
-                   break;
-           }
+                case WISHLIST:
+                    deleteWishlists();
+                    break;
+
+                case MYBOOKS:
+                    deleteMyBooks();
+                    break;
+            }
 
             bookNames.removeAll(toDelete);
         }
@@ -161,24 +163,53 @@ public class ExpandedShelfAdapter extends RecyclerView.Adapter<ExpandedShelfAdap
 
     public void deleteWishlists() {
 
-        if(this.type != ShelfFragment.ShelfType.WISHLIST)
+        if (this.type != ShelfFragment.ShelfType.WISHLIST)
             throw new AssertionError("Wrong adapter type!");
 
-        for(String book_name : toDelete){
+        for (String book_name : toDelete) {
             CollectionReference requestsRef = db.collection("Wishlist");
             Query requestQuery = requestsRef.whereEqualTo("user_email", mAuth.getCurrentUser().getEmail())
-                    .whereEqualTo("book_title",book_name);
+                    .whereEqualTo("book_title", book_name);
             requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if(task.isSuccessful()){
-                        for(QueryDocumentSnapshot document: task.getResult()){
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            document.getReference().delete();
+                        }
+                    } else
+                        Toast.makeText(mContext, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+
+    //TODO: deleting a book from my books also deletes my review on the book.
+    //      should we provide other options?
+    public void deleteMyBooks() {
+
+        if (this.type != ShelfFragment.ShelfType.MYBOOKS)
+            throw new AssertionError("Wrong adapter type!");
+
+        for (String book_name : toDelete) {
+            CollectionReference requestsRef = db.collection("Reviews");
+            Query requestQuery = requestsRef.whereEqualTo("reviewer_email", mAuth.getCurrentUser().getEmail())
+                                            .whereEqualTo("book_title", book_name);
+            requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
                             document.getReference().delete();
                         }
                     }
+
                     else Toast.makeText(mContext, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
         }
     }
+
+
 }

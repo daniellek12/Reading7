@@ -135,6 +135,18 @@ public class ProfileFragment extends Fragment {
         adapterReviews = new ReadShelfAdapter(usersReviews, getActivity());
         myBooksRV.setAdapter(adapterReviews);
 
+        getActivity().findViewById(R.id.mybooksTitle).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ArrayList<String> book_names = new ArrayList<String>();
+                for(Review review: usersReviews){
+                    book_names.add(review.getBook_title());
+                }
+
+                ((MainActivity)getActivity()).loadShelfFragment(new ShelfFragment(book_names,getString(R.string.my_books),mAuth.getCurrentUser().getEmail(), ShelfFragment.ShelfType.MYBOOKS));
+            }
+        });
+
     }
 
     private void initEditBtn() {

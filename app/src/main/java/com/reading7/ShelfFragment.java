@@ -13,12 +13,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.reading7.Adapters.ExpandedShelfAdapter;
-import com.reading7.Adapters.WishListAdapter;
 
 import java.util.ArrayList;
 
@@ -85,7 +82,7 @@ public class ShelfFragment extends Fragment {
     private void initEditButton() {
 
         if(!FirebaseAuth.getInstance().getCurrentUser().getEmail().equals(owner_email))
-            return;
+            throw new AssertionError("You can't edit someone else's shelf!");
 
         ImageView editButton = getActivity().findViewById(R.id.editShelfButton);
         editButton.setOnClickListener(new View.OnClickListener() {
