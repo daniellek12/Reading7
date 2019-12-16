@@ -36,7 +36,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        ImageView backBtn = findViewById(R.id.backBtn);
+        ImageView backBtn = findViewById(R.id.backButton);
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -223,7 +223,7 @@ public class SignUpActivity extends AppCompatActivity {
         findViewById(R.id.password_edit).setEnabled(false);
         findViewById(R.id.email_edit).setEnabled(false);
         findViewById(R.id.birth_date_edit).setEnabled(false);
-        findViewById(R.id.backBtn).setEnabled(false);
+        findViewById(R.id.backButton).setEnabled(false);
 
     }
 
@@ -234,7 +234,7 @@ public class SignUpActivity extends AppCompatActivity {
         findViewById(R.id.password_edit).setEnabled(true);
         findViewById(R.id.email_edit).setEnabled(true);
         findViewById(R.id.birth_date_edit).setEnabled(true);
-        findViewById(R.id.backBtn).setEnabled(true);
+        findViewById(R.id.backButton).setEnabled(true);
 
     }
 

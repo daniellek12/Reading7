@@ -10,11 +10,20 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+<<<<<<< HEAD
         <activity android:name=".QuestionnaireActivity"></activity>
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+=======
+        <activity android:name=".AuthorFragment"></activity>
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan"></activity>
+>>>>>>> d4bf73764bfdad4c495584c4d491917f893ceaaf
         <activity
             android:name=".SignUpActivity"
             android:screenOrientation="portrait"

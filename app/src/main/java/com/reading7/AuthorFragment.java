@@ -1,11 +1,15 @@
 package com.reading7;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -17,38 +21,48 @@ import com.reading7.Adapters.SearchBooksAdapter;
 
 import java.util.ArrayList;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+public class AuthorFragment  extends Fragment {
 
-public class SearchBooksFragment extends Fragment implements androidx.appcompat.widget.SearchView.OnQueryTextListener {
-
-    SearchBooksAdapter adapter;
+    private FirebaseFirestore db;
     private ArrayList<Book> books = new ArrayList<Book>();
+    private String author_name;
+    private SearchBooksAdapter adapter;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.search_books_fragment, null);
+        db = FirebaseFirestore.getInstance();
+        return inflater.inflate(R.layout.author_fragment, null);
     }
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-
-        initListView();
         super.onViewCreated(view, savedInstanceState);
+        initBooks();
+        initBackBtn();
+        ((TextView)view.findViewById(R.id.toolbar_title)).setText("הספרים של "+author_name);
     }
 
 
-    private void initListView() {
+    public void setAuthor(String author_name) {
+        this.author_name = author_name;
+    }
 
-        final ListView list = getActivity().findViewById(R.id.booksListView);
 
-        if(adapter != null){
-            list.setAdapter(adapter);
-            onQueryTextChange(((androidx.appcompat.widget.SearchView)getActivity().findViewById(R.id.searchView)).getQuery().toString());
-            return;
-        }
+    private void initBackBtn() {
+        getActivity().findViewById(R.id.af_backButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().onBackPressed();
+            }
+        });
+    }
+
+
+    private void initBooks() {
+
+        final ListView list = getActivity().findViewById(R.id.booksRV);
 
         CollectionReference requestBooksRef = FirebaseFirestore.getInstance().collection("Books");
         requestBooksRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -58,31 +72,16 @@ public class SearchBooksFragment extends Fragment implements androidx.appcompat.
                 for (QueryDocumentSnapshot document : task.getResult()) {
                     Book book = document.toObject(Book.class);
 
-                    if(!books.contains(book))
+                    if(!books.contains(book) && book.getAuthor().equals(author_name))
                         books.add(book);
                 }
 
                 adapter = new SearchBooksAdapter(getContext(), books);
                 list.setAdapter(adapter);
-                onQueryTextChange(((androidx.appcompat.widget.SearchView)getActivity().findViewById(R.id.searchView)).getQuery().toString());
             }
         });
 
-        ((SearchFragment)getParentFragment()).initViewPagerOnPageChanged();
-    }
 
-    @Override
-    public boolean onQueryTextSubmit(String string) {
-        Filter filter = adapter.getFilter();
-        filter.filter(string);
-        return true;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String string) {
-        Filter filter = adapter.getFilter();
-        filter.filter(string);
-        return true;
     }
 
 }

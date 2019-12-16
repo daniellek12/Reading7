@@ -35,21 +35,20 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHolder>   {
+public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHolder> {
 
     private List<Book> books;
     private Context mContext;
     private Activity mActivity;
 
 
-    public ExploreAdapter(Context context, Activity activity, List<Book> books){
+    public ExploreAdapter(Context context, Activity activity, List<Book> books) {
 
         //get me some books
-        this.books= books;
+        this.books = books;
         this.mContext = context;
-        this.mActivity= activity;
+        this.mActivity = activity;
     }
-
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -79,7 +78,7 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
 
         //set height of rows with 2 items
-        if( i%11 == 0 || i%11 == 1 )
+        if (i % 11 == 0 || i % 11 == 1)
             viewHolder.cover.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DpToPx(250)));
 
         //set ratingbar color
@@ -87,7 +86,7 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
         rating.setColorFilter(Color.parseColor("#FFC21C"), PorterDuff.Mode.SRC_ATOP);
 
         viewHolder.ratingBar.setRating(books.get(i).getAvg_rating());
-        Utils.showImage(books.get(i).getTitle(),viewHolder.cover,mActivity);
+        Utils.showImage(books.get(i).getTitle(), viewHolder.cover, mActivity);
         //viewHolder.cover.setImageResource(mContext.getResources().getIdentifier("cover"+(i+1), "mipmap", mContext.getPackageName()));
 
 
@@ -107,9 +106,9 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
     }
 
 
-    public int DpToPx(int dp){
-        Resources r  = mContext.getResources();
-        int px    = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics());
+    public int DpToPx(int dp) {
+        Resources r = mContext.getResources();
+        int px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics());
         return px;
 
     }

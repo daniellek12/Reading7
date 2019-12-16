@@ -9,7 +9,7 @@
     android:layoutDirection="rtl">
 
     <ImageView
-        android:id="@+id/backBtn"
+        android:id="@+id/af_backButton"
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_marginTop="20dp"
@@ -27,6 +27,7 @@
         android:layout_marginTop="80dp"
         android:elevation="5dp"
         android:src="@drawable/round_user"
+        android:tint="@color/colorPrimaryDark"
         app:civ_border_color="@color/white"
         app:civ_border_width="2dp"
         app:civ_circle_background_color="@color/white"/>
