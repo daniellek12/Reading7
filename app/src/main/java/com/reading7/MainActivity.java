@@ -4,6 +4,9 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.reading7.Objects.Book;
+
+import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,25 +23,8 @@ public class MainActivity extends AppCompatActivity
 
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(this);
-        loadFragment(new HomeFragment());
+        loadFragment(new ExploreFragment());
     }
-
-
-    public boolean loadPublicProfileFragment(Fragment fragment, String user_email) {
-
-        if (fragment != null && user_email != null) {
-            ((PublicProfileFragment)fragment).setUser(user_email);
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .add(R.id.fragmant_container, fragment)
-                    .addToBackStack(fragment.getClass().toString())
-                    .commit();
-            return true;
-        }
-
-        return false;
-    }
-
 
     public boolean loadFragment(Fragment fragment) {
 
@@ -72,6 +58,22 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    public boolean loadPublicProfileFragment(Fragment fragment, String user_email) {
+
+        if (fragment != null && user_email != null) {
+            ((PublicProfileFragment)fragment).setUser(user_email);
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.fragmant_container, fragment)
+                    .addToBackStack(fragment.getClass().toString())
+                    .commit();
+            return true;
+        }
+
+        return false;
+    }
+
+
     public boolean loadAuthorFragment(Fragment fragment, String author_name){
 
         if(fragment != null && author_name != null){
@@ -87,6 +89,22 @@ public class MainActivity extends AppCompatActivity
 
         return false;
     }
+
+
+    public boolean loadShelfFragment(Fragment fragment){
+
+        if(fragment != null){
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.fragmant_container, fragment)
+                    .addToBackStack(fragment.getClass().toString())
+                    .commit();
+            return true;
+        }
+
+        return false;
+    }
+
 
 
     @Override
@@ -121,5 +139,19 @@ public class MainActivity extends AppCompatActivity
         return loadFragment(fragment);
     }
 
+
+    public void disableBottomNavigation(){
+        BottomNavigationView bottomNavigationView = findViewById(R.id.navigation);
+        bottomNavigationView.getMenu().findItem(R.id.navigation_home).setEnabled(false);
+        bottomNavigationView.getMenu().findItem(R.id.navigation_explore).setEnabled(false);
+        bottomNavigationView.getMenu().findItem(R.id.navigation_profile).setEnabled(false);
+    }
+
+    public void enableBottomNavigation(){
+        BottomNavigationView bottomNavigationView = findViewById(R.id.navigation);
+        bottomNavigationView.getMenu().findItem(R.id.navigation_home).setEnabled(true);
+        bottomNavigationView.getMenu().findItem(R.id.navigation_explore).setEnabled(true);
+        bottomNavigationView.getMenu().findItem(R.id.navigation_profile).setEnabled(true);
+    }
 
 }

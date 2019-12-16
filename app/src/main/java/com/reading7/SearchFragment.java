@@ -60,7 +60,7 @@ public class SearchFragment extends Fragment implements androidx.appcompat.widge
 
     private void initBackButton() {
 
-        ImageButton backButton = getActivity().findViewById(R.id.backButton);
+        ImageView backButton = getActivity().findViewById(R.id.backButton);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

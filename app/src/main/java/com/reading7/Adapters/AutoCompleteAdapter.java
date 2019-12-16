@@ -10,7 +10,7 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
-import com.reading7.Book;
+import com.reading7.Objects.Book;
 import com.reading7.Utils;
 import com.reading7.R;
 

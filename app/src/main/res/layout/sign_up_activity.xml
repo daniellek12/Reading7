@@ -9,7 +9,7 @@
     android:layoutDirection="rtl">
 
     <ImageView
-        android:id="@+id/af_backButton"
+        android:id="@+id/backButton"
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_marginTop="20dp"
@@ -326,29 +326,6 @@
         android:layout_marginTop="500dp"
         android:elevation="11dp"
         android:visibility="gone"/>
-
-    <View
-        android:id="@+id/dummy"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone" />
-
-    <RelativeLayout
-        android:id="@+id/ac_layout"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_above="@+id/birth_date_edit">
-
-        <ListView
-            android:id="@+id/autoCompleteList"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginLeft="58dp"
-            android:layout_marginRight="58dp"
-            android:background="@color/white"
-            android:elevation="10dp" />
-    </RelativeLayout>
 
 
 </RelativeLayout>

@@ -1,8 +1,6 @@
-package com.reading7;
+package com.reading7.Objects;
 
 import com.google.firebase.Timestamp;
-
-import java.util.ArrayList;
 
 public class Review implements Comparable {
 

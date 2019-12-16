@@ -14,22 +14,12 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.reading7.Book;
+import com.reading7.Objects.Book;
 import com.reading7.BookFragment;
 import com.reading7.MainActivity;
-import com.reading7.PublicProfileFragment;
 import com.reading7.R;
 import com.reading7.Utils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;

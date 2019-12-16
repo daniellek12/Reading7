@@ -8,10 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.reading7.R;
-import com.reading7.Review;
+import com.reading7.Objects.Review;
 import com.reading7.Utils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -30,6 +29,7 @@ public class ReadShelfAdapter extends RecyclerView.Adapter<ReadShelfAdapter.View
         this.currentActivity = activity;
     }
 
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView cover;
 
@@ -38,6 +38,7 @@ public class ReadShelfAdapter extends RecyclerView.Adapter<ReadShelfAdapter.View
             cover = itemView.findViewById(R.id.coverImage);
         }
     }
+
 
     @NonNull
     @Override

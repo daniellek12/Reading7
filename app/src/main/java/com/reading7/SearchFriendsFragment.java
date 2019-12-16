@@ -19,6 +19,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.reading7.Adapters.SearchFriendsAdapter;
+import com.reading7.Objects.User;
 
 import java.util.ArrayList;
 
@@ -71,6 +72,7 @@ public class SearchFriendsFragment extends Fragment implements androidx.appcompa
 
     @Override
     public boolean onQueryTextSubmit(String string) {
+        if(adapter == null) return false;
         Filter filter = adapter.getFilter();
         filter.filter(string);
         return true;
@@ -78,6 +80,7 @@ public class SearchFriendsFragment extends Fragment implements androidx.appcompa
 
     @Override
     public boolean onQueryTextChange(String string) {
+        if(adapter == null) return false;
         Filter filter = adapter.getFilter();
         filter.filter(string);
         return true;

@@ -7,8 +7,8 @@
     android:foreground="?android:attr/selectableItemBackground"
     cardview:cardBackgroundColor="@color/transparent"
     cardview:cardElevation="5dp"
-    cardview:cardCornerRadius="20dp">
-
+    cardview:cardCornerRadius="20dp"
+    android:layoutDirection="rtl">
 
         <ImageView
             android:id="@+id/coverImage"

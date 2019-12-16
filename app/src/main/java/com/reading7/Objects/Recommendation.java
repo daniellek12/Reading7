@@ -1,4 +1,4 @@
-package com.reading7;
+package com.reading7.Objects;
 
 public class Recommendation {
     private String user_id;

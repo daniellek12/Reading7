@@ -27,7 +27,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.reading7.Adapters.AutoCompleteAdapter;
 import com.reading7.Adapters.QuestionnaireAdapter;
-import com.reading7.Adapters.SearchAdapter;
+import com.reading7.Objects.Book;
 
 import org.w3c.dom.Document;
 
@@ -37,7 +37,7 @@ import java.util.List;
 public class QuestionnaireActivity extends AppCompatActivity {
 
     private ArrayList<MultiSpinner> list = new ArrayList<>();
-    private ArrayList<Book> favourite_books = new ArrayList<>();
+    private ArrayList<Book> favourite_books = new ArrayList<Book>();
     private ArrayList<Book> books = new ArrayList<Book>();
     AutoCompleteAdapter adapter;
 

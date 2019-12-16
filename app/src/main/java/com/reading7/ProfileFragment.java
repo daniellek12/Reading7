@@ -1,5 +1,6 @@
 package com.reading7;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -22,8 +24,10 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.reading7.Adapters.ReadShelfAdapter;
 import com.reading7.Adapters.WishListAdapter;
+import com.reading7.Objects.Review;
+import com.reading7.Objects.User;
+import com.reading7.Objects.WishList;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,27 +38,19 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import static com.reading7.Utils.calculateAge;
-import static com.reading7.Utils.convertTxtToBook;
 
 public class ProfileFragment extends Fragment {
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
-    private List<Review> usersReviews;
-    private List<WishList> usersWishList;
+    final private List<Review> usersReviews = new ArrayList<Review>();
+    final private List<WishList> usersWishList = new ArrayList<WishList>();
     private ReadShelfAdapter adapterReviews;
     private WishListAdapter adapterWishList;
-
-    private User curr_user;
-
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mAuth = FirebaseAuth.getInstance();
-        db = FirebaseFirestore.getInstance();
-
-
         return inflater.inflate(R.layout.profile_fragment, null);
     }
 
@@ -62,11 +58,11 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        usersReviews = new ArrayList<>();
-        usersWishList = new ArrayList<>();
+        ((BottomNavigationView)getActivity().findViewById(R.id.navigation)).setSelectedItemId(R.id.navigation_profile);
+
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
         getUserInformation();
-
-
     }
 
     private void getUserInformation() {
@@ -80,7 +76,6 @@ public class ProfileFragment extends Fragment {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        curr_user = new User();
 
                         TextView userName = getActivity().findViewById(R.id.userName);
                         userName.setText(document.getData().get("full_name").toString());
@@ -103,53 +98,33 @@ public class ProfileFragment extends Fragment {
                         getUserReviews();
                         getUserWishList();
 
-                    } else
-                        Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    } else Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
 
-                } else
-                    Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                } else Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    private ArrayList<Integer> getCovers() {
-
-        ArrayList<Integer> covers = new ArrayList<Integer>();
-        covers.add(1);
-        covers.add(2);
-        covers.add(3);
-        covers.add(4);
-        covers.add(5);
-        covers.add(6);
-        covers.add(7);
-        covers.add(8);
-        covers.add(9);
-        covers.add(10);
-        covers.add(11);
-        covers.add(12);
-        covers.add(13);
-        covers.add(14);
-        covers.add(15);
-        covers.add(16);
-        covers.add(17);
-        covers.add(18);
-        covers.add(19);
-        covers.add(20);
-        covers.add(21);
-        covers.add(22);
-        covers.add(23);
-        covers.add(24);
-
-        return covers;
     }
 
     private void initWishlist() {
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-        RecyclerView wishlistRV = getActivity().findViewById(R.id.wishlistRV);
+        final RecyclerView wishlistRV = getActivity().findViewById(R.id.wishlistRV);
         wishlistRV.setLayoutManager(layoutManager);
         adapterWishList = new WishListAdapter(usersWishList, getActivity());
         wishlistRV.setAdapter(adapterWishList);
+
+        getActivity().findViewById(R.id.wishlistTitle).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ArrayList<String> book_names = new ArrayList<String>();
+                for(WishList wishList: usersWishList){
+                    book_names.add(wishList.getBook_title());
+                }
+
+                ((MainActivity)getActivity()).loadShelfFragment(new ShelfFragment(book_names,getString(R.string.my_wishlist),mAuth.getCurrentUser().getEmail(), ShelfFragment.ShelfType.WISHLIST));
+            }
+        });
+
     }
 
     private void initMyBookslist() {
@@ -159,6 +134,18 @@ public class ProfileFragment extends Fragment {
         myBooksRV.setLayoutManager(layoutManager);
         adapterReviews = new ReadShelfAdapter(usersReviews, getActivity());
         myBooksRV.setAdapter(adapterReviews);
+
+        getActivity().findViewById(R.id.mybooksTitle).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ArrayList<String> book_names = new ArrayList<String>();
+                for(Review review: usersReviews){
+                    book_names.add(review.getBook_title());
+                }
+
+                ((MainActivity)getActivity()).loadShelfFragment(new ShelfFragment(book_names,getString(R.string.my_books),mAuth.getCurrentUser().getEmail(), ShelfFragment.ShelfType.MYBOOKS));
+            }
+        });
 
     }
 
@@ -208,8 +195,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void getUserReviews() {
-        final List<Review> newlist = new ArrayList<>();
-        FirebaseUser mUser = mAuth.getCurrentUser();
+
         CollectionReference collection = db.collection("Reviews");
         Query query = collection.whereEqualTo("reviewer_email", mAuth.getCurrentUser().getEmail());
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -217,9 +203,8 @@ public class ProfileFragment extends Fragment {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot doc : task.getResult()) {
-                        newlist.add(doc.toObject(Review.class));
+                        usersReviews.add(doc.toObject(Review.class));
                     }
-                    usersReviews.addAll(newlist);
                     adapterReviews.notifyDataSetChanged();
                     TextView reviews_num = getActivity().findViewById(R.id.recommendations);
                     reviews_num.setText(Integer.toString(usersReviews.size()));
@@ -229,8 +214,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void getUserWishList() {
-        final List<WishList> newlist = new ArrayList<>();
-        FirebaseUser mUser = mAuth.getCurrentUser();
+
         CollectionReference collection = db.collection("Wishlist");
         Query query = collection.whereEqualTo("user_email", mAuth.getCurrentUser().getEmail());
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -238,13 +222,12 @@ public class ProfileFragment extends Fragment {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot doc : task.getResult()) {
-                        newlist.add(doc.toObject(WishList.class));
+                        usersWishList.add(doc.toObject(WishList.class));
                     }
-                    usersWishList.addAll(newlist);
                     adapterWishList.notifyDataSetChanged();
-
                 }
             }
         });
     }
+
 }

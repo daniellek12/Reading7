@@ -14,6 +14,8 @@
     <string name="search_tab2">סופרים</string>
     <string name="search_tab3">חברים</string>
     <string name="search_hint">חפש ספר, סופר או חבר</string>
+    <string name="recent_searches">חיפושים אחרונים</string>
+
 
     <!--Home Feed-->
     <string name="add_review">רוצה להמליץ על ספר?</string>
@@ -50,21 +52,20 @@
     <string name="first_place">1</string>
     <string name="second_place">2</string>
     <string name="third_place">3</string>
-    <string name="recent_searches">חיפושים אחרונים</string>
+    <string name="edit_profile_string">ערוך פרופיל</string>
+    <string name="show_all">הצג הכל</string>
+
+
+    <!--Public Profile-->
+    <string name="unfollow_button">עוקב</string>
+    <string name="follow_button">עקוב</string>
 
     <!--Edit Avatar-->
     <string name="skin_color">צבע עור</string>
     <string name="hair_color">צבע שיער</string>
     <string name="eye_color">צבע עיניים</string>
     <string name="shirt_color">צבע חולצה</string>
-
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="edit_profile_string">ערוך פרופיל</string>
-
-    <string name="unfollow_button">עוקב</string>
-    <string name="follow_button">עקוב</string>
+    <string name="choose_items">בחר פריטים</string>
 
 
 </resources>
