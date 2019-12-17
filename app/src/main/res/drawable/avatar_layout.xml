@@ -2,11 +2,15 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:id="@+id/skin"
-        android:drawable="@drawable/pen"
+        android:drawable="@drawable/skin2"
+        android:gravity="bottom" />
+
+    <item android:id="@+id/shirt"
+        android:drawable="@drawable/shirt"
         android:gravity="bottom" />
 
     <item android:id="@+id/hair"
-        android:drawable="@drawable/search"
+        android:drawable="@drawable/hair2"
         android:gravity="bottom" />
 
 

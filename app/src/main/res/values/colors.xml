@@ -19,11 +19,11 @@
 
 
     <!--Avatar Colors-->
-    <color name="skin1">#FFDBAC</color>
-    <color name="skin2">#F1C27D</color>
-    <color name="skin3">#E0AC69</color>
-    <color name="skin4">#C68642</color>
-    <color name="skin5">#8D5524</color>
+    <color name="skin1">#F0D0B4</color>
+    <color name="skin2">#FBBC98</color>
+    <color name="skin3">#DFB28B</color>
+    <color name="skin4">#F9A66F</color>
+    <color name="skin5">#A46C35</color>
 
     <color name="eyes1">#231F20</color>
     <color name="eyes2">#80461B</color>

@@ -6,8 +6,6 @@ import android.view.MenuItem;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.reading7.Objects.Book;
 
-import java.util.ArrayList;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -26,6 +24,7 @@ public class MainActivity extends AppCompatActivity
         loadFragment(new ExploreFragment());
     }
 
+
     public boolean loadFragment(Fragment fragment) {
 
         if (fragment != null) {
@@ -41,11 +40,11 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    public boolean loadBookFragment(Fragment fragment, Book book){
+    public boolean loadBookFragment(Fragment fragment, Book book) {
 
-        if(fragment != null && book != null){
+        if (fragment != null && book != null) {
 
-            ((BookFragment)fragment).setBook(book);
+            ((BookFragment) fragment).setBook(book);
             getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.fragmant_container, fragment)
@@ -61,7 +60,7 @@ public class MainActivity extends AppCompatActivity
     public boolean loadPublicProfileFragment(Fragment fragment, String user_email) {
 
         if (fragment != null && user_email != null) {
-            ((PublicProfileFragment)fragment).setUser(user_email);
+            ((PublicProfileFragment) fragment).setUser(user_email);
             getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.fragmant_container, fragment)
@@ -74,11 +73,11 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    public boolean loadAuthorFragment(Fragment fragment, String author_name){
+    public boolean loadAuthorFragment(Fragment fragment, String author_name) {
 
-        if(fragment != null && author_name != null){
+        if (fragment != null && author_name != null) {
 
-            ((AuthorFragment)fragment).setAuthor(author_name);
+            ((AuthorFragment) fragment).setAuthor(author_name);
             getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.fragmant_container, fragment)
@@ -91,9 +90,9 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    public boolean loadShelfFragment(Fragment fragment){
+    public boolean loadShelfFragment(Fragment fragment) {
 
-        if(fragment != null){
+        if (fragment != null) {
             getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.fragmant_container, fragment)
@@ -104,7 +103,6 @@ public class MainActivity extends AppCompatActivity
 
         return false;
     }
-
 
 
     @Override
@@ -140,18 +138,16 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    public void disableBottomNavigation(){
+    public void setBottomNavigationEnabled(boolean enabled) {
         BottomNavigationView bottomNavigationView = findViewById(R.id.navigation);
-        bottomNavigationView.getMenu().findItem(R.id.navigation_home).setEnabled(false);
-        bottomNavigationView.getMenu().findItem(R.id.navigation_explore).setEnabled(false);
-        bottomNavigationView.getMenu().findItem(R.id.navigation_profile).setEnabled(false);
-    }
+        bottomNavigationView.getMenu().findItem(R.id.navigation_home).setEnabled(enabled);
+        bottomNavigationView.getMenu().findItem(R.id.navigation_explore).setEnabled(enabled);
+        bottomNavigationView.getMenu().findItem(R.id.navigation_profile).setEnabled(enabled);
 
-    public void enableBottomNavigation(){
-        BottomNavigationView bottomNavigationView = findViewById(R.id.navigation);
-        bottomNavigationView.getMenu().findItem(R.id.navigation_home).setEnabled(true);
-        bottomNavigationView.getMenu().findItem(R.id.navigation_explore).setEnabled(true);
-        bottomNavigationView.getMenu().findItem(R.id.navigation_profile).setEnabled(true);
+        if (enabled)
+            bottomNavigationView.setAlpha((float) 1);
+        else
+            bottomNavigationView.setAlpha((float) 0.5);
     }
 
 }

@@ -125,7 +125,7 @@ public class ShelfFragment extends Fragment {
         edit_mode = true;
         adapter.setEditMode(true);
 
-        ((MainActivity)getActivity()).disableBottomNavigation();
+        ((MainActivity)getActivity()).setBottomNavigationEnabled(false);
         getActivity().findViewById(R.id.editShelfButton).setVisibility(View.GONE);
         getActivity().findViewById(R.id.backButton).setVisibility(View.GONE);
         getActivity().findViewById(R.id.deleteButton).setVisibility(View.VISIBLE);
@@ -143,7 +143,7 @@ public class ShelfFragment extends Fragment {
         getActivity().findViewById(R.id.editShelfButton).setVisibility(View.VISIBLE);
         getActivity().findViewById(R.id.backButton).setVisibility(View.VISIBLE);
         ((TextView)getActivity().findViewById(R.id.toolbar_title)).setText(title);
-        ((MainActivity)getActivity()).enableBottomNavigation();
+        ((MainActivity)getActivity()).setBottomNavigationEnabled(true);
 
     }
 

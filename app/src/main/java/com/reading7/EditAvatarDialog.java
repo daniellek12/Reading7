@@ -53,19 +53,19 @@ public class EditAvatarDialog extends AppCompatDialogFragment {
                 Drawable skin = layer.findDrawableByLayerId(R.id.skin);
                 switch (checked){
                     case R.id.skin1:
-                        skin.setTint(getResources().getColor(R.color.skin1));
+                        layer.setDrawableByLayerId(R.id.skin, getResources().getDrawable(R.drawable.skin1));
                         break;
                     case R.id.skin2:
-                        skin.setTint(getResources().getColor(R.color.skin2));
+                        layer.setDrawableByLayerId(R.id.skin, getResources().getDrawable(R.drawable.skin2));
                         break;
                     case R.id.skin3:
-                        skin.setTint(getResources().getColor(R.color.skin3));
+                        layer.setDrawableByLayerId(R.id.skin, getResources().getDrawable(R.drawable.skin3));
                         break;
                     case R.id.skin4:
-                        skin.setTint(getResources().getColor(R.color.skin4));
+                        layer.setDrawableByLayerId(R.id.skin, getResources().getDrawable(R.drawable.skin4));
                         break;
                     case R.id.skin5:
-                        skin.setTint(getResources().getColor(R.color.skin5));
+                        layer.setDrawableByLayerId(R.id.skin, getResources().getDrawable(R.drawable.skin5));
                         break;
                 }
                 avatar.setImageDrawable(layer);
@@ -92,6 +92,33 @@ public class EditAvatarDialog extends AppCompatDialogFragment {
                         break;
                     case R.id.hair5:
                         hair.setTint(getResources().getColor(R.color.hair5));
+                        break;
+                }
+                avatar.setImageDrawable(layer);
+            }
+        });
+
+
+        shirtButtons.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int checked) {
+
+                Drawable shirt = layer.findDrawableByLayerId(R.id.shirt);
+                switch (checked){
+                    case R.id.shirt1:
+                        shirt.setTint(getResources().getColor(R.color.shirt1));
+                        break;
+                    case R.id.shirt2:
+                        shirt.setTint(getResources().getColor(R.color.shirt2));
+                        break;
+                    case R.id.shirt3:
+                        shirt.setTint(getResources().getColor(R.color.shirt3));
+                        break;
+                    case R.id.shirt4:
+                        shirt.setTint(getResources().getColor(R.color.shirt4));
+                        break;
+                    case R.id.shirt5:
+                        shirt.setTint(getResources().getColor(R.color.shirt5));
                         break;
                 }
                 avatar.setImageDrawable(layer);

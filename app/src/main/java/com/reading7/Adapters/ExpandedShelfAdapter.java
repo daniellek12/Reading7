@@ -6,22 +6,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.util.Assert;
 import com.reading7.BookFragment;
 import com.reading7.MainActivity;
 import com.reading7.Objects.Book;
@@ -37,11 +32,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class ExpandedShelfAdapter extends RecyclerView.Adapter<ExpandedShelfAdapter.ViewHolder> {
 
+    private Context mContext;
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
     private ShelfFragment.ShelfType type;
     private List<String> bookNames;
-    private Context mContext;
 
     private boolean editMode;
     private List<String> toDelete;
@@ -184,9 +179,10 @@ public class ExpandedShelfAdapter extends RecyclerView.Adapter<ExpandedShelfAdap
         }
     }
 
-
-    //TODO: deleting a book from my books also deletes my review on the book.
-    //      should we provide other options?
+    /*
+     * TODO: deleting a book from my books also deletes my review on the book.
+     *       should we provide other options?
+     */
     public void deleteMyBooks() {
 
         if (this.type != ShelfFragment.ShelfType.MYBOOKS)

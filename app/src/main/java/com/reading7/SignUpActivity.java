@@ -59,6 +59,7 @@ public class SignUpActivity extends AppCompatActivity {
         });
 
         setupDatePicker();
+        setupAvatarDialog();
     }
 
     @Override
@@ -158,7 +159,6 @@ public class SignUpActivity extends AppCompatActivity {
         });
     }
 
-
     private String getBirthDate () {
         String birth_date = ((EditText) findViewById(R.id.birth_date_edit)).getText().toString();
         if (birth_date.equals("")){
@@ -167,6 +167,17 @@ public class SignUpActivity extends AppCompatActivity {
         return birth_date;
     }
 
+    private void setupAvatarDialog() {
+
+        findViewById(R.id.profile_image).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EditAvatarDialog dialog = new EditAvatarDialog();
+                dialog.show(getSupportFragmentManager(), "edit avater");
+            }
+        });
+
+    }
 
     private void signUpUser(final User user) {
 

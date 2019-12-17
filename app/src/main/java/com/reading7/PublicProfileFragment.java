@@ -77,16 +77,16 @@ public class PublicProfileFragment extends Fragment {
                     if (document.exists()) {
 
                         String userName = document.getData().get("full_name").toString();
-                        ((TextView) getActivity().findViewById(R.id.userName)).setText(userName);
+                        ((TextView) getActivity().findViewById(R.id.publicProfile_userName)).setText(userName);
 
                         String birthDate = document.getData().get("birth_date").toString();
-                        ((TextView) getActivity().findViewById(R.id.age)).setText("גיל: " + calculateAge(birthDate));
+                        ((TextView) getActivity().findViewById(R.id.publicProfile_age)).setText("גיל: " + calculateAge(birthDate));
 
                         ArrayList<String> followers = (ArrayList<String>) document.getData().get("followers");
-                        ((TextView) getActivity().findViewById(R.id.followers)).setText(Integer.toString(followers.size()));
+                        ((TextView) getActivity().findViewById(R.id.publicProfile_followers)).setText(Integer.toString(followers.size()));
 
                         ArrayList<String> following = (ArrayList<String>) document.getData().get("following");
-                        ((TextView) getActivity().findViewById(R.id.following)).setText(Integer.toString(following.size()));
+                        ((TextView) getActivity().findViewById(R.id.publicProfile_following)).setText(Integer.toString(following.size()));
 
                         ArrayList<String> favouriteBooks = (ArrayList<String>) document.getData().get("favourite_books");
 
