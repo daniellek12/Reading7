@@ -46,6 +46,7 @@ public class QuestionnaireActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.questionnaire_activity);
 
+        final AutoCompleteTextView edit_text =(AutoCompleteTextView) findViewById(R.id.auto_complete);
         Button submit_button = findViewById(R.id.submit);
         submit_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,10 +60,8 @@ public class QuestionnaireActivity extends AppCompatActivity {
                     }
 
                 }
-//                DocumentReference userRef = FirebaseFirestore.getInstance().collection("Users").document(user.getEmail());
-//                userRef.update("favourite_books", FieldValue.arrayUnion(favourite_books.get(0)));
-//                userRef.update("favourite_books", FieldValue.arrayUnion(favourite_books.get(1)));
-//                userRef.update("favourite_books", FieldValue.arrayUnion(favourite_books.get(2)));
+                DocumentReference userRef = FirebaseFirestore.getInstance().collection("Users").document(user.getEmail());
+                userRef.update("favourite_books", FieldValue.arrayUnion(edit_text.getText().toString()));
                 Intent intent = new Intent(QuestionnaireActivity.this, LoginActivity.class);
                 intent.putExtra("NEW_USER", true);
                 startActivity(intent);
@@ -86,27 +85,6 @@ public class QuestionnaireActivity extends AppCompatActivity {
             }
         });
 
-        final AutoCompleteTextView edit_text =(AutoCompleteTextView) findViewById(R.id.auto_complete);
-//        edit_text.getOnItemSelectedListener(new AdapterView.OnItemClickListener(){
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                String selectedItem;
-//                selectedItem = adapter.getItem(position).toString();
-//                CollectionReference collection = FirebaseFirestore.getInstance().collection("Books");
-//                Query query = collection.whereEqualTo("book_name", selectedItem);
-//                query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-////                        if(task.isSuccessful()){
-////                            for (QueryDocumentSnapshot document : task.getResult()) {
-////                                Book book = document.toObject(Book.class);
-////                                /* favourite_books.add(book); */
-////                            }
-////                        }
-//                    }
-//                });
-//            }
-//        });
 
 
 

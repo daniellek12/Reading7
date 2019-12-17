@@ -1,5 +1,7 @@
 package com.reading7.Objects;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 
 public class Book {
@@ -97,5 +99,11 @@ public class Book {
         this.description = description;
         this.avg_rating = avg_rating;
         this.num_readers = num_readers;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return title;
     }
 }

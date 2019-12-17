@@ -10,29 +10,15 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-<<<<<<< HEAD
-<<<<<<< HEAD
+
         <activity android:name=".QuestionnaireActivity"></activity>
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-=======
-        <activity android:name=".AuthorFragment"></activity>
-=======
         <activity android:name=".ShelfFragment"></activity>
         <activity android:name=".AuthorFragment" />
->>>>>>> f46f206ba8cc22cfa2246c3a8ee5614028b6076b
-        <activity
-            android:name=".MainActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"
-<<<<<<< HEAD
-            android:windowSoftInputMode="adjustPan"></activity>
->>>>>>> d4bf73764bfdad4c495584c4d491917f893ceaaf
-=======
-            android:windowSoftInputMode="adjustPan" />
->>>>>>> f46f206ba8cc22cfa2246c3a8ee5614028b6076b
+
         <activity
             android:name=".SignUpActivity"
             android:screenOrientation="portrait"

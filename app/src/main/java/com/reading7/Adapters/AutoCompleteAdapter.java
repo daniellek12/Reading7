@@ -8,9 +8,13 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.reading7.BookFragment;
+import com.reading7.MainActivity;
 import com.reading7.Objects.Book;
+import com.reading7.QuestionnaireActivity;
 import com.reading7.Utils;
 import com.reading7.R;
 
@@ -50,8 +54,10 @@ public class AutoCompleteAdapter extends BaseAdapter implements Filterable {
 
     public class ViewHolder {
 
+        RelativeLayout container;
         CircleImageView cover;
         TextView title;
+        TextView author;
     }
 
     public Filter getFilter() {
@@ -87,14 +93,16 @@ public class AutoCompleteAdapter extends BaseAdapter implements Filterable {
 
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
 
-        ViewHolder holder;
+        final ViewHolder holder;
         if (convertView == null) {
 
             convertView = LayoutInflater.from(mContext).inflate(R.layout.search_item, parent, false);
             holder = new ViewHolder();
+            holder.container = convertView.findViewById(R.id.container);
             holder.title = convertView.findViewById(R.id.title);
+            holder.author = convertView.findViewById(R.id.author);
             holder.cover = convertView.findViewById(R.id.cover);
             convertView.setTag(holder);
 
@@ -103,6 +111,7 @@ public class AutoCompleteAdapter extends BaseAdapter implements Filterable {
         }
 
         holder.title.setText(books.get(position).getTitle());
+        holder.author.setText(books.get(position).getAuthor());
         Utils.showImage(books.get(position).getTitle(), holder.cover, (Activity) mContext);
 
         return convertView;
