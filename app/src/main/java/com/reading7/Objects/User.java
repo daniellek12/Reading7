@@ -18,6 +18,8 @@ public class User {
     private ArrayList<String> favourite_genres;
     private ArrayList<String> liked_reviews;
 
+    private ArrayList<Integer> avatar_details; //hair color, hair type, eyes color, glasses, skin color, shirt color
+
     public User() {
         this.full_name = "";
         this.email = "";
@@ -28,6 +30,7 @@ public class User {
         this.favourite_books = new ArrayList<>();
         this.favourite_genres = new ArrayList<>();
         this.liked_reviews = new ArrayList<>();
+        this.avatar_details = new ArrayList<>();
     }
 
     public User(String full_name, String email, String birth_date) {
@@ -40,7 +43,10 @@ public class User {
         this.favourite_books = new ArrayList<>();
         this.favourite_genres = new ArrayList<>();
         this.liked_reviews = new ArrayList<>();
+        this.avatar_details = new ArrayList<>();
     }
+
+    //TODO: REMOVE WHEN THE AVATAR WILL WORK
 
     public User(String full_name, String email, String birth_date, ArrayList<String> followers, ArrayList<String> following, ArrayList<String> last_searches, ArrayList<String> favourite_books, ArrayList<String> favourite_genres, ArrayList<String> liked_reviews) {
         this.full_name = full_name;
@@ -51,7 +57,21 @@ public class User {
         this.last_searches = last_searches;
         this.favourite_books = favourite_books;
         this.favourite_genres = favourite_genres;
+        this.liked_reviews = liked_reviews;;
+    }
+
+
+    public User(String full_name, String email, String birth_date, ArrayList<String> followers, ArrayList<String> following, ArrayList<String> last_searches, ArrayList<String> favourite_books, ArrayList<String> favourite_genres, ArrayList<String> liked_reviews, ArrayList<Integer> avatar_details) {
+        this.full_name = full_name;
+        this.email = email;
+        this.birth_date = birth_date;
+        this.followers = followers;
+        this.following = following;
+        this.last_searches = last_searches;
+        this.favourite_books = favourite_books;
+        this.favourite_genres = favourite_genres;
         this.liked_reviews = liked_reviews;
+        this.avatar_details = avatar_details;
     }
 
     public String getFull_name() {
@@ -132,5 +152,13 @@ public class User {
 
     public void add_like(String id) {
         this.liked_reviews.add(id);
+    }
+
+    public ArrayList<Integer> getAvatar_details() {
+        return avatar_details;
+    }
+
+    public void setAvatar_details(ArrayList<Integer> avatar_details) {
+        this.avatar_details = avatar_details;
     }
 }
