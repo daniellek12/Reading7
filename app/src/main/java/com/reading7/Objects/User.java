@@ -133,6 +133,4 @@ public class User {
     public void add_like(String id) {
         this.liked_reviews.add(id);
     }
-
-
 }

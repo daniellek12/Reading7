@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/signup_background"
+    tools:context=".QuestionnaireActivity"
+    android:layoutDirection="rtl">
+
+    <TextView
+        android:id="@+id/questionnaire_title"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginBottom="25dp"
+        android:drawablePadding="10dp"
+        android:drawableTint="@color/transparentPrimaryDark"
+        android:foregroundGravity="center"
+        android:gravity="center|center_vertical"
+        android:hint="שאלון העדפות"
+        android:inputType="text"
+        android:lines="1"
+        android:maxLength="25"
+        android:maxLines="1"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:singleLine="true"
+        android:textSize="25sp">
+
+    </TextView>
+
+    <AutoCompleteTextView
+        android:id="@+id/auto_complete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/questionnaire_title"
+        android:layout_centerHorizontal="true"
+        android:completionHint="בחר ספר מועדף"
+        android:completionThreshold="1"
+        android:foregroundGravity="center"
+        android:gravity="center"
+        android:hint="בחר ספר מועדף" />
+
+
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_below="@+id/auto_complete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp" />
+
+    <LinearLayout
+        android:id="@+id/firstLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="invisible"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="12dp"
+        android:background="@drawable/podium1"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingLeft="12dp"
+        android:paddingTop="6dp"
+        android:paddingRight="12dp"
+        android:paddingBottom="12dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="@string/first_place"
+            android:textAlignment="center"
+            android:textColor="@color/darkGrey"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/first"
+            android:layout_width="85dp"
+            android:layout_height="110dp"
+            android:background="@color/white"
+            android:padding="2dp"
+            android:scaleType="fitXY"
+            android:src="@mipmap/cover20" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/submit"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="500dp"
+        android:background="@drawable/rounded_button"
+        android:text="סיימתי"
+        android:textColor="@color/white"
+        android:textSize="18sp">
+
+    </Button>
+
+
+</RelativeLayout>
