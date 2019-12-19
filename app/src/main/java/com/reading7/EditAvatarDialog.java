@@ -64,7 +64,7 @@ public class EditAvatarDialog extends AppCompatDialogFragment {
         layer = (LayerDrawable) avatar.getDrawable();
 
         Utils.loadAvatar(getContext(), avatar, avatar_details);
-        changeHairButtonsColor(view, Utils.getColor(getContext(), "hair" + avatar_details.get(2)));
+        changeHairButtonsColor(view, Utils.getColor(getContext(), "hair" + avatar_details.get(3)));
 
         initTabs(view);
         initSkinButtons(view);

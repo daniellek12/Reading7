@@ -1,12 +1,10 @@
 package com.reading7;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,7 +23,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.reading7.Adapters.ReadShelfAdapter;
 import com.reading7.Adapters.WishListAdapter;
 import com.reading7.Objects.Review;
-import com.reading7.Objects.User;
 import com.reading7.Objects.WishList;
 
 import java.util.ArrayList;
@@ -96,12 +93,9 @@ public class ProfileFragment extends Fragment {
                         arr = (ArrayList<String>) document.getData().get("following");
                         following.setText(Integer.toString(arr.size()));
 
-                        initEditBtn();
                         initLogOutBtn();
                         initWishlist();
                         initMyBookslist();
-                        getUserReviews();
-                        getUserWishList();
 
                     } else Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
 
@@ -118,6 +112,8 @@ public class ProfileFragment extends Fragment {
         adapterWishList = new WishListAdapter(usersWishList, getActivity());
         wishlistRV.setAdapter(adapterWishList);
 
+        getUserWishList();
+
         getActivity().findViewById(R.id.wishlistTitle).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -129,7 +125,6 @@ public class ProfileFragment extends Fragment {
                 ((MainActivity)getActivity()).loadShelfFragment(new ShelfFragment(book_names,getString(R.string.my_wishlist),mAuth.getCurrentUser().getEmail(), ShelfFragment.ShelfType.WISHLIST));
             }
         });
-
     }
 
     private void initMyBookslist() {
@@ -139,6 +134,8 @@ public class ProfileFragment extends Fragment {
         myBooksRV.setLayoutManager(layoutManager);
         adapterReviews = new ReadShelfAdapter(usersReviews, getActivity());
         myBooksRV.setAdapter(adapterReviews);
+
+        getUserReviews();
 
         getActivity().findViewById(R.id.mybooksTitle).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,19 +149,6 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-    }
-
-    private void initEditBtn() {
-
-        final Button edit_btn = getActivity().findViewById(R.id.edit);
-        edit_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                disableClicks();
-                Toast.makeText(getContext(), "EDIT PROFILE", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     private void initLogOutBtn() {
@@ -211,8 +195,17 @@ public class ProfileFragment extends Fragment {
                         usersReviews.add(doc.toObject(Review.class));
                     }
                     adapterReviews.notifyDataSetChanged();
+
                     TextView reviews_num = getActivity().findViewById(R.id.recommendations);
                     reviews_num.setText(Integer.toString(usersReviews.size()));
+
+                    if(usersReviews.isEmpty()){
+                        getActivity().findViewById(R.id.myBooksRV).setVisibility(View.INVISIBLE);
+                        getActivity().findViewById(R.id.emptyMyBooks).setVisibility(View.VISIBLE);
+                    } else {
+                        getActivity().findViewById(R.id.myBooksRV).setVisibility(View.VISIBLE);
+                        getActivity().findViewById(R.id.emptyMyBooks).setVisibility(View.INVISIBLE);
+                    }
                 }
             }
         });
@@ -230,6 +223,14 @@ public class ProfileFragment extends Fragment {
                         usersWishList.add(doc.toObject(WishList.class));
                     }
                     adapterWishList.notifyDataSetChanged();
+
+                    if(usersWishList.isEmpty()){
+                        getActivity().findViewById(R.id.wishlistRV).setVisibility(View.INVISIBLE);
+                        getActivity().findViewById(R.id.emptyWishlist).setVisibility(View.VISIBLE);
+                    } else {
+                        getActivity().findViewById(R.id.wishlistRV).setVisibility(View.VISIBLE);
+                        getActivity().findViewById(R.id.emptyWishlist).setVisibility(View.INVISIBLE);
+                    }
                 }
             }
         });

@@ -21,8 +21,10 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.reading7.Adapters.ReadShelfAdapter;
+import com.reading7.Adapters.WishListAdapter;
 import com.reading7.Objects.Review;
 import com.reading7.Objects.User;
+import com.reading7.Objects.WishList;
 
 import java.util.ArrayList;
 
@@ -39,9 +41,13 @@ public class PublicProfileFragment extends Fragment {
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
-    private ArrayList<Review> usersReviews;
+    private ArrayList<Review> usersReviews = new ArrayList<>();
+    private ArrayList<WishList> usersWishList = new ArrayList<>();
+    ;
     private String user_email;
     private User user;
+    private ReadShelfAdapter adapterReviews;
+    private WishListAdapter adapterWishList;
 
 
     @Nullable
@@ -58,8 +64,6 @@ public class PublicProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getUserInformation();
-        initWishlist();
-        initMyBookslist();
     }
 
     public void setUser(String user_email) {
@@ -106,6 +110,9 @@ public class PublicProfileFragment extends Fragment {
                                 favouriteBooks, favouriteGenres, likedReviews);
 
                         initFollowButton();
+                        initWishlist();
+                        initMyBookslist();
+
                     } else
                         Toast.makeText(getActivity(), "Account does not exist", Toast.LENGTH_SHORT).show();
                 } else
@@ -114,37 +121,6 @@ public class PublicProfileFragment extends Fragment {
         });
     }
 
-
-    private ArrayList<Integer> getCovers() {
-
-        ArrayList<Integer> covers = new ArrayList<Integer>();
-        covers.add(1);
-        covers.add(2);
-        covers.add(3);
-        covers.add(4);
-        covers.add(5);
-        covers.add(6);
-        covers.add(7);
-        covers.add(8);
-        covers.add(9);
-        covers.add(10);
-        covers.add(11);
-        covers.add(12);
-        covers.add(13);
-        covers.add(14);
-        covers.add(15);
-        covers.add(16);
-        covers.add(17);
-        covers.add(18);
-        covers.add(19);
-        covers.add(20);
-        covers.add(21);
-        covers.add(22);
-        covers.add(23);
-        covers.add(24);
-
-        return covers;
-    }
 
     private void initFollowButton() {
 
@@ -216,21 +192,53 @@ public class PublicProfileFragment extends Fragment {
     }
 
     private void initWishlist() {
-        getUserReviews();
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-        RecyclerView wishlistRV = getActivity().findViewById(R.id.wishlistRV);
+        final RecyclerView wishlistRV = getActivity().findViewById(R.id.wishlistRV);
         wishlistRV.setLayoutManager(layoutManager);
-        ReadShelfAdapter adapter = new ReadShelfAdapter(usersReviews, getActivity());
-        wishlistRV.setAdapter(adapter);
+        adapterWishList = new WishListAdapter(usersWishList, getActivity());
+        wishlistRV.setAdapter(adapterWishList);
+
+        getUserWishList();
+
+        getActivity().findViewById(R.id.wishlistTitle).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ArrayList<String> book_names = new ArrayList<String>();
+                for (WishList wishList : usersWishList) {
+                    book_names.add(wishList.getBook_title());
+                }
+
+                String title = getString(R.string.public_my_wishlist) + " " + user.getFull_name();
+                ((MainActivity) getActivity()).loadShelfFragment(new ShelfFragment(book_names, title, user.getEmail(), ShelfFragment.ShelfType.WISHLIST));
+            }
+        });
+
     }
 
     private void initMyBookslist() {
-        getUserReviews();
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         RecyclerView myBooksRV = getActivity().findViewById(R.id.myBooksRV);
         myBooksRV.setLayoutManager(layoutManager);
-        ReadShelfAdapter adapter = new ReadShelfAdapter(usersReviews, getActivity());
-        myBooksRV.setAdapter(adapter);
+        adapterReviews = new ReadShelfAdapter(usersReviews, getActivity());
+        myBooksRV.setAdapter(adapterReviews);
+
+        getUserReviews();
+
+        getActivity().findViewById(R.id.mybooksTitle).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ArrayList<String> book_names = new ArrayList<String>();
+                for (Review review : usersReviews) {
+                    book_names.add(review.getBook_title());
+                }
+
+                String title = getString(R.string.public_my_books) + " " + user.getFull_name();
+                ((MainActivity) getActivity()).loadShelfFragment(new ShelfFragment(book_names, title, user.getEmail(), ShelfFragment.ShelfType.MYBOOKS));
+            }
+        });
+
 
     }
 
@@ -242,16 +250,54 @@ public class PublicProfileFragment extends Fragment {
 
     }
 
+    private void getUserWishList() {
+
+        CollectionReference collection = db.collection("Wishlist");
+        Query query = collection.whereEqualTo("user_email", user.getEmail());
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                        usersWishList.add(doc.toObject(WishList.class));
+                    }
+                    adapterWishList.notifyDataSetChanged();
+
+                    if (usersWishList.isEmpty()) {
+                        getActivity().findViewById(R.id.wishlistRV).setVisibility(View.INVISIBLE);
+                        getActivity().findViewById(R.id.publicProfile_emptyWishlist).setVisibility(View.VISIBLE);
+                    } else {
+                        getActivity().findViewById(R.id.wishlistRV).setVisibility(View.VISIBLE);
+                        getActivity().findViewById(R.id.publicProfile_emptyWishlist).setVisibility(View.INVISIBLE);
+                    }
+                }
+            }
+        });
+    }
+
     private void getUserReviews() {
-        FirebaseUser mUser = mAuth.getCurrentUser();
+
         CollectionReference collection = db.collection("Reviews");
-        Query query = collection.whereEqualTo("reviewer_email", mUser.getEmail());
+        Query query = collection.whereEqualTo("reviewer_email", user.getEmail());
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot doc : task.getResult()) {
                         usersReviews.add(doc.toObject(Review.class));
+                    }
+
+                    adapterReviews.notifyDataSetChanged();
+
+                    TextView reviews_num = getActivity().findViewById(R.id.publicProfile_recommendations);
+                    reviews_num.setText(Integer.toString(usersReviews.size()));
+
+                    if (usersReviews.isEmpty()) {
+                        getActivity().findViewById(R.id.myBooksRV).setVisibility(View.INVISIBLE);
+                        getActivity().findViewById(R.id.publicProfile_emptyMyBooks).setVisibility(View.VISIBLE);
+                    } else {
+                        getActivity().findViewById(R.id.myBooksRV).setVisibility(View.VISIBLE);
+                        getActivity().findViewById(R.id.publicProfile_emptyMyBooks).setVisibility(View.INVISIBLE);
                     }
                 }
             }

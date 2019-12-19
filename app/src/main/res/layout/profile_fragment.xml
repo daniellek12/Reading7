@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -24,6 +25,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -54,7 +56,6 @@
             android:textSize="22sp"
             android:textStyle="bold" />
 
-
         <LinearLayout
             android:id="@+id/profileDetails"
             android:layout_width="match_parent"
@@ -76,23 +77,11 @@
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/edit"
-            android:layout_width="200dp"
-            android:layout_height="35dp"
-            android:layout_below="@+id/profileDetails"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/rounded_button"
-            android:text="@string/edit_profile_string"
-            android:textColor="@color/white"
-            android:textSize="18sp" />
-
         <LinearLayout
             android:id="@+id/countersLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/edit"
+            android:layout_below="@id/profileDetails"
             android:layout_marginTop="20dp"
             android:background="@color/white"
             android:gravity="center"
@@ -202,14 +191,13 @@
 
         </LinearLayout>
 
-
         <View
             android:id="@+id/divider1"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_below="@id/countersLayout"
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="25dp"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="15dp"
             android:background="?android:attr/listDivider" />
@@ -236,19 +224,45 @@
                 android:textColor="@color/darkGrey" />
         </RelativeLayout>
 
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/wishlistRV"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:minHeight="100dp"
             android:layout_below="@+id/wishlistTitle"
             android:layout_marginTop="20dp"
             android:clipToPadding="false"
             android:layoutDirection="rtl"
             android:orientation="horizontal"
             android:paddingLeft="20dp"
-            android:paddingRight="10dp" />
+            android:paddingRight="10dp"
+            android:visibility="invisible" />
 
+        <RelativeLayout
+            android:id="@+id/emptyWishlist"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_below="@+id/wishlistTitle"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/rounded_button"
+            android:backgroundTint="@color/grey"
+            android:elevation="2dp"
+            android:layoutDirection="rtl"
+            android:padding="25dp">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:text="@string/empty_wishlist"
+                android:textColor="@color/lightGrey"
+                android:textSize="14sp" />
+        </RelativeLayout>
 
         <View
             android:id="@+id/divider2"
@@ -256,11 +270,10 @@
             android:layout_height="1dp"
             android:layout_below="@+id/wishlistRV"
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="25dp"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="15dp"
             android:background="?android:attr/listDivider" />
-
 
         <RelativeLayout
             android:id="@+id/mybooksTitle"
@@ -288,14 +301,41 @@
             android:id="@+id/myBooksRV"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:minHeight="100dp"
             android:layout_below="@+id/mybooksTitle"
             android:layout_marginTop="20dp"
             android:clipToPadding="false"
             android:layoutDirection="rtl"
             android:orientation="horizontal"
             android:paddingLeft="20dp"
-            android:paddingRight="10dp" />
+            android:paddingRight="10dp"
+            android:visibility="visible" />
 
+        <RelativeLayout
+            android:id="@+id/emptyMyBooks"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_below="@+id/mybooksTitle"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/rounded_button"
+            android:backgroundTint="@color/grey"
+            android:elevation="2dp"
+            android:layoutDirection="rtl"
+            android:padding="25dp">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:text="@string/empty_mybooks"
+                android:textColor="@color/lightGrey"
+                android:textSize="14sp" />
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/logout"
@@ -318,8 +358,8 @@
             android:layout_marginBottom="25dp"
             android:visibility="gone" />
 
-
     </RelativeLayout>
 
     </androidx.core.widget.NestedScrollView>
+
 </RelativeLayout>

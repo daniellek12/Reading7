@@ -81,10 +81,13 @@ public class ShelfFragment extends Fragment {
 
     private void initEditButton() {
 
-        if(!FirebaseAuth.getInstance().getCurrentUser().getEmail().equals(owner_email))
-            throw new AssertionError("You can't edit someone else's shelf!");
-
         ImageView editButton = getActivity().findViewById(R.id.editShelfButton);
+
+        if(!FirebaseAuth.getInstance().getCurrentUser().getEmail().equals(owner_email)) {
+            editButton.setVisibility(View.GONE);
+            return;
+        }
+
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

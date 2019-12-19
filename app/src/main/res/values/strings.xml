@@ -54,11 +54,18 @@
     <string name="third_place">3</string>
     <string name="edit_profile_string">ערוך פרופיל</string>
     <string name="show_all">הצג הכל</string>
+    <string name="empty_wishlist">עדיין לא הוספת ספרים לרשימת המשאלות.</string>
+    <string name="empty_mybooks">עדיין לא הוספת ספרים לרשימת הספרים שקראת.</string>
 
 
     <!--Public Profile-->
     <string name="unfollow_button">עוקב</string>
     <string name="follow_button">עקוב</string>
+    <string name="public_empty_wishlist">עדיין לא הוסיף ספרים לרשימת המשאלות שלו.</string>
+    <string name="public_empty_mybooks">עדיין לא הוסיף ספרים לרשימת הספרים שקרא.</string>
+    <string name="public_my_wishlist">רשימת המשאלות של</string>
+    <string name="public_my_books">ספרים שקרא</string>
+
 
     <!--Edit Avatar-->
     <string name="skin_color">צבע עור</string>
@@ -70,6 +77,5 @@
     <string name="hair_title">שיער</string>
     <string name="accessories_title">אביזרים</string>
     <string name="glasses">משקפיים</string>
-
 
 </resources>

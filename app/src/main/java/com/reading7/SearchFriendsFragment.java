@@ -14,6 +14,7 @@ import android.widget.ListView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -60,7 +61,8 @@ public class SearchFriendsFragment extends Fragment implements androidx.appcompa
 
                 for (QueryDocumentSnapshot document : task.getResult()) {
                     User user = document.toObject(User.class);
-                    users.add(user);
+                    if(!user.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail()))
+                        users.add(user);
                 }
 
                 adapter = new SearchFriendsAdapter(getContext(), users);

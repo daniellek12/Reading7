@@ -9,21 +9,10 @@
     tools:context=".PublicProfileFragment"
     android:layoutDirection="rtl">
 
-<!--    <ImageButton-->
-<!--        android:id="@+id/settings"-->
-<!--        android:layout_width="25dp"-->
-<!--        android:layout_height="25dp"-->
-<!--        android:layout_alignParentRight="true"-->
-<!--        android:layout_marginTop="20dp"-->
-<!--        android:layout_marginRight="20dp"-->
-<!--        android:background="@color/transparent"-->
-<!--        android:scaleType="fitXY"-->
-<!--        android:src="@drawable/settings"-->
-<!--        android:tint="@color/white" />-->
-
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -53,7 +42,6 @@
                 android:textColor="@color/darkGrey"
                 android:textSize="22sp"
                 android:textStyle="bold" />
-
 
             <LinearLayout
                 android:id="@+id/profileDetails"
@@ -87,7 +75,6 @@
                 android:text="עקוב"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
-
 
             <LinearLayout
                 android:id="@+id/countersLayout"
@@ -203,7 +190,6 @@
 
             </LinearLayout>
 
-
             <View
                 android:id="@+id/divider1"
                 android:layout_width="match_parent"
@@ -215,29 +201,62 @@
                 android:layout_marginBottom="15dp"
                 android:background="?android:attr/listDivider" />
 
-            <TextView
+            <RelativeLayout
                 android:id="@+id/wishlistTitle"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/divider1"
-                android:layout_marginRight="20dp"
-                android:text="@string/my_wishlist"
-                android:textColor="@color/colorAccent" />
+                android:layout_below="@id/divider1">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:text="@string/my_wishlist"
+                    android:textColor="@color/colorAccent" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="20dp"
+                    android:text="@string/show_all"
+                    android:textColor="@color/darkGrey" />
+            </RelativeLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/wishlistRV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:minHeight="100dp"
                 android:layout_below="@+id/wishlistTitle"
                 android:layout_marginTop="20dp"
                 android:clipToPadding="false"
                 android:layoutDirection="rtl"
                 android:orientation="horizontal"
                 android:paddingLeft="20dp"
-                android:paddingRight="10dp" />
+                android:paddingRight="10dp"
+                android:visibility="invisible"/>
 
+            <RelativeLayout
+                android:id="@+id/publicProfile_emptyWishlist"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_below="@+id/wishlistTitle"
+                android:layoutDirection="rtl"
+                android:background="@drawable/rounded_button"
+                android:backgroundTint="@color/grey"
+                android:layout_margin="20dp"
+                android:elevation="2dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="@string/public_empty_wishlist"
+                    android:textColor="@color/lightGrey"
+                    android:textSize="14sp" />
+
+            </RelativeLayout>
 
             <View
                 android:id="@+id/divider2"
@@ -250,41 +269,63 @@
                 android:layout_marginBottom="15dp"
                 android:background="?android:attr/listDivider" />
 
-
-            <TextView
+            <RelativeLayout
                 android:id="@+id/mybooksTitle"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/divider2"
-                android:layout_marginRight="20dp"
-                android:text="@string/my_books"
-                android:textColor="@color/colorAccent" />
+                android:layout_below="@id/divider2">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:text="@string/my_books"
+                    android:textColor="@color/colorAccent" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="20dp"
+                    android:text="@string/show_all"
+                    android:textColor="@color/darkGrey" />
+
+            </RelativeLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/myBooksRV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:minHeight="100dp"
                 android:layout_below="@+id/mybooksTitle"
                 android:layout_marginTop="20dp"
                 android:clipToPadding="false"
                 android:layoutDirection="rtl"
                 android:orientation="horizontal"
                 android:paddingLeft="20dp"
-                android:paddingRight="10dp" />
+                android:paddingRight="10dp"
+                android:visibility="invisible"/>
 
+            <RelativeLayout
+                android:id="@+id/publicProfile_emptyMyBooks"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_below="@+id/mybooksTitle"
+                android:layoutDirection="rtl"
+                android:background="@drawable/rounded_button"
+                android:backgroundTint="@color/grey"
+                android:layout_margin="20dp"
+                android:elevation="2dp">
 
-<!--            <TextView-->
-<!--                android:id="@+id/logout"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_below="@id/myBooksRV"-->
-<!--                android:layout_centerHorizontal="true"-->
-<!--                android:layout_marginTop="20dp"-->
-<!--                android:layout_marginBottom="20dp"-->
-<!--                android:clickable="true"-->
-<!--                android:text="התנתק"-->
-<!--                android:textSize="14sp" />-->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="@string/public_empty_mybooks"
+                    android:textColor="@color/lightGrey"
+                    android:textSize="14sp" />
+
+            </RelativeLayout>
 
             <ProgressBar
                 android:id="@+id/progressBar2"
@@ -295,8 +336,8 @@
                 android:layout_marginBottom="25dp"
                 android:visibility="gone" />
 
-
         </RelativeLayout>
 
     </androidx.core.widget.NestedScrollView>
+
 </RelativeLayout>

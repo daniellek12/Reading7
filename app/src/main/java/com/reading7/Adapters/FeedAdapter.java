@@ -42,7 +42,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
     ArrayList<Post> posts;
     Context mContext;
 
-    /*************************************** View Holders *****************************************/
+    /*-------------------------------------- View Holders ----------------------------------------*/
 
 
     public class ReviewPostHolder extends RecyclerView.ViewHolder {
@@ -99,7 +99,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
 
     //TODO: NewBookPostHolder
 
-    /**********************************************************************************************/
+    /*--------------------------------------------------------------------------------------------*/
 
 
     public FeedAdapter(Context context, ArrayList<Post> posts) {
@@ -178,7 +178,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
     }
 
 
-    /*************************************** View Binders *****************************************/
+    /*-------------------------------------- View Binders ----------------------------------------*/
 
 
     private void bindReview(RecyclerView.ViewHolder viewHolder, int i) {
@@ -296,7 +296,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
 
     }
 
-    /**********************************************************************************************/
+    /*--------------------------------------------------------------------------------------------*/
 
 
 }

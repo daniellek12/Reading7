@@ -3,13 +3,9 @@ package com.reading7;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.DocumentsContract;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -22,24 +18,20 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.reading7.Adapters.AutoCompleteAdapter;
 import com.reading7.Adapters.QuestionnaireAdapter;
 import com.reading7.Objects.Book;
 
-import org.w3c.dom.Document;
-
 import java.util.ArrayList;
-import java.util.List;
 
 public class QuestionnaireActivity extends AppCompatActivity {
 
     private ArrayList<MultiSpinner> list = new ArrayList<>();
     private ArrayList<Book> favourite_books = new ArrayList<Book>();
     private ArrayList<Book> books = new ArrayList<Book>();
-    AutoCompleteAdapter adapter;
+    private AutoCompleteAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,8 +110,5 @@ public class QuestionnaireActivity extends AppCompatActivity {
 
 
     }
-
-
-
 
 }
