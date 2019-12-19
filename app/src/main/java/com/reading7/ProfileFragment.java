@@ -36,6 +36,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.reading7.Utils.calculateAge;
 
@@ -82,6 +83,10 @@ public class ProfileFragment extends Fragment {
 
                         TextView userAge = getActivity().findViewById(R.id.age);
                         userAge.setText("גיל: " + calculateAge(document.getData().get("birth_date").toString()));
+
+                        CircleImageView profileImage = getActivity().findViewById(R.id.profileImage);
+                        ArrayList<Integer> avatar_details = (ArrayList<Integer>) document.getData().get("avatar_details");
+                        Utils.loadAvatar(getContext(), profileImage, avatar_details);
 
                         TextView followers = getActivity().findViewById(R.id.followers);
                         ArrayList<String> arr = (ArrayList<String>) document.getData().get("followers");

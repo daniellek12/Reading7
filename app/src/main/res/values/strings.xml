@@ -66,6 +66,10 @@
     <string name="eye_color">צבע עיניים</string>
     <string name="shirt_color">צבע חולצה</string>
     <string name="choose_items">בחר פריטים</string>
+    <string name="body_title">גוף</string>
+    <string name="hair_title">שיער</string>
+    <string name="accessories_title">אביזרים</string>
+    <string name="glasses">משקפיים</string>
 
 
 </resources>

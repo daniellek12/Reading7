@@ -119,7 +119,7 @@ public class BookFragment extends Fragment
                                             }
 
 
-                                            WishList wlist = new WishList("", user.getEmail(), user.getFull_name(), mBook.getId(), mBook.getTitle(), Timestamp.now());
+                                            WishList wlist = new WishList("", user.getEmail(), user.getFull_name(), mBook.getId(), mBook.getTitle(), Timestamp.now(), user.getAvatar_details());
                                             DocumentReference newWish = db.collection("Wishlist").document();
                                             wlist.setId(newWish.getId());
                                             newWish.set(wlist).addOnCompleteListener(new OnCompleteListener<Void>() {

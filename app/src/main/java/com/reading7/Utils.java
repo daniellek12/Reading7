@@ -2,6 +2,8 @@ package com.reading7;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.view.View;
@@ -10,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -31,23 +34,28 @@ import java.util.Calendar;
 
 public class Utils {
 
+
     public static void convertTxtToBook(final Context context) throws IOException {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         for (String name : context.getAssets().list("")) {
             if (!(name.contains(".")))
                 continue;
-            if (name.contains("huangli.idf")){
+            if (name.contains("huangli.idf")) {
                 continue;
             }
-            if (name.contains("operators.dat")){
+            if (name.contains("operators.dat")) {
                 continue;
-            }if (name.contains("pinyinindex.idf")){
+            }
+            if (name.contains("pinyinindex.idf")) {
                 continue;
-            }if (name.contains("tel_uniqid_len8.dat")){
+            }
+            if (name.contains("tel_uniqid_len8.dat")) {
                 continue;
-            }if (name.contains("telocation.idf")){
+            }
+            if (name.contains("telocation.idf")) {
                 continue;
-            }if (name.contains("xiaomi_mobile.dat")){
+            }
+            if (name.contains("xiaomi_mobile.dat")) {
                 continue;
             }
             InputStream is = context.getAssets().open(name);
@@ -94,7 +102,7 @@ public class Utils {
             final String t = title;
 
             Book b = new Book("", title, genersarray, author, publisher, Integer.parseInt(num_pages), summary, 0, 0);
-            if (b.getTitle().equals("")){
+            if (b.getTitle().equals("")) {
                 throw new AssertionError(name);
             }
             DocumentReference newBook = db.collection("Books").document();
@@ -115,27 +123,6 @@ public class Utils {
 
     }
 
-    //Birthday = string of format "dd/mm/yyyy"
-    public static int calculateAge(String birthday) {
-
-        int day = Integer.parseInt(birthday.substring(0, 2));
-        int month = Integer.parseInt(birthday.substring(3, 5));
-        int year = Integer.parseInt(birthday.substring(6, 10));
-
-        Calendar today = Calendar.getInstance();
-        Calendar birth = Calendar.getInstance();
-
-        birth.set(year, month - 1, day); //month starts from 0
-
-        int age = today.get(Calendar.YEAR) - birth.get(Calendar.YEAR);
-        if (today.get(Calendar.DAY_OF_YEAR) < birth.get(Calendar.DAY_OF_YEAR))
-            age--;
-
-        return age;
-    }
-
-    //use this when you want to load image of book to imageView, image_id is the name of the file in
-    //firebase storage, view is where you want to load the image, activity pass the current activity-probably this
     public static String convertTitle(String t) {
         int l = t.length();
         String[] r = new String[l];
@@ -146,6 +133,14 @@ public class Utils {
         return TextUtils.join(" ", r);
     }
 
+
+    /**
+     * Loads image of book into an imageView.
+     *
+     * @param imageFileName is the name of the file in firebase storage
+     * @param view          is where you want to load the image
+     * @param activity      is the current activity (probably this)
+     */
     public static void showImage(final String imageFileName, final ImageView view, final Activity activity) {
         StorageReference mStorageRef;
         mStorageRef = FirebaseStorage.getInstance().getReference("images/" + convertTitle(imageFileName) + ".jpg");
@@ -167,47 +162,95 @@ public class Utils {
         });
     }
 
-//    public static User getUserByMail(final Activity activity, final String user_email) {
-//        final User[] user = {new User()};
-//        FirebaseFirestore db = FirebaseFirestore.getInstance();
-//        DocumentReference userRef = db.collection("Users").document(user_email);
-//
-//        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                if (task.isSuccessful()) {
-//                    DocumentSnapshot document = task.getResult();
-//                    if (document.exists()) {
-////                        User user = new User();
-//
-//                        String full_name = document.getData().get("full_name").toString();
-//
-//                        String birth_date = document.getData().get("birth_date").toString();
-//
-//                        ArrayList<String> followers = (ArrayList<String>) document.getData().get("followers");
-//
-//                        ArrayList<String> following = (ArrayList<String>) document.getData().get("following");
-//
-//                        Queue<String> last_searches = (Queue<String>) document.getData().get("last_searches");
-//
-//                        user[0] = new User(full_name, user_email, birth_date, followers, following, last_searches);
-//
-//                    } else
-//                        Toast.makeText(activity, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-//
-//                } else
-//                    Toast.makeText(activity, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//        return user[0];
-//    }
+
+    /**
+     * Returns the user's age based on it's birth date.
+     *
+     * @param birthday is of format "dd/mm/yyyy"
+     */
+    public static int calculateAge(String birthday) {
+
+        int day = Integer.parseInt(birthday.substring(0, 2));
+        int month = Integer.parseInt(birthday.substring(3, 5));
+        int year = Integer.parseInt(birthday.substring(6, 10));
+
+        Calendar today = Calendar.getInstance();
+        Calendar birth = Calendar.getInstance();
+
+        birth.set(year, month - 1, day); //month starts from 0
+
+        int age = today.get(Calendar.YEAR) - birth.get(Calendar.YEAR);
+        if (today.get(Calendar.DAY_OF_YEAR) < birth.get(Calendar.DAY_OF_YEAR))
+            age--;
+
+        return age;
+    }
+
+
+    /**
+     * Loads the correct avatar into the image.
+     *
+     * @param avatar_details holds the wanted avatar specifications:
+     *                       index 0 - skin index (if the wanted drawable is skin1, then the value is 1)
+     *                       index 1 - eyes color index
+     *                       index 2 - hair color index
+     *                       index 3 - hair type index
+     *                       index 4 - shirt color index
+     * @param image          should have "avatar_layout" drawable set as it's drawable.
+     */
+    public static void loadAvatar(Context context, CircleImageView image, ArrayList<Integer> avatar_details) {
+
+        LayerDrawable layer = (LayerDrawable) image.getDrawable();
+
+        String skin = "skin" + avatar_details.get(0);
+        Drawable skinDrawable = getDrawable(context,skin);
+        layer.setDrawableByLayerId(R.id.skin, skinDrawable);
+
+        String eyes = "eyes" + avatar_details.get(1);
+        Drawable eyesDrawable = layer.findDrawableByLayerId(R.id.eyes);
+        eyesDrawable.setTint(getColor(context,eyes));
+        layer.setDrawableByLayerId(R.id.eyes, eyesDrawable);
+
+        String hairType = "hair" + avatar_details.get(2);
+        Drawable hairTypeDrawable = getDrawable(context, hairType);
+        layer.setDrawableByLayerId(R.id.hair, hairTypeDrawable);
+
+        String hairColor = "hair" + avatar_details.get(3);
+        Drawable hairDrawable = layer.findDrawableByLayerId(R.id.hair);
+        hairDrawable.setTint(getColor(context,hairColor));
+        layer.setDrawableByLayerId(R.id.hair, hairDrawable);
+
+        String shirt = "shirt" + avatar_details.get(4);
+        Drawable shirtDrawable = layer.findDrawableByLayerId(R.id.shirt);
+        shirtDrawable.setTint(getColor(context,shirt));
+        layer.setDrawableByLayerId(R.id.shirt, shirtDrawable);
+
+        image.setImageDrawable(layer);
+    }
+
+
+    /**
+     * Returns a color from colors.xml based on it's name.
+     */
+    public static int getColor(Context context, String color_name) {
+        return context.getResources().getColor(context.getResources().getIdentifier(color_name, "color", context.getPackageName()));
+    }
+
+
+    /**
+     * Returns a drawable based on it's name.
+     */
+    public static Drawable getDrawable(Context context, String drawable_name) {
+        return context.getResources().getDrawable(context.getResources().getIdentifier(drawable_name, "drawable", context.getPackageName()));
+    }
+
 
     public static void closeKeyboard(Context context) {
 
         InputMethodManager imm = (InputMethodManager) context.getSystemService(context.INPUT_METHOD_SERVICE);
-        View view = ((Activity)context).getCurrentFocus();
-        if(view == null)
-            view = new View((Activity)context);
+        View view = ((Activity) context).getCurrentFocus();
+        if (view == null)
+            view = new View((Activity) context);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 

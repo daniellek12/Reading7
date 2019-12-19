@@ -16,7 +16,8 @@
         android:layout_marginTop="20dp"
         android:layout_marginRight="20dp"
         android:elevation="3dp"
-        android:src="@mipmap/cover15" />
+        android:src="@drawable/avatar_layout"
+        app:civ_circle_background_color="@color/white"/>
 
     <TextView
         android:id="@+id/userName"

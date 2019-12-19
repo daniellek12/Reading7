@@ -7,18 +7,16 @@ import java.util.Queue;
 
 public class User {
 
-    private String full_name; //user's name
-    private String email; //user's email
-    private String birth_date; //user's birth date
-
-    private ArrayList<String> followers; //Emails list of the followers
-    private ArrayList<String> following; //Emails list of the following
+    private String full_name;                       // user's name
+    private String email;                           // user's email
+    private String birth_date;                      // user's birth date
+    private ArrayList<Integer> avatar_details;      // skin color, eyes color, hair color, hair type, shirt color
+    private ArrayList<String> followers;            // Emails list of the followers
+    private ArrayList<String> following;            // Emails list of the following
     private ArrayList<String> last_searches;
-    private ArrayList<String> favourite_books; // top books to view on profile
+    private ArrayList<String> favourite_books;      // top books to view on profile
     private ArrayList<String> favourite_genres;
     private ArrayList<String> liked_reviews;
-
-    private ArrayList<Integer> avatar_details; //hair color, hair type, eyes color, glasses, skin color, shirt color
 
     public User() {
         this.full_name = "";
@@ -33,7 +31,7 @@ public class User {
         this.avatar_details = new ArrayList<>();
     }
 
-    public User(String full_name, String email, String birth_date) {
+    public User(String full_name, String email, String birth_date, ArrayList<Integer> avatar_details) {
         this.full_name = full_name;
         this.email = email;
         this.birth_date = birth_date;
@@ -43,10 +41,9 @@ public class User {
         this.favourite_books = new ArrayList<>();
         this.favourite_genres = new ArrayList<>();
         this.liked_reviews = new ArrayList<>();
-        this.avatar_details = new ArrayList<>();
+        this.avatar_details = avatar_details;
     }
 
-    //TODO: REMOVE WHEN THE AVATAR WILL WORK
 
     public User(String full_name, String email, String birth_date, ArrayList<String> followers, ArrayList<String> following, ArrayList<String> last_searches, ArrayList<String> favourite_books, ArrayList<String> favourite_genres, ArrayList<String> liked_reviews) {
         this.full_name = full_name;
@@ -60,6 +57,7 @@ public class User {
         this.liked_reviews = liked_reviews;;
     }
 
+    //TODO: REMOVE WHEN THE AVATAR WILL WORK
 
     public User(String full_name, String email, String birth_date, ArrayList<String> followers, ArrayList<String> following, ArrayList<String> last_searches, ArrayList<String> favourite_books, ArrayList<String> favourite_genres, ArrayList<String> liked_reviews, ArrayList<Integer> avatar_details) {
         this.full_name = full_name;

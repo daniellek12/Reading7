@@ -20,8 +20,8 @@
 
     <!--Avatar Colors-->
     <color name="skin1">#F0D0B4</color>
-    <color name="skin2">#FBBC98</color>
-    <color name="skin3">#DFB28B</color>
+    <color name="skin2">#DFB28B</color>
+    <color name="skin3">#FBBC98</color>
     <color name="skin4">#F9A66F</color>
     <color name="skin5">#A46C35</color>
 
@@ -35,13 +35,17 @@
     <color name="hair2">#5E321F</color>
     <color name="hair3">#9C7248</color>
     <color name="hair4">#DF6320</color>
-    <color name="hair5">#FFCC47</color>
+    <color name="hair5">#ECD5A7</color>
 
-    <color name="shirt1">#FED557</color>
-    <color name="shirt2">#A1C837</color>
-    <color name="shirt3">#45B6FE</color>
-    <color name="shirt4">#9969C7</color>
-    <color name="shirt5">#F47DBB</color>
-
+    <color name="shirt1">#F9F6D8</color>
+    <color name="shirt2">#7F7F7F</color>
+    <color name="shirt3">#191919</color>
+    <color name="shirt4">#113B08</color>
+    <color name="shirt5">#003065</color>
+    <color name="shirt6">#FFADAD</color>
+    <color name="shirt7">#FFEFAA</color>
+    <color name="shirt8">#BAFFC9</color>
+    <color name="shirt9">#BAE1FF</color>
+    <color name="shirt10">#E6AFFF</color>
 
 </resources>

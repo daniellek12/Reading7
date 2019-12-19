@@ -2,6 +2,8 @@ package com.reading7;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -19,16 +21,20 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.reading7.Objects.User;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
-public class SignUpActivity extends AppCompatActivity {
+public class SignUpActivity extends AppCompatActivity implements EditAvatarDialog.EditAvatarDialogListener {
 
     private FirebaseAuth mAuth;
+    private ArrayList<Integer> avatar_details = new ArrayList<Integer>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +64,7 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
 
+        initAvatarDetails();
         setupDatePicker();
         setupAvatarDialog();
     }
@@ -96,7 +103,7 @@ public class SignUpActivity extends AppCompatActivity {
             return null;
         }
 
-        return new User(name, email, birth_date);
+        return new User(name, email, birth_date, avatar_details);
     }
 
     private String getName() {
@@ -167,18 +174,6 @@ public class SignUpActivity extends AppCompatActivity {
         return birth_date;
     }
 
-    private void setupAvatarDialog() {
-
-        findViewById(R.id.profile_image).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                EditAvatarDialog dialog = new EditAvatarDialog();
-                dialog.show(getSupportFragmentManager(), "edit avater");
-            }
-        });
-
-    }
-
     private void signUpUser(final User user) {
 
         if (user == null) return;
@@ -197,7 +192,6 @@ public class SignUpActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
-//                                Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
                                 Intent intent = new Intent(SignUpActivity.this, QuestionnaireActivity.class);
                                 intent.putExtra("NEW_USER", true);
                                 startActivity(intent);
@@ -259,17 +253,6 @@ public class SignUpActivity extends AppCompatActivity {
         findViewById(R.id.email_exists).setVisibility(View.INVISIBLE);
     }
 
-//    private void shake(View view){
-//
-//        Animation shake;
-//        if(view instanceof TextView)
-//            shake = AnimationUtils.loadAnimation(this, R.anim.shake_text);
-//
-//        else shake = AnimationUtils.loadAnimation(this, R.anim.shake_animation);
-//
-//        view.startAnimation(shake);
-//    }
-
     private void showProgressBar(){
 
         disableClicks();
@@ -286,4 +269,27 @@ public class SignUpActivity extends AppCompatActivity {
         enableClicks();
     }
 
+
+    private void initAvatarDetails(){
+
+        for(int i=0; i<5; i++)
+            avatar_details.add(1);
+    }
+
+    private void setupAvatarDialog() {
+
+        findViewById(R.id.profile_image).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EditAvatarDialog dialog = new EditAvatarDialog(avatar_details);
+                dialog.show(getSupportFragmentManager(), "edit avater");
+            }
+        });
+    }
+
+    @Override
+    public void getAvatarDetails(ArrayList<Integer> details) {
+        this.avatar_details = details;
+        Utils.loadAvatar(SignUpActivity.this, (CircleImageView)findViewById(R.id.profile_image), avatar_details);
+    }
 }

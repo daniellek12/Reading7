@@ -111,6 +111,8 @@ public class SearchFriendsAdapter extends BaseAdapter implements Filterable {
 
         holder.name.setText(users.get(position).getFull_name());
         holder.toDelete.setVisibility(View.GONE);
+        holder.image.setImageDrawable(mContext.getResources().getDrawable(R.drawable.avatar_layout));
+        Utils.loadAvatar(mContext, holder.image, users.get(position).getAvatar_details());
        // Utils.showImage(books.get(position).getTitle(), holder.cover, (Activity) mContext);
 
         holder.container.setOnClickListener(new View.OnClickListener() {

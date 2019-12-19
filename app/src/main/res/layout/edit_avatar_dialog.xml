@@ -5,31 +5,102 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:layoutDirection="rtl"
-    android:orientation="vertical"
-    android:padding="20dp">
+    android:orientation="vertical">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/image"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="40dp"
         android:elevation="10dp"
         android:src="@drawable/avatar_layout"
         app:civ_border_color="@color/white"
         app:civ_border_width="2dp"
-        app:civ_circle_background_color="@color/white"/>
+        app:civ_circle_background_color="@color/white" />
+
+    <View
+        android:id="@+id/divider9"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/image"
+        android:layout_marginTop="20dp"
+        android:background="?android:attr/listDivider" />
+
+    <RelativeLayout
+        android:id="@+id/tabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/divider9"
+        android:layoutDirection="rtl">
+
+        <Button
+            android:id="@+id/bodyBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/divider6"
+            android:background="@color/transparent"
+            android:text="@string/body_title"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold" />
+
+        <View
+            android:id="@+id/divider6"
+            android:layout_width="1dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_margin="10dp"
+            android:layout_toRightOf="@id/hairBtn"
+            android:background="?android:attr/listDivider" />
+
+        <Button
+            android:id="@+id/hairBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@color/transparent"
+            android:text="@string/hair_title"
+            android:textStyle="bold" />
+
+        <View
+            android:id="@+id/divider7"
+            android:layout_width="1dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_margin="10dp"
+            android:layout_toLeftOf="@id/hairBtn"
+            android:background="?android:attr/listDivider" />
+
+        <Button
+            android:id="@+id/accessoriesBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/divider7"
+            android:background="@color/transparent"
+            android:text="@string/accessories_title"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/divider8"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/tabs"
+        android:background="?android:attr/listDivider" />
 
 
     <ScrollView
+        android:id="@+id/bodyLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/image"
-        android:layout_marginTop="20dp">
+        android:layout_height="250dp"
+        android:layout_below="@id/tabs"
+        android:padding="20dp"
+        android:visibility="visible">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
 
             <RelativeLayout
                 android:id="@+id/skinLayout"
@@ -41,15 +112,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/skin_color"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
+                    android:textColor="@color/black" />
 
                 <RadioGroup
                     android:id="@+id/skinButtons"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_below="@id/skinTitle"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="20dp"
                     android:gravity="center"
                     android:layoutDirection="rtl"
                     android:orientation="horizontal">
@@ -101,86 +171,13 @@
 
                 </RadioGroup>
 
-             </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/hairLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/skinLayout"
-                android:layout_marginTop="20dp">
-
-                <TextView
-                    android:id="@+id/hairTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/hair_color"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
-
-                <RadioGroup
-                    android:id="@+id/hairButtons"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_below="@id/hairTitle"
-                    android:layout_marginTop="10dp"
-                    android:gravity="center"
-                    android:layoutDirection="rtl"
-                    android:orientation="horizontal">
-
-                    <RadioButton
-                        android:id="@+id/hair1"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_marginLeft="20dp"
-                        android:background="@drawable/rounded_button"
-                        android:backgroundTint="@color/hair1"
-                        android:button="@color/transparent" />
-
-                    <RadioButton
-                        android:id="@+id/hair2"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_marginLeft="20dp"
-                        android:background="@drawable/rounded_button"
-                        android:backgroundTint="@color/hair2"
-                        android:button="@color/transparent" />
-
-                    <RadioButton
-                        android:id="@+id/hair3"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_marginLeft="20dp"
-                        android:background="@drawable/rounded_button"
-                        android:backgroundTint="@color/hair3"
-                        android:button="@color/transparent" />
-
-                    <RadioButton
-                        android:id="@+id/hair4"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_marginLeft="20dp"
-                        android:background="@drawable/rounded_button"
-                        android:backgroundTint="@color/hair4"
-                        android:button="@color/transparent" />
-
-                    <RadioButton
-                        android:id="@+id/hair5"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:background="@drawable/rounded_button"
-                        android:backgroundTint="@color/hair5"
-                        android:button="@color/transparent" />
-
-                </RadioGroup>
-
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/eyesLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/hairLayout"
+                android:layout_below="@id/skinLayout"
                 android:layout_marginTop="20dp">
 
                 <TextView
@@ -188,15 +185,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/eye_color"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
+                    android:textColor="@color/black" />
 
                 <RadioGroup
                     android:id="@+id/eyesButtons"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_below="@id/eyesTitle"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="20dp"
                     android:gravity="center"
                     android:layoutDirection="rtl"
                     android:orientation="horizontal">
@@ -249,81 +245,464 @@
 
             </RelativeLayout>
 
-            <RelativeLayout
-                android:id="@+id/shirtLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/eyesLayout"
-                android:layout_marginTop="20dp">
+        </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/shirtTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/shirt_color"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
+    </ScrollView>
+
+
+    <ScrollView
+        android:id="@+id/hairLayout"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_below="@id/tabs"
+        android:padding="20dp"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <RelativeLayout
+                android:id="@+id/hairColorLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
                 <RadioGroup
-                    android:id="@+id/shirtButtons"
+                    android:id="@+id/hairColorButtons"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_below="@id/shirtTitle"
-                    android:layout_marginTop="10dp"
                     android:gravity="center"
                     android:layoutDirection="rtl"
                     android:orientation="horizontal">
 
                     <RadioButton
-                        android:id="@+id/shirt1"
+                        android:id="@+id/hairColor1"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_marginLeft="20dp"
                         android:background="@drawable/rounded_button"
-                        android:backgroundTint="@color/shirt1"
+                        android:backgroundTint="@color/hair1"
                         android:button="@color/transparent" />
 
                     <RadioButton
-                        android:id="@+id/shirt2"
+                        android:id="@+id/hairColor2"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_marginLeft="20dp"
                         android:background="@drawable/rounded_button"
-                        android:backgroundTint="@color/shirt2"
+                        android:backgroundTint="@color/hair2"
                         android:button="@color/transparent" />
 
                     <RadioButton
-                        android:id="@+id/shirt3"
+                        android:id="@+id/hairColor3"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_marginLeft="20dp"
                         android:background="@drawable/rounded_button"
-                        android:backgroundTint="@color/shirt3"
+                        android:backgroundTint="@color/hair3"
                         android:button="@color/transparent" />
 
                     <RadioButton
-                        android:id="@+id/shirt4"
+                        android:id="@+id/hairColor4"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_marginLeft="20dp"
                         android:background="@drawable/rounded_button"
-                        android:backgroundTint="@color/shirt4"
+                        android:backgroundTint="@color/hair4"
                         android:button="@color/transparent" />
 
                     <RadioButton
-                        android:id="@+id/shirt5"
+                        android:id="@+id/hairColor5"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:background="@drawable/rounded_button"
-                        android:backgroundTint="@color/shirt5"
+                        android:backgroundTint="@color/hair5"
                         android:button="@color/transparent" />
 
                 </RadioGroup>
 
             </RelativeLayout>
 
+            <RelativeLayout
+                android:id="@+id/hairTypeLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/hairColorLayout"
+                android:layout_marginTop="20dp"
+                android:gravity="center">
+
+                <!--         <RadioGroup
+                    android:id="@+id/hairTypeButtons"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:layoutDirection="rtl"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/hairType1"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="20dp"
+                        android:background="@drawable/hair1"
+                        android:backgroundTint="@color/black"
+                        android:button="@color/transparent" />
+
+                    <RadioButton
+                        android:id="@+id/hair2"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="20dp"
+                        android:background="@drawable/hair2"
+                        android:backgroundTint="@color/black"
+                        android:button="@color/transparent" />
+
+                    <RadioButton
+                        android:id="@+id/hair3"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="20dp"
+                        android:background="@drawable/hair3"
+                        android:backgroundTint="@color/black"
+                        android:button="@color/transparent" />
+
+                    <RadioButton
+                        android:id="@+id/hair4"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="20dp"
+                        android:background="@drawable/hair4"
+                        android:backgroundTint="@color/black"
+                        android:button="@color/transparent" />
+
+                    <RadioButton
+                        android:id="@+id/hair5"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="20dp"
+                        android:background="@drawable/hair5"
+                        android:backgroundTint="@color/black"
+                        android:button="@color/transparent" />
+
+                    <RadioButton
+                        android:id="@+id/hair6"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/hair6"
+                        android:backgroundTint="@color/black"
+                        android:button="@color/transparent" />
+
+                </RadioGroup>-->
+
+                <ImageButton
+                    android:id="@+id/hair1"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@color/transparent"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/hair1"
+                    android:tag="hair1"
+                    android:tint="@color/black" />
+
+                <ImageButton
+                    android:id="@+id/hair2"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_toLeftOf="@id/hair1"
+                    android:background="@color/transparent"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/hair2"
+                    android:tag="hair2"
+                    android:tint="@color/black" />
+
+                <ImageButton
+                    android:id="@+id/hair3"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_toLeftOf="@id/hair2"
+                    android:background="@color/transparent"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/hair3"
+                    android:tag="hair3"
+                    android:tint="@color/black" />
+
+                <ImageButton
+                    android:id="@+id/hair4"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_toLeftOf="@id/hair3"
+                    android:background="@color/transparent"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/hair4"
+                    android:tag="hair4"
+                    android:tint="@color/black" />
+
+                <ImageButton
+                    android:id="@+id/hair5"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_below="@id/hair1"
+                    android:layout_marginTop="15dp"
+                    android:background="@color/transparent"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/hair5"
+                    android:tag="hair5"
+                    android:tint="@color/black" />
+
+                <ImageButton
+                    android:id="@+id/hair6"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_below="@id/hair1"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_toLeftOf="@id/hair5"
+                    android:background="@color/transparent"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/hair6"
+                    android:tag="hair6"
+                    android:tint="@color/black" />
+
+                <ImageButton
+                    android:id="@+id/hair7"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_below="@id/hair1"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_toLeftOf="@id/hair6"
+                    android:background="@color/transparent"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/hair7"
+                    android:tag="hair7"
+                    android:tint="@color/black" />
+
+                <ImageButton
+                    android:id="@+id/hair8"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_below="@id/hair1"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_toLeftOf="@id/hair7"
+                    android:background="@color/transparent"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/hair8"
+                    android:tag="hair8"
+                    android:tint="@color/black" />
+
+                <ImageButton
+                    android:id="@+id/hair9"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_below="@id/hair5"
+                    android:layout_marginTop="15dp"
+                    android:background="@color/transparent"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/hair9"
+                    android:tag="hair9"
+                    android:tint="@color/black" />
+
+                <ImageButton
+                    android:id="@+id/hair10"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_below="@id/hair5"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_toLeftOf="@id/hair9"
+                    android:background="@color/transparent"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/hair10"
+                    android:tag="hair10"
+                    android:tint="@color/black" />
+
+                <ImageButton
+                    android:id="@+id/hair11"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_below="@id/hair5"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_toLeftOf="@id/hair10"
+                    android:background="@color/transparent"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/hair11"
+                    android:tag="hair11"
+                    android:tint="@color/black" />
+
+                <ImageButton
+                    android:id="@+id/hair12"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_below="@id/hair5"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_toLeftOf="@id/hair11"
+                    android:background="@color/transparent"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/hair12"
+                    android:tag="hair12"
+                    android:tint="@color/black" />
+
+            </RelativeLayout>
+
         </RelativeLayout>
 
     </ScrollView>
+
+
+    <ScrollView
+        android:id="@+id/accessoriesLayout"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_below="@id/tabs"
+        android:padding="20dp"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/shirtLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/shirtTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/shirt_color"
+                    android:textColor="@color/black" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/shirtTitle"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center"
+                    android:layoutDirection="rtl">
+
+                    <ImageButton
+                        android:id="@+id/shirt1"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/rounded_button"
+                        android:backgroundTint="@color/shirt1"
+                        android:tag="shirt1" />
+
+                    <ImageButton
+                        android:id="@+id/shirt2"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_toLeftOf="@id/shirt1"
+                        android:background="@drawable/rounded_button"
+                        android:backgroundTint="@color/shirt2"
+                        android:tag="shirt2" />
+
+                    <ImageButton
+                        android:id="@+id/shirt3"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_toLeftOf="@id/shirt2"
+                        android:background="@drawable/rounded_button"
+                        android:backgroundTint="@color/shirt3"
+                        android:tag="shirt3" />
+
+                    <ImageButton
+                        android:id="@+id/shirt4"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_toLeftOf="@id/shirt3"
+                        android:background="@drawable/rounded_button"
+                        android:backgroundTint="@color/shirt4"
+                        android:tag="shirt4" />
+
+                    <ImageButton
+                        android:id="@+id/shirt5"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_toLeftOf="@id/shirt4"
+                        android:background="@drawable/rounded_button"
+                        android:backgroundTint="@color/shirt5"
+                        android:tag="shirt5" />
+
+                    <ImageButton
+                        android:id="@+id/shirt6"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_below="@id/shirt1"
+                        android:layout_marginTop="20dp"
+                        android:background="@drawable/rounded_button"
+                        android:backgroundTint="@color/shirt6"
+                        android:tag="shirt6" />
+
+                    <ImageButton
+                        android:id="@+id/shirt7"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_below="@id/shirt1"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_toLeftOf="@id/shirt6"
+                        android:background="@drawable/rounded_button"
+                        android:backgroundTint="@color/shirt7"
+                        android:tag="shirt7" />
+
+                    <ImageButton
+                        android:id="@+id/shirt8"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_below="@id/shirt1"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_toLeftOf="@id/shirt7"
+                        android:background="@drawable/rounded_button"
+                        android:backgroundTint="@color/shirt8"
+                        android:tag="shirt8" />
+
+                    <ImageButton
+                        android:id="@+id/shirt9"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_below="@id/shirt1"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_toLeftOf="@id/shirt8"
+                        android:background="@drawable/rounded_button"
+                        android:backgroundTint="@color/shirt9"
+                        android:tag="shirt9" />
+
+                    <ImageButton
+                        android:id="@+id/shirt10"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_below="@id/shirt1"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_toLeftOf="@id/shirt9"
+                        android:background="@drawable/rounded_button"
+                        android:backgroundTint="@color/shirt10"
+                        android:tag="shirt10" />
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+
 
 </RelativeLayout>

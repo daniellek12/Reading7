@@ -31,6 +31,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.reading7.Utils.calculateAge;
 
@@ -81,6 +82,10 @@ public class PublicProfileFragment extends Fragment {
 
                         String birthDate = document.getData().get("birth_date").toString();
                         ((TextView) getActivity().findViewById(R.id.publicProfile_age)).setText("גיל: " + calculateAge(birthDate));
+
+                        CircleImageView profileImage = getActivity().findViewById(R.id.publicProfile_profileImage);
+                        ArrayList<Integer> avatar_details = (ArrayList<Integer>) document.getData().get("avatar_details");
+                        Utils.loadAvatar(getContext(), profileImage, avatar_details);
 
                         ArrayList<String> followers = (ArrayList<String>) document.getData().get("followers");
                         ((TextView) getActivity().findViewById(R.id.publicProfile_followers)).setText(Integer.toString(followers.size()));
@@ -198,7 +203,7 @@ public class PublicProfileFragment extends Fragment {
                             if (document.exists()) {
 
                                 ArrayList<String> followers = (ArrayList<String>) document.getData().get("followers");
-                                ((TextView) getActivity().findViewById(R.id.followers)).setText(Integer.toString(followers.size()));
+                                ((TextView) getActivity().findViewById(R.id.publicProfile_followers)).setText(Integer.toString(followers.size()));
 
                             } else
                                 Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();

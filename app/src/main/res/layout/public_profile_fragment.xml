@@ -37,9 +37,10 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="30dp"
                 android:elevation="5dp"
-                android:src="@mipmap/cover10"
+                android:src="@drawable/avatar_layout"
                 app:civ_border_color="@color/white"
-                app:civ_border_width="2dp" />
+                app:civ_border_width="2dp"
+                app:civ_circle_background_color="@color/white"/>
 
             <TextView
                 android:id="@+id/publicProfile_userName"

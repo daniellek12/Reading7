@@ -38,6 +38,8 @@ public class RankBookDialog extends AppCompatDialogFragment {
     private View view;
     RatingBar avg;
     //private RankBookDialogListener listener;
+
+
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -47,35 +49,34 @@ public class RankBookDialog extends AppCompatDialogFragment {
         final float currAvg = getArguments().getFloat("avg");
         final int numOfRaters = getArguments().getInt("countRaters");
 
-
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
-        RatingBar avg=(RatingBar) getActivity().findViewById(R.id.ratingBar);
+        RatingBar avg = getActivity().findViewById(R.id.ratingBar);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         view = inflater.inflate(R.layout.rank_book_dialog, null);
-        final RatingBar rateStar = (RatingBar) view.findViewById(R.id.ratingBar);
-        final EditText titleText = (EditText) view.findViewById(R.id.FeedbackTitle);
-        final EditText contentText = (EditText) view.findViewById(R.id.FeedbackContent);
+        final RatingBar rateStar = view.findViewById(R.id.ratingBar);
+        final EditText titleText = view.findViewById(R.id.FeedbackTitle);
+        final EditText contentText = view.findViewById(R.id.FeedbackContent);
         mReview = null;
         CollectionReference requestCollectionRef = db.collection("Reviews");
-        Query requestQuery = requestCollectionRef.whereEqualTo("reviewer_email",mAuth.getCurrentUser().getEmail()).whereEqualTo("book_id",book_id);
+        Query requestQuery = requestCollectionRef.whereEqualTo("reviewer_email", mAuth.getCurrentUser().getEmail()).whereEqualTo("book_id", book_id);
         requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                                     @Override
-                                                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                         if (task.isSuccessful()) {
-                                                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                                                 mReview = document.toObject(Review.class);
-                                                             }
-                                                            if(mReview!= null){
-                                                                rateStar.setRating(mReview.getRank());
-                                                                titleText.setText(mReview.getReview_title());
-                                                                contentText.setText(mReview.getReview_content());
-                                                            }
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        mReview = document.toObject(Review.class);
+                    }
+                    if (mReview != null) {
+                        rateStar.setRating(mReview.getRank());
+                        titleText.setText(mReview.getReview_title());
+                        contentText.setText(mReview.getReview_content());
+                    }
 
-                                                         }
-                                                     }
-                                                 });
+                }
+            }
+        });
 
 
         builder.setView(view).setPositiveButton("הוסף ביקורת", new DialogInterface.OnClickListener() {
@@ -85,70 +86,68 @@ public class RankBookDialog extends AppCompatDialogFragment {
                 final String review_title = titleText.getText().toString();
                 final String review_content = contentText.getText().toString();
 
-
                 CollectionReference requestCollectionRef = db.collection("Users");
-                Query requestQuery = requestCollectionRef.whereEqualTo("email",mAuth.getCurrentUser().getEmail());
+                Query requestQuery = requestCollectionRef.whereEqualTo("email", mAuth.getCurrentUser().getEmail());
                 requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
-                        if (task.isSuccessful()){
+                        if (task.isSuccessful()) {
                             DocumentReference newReview = db.collection("Reviews").document();
-                            if(mReview==null){
-                            User user = new User();
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                user = document.toObject(User.class);
-                            }
+                            if (mReview == null) {
+                                User user = new User();
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    user = document.toObject(User.class);
+                                }
 
-
-                            mReview = new Review("", book_id, mAuth.getCurrentUser().getEmail(), rank, review_title, review_content, Timestamp.now(), user.getFull_name(), book_title);
-                            mReview.setReview_id(newReview.getId());
-                            final float newAvg =  ((numOfRaters*currAvg)+rank)/(numOfRaters+1);
+                                mReview = new Review("", book_id, mAuth.getCurrentUser().getEmail(), rank, review_title, review_content, Timestamp.now(), user.getFull_name(), book_title, user.getAvatar_details());
+                                mReview.setReview_id(newReview.getId());
+                                final float newAvg = ((numOfRaters * currAvg) + rank) / (numOfRaters + 1);
                                 newReview.set(mReview).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                            @Override
-                                                                            public void onComplete(@NonNull Task<Void> task) {
-                                                                                if (task.isSuccessful()) {
-                                                                                    UpdateBook(newAvg,book_id);
-                                                                                }
+                                                                                 @Override
+                                                                                 public void onComplete(@NonNull Task<Void> task) {
+                                                                                     if (task.isSuccessful()) {
+                                                                                         UpdateBook(newAvg, book_id);
+                                                                                     }
 
-                                                                            }
-
-
-                                                                        }
+                                                                                 }
 
 
-                            );
+                                                                             }
 
-                            }
-                        else{
 
-                            DocumentReference ref = db.collection("Reviews").document(mReview.getReview_id());
-                            final Map<String, Object> updates = new HashMap<String,Object>();
+                                );
 
-                            updates.put("rank", rank);
-                            updates.put("review_title",review_title);
-                            updates.put("review_content",review_content);
-                            final float newAvg;
-                            if (numOfRaters == 0){
-                                newAvg = rank;
-                            }
+                            } else {
 
-                            else{
-                                newAvg =  ((numOfRaters*currAvg)+rank-mReview.getRank())/(numOfRaters);
-                            }
+                                DocumentReference ref = db.collection("Reviews").document(mReview.getReview_id());
+                                final Map<String, Object> updates = new HashMap<String, Object>();
+
+                                updates.put("rank", rank);
+                                updates.put("review_title", review_title);
+                                updates.put("review_content", review_content);
+                                final float newAvg;
+                                if (numOfRaters == 0) {
+                                    newAvg = rank;
+                                } else {
+                                    newAvg = ((numOfRaters * currAvg) + rank - mReview.getRank()) / (numOfRaters);
+                                }
 
                                 ref.update(updates).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if(task.isSuccessful()){
-                                        UpdateBook(newAvg,book_id);
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            UpdateBook(newAvg, book_id);
+                                        }
                                     }
-                                }
-                            });
-                        }
+                                });
+                            }
 
+                        }
                     }
-        }});}}).setNegativeButton("בטל", new DialogInterface.OnClickListener() {
+                });
+            }
+        }).setNegativeButton("בטל", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
@@ -158,25 +157,27 @@ public class RankBookDialog extends AppCompatDialogFragment {
         return builder.create();
     }
 
-    public void UpdateBook(final float newAvg,String book_id){
+
+    public void UpdateBook(final float newAvg, String book_id) {
 
         DocumentReference ref = db.collection("Books").document(book_id);
 
-        ref.update("avg_rating",newAvg).addOnCompleteListener(new OnCompleteListener<Void>() {
+        ref.update("avg_rating", newAvg).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful()){
+                if (task.isSuccessful()) {
                     //listener.applyAvg(newAvg);
-                    sendResult(202,newAvg);
+                    sendResult(202, newAvg);
 
                 }
             }
         });
     }
 
-    private void sendResult(int REQUEST_CODE,float newAvg) {
+
+    private void sendResult(int REQUEST_CODE, float newAvg) {
         Intent intent = new Intent();
-        intent.putExtra("avg",newAvg);
+        intent.putExtra("avg", newAvg);
         getTargetFragment().onActivityResult(
                 getTargetRequestCode(), REQUEST_CODE, intent);
     }
@@ -199,9 +200,6 @@ public class RankBookDialog extends AppCompatDialogFragment {
     public interface RankBookDialogListener {
         void applyAvg(float newAvg);
     }*/
-
-
-
 
 
 }

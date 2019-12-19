@@ -83,7 +83,6 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
         TextView userName;
         TextView postTime;
         TextView bookName;
-
         CircleImageView profileImage;
 
 
@@ -95,7 +94,6 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
             bookName =itemView.findViewById(R.id.bookName);
             postTime =itemView.findViewById(R.id.postTime);
             profileImage = itemView.findViewById(R.id.profileImage);
-
         }
     }
 
@@ -198,6 +196,9 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
 
         holder.userName.setText(post.getUser_name());
 
+        ArrayList<Integer> avatar_details = post.getUser_avatar();
+        Utils.loadAvatar(mContext, holder.profileImage, avatar_details);
+
         DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
         String strDate = dateFormat.format(post.getPost_time().toDate());
         holder.postTime.setText(strDate); // FIXME check this
@@ -238,7 +239,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
                                 if (liked) {
                                     user.remove_like(id);
 
-                                    post.setLikes_count_count(curr_num-1);
+                                    post.setLikes_count(curr_num-1);
                                     userRef.update("liked_reviews", user.getLiked_reviews());
                                     PostRef.update("likes_count", curr_num - 1);
 
@@ -248,7 +249,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
                                 } else {
                                     user.add_like(id);
 
-                                    post.setLikes_count_count(curr_num+1);
+                                    post.setLikes_count(curr_num+1);
                                     userRef.update("liked_reviews", user.getLiked_reviews());
                                     PostRef.update("likes_count", curr_num + 1);
 
@@ -284,14 +285,14 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
         Utils.showImage(post.getBook_title(), holder.cover,(Activity)mContext);
         holder.userName.setText(post.getUser_name());
 
+        ArrayList<Integer> avatar_details = post.getUser_avatar();
+        Utils.loadAvatar(mContext, holder.profileImage, avatar_details);
+
         DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
         String strDate = dateFormat.format(post.getPost_time().toDate());
         holder.postTime.setText(strDate);
 
-        //TODO: deal with profile image
-
-        //TODO: load the images correctly
-        ///holder.cover.setImageResource(mContext.getResources().getIdentifier("cover"+(i+1), "mipmap", mContext.getPackageName()));
+        // TODO: deal with profile image
 
     }
 
