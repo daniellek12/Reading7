@@ -14,10 +14,14 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.reading7.BookFragment;
+import com.reading7.MainActivity;
+import com.reading7.Objects.Book;
 import com.reading7.R;
 import com.reading7.Utils;
 import com.reading7.Objects.WishList;
@@ -67,8 +71,25 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
 
         final String book_name = usersList.get(i).getBook_title();
         Utils.showImage(book_name, viewHolder.cover, (Activity)mContext);
+        viewHolder.cover.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Query bookRef = FirebaseFirestore.getInstance().collection("Books").whereEqualTo("title",book_name);
+                bookRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (DocumentSnapshot doc : task.getResult()) {
+                                ((MainActivity) mContext).loadBookFragment(new BookFragment(), doc.toObject(Book.class));
+                                break;
+                            }
+                        }
+                    }
+                });
+            }
+        });
 
-        //TODO: on item click load the matching bookFragment
+
     }
 
 

@@ -7,6 +7,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.reading7.BookFragment;
+import com.reading7.MainActivity;
+import com.reading7.Objects.Book;
 import com.reading7.R;
 import com.reading7.Objects.Review;
 import com.reading7.Utils;
@@ -20,13 +29,11 @@ public class ReadShelfAdapter extends RecyclerView.Adapter<ReadShelfAdapter.View
 
     private List<Review> usersReviews;
     private Context mContext;
-    private Activity currentActivity;
 
 
-    public ReadShelfAdapter(List<Review> reviews, Activity activity){
+    public ReadShelfAdapter(List<Review> reviews, Context context){
         this.usersReviews = reviews;
-        this.mContext = activity.getApplicationContext();
-        this.currentActivity = activity;
+        this.mContext = context;
     }
 
 
@@ -52,8 +59,25 @@ public class ReadShelfAdapter extends RecyclerView.Adapter<ReadShelfAdapter.View
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
 
-        String book_name = usersReviews.get(i).getBook_title();
-        Utils.showImage(book_name, viewHolder.cover, currentActivity);
+        final String book_name = usersReviews.get(i).getBook_title();
+        Utils.showImage(book_name, viewHolder.cover, (Activity) mContext);
+        viewHolder.cover.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Query bookRef = FirebaseFirestore.getInstance().collection("Books").whereEqualTo("title",book_name);
+                bookRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (DocumentSnapshot doc : task.getResult()) {
+                                ((MainActivity) mContext).loadBookFragment(new BookFragment(), doc.toObject(Book.class));
+                                break;
+                            }
+                        }
+                    }
+                });
+            }
+        });
     }
 
     @Override
