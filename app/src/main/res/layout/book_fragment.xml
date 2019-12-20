@@ -132,7 +132,7 @@
         </LinearLayout>
 
         <RatingBar
-            android:id="@+id/ratingBar"
+            android:id="@+id/bookRatingBar"
             style="@style/Widget.AppCompat.RatingBar.Indicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -152,7 +152,7 @@
             android:id="@+id/ratingNum"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/ratingBar"
+            android:layout_toLeftOf="@id/bookRatingBar"
             android:layout_below="@id/genres"
             android:layout_marginTop="11dp"
             android:layout_marginRight="-15dp"
@@ -166,7 +166,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_below="@id/ratingBar"
+            android:layout_below="@id/bookRatingBar"
             android:layout_marginTop="5dp"
             android:layout_marginRight="15dp"
             android:layout_alignParentRight="true"

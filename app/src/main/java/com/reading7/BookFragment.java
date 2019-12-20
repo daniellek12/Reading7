@@ -245,7 +245,7 @@ public class BookFragment extends Fragment
         }
         textViewgeners.setText(geners);
 
-        rankRatingBar = (RatingBar)getActivity().findViewById(R.id.ratingBar);
+        rankRatingBar = (RatingBar)getActivity().findViewById(R.id.bookRatingBar);
         rankRatingBar.setRating(mBook.getAvg_rating());
 
        ratingNum = (TextView) getActivity().findViewById(R.id.ratingNum);
