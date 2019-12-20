@@ -21,7 +21,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.reading7.BookFragment;
 import com.reading7.MainActivity;
+import com.reading7.Objects.Book;
 import com.reading7.Objects.Post;
 import com.reading7.PublicProfileFragment;
 import com.reading7.R;
@@ -272,6 +276,25 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
                 ((MainActivity)mContext).loadPublicProfileFragment(new PublicProfileFragment(), post.getReviewer_email());
             }
         });
+
+        holder.cover.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Query bookRef = FirebaseFirestore.getInstance().collection("Books").whereEqualTo("title",post.getBook_title());
+                bookRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (DocumentSnapshot doc : task.getResult()) {
+                                ((MainActivity) mContext).loadBookFragment(new BookFragment(), doc.toObject(Book.class));
+                                break;
+                            }
+                        }
+                    }
+                });
+            }
+        });
+
 
     }
 
