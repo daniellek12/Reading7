@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,11 +64,13 @@ public class ProfileFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
         getUserInformation();
 
-        Button dc = getActivity().findViewById(R.id.dont_click);
+        ImageButton dc = (ImageButton)getActivity().findViewById(R.id.settings);
+        dc.bringToFront();
         dc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Utils.updateBooks();
+//                Utils.updateBooks();
+                Toast.makeText(getActivity(), "IF YOU TOUCH THIS BUTTON EVER AGAIN ROTEM WILL KILL YOU.", Toast.LENGTH_SHORT).show();
             }
         });
     }

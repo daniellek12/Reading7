@@ -348,12 +348,12 @@
             android:clickable="true"
             android:text="התנתק"
             android:textSize="14sp" />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="If you will click on me Rotem will kill you."
-            android:layout_below="@id/logout"
-            android:id="@+id/dont_click"/>
+<!--        <Button-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="If you will click on me Rotem will kill you."-->
+<!--            android:layout_below="@id/logout"-->
+<!--            android:id="@+id/dont_click"/>-->
 
         <ProgressBar
             android:id="@+id/progressBar2"
