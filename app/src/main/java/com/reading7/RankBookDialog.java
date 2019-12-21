@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
+import com.bumptech.glide.util.Util;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
@@ -37,6 +38,7 @@ public class RankBookDialog extends AppCompatDialogFragment {
     private Review mReview;
     private View view;
     RatingBar avg;
+    int userAge;
     //private RankBookDialogListener listener;
 
 
@@ -48,6 +50,7 @@ public class RankBookDialog extends AppCompatDialogFragment {
         final String book_title = getArguments().getString("book_title");
         final float currAvg = getArguments().getFloat("avg");
         final int numOfRaters = getArguments().getInt("countRaters");
+        final float currAge = getArguments().getFloat("avgAge");
 
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
@@ -94,20 +97,22 @@ public class RankBookDialog extends AppCompatDialogFragment {
 
                         if (task.isSuccessful()) {
                             DocumentReference newReview = db.collection("Reviews").document();
+                            User user = new User();
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                user = document.toObject(User.class);
+                            }
+                            userAge = Utils.calculateAge(user.getBirth_date());
                             if (mReview == null) {
-                                User user = new User();
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    user = document.toObject(User.class);
-                                }
 
-                                mReview = new Review("", book_id, mAuth.getCurrentUser().getEmail(), rank, review_title, review_content, Timestamp.now(), user.getFull_name(), book_title, user.getAvatar_details());
+                                mReview = new Review("", book_id, mAuth.getCurrentUser().getEmail(),Utils.calculateAge(user.getBirth_date()), rank, review_title, review_content, Timestamp.now(), user.getFull_name(), book_title, user.getAvatar_details());
                                 mReview.setReview_id(newReview.getId());
                                 final float newAvg = ((numOfRaters * currAvg) + rank) / (numOfRaters + 1);
+                                final float newAge = ((numOfRaters * currAge) + userAge) / (numOfRaters + 1);
                                 newReview.set(mReview).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                                  @Override
                                                                                  public void onComplete(@NonNull Task<Void> task) {
                                                                                      if (task.isSuccessful()) {
-                                                                                         UpdateBook(newAvg, book_id);
+                                                                                         UpdateBook(newAge,newAvg, book_id);
                                                                                      }
 
                                                                                  }
@@ -127,9 +132,14 @@ public class RankBookDialog extends AppCompatDialogFragment {
                                 updates.put("review_title", review_title);
                                 updates.put("review_content", review_content);
                                 final float newAvg;
+                                final float newAge;
+
                                 if (numOfRaters == 0) {
                                     newAvg = rank;
+                                    newAge = userAge;
+
                                 } else {
+                                    newAge = ((numOfRaters * currAge) + userAge - mReview.getReviewer_age()) / (numOfRaters);
                                     newAvg = ((numOfRaters * currAvg) + rank - mReview.getRank()) / (numOfRaters);
                                 }
 
@@ -137,7 +147,7 @@ public class RankBookDialog extends AppCompatDialogFragment {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
-                                            UpdateBook(newAvg, book_id);
+                                            UpdateBook(newAge,newAvg, book_id);
                                         }
                                     }
                                 });
@@ -158,16 +168,21 @@ public class RankBookDialog extends AppCompatDialogFragment {
     }
 
 
-    public void UpdateBook(final float newAvg, String book_id) {
+    public void UpdateBook(final float newAge,final float newAvg, String book_id) {
 
         DocumentReference ref = db.collection("Books").document(book_id);
+        final Map<String, Object> updates = new HashMap<String, Object>();
 
-        ref.update("avg_rating", newAvg).addOnCompleteListener(new OnCompleteListener<Void>() {
+        updates.put("avg_rating", newAvg);
+        updates.put("avg_age", newAge);
+
+        ref.update(updates).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
                     //listener.applyAvg(newAvg);
-                    sendResult(202, newAvg);
+                    sendResult(202, newAvg,newAge);
+
 
                 }
             }
@@ -175,9 +190,11 @@ public class RankBookDialog extends AppCompatDialogFragment {
     }
 
 
-    private void sendResult(int REQUEST_CODE, float newAvg) {
+    private void sendResult(int REQUEST_CODE, float newAvg,float newAge) {
         Intent intent = new Intent();
         intent.putExtra("avg", newAvg);
+        intent.putExtra("avgAge", newAge);
+
         getTargetFragment().onActivityResult(
                 getTargetRequestCode(), REQUEST_CODE, intent);
     }

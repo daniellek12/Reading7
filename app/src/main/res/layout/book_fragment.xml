@@ -68,6 +68,26 @@
             android:layout_marginRight="25dp"
             android:gravity="right"/>
 
+
+            <TextView
+                android:id="@+id/countRaters"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/genres"
+                android:text="count raters"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="25dp"
+                android:gravity="right"/>
+            <TextView
+                android:id="@+id/ageAvg"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/countRaters"
+                android:text="age"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="25dp"
+                android:gravity="right"/>
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -136,7 +156,7 @@
             style="@style/Widget.AppCompat.RatingBar.Indicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/genres"
+            android:layout_below="@+id/ageAvg"
             android:layout_marginTop="2dp"
             android:progressTint="@color/gold"
             android:secondaryProgressTint="@color/gold2"

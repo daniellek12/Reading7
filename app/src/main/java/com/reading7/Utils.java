@@ -101,7 +101,7 @@ public class Utils {
             }
             final String t = title;
 
-            Book b = new Book("", title, genersarray, author, publisher, Integer.parseInt(num_pages), summary, 0, 0);
+            Book b = new Book("", title, genersarray, author, publisher, Integer.parseInt(num_pages), summary, 0,0);
             if (b.getTitle().equals("")) {
                 throw new AssertionError(name);
             }

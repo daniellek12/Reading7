@@ -17,6 +17,8 @@ public class Review implements Comparable {
     private String review_content;      // NEED to decide whether we want to limit the length
     private Timestamp review_time;      // time the review was published // note - constructor gets miliseconds(System.currentTimeMillis())
     private int likes_count;
+    private int reviewer_age;//important age and not birth year
+
     // instead array of comments, we will save collection of comments with the review_id
 
     // some fields seem to be pointless because we can bring the information from
@@ -28,7 +30,7 @@ public class Review implements Comparable {
 
     public Review() {}
 
-    public Review(String review_id, String book_id, String reviewer_email, int rank, String review_title, String review_content, Timestamp review_time, String reviewer_name, String book_title, ArrayList<Integer> reviewer_avatar) {
+    public Review(String review_id, String book_id, String reviewer_email, int reviewer_age,int rank, String review_title, String review_content, Timestamp review_time, String reviewer_name, String book_title, ArrayList<Integer> reviewer_avatar) {
         this.review_id = review_id;
         this.book_id = book_id;
         this.book_title = book_title;
@@ -40,6 +42,8 @@ public class Review implements Comparable {
         this.review_content = review_content;
         this.review_time = review_time;
         this.likes_count = 0;
+        this.reviewer_age = reviewer_age;
+
     }
 
 
@@ -139,6 +143,14 @@ public class Review implements Comparable {
 
     public void setReviewer_avatar(ArrayList<Integer> reviewer_avatar) {
         this.reviewer_avatar = reviewer_avatar;
+    }
+
+    public int getReviewer_age() {
+        return reviewer_age;
+    }
+
+    public void setReviewer_age(int reviewer_age) {
+        this.reviewer_age = reviewer_age;
     }
 
     @Override
