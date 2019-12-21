@@ -5,14 +5,23 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.reading7.MainActivity;
+import com.reading7.Objects.User;
 import com.reading7.ProfileFragment;
 import com.reading7.PublicProfileFragment;
 import com.reading7.R;
@@ -20,6 +29,7 @@ import com.reading7.Objects.Review;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -27,15 +37,39 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.ViewHolder> {
 
+
     List<Review> reviews; //TODO: should be the actual Review class
     Context mContext;
     private FirebaseAuth mAuth;
+    private FirebaseFirestore mFirestore;
+
+    // More Fields to support Like button
+    private final FirebaseUser mUser;
+    private final DocumentReference userRef;
+    private ArrayList<String> LikedReviews;
 
 
     public ReviewListAdapter(Context context, List<Review> reviews) {
         mAuth = FirebaseAuth.getInstance();
+        mFirestore = FirebaseFirestore.getInstance();
         this.reviews = reviews;
         this.mContext = context;
+
+        this.mUser = mAuth.getCurrentUser();
+        this.userRef = mFirestore.collection("Users").document(mUser.getEmail());
+
+        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    final DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        final User user = document.toObject(User.class);
+                        LikedReviews = user.getLiked_reviews(); // Update Local array
+                    }
+                }
+            }
+        });
     }
 
     @NonNull
@@ -46,7 +80,7 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ReviewListAdapter.ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull final ReviewListAdapter.ViewHolder viewHolder, int i) {
 
         final Review review = reviews.get(i);
         viewHolder.ratingBar.setRating(review.getRank());
@@ -68,6 +102,39 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
                 }
             });
 
+
+        // Actions added to support Like button mechanics
+        final String id = review.getReview_id();
+
+        if (LikedReviews.contains(id)) viewHolder.likeBtn.setBackground(mContext.getResources().getDrawable(R.drawable.like_colored));
+        else viewHolder.likeBtn.setBackground(mContext.getResources().getDrawable(R.drawable.like));
+        viewHolder.likeNum.setText(Integer.toString(review.getLikes_count()));
+        viewHolder.likeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Boolean liked = LikedReviews.contains(id);
+                final DocumentReference ReviewRef = FirebaseFirestore.getInstance().collection("Reviews").document(review.getReview_id());
+                int curr_num = review.getLikes_count();
+                if (liked) {
+                    LikedReviews.remove(id);
+                    review.setLikes_count(curr_num-1);
+                    userRef.update("liked_reviews", LikedReviews);
+                    ReviewRef.update("likes_count", curr_num - 1);
+
+                    viewHolder.likeBtn.setBackground(mContext.getResources().getDrawable(R.drawable.like));
+                    viewHolder.likeNum.setText(String.valueOf(curr_num - 1));
+
+                } else {
+                    LikedReviews.add(id);
+                    review.setLikes_count(curr_num+1);
+                    userRef.update("liked_reviews", LikedReviews);
+                    ReviewRef.update("likes_count", curr_num + 1);
+
+                    viewHolder.likeBtn.setBackground(mContext.getResources().getDrawable(R.drawable.like_colored));
+                    viewHolder.likeNum.setText(String.valueOf(curr_num + 1));
+                }
+            }
+        });
     }
 
     @Override
@@ -84,6 +151,8 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
         TextView reviewTitle;
         TextView reviewContent;
         CircleImageView profileImage;
+        TextView likeNum;
+        Button likeBtn;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -93,6 +162,8 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
             postTime = itemView.findViewById(R.id.postTime);
             reviewTitle = itemView.findViewById(R.id.review_title);
             reviewContent = itemView.findViewById(R.id.review);
+            likeNum = itemView.findViewById(R.id.likeNum);
+            likeBtn = itemView.findViewById(R.id.likeBtn);
         }
     }
 }
