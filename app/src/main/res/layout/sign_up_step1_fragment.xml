@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/transparent"
+    tools:context=".SignUpStep1"
+    android:layoutDirection="rtl">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profile_image"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="80dp"
+        android:elevation="5dp"
+        android:src="@drawable/avatar_layout"
+        android:tint="@color/colorPrimaryDark"
+        app:civ_border_color="@color/white"
+        app:civ_border_width="2dp"
+        app:civ_circle_background_color="@color/white" />
+
+    <EditText
+        android:id="@+id/name_edit"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/profile_image"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/edittext_background"
+        android:drawableStart="@drawable/user"
+        android:drawableLeft="@drawable/user"
+        android:drawablePadding="10dp"
+        android:drawableTint="@color/transparentPrimaryDark"
+        android:gravity="center_vertical|start"
+        android:hint="@string/user_name"
+        android:inputType="textPersonName"
+        android:lines="1"
+        android:maxLength="25"
+        android:maxLines="1"
+        android:paddingLeft="10dp"
+        android:paddingRight="15dp"
+        android:singleLine="true"
+        android:textAlignment="viewStart"
+        android:textSize="14sp" />
+
+
+    <EditText
+        android:id="@+id/email_edit"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/name_edit"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginLeft="40dp"
+        android:background="@drawable/edittext_background"
+        android:inputType="textEmailAddress"
+        android:lines="1"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textSize="14sp"
+        android:hint="@string/email"
+        android:paddingLeft="10dp"
+        android:paddingRight="15dp"
+        android:textAlignment="viewStart"
+        android:gravity="center_vertical|start"
+        android:drawableStart="@drawable/email"
+        android:drawableLeft="@drawable/email"
+        android:drawableTint="@color/transparentPrimaryDark"
+        android:drawablePadding="10dp"/>
+
+
+    <EditText
+        android:id="@+id/password_edit"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/email_edit"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginLeft="40dp"
+        android:background="@drawable/edittext_background"
+        android:inputType="textPassword"
+        android:lines="1"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textSize="14sp"
+        android:hint="@string/password"
+        android:paddingLeft="10dp"
+        android:paddingRight="15dp"
+        android:textAlignment="viewStart"
+        android:gravity="center_vertical|start"
+        android:drawableStart="@drawable/password"
+        android:drawableLeft="@drawable/password"
+        android:drawableTint="@color/transparentPrimaryDark"
+        android:drawablePadding="10dp"/>
+
+
+    <EditText
+        android:id="@+id/birth_date_edit"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/password_edit"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/edittext_background"
+        android:clickable="true"
+        android:focusable="false"
+        android:drawableStart="@drawable/gift"
+        android:drawableLeft="@drawable/gift"
+        android:drawablePadding="10dp"
+        android:drawableTint="@color/transparentPrimaryDark"
+        android:gravity="center_vertical|start"
+        android:hint="@string/age"
+        android:editable="false"
+        android:lines="1"
+        android:maxLines="1"
+        android:paddingLeft="10dp"
+        android:paddingRight="15dp"
+        android:singleLine="true"
+        android:textAlignment="viewStart"
+        android:textSize="14sp" />
+
+
+    <LinearLayout
+        android:id="@+id/illegal_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="right"
+        android:layout_marginTop="500dp"
+        android:layout_marginRight="5dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="invisible">
+
+        <ImageView
+            android:id="@+id/error6"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_marginLeft="3dp"
+            android:src="@drawable/ic_error" />
+
+        <TextView
+            android:id="@+id/illegal_name_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:text="@string/illegal_name"
+            android:textColor="@color/colorAccent"
+            android:textSize="12sp"
+            android:visibility="visible" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/illegal_mail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="right"
+        android:layout_marginTop="500dp"
+        android:layout_marginRight="5dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="invisible">
+
+        <ImageView
+            android:id="@+id/error2"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_marginLeft="3dp"
+            android:src="@drawable/ic_error" />
+
+        <TextView
+            android:id="@+id/illegal_mail_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:text="@string/illegal_email"
+            android:textColor="@color/colorAccent"
+            android:textSize="12sp"
+            android:visibility="visible" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/illegal_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="right"
+        android:layout_marginTop="500dp"
+        android:layout_marginRight="5dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="invisible">
+
+        <ImageView
+            android:id="@+id/error3"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_marginLeft="3dp"
+            android:src="@drawable/ic_error" />
+
+        <TextView
+            android:id="@+id/illegal_pass_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:text="@string/illegal_password"
+            android:textColor="@color/colorAccent"
+            android:textSize="12sp"
+            android:visibility="visible" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/illegal_birth_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="right"
+        android:layout_marginTop="500dp"
+        android:layout_marginRight="5dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="invisible">
+
+        <ImageView
+            android:id="@+id/error4"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_marginLeft="3dp"
+            android:src="@drawable/ic_error" />
+
+        <TextView
+            android:id="@+id/illegal_birth_date_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:text="@string/illegal_age"
+            android:textColor="@color/colorAccent"
+            android:textSize="12sp"
+            android:visibility="visible" />
+    </LinearLayout>
+
+</RelativeLayout>

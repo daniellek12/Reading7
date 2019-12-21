@@ -75,7 +75,6 @@ public class SearchFragment extends Fragment implements androidx.appcompat.widge
 
         TabsPagerAdapter tabsPagerAdapter = new TabsPagerAdapter(getChildFragmentManager());
 
-        //TODO: change this to real fragments
         tabsPagerAdapter.addFragment(new SearchBooksFragment(), "ספרים");
         tabsPagerAdapter.addFragment(new SearchAuthorsFragment(), "סופרים");
         tabsPagerAdapter.addFragment(new SearchFriendsFragment(), "חברים");
@@ -85,7 +84,6 @@ public class SearchFragment extends Fragment implements androidx.appcompat.widge
 
         TabLayout tabs = getActivity().findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
-
     }
 
 

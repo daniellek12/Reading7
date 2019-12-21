@@ -1,40 +1,39 @@
 package com.reading7;
 
-import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.reading7.Adapters.TabsPagerAdapter;
 import com.reading7.Objects.User;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import de.hdodenhof.circleimageview.CircleImageView;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 
 
 public class SignUpActivity extends AppCompatActivity implements EditAvatarDialog.EditAvatarDialogListener {
 
     private FirebaseAuth mAuth;
-    private ArrayList<Integer> avatar_details = new ArrayList<Integer>();
-
+    private ViewPager viewPager;
+    private User user;
+    private String password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +41,9 @@ public class SignUpActivity extends AppCompatActivity implements EditAvatarDialo
         setContentView(R.layout.sign_up_activity);
 
         mAuth = FirebaseAuth.getInstance();
+        initTabs();
 
-        ImageView backBtn = findViewById(R.id.backButton);
+        ImageButton backBtn = findViewById(R.id.backButton);
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -51,245 +51,200 @@ public class SignUpActivity extends AppCompatActivity implements EditAvatarDialo
             }
         });
 
-        final Button signup = findViewById(R.id.signup_btn);
-        signup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        initSignUpButton();
+        initPreviousButton();
+    }
 
-                showProgressBar();
-                dissapearErrorMsgs();
-                User user = getUser();
-                signUpUser(user);
-                hideProgressBar();
+    private void initTabs() {
+
+        TabsPagerAdapter tabsPagerAdapter = new TabsPagerAdapter(getSupportFragmentManager());
+
+        tabsPagerAdapter.addFragment(new SignUpStep1(), null);
+        tabsPagerAdapter.addFragment(new SignUpStep2(), null);
+        tabsPagerAdapter.addFragment(new SignUpStep3(), null);
+
+        viewPager = findViewById(R.id.signup_ViewPager);
+        viewPager.setAdapter(tabsPagerAdapter);
+        viewPager.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                return true;
             }
         });
 
-        initAvatarDetails();
-        setupDatePicker();
-        setupAvatarDialog();
+        TabLayout tabs = findViewById(R.id.signup_Tabs);
+        tabs.setupWithViewPager(viewPager, true);
+
+        LinearLayout tabStrip = ((LinearLayout) tabs.getChildAt(0));
+        for (int i = 0; i < tabStrip.getChildCount(); i++) {
+            tabStrip.getChildAt(i).setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    return true;
+                }
+            });
+        }
     }
 
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
         startActivity(intent);
-        overridePendingTransition(0, 0);
         finish();
     }
 
-    private User getUser() {
-
-        String name = getName();
-        if(name == null) {
-            findViewById(R.id.illegal_name).setVisibility(View.VISIBLE);
-            return null;
-        }
-
-        String email = getEmail();
-        if(email == null) {
-            findViewById(R.id.illegal_mail).setVisibility(View.VISIBLE);
-            return null;
-        }
-
-        String password = getPassword();
-        if(password == null) {
-            findViewById(R.id.illegal_password).setVisibility(View.VISIBLE);
-            return null;
-        }
-
-        String birth_date = getBirthDate();
-        if(birth_date == null) {
-            findViewById(R.id.illegal_birth_date).setVisibility(View.VISIBLE);
-            return null;
-        }
-
-        return new User(name, email, birth_date, avatar_details);
-    }
-
-    private String getName() {
-
-        String name = ((EditText) findViewById(R.id.name_edit)).getText().toString();
-
-        //should be not empty and only hebrew
-        if (name.equals("") || !(name.matches("[\u0590-\u05fe]+(( )[\u0590-\u05fe]+)*")))
-            return null;
-
-        return name;
-    }
-
-    private String getEmail() {
-
-        String email = ((EditText) findViewById(R.id.email_edit)).getText().toString();
-        if (email.equals("") || !(email.matches("[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}")))
-            return null;
-
-        return email;
-    }
-
-    private String getPassword() {
-
-        String password = ((EditText) findViewById(R.id.password_edit)).getText().toString();
-        if (password.length() < 6)
-            return null;
-
-        return password;
-    }
-
-    private void setupDatePicker() {
-
-        final EditText birth_date_edit = findViewById(R.id.birth_date_edit);
-        final Calendar myCalendar = Calendar.getInstance();
-
-        final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
-
-            @Override
-            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                myCalendar.set(Calendar.YEAR, year);
-                myCalendar.set(Calendar.MONTH, monthOfYear);
-                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
-
-                birth_date_edit.setText(sdf.format(myCalendar.getTime()));
-            }
-
-        };
-
-        birth_date_edit.setOnClickListener(new View.OnClickListener() {
+    private void initSignUpButton() {
+        final Button signup = findViewById(R.id.signup_btn);
+        signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DatePickerDialog dialog = new DatePickerDialog(SignUpActivity.this,R.style.MySpinnerDatePickerStyle, date,
-                        myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                        myCalendar.get(Calendar.DAY_OF_MONTH));
-                dialog.getDatePicker().setMaxDate(System.currentTimeMillis() - 1000);
-                dialog.show();
+
+                Fragment frag = ((TabsPagerAdapter) viewPager.getAdapter()).getItem(viewPager.getCurrentItem());
+                switch (viewPager.getCurrentItem()) {
+
+                    case 0:
+                        ((SignUpStep1) frag).dissapearErrorMsgs();
+                        user = ((SignUpStep1) frag).getUser();
+                        if (user != null) {
+                            password = ((SignUpStep1) frag).getPassword();
+                            setFragmnet(1);
+                        }
+                        break;
+
+                    case 1:
+                        user.setFavourite_books(((SignUpStep2) frag).getFavouriteBookID());
+                        setFragmnet(2);
+                        break;
+
+                    case 2:
+                        user.setFavourite_genres(((SignUpStep3) frag).getFavourite_genres());
+                        signUpUser(user);
+                        break;
+                }
             }
         });
     }
 
-    private String getBirthDate () {
-        String birth_date = ((EditText) findViewById(R.id.birth_date_edit)).getText().toString();
-        if (birth_date.equals("")){
-            return "";
-        }
-        return birth_date;
+    private void initPreviousButton() {
+
+        final Button previous = findViewById(R.id.previousButton);
+        previous.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment frag = ((TabsPagerAdapter) viewPager.getAdapter()).getItem(viewPager.getCurrentItem());
+                switch (viewPager.getCurrentItem()) {
+
+                    case 1:
+                        user.setFavourite_books(((SignUpStep2) frag).getFavouriteBookID());
+                        setFragmnet(0);
+                        break;
+
+                    case 2:
+                        user.setFavourite_genres(((SignUpStep3) frag).getFavourite_genres());
+                        setFragmnet(1);
+                        break;
+                }
+            }
+        });
+
+
     }
 
     private void signUpUser(final User user) {
 
         if (user == null) return;
 
-        String password = ((EditText) findViewById(R.id.password_edit)).getText().toString();
+        showProgressBar();
+
         mAuth.createUserWithEmailAndPassword(user.getEmail(), password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    FirebaseFirestore db = FirebaseFirestore.getInstance();
-                    mAuth = FirebaseAuth.getInstance();
 
-                    DocumentReference newUser = db.collection("Users").document(user.getEmail());
-
+                    DocumentReference newUser = FirebaseFirestore.getInstance().collection("Users").document(user.getEmail());
                     newUser.set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
-                                Intent intent = new Intent(SignUpActivity.this, QuestionnaireActivity.class);
+                                Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
                                 intent.putExtra("NEW_USER", true);
                                 startActivity(intent);
                                 finish();
-                            }
-
-                            else Toast.makeText(SignUpActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            } else
+                                Toast.makeText(SignUpActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
 
                 } else {
 
-                    if (task.getException().getMessage().equals("The email address is badly formatted."))
-                        findViewById(R.id.illegal_mail).setVisibility(View.VISIBLE);
-
-                    if (task.getException().getMessage().equals("The given password is invalid. [ Password should be at least 6 characters ]"))
-                        findViewById(R.id.illegal_password).setVisibility(View.VISIBLE);
-
-                    if (task.getException().getMessage().equals("The email address is already in use by another account."))
+                    if (task.getException().getMessage().equals("The email address is already in use by another account.")) {
+                        hideProgressBar();
                         findViewById(R.id.email_exists).setVisibility(View.VISIBLE);
-
-                    else Toast.makeText(SignUpActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-
-                    hideProgressBar();
+                        setFragmnet(0);
+                    } else {
+                        Toast.makeText(SignUpActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        hideProgressBar();
+                    }
                 }
             }
         });
 
     }
 
-    private void disableClicks(){
 
-//        findViewById(R.id.school_name_edit).setEnabled(false);
-        findViewById(R.id.name_edit).setEnabled(false);
-        findViewById(R.id.password_edit).setEnabled(false);
-        findViewById(R.id.email_edit).setEnabled(false);
-        findViewById(R.id.birth_date_edit).setEnabled(false);
+    private void setFragmnet(int position){
+        switch (position){
+            case 0:
+                findViewById(R.id.previousButton).setVisibility(View.GONE);
+                ((Button) findViewById(R.id.signup_btn)).setText(getString(R.string.cont));
+                viewPager.setCurrentItem(0);
+                break;
+
+            case 1:
+                findViewById(R.id.previousButton).setVisibility(View.VISIBLE);
+                ((Button) findViewById(R.id.signup_btn)).setText(getString(R.string.cont));
+                viewPager.setCurrentItem(1);
+                break;
+
+            case 2:
+                findViewById(R.id.previousButton).setVisibility(View.VISIBLE);
+                ((Button) findViewById(R.id.signup_btn)).setText(getString(R.string.signup));
+                viewPager.setCurrentItem(2);
+                break;
+
+
+        }
+    }
+
+    private void disableClicks() {
         findViewById(R.id.backButton).setEnabled(false);
-
+        findViewById(R.id.signup_btn).setEnabled(false);
     }
 
-    private void enableClicks(){
-
-//        findViewById(R.id.school_name_edit).setEnabled(true);
-        findViewById(R.id.name_edit).setEnabled(true);
-        findViewById(R.id.password_edit).setEnabled(true);
-        findViewById(R.id.email_edit).setEnabled(true);
-        findViewById(R.id.birth_date_edit).setEnabled(true);
+    private void enableClicks() {
         findViewById(R.id.backButton).setEnabled(true);
-
+        findViewById(R.id.signup_btn).setEnabled(true);
     }
 
-    private void dissapearErrorMsgs() {
-        findViewById(R.id.illegal_mail).setVisibility(View.INVISIBLE);
-        findViewById(R.id.illegal_password).setVisibility(View.INVISIBLE);
-        findViewById(R.id.illegal_name).setVisibility(View.INVISIBLE);
-//        findViewById(R.id.illegal_school_name).setVisibility(View.INVISIBLE);
-        findViewById(R.id.illegal_birth_date).setVisibility(View.INVISIBLE);
-        findViewById(R.id.email_exists).setVisibility(View.INVISIBLE);
-    }
-
-    private void showProgressBar(){
-
+    private void showProgressBar() {
         disableClicks();
-        findViewById(R.id.signup_btn).setVisibility(View.INVISIBLE);
+        findViewById(R.id.signup_btn).setVisibility(View.GONE);
+        findViewById(R.id.previousButton).setVisibility(View.GONE);
         findViewById(R.id.progress_background).setVisibility(View.VISIBLE);
         findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
     }
 
-    private void hideProgressBar(){
-
+    private void hideProgressBar() {
         findViewById(R.id.progress_background).setVisibility(View.GONE);
         findViewById(R.id.progressBar).setVisibility(View.GONE);
         findViewById(R.id.signup_btn).setVisibility(View.VISIBLE);
+        findViewById(R.id.previousButton).setVisibility(View.VISIBLE);
         enableClicks();
-    }
-
-
-    private void initAvatarDetails(){
-
-        for(int i=0; i<5; i++)
-            avatar_details.add(1);
-    }
-
-    private void setupAvatarDialog() {
-
-        findViewById(R.id.profile_image).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                EditAvatarDialog dialog = new EditAvatarDialog(avatar_details);
-                dialog.show(getSupportFragmentManager(), "edit avater");
-            }
-        });
     }
 
     @Override
     public void getAvatarDetails(ArrayList<Integer> details) {
-        this.avatar_details = details;
-        Utils.loadAvatar(SignUpActivity.this, (CircleImageView)findViewById(R.id.profile_image), avatar_details);
+        Fragment frag = ((TabsPagerAdapter) viewPager.getAdapter()).getItem(viewPager.getCurrentItem());
+        ((SignUpStep1) frag).getAvatarDetails(details);
     }
 }

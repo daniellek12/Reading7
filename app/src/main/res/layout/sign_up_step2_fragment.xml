@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent"
+    android:layoutDirection="rtl"
+    tools:context=".SignUpStep2">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="130dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:text="כיף שהצטרפת!"
+        android:textColor="@color/white"
+        android:textSize="36sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:layout_centerHorizontal="true"
+        android:text="רק עוד קצת לפני שמתחילים"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
+
+    <AutoCompleteTextView
+        android:id="@+id/auto_complete"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="250dp"
+        android:layout_marginRight="40dp"
+        android:background="@drawable/edittext_background"
+        android:drawableStart="@drawable/book"
+        android:drawableLeft="@drawable/book"
+        android:drawablePadding="10dp"
+        android:drawableTint="@color/transparentPrimaryDark"
+        android:gravity="center_vertical|start"
+        android:hint="@string/choose_last_book"
+        android:completionThreshold="1"
+        android:lines="1"
+        android:maxLines="1"
+        android:paddingLeft="10dp"
+        android:paddingRight="15dp"
+        android:singleLine="true"
+        android:textAlignment="viewStart"
+        android:textSize="14sp"/>
+
+</RelativeLayout>

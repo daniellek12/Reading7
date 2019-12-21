@@ -78,4 +78,22 @@
     <string name="accessories_title">אביזרים</string>
     <string name="glasses">משקפיים</string>
 
+    <string name="cont">המשך</string>
+    <string name="choose_last_book">מהו הספר האחרון שקראת?</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="adventures">הרפתקאות</string>
+    <string name="fantasy">פנטזיה</string>
+    <string name="history">היסטוריה</string>
+    <string name="comedy">קומדיה</string>
+    <string name="drama">דרמה</string>
+    <string name="horror">אימה</string>
+    <string name="science">מדע</string>
+    <string name="teens">התבגרות</string>
+    <string name="thriller">מתח</string>
+    <string name="favourite_geners_title">מהם הז׳אנרים האהובים עלייך?</string>
+    <string name="romance">אהבה</string>
+    <string name="back">חזור</string>
+
 </resources>

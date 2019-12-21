@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent"
+    android:layoutDirection="rtl"
+    tools:context=".SignUpStep3">
+
+
+    <Button
+        android:id="@+id/adventures"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:layout_marginTop="20dp"
+        android:layout_toRightOf="@id/fantasy"
+        android:background="@drawable/rounded_corners"
+        android:backgroundTint="@color/grey"
+        android:drawableTop="@drawable/genre_advuntures"
+        android:drawablePadding="5dp"
+        android:drawableTint="@color/colorPrimaryDark"
+        android:padding="15dp"
+        android:tag="הרפתקאות"
+        android:text="@string/adventures"
+        android:textColor="@color/darkGrey" />
+
+    <Button
+        android:id="@+id/fantasy"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="7dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="7dp"
+        android:background="@drawable/rounded_corners"
+        android:backgroundTint="@color/grey"
+        android:drawableTop="@drawable/genre_fantasy"
+        android:drawablePadding="5dp"
+        android:drawableTint="@color/colorPrimaryDark"
+        android:padding="15dp"
+        android:tag="פנטזיה"
+        android:text="@string/fantasy"
+        android:textColor="@color/darkGrey" />
+
+    <Button
+        android:id="@+id/history"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:layout_marginTop="20dp"
+        android:layout_toLeftOf="@id/fantasy"
+        android:background="@drawable/rounded_corners"
+        android:backgroundTint="@color/grey"
+        android:drawableTop="@drawable/genre_history"
+        android:drawablePadding="5dp"
+        android:drawableTint="@color/colorPrimaryDark"
+        android:padding="15dp"
+        android:tag="היסטוריה"
+        android:text="@string/history"
+        android:textColor="@color/darkGrey" />
+
+    <Button
+        android:id="@+id/romance"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/adventures"
+        android:layout_marginTop="7dp"
+        android:layout_toRightOf="@id/thriller"
+        android:background="@drawable/rounded_corners"
+        android:backgroundTint="@color/grey"
+        android:drawableTop="@drawable/genre_romance"
+        android:drawablePadding="5dp"
+        android:drawableTint="@color/colorPrimaryDark"
+        android:padding="15dp"
+        android:tag="אהבה"
+        android:text="@string/romance"
+        android:textColor="@color/darkGrey" />
+
+    <Button
+        android:id="@+id/thriller"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/adventures"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="7dp"
+        android:layout_marginTop="7dp"
+        android:layout_marginRight="7dp"
+        android:background="@drawable/rounded_corners"
+        android:backgroundTint="@color/grey"
+        android:drawableTop="@drawable/genre_thriller"
+        android:drawablePadding="5dp"
+        android:drawableTint="@color/colorPrimaryDark"
+        android:padding="15dp"
+        android:tag="מתח"
+        android:text="@string/thriller"
+        android:textColor="@color/darkGrey" />
+
+    <Button
+        android:id="@+id/horror"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/adventures"
+        android:layout_marginTop="7dp"
+        android:layout_toLeftOf="@id/drama"
+        android:background="@drawable/rounded_corners"
+        android:backgroundTint="@color/grey"
+        android:drawableTop="@drawable/genre_horror"
+        android:drawablePadding="5dp"
+        android:drawableTint="@color/colorPrimaryDark"
+        android:padding="15dp"
+        android:tag="אימה"
+        android:text="@string/horror"
+        android:textColor="@color/darkGrey" />
+
+    <Button
+        android:id="@+id/science"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/romance"
+        android:layout_marginTop="7dp"
+        android:layout_toRightOf="@id/drama"
+        android:background="@drawable/rounded_corners"
+        android:backgroundTint="@color/grey"
+        android:drawableTop="@drawable/genre_science"
+        android:drawablePadding="5dp"
+        android:drawableTint="@color/colorPrimaryDark"
+        android:padding="15dp"
+        android:tag="מדע"
+        android:text="@string/science"
+        android:textColor="@color/darkGrey" />
+
+    <Button
+        android:id="@+id/drama"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/romance"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="7dp"
+        android:layout_marginTop="7dp"
+        android:layout_marginRight="7dp"
+        android:background="@drawable/rounded_corners"
+        android:backgroundTint="@color/grey"
+        android:drawableTop="@drawable/genre_drama"
+        android:drawablePadding="5dp"
+        android:drawableTint="@color/colorPrimaryDark"
+        android:padding="15dp"
+        android:tag="דרמה"
+        android:text="@string/drama"
+        android:textColor="@color/darkGrey" />
+
+    <Button
+        android:id="@+id/comedy"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/romance"
+        android:layout_marginTop="7dp"
+        android:layout_toLeftOf="@id/drama"
+        android:background="@drawable/rounded_corners"
+        android:backgroundTint="@color/grey"
+        android:drawableTop="@drawable/genre_comedy"
+        android:drawablePadding="5dp"
+        android:drawableTint="@color/colorPrimaryDark"
+        android:padding="15dp"
+        android:tag="קומדיה"
+        android:text="@string/comedy"
+        android:textColor="@color/darkGrey" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="80dp"
+        android:text="@string/favourite_geners_title"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        android:textStyle="bold" />
+
+
+</RelativeLayout>
