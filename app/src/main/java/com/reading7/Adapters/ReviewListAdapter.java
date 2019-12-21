@@ -2,6 +2,7 @@ package com.reading7.Adapters;
 
 
 import android.content.Context;
+import android.icu.text.RelativeDateTimeFormatter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -34,6 +36,8 @@ import java.util.Date;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import static com.reading7.Utils.RelativeDateDisplay;
 
 public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.ViewHolder> {
 
@@ -86,8 +90,8 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
         viewHolder.ratingBar.setRating(review.getRank());
         viewHolder.userName.setText(review.getReviewer_name());
         Date date = review.getReview_time().toDate();
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm");
-        String strDate = dateFormat.format(date);
+
+        String strDate = RelativeDateDisplay(Timestamp.now().toDate().getTime() - date.getTime());
 
         viewHolder.postTime.setText(strDate);
         viewHolder.reviewTitle.setText(review.getReview_title());

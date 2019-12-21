@@ -287,6 +287,52 @@ public class Utils {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
     }
+
+    public static String RelativeDateDisplay(long timeDifferenceMilliseconds) {
+        long diffSeconds = timeDifferenceMilliseconds / 1000;
+        long diffMinutes = timeDifferenceMilliseconds / (60 * 1000);
+        long diffHours = timeDifferenceMilliseconds / (60 * 60 * 1000);
+        long diffDays = timeDifferenceMilliseconds / (60 * 60 * 1000 * 24);
+        long diffWeeks = timeDifferenceMilliseconds / (60 * 60 * 1000 * 24 * 7);
+        long diffMonths = (long) (timeDifferenceMilliseconds / (60 * 60 * 1000 * 24 * 30.41666666));
+        long diffYears = timeDifferenceMilliseconds / ((long)60 * 60 * 1000 * 24 * 365);
+
+        if (diffMinutes < 1) {
+            return "הרגע";
+        } else if (diffHours < 1) {
+            if (diffMinutes  == 1)
+                return "לפני דקה";
+            return  "לפני " + diffMinutes + " דקות";
+        } else if (diffDays < 1) {
+            if (diffHours == 1)
+                return "לפני שעה";
+            if (diffHours == 2)
+                return "לפני שעתיים";
+            return "לפני " + diffHours + " שעות";
+        } else if (diffWeeks < 1) {
+            if (diffDays == 1)
+                return "לפני יום";
+            if (diffDays == 2)
+                return "לפני יומיים";
+            return "לפני " + diffDays + " ימים";
+        } else if (diffMonths < 1) {
+            if (diffWeeks == 1)
+                return "לפני שבוע";
+            return "לפני " + diffWeeks + " שבועות";
+        } else if (diffYears < 1) {
+            if (diffMonths == 1)
+                return "לפני חודש";
+            if (diffMonths == 2)
+                return "לפני חודשיים";
+            return "לפני " + diffMonths + "חודשים";
+        } else {
+            if (diffYears == 1)
+                return "לפני שנה";
+            if (diffYears == 2)
+                return "לפני שנתיים";
+            return "לפני " + diffYears + " שנים";
+        }
+    }
 }
 
 

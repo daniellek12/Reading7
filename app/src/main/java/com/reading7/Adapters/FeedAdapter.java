@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -40,6 +41,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import static com.reading7.Utils.RelativeDateDisplay;
 
 public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
 
@@ -203,8 +206,8 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
         ArrayList<Integer> avatar_details = post.getUser_avatar();
         Utils.loadAvatar(mContext, holder.profileImage, avatar_details);
 
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
-        String strDate = dateFormat.format(post.getPost_time().toDate());
+        String strDate = RelativeDateDisplay(Timestamp.now().toDate().getTime() - post.getPost_time().toDate().getTime());
+
         holder.postTime.setText(strDate); // FIXME check this
 
         holder.review_content.setText(post.getReview_content());
@@ -311,8 +314,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
         ArrayList<Integer> avatar_details = post.getUser_avatar();
         Utils.loadAvatar(mContext, holder.profileImage, avatar_details);
 
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
-        String strDate = dateFormat.format(post.getPost_time().toDate());
+        String strDate = RelativeDateDisplay(Timestamp.now().toDate().getTime() - post.getPost_time().toDate().getTime());
         holder.postTime.setText(strDate);
 
         // TODO: deal with profile image
