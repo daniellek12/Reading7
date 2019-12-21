@@ -6,19 +6,24 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.reading7.Objects.Book;
@@ -34,6 +39,29 @@ import java.util.Calendar;
 
 public class Utils {
 
+
+    public static void updateBooks() {
+        final FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("Books").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (final QueryDocumentSnapshot document : task.getResult()) {
+                                db.collection("Books").document(document.getId()).update("avg_age", 0).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d("Utils", "Updated ".concat(document.get("title").toString()));
+                                    }
+                                });
+                            }
+                        } else {
+                            Log.d("Utils", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+    }
 
     public static void convertTxtToBook(final Context context) throws IOException {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -101,7 +129,7 @@ public class Utils {
             }
             final String t = title;
 
-            Book b = new Book("", title, genersarray, author, publisher, Integer.parseInt(num_pages), summary, 0, 0);
+            Book b = new Book("", title, genersarray, author, publisher, Integer.parseInt(num_pages), summary, 0,0);
             if (b.getTitle().equals("")) {
                 throw new AssertionError(name);
             }
@@ -203,12 +231,12 @@ public class Utils {
         LayerDrawable layer = (LayerDrawable) image.getDrawable();
 
         String skin = "skin" + avatar_details.get(0);
-        Drawable skinDrawable = getDrawable(context,skin);
+        Drawable skinDrawable = getDrawable(context, skin);
         layer.setDrawableByLayerId(R.id.skin, skinDrawable);
 
         String eyes = "eyes" + avatar_details.get(1);
         Drawable eyesDrawable = layer.findDrawableByLayerId(R.id.eyes);
-        eyesDrawable.setTint(getColor(context,eyes));
+        eyesDrawable.setTint(getColor(context, eyes));
         layer.setDrawableByLayerId(R.id.eyes, eyesDrawable);
 
         String hairType = "hair" + avatar_details.get(2);
@@ -217,12 +245,12 @@ public class Utils {
 
         String hairColor = "hair" + avatar_details.get(3);
         Drawable hairDrawable = layer.findDrawableByLayerId(R.id.hair);
-        hairDrawable.setTint(getColor(context,hairColor));
+        hairDrawable.setTint(getColor(context, hairColor));
         layer.setDrawableByLayerId(R.id.hair, hairDrawable);
 
         String shirt = "shirt" + avatar_details.get(4);
         Drawable shirtDrawable = layer.findDrawableByLayerId(R.id.shirt);
-        shirtDrawable.setTint(getColor(context,shirt));
+        shirtDrawable.setTint(getColor(context, shirt));
         layer.setDrawableByLayerId(R.id.shirt, shirtDrawable);
 
         image.setImageDrawable(layer);
@@ -258,6 +286,52 @@ public class Utils {
 
         InputMethodManager imm = (InputMethodManager) context.getSystemService(context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+    }
+
+    public static String RelativeDateDisplay(long timeDifferenceMilliseconds) {
+        long diffSeconds = timeDifferenceMilliseconds / 1000;
+        long diffMinutes = timeDifferenceMilliseconds / (60 * 1000);
+        long diffHours = timeDifferenceMilliseconds / (60 * 60 * 1000);
+        long diffDays = timeDifferenceMilliseconds / (60 * 60 * 1000 * 24);
+        long diffWeeks = timeDifferenceMilliseconds / (60 * 60 * 1000 * 24 * 7);
+        long diffMonths = (long) (timeDifferenceMilliseconds / (60 * 60 * 1000 * 24 * 30.41666666));
+        long diffYears = timeDifferenceMilliseconds / ((long)60 * 60 * 1000 * 24 * 365);
+
+        if (diffMinutes < 1) {
+            return "הרגע";
+        } else if (diffHours < 1) {
+            if (diffMinutes  == 1)
+                return "לפני דקה";
+            return  "לפני " + diffMinutes + " דקות";
+        } else if (diffDays < 1) {
+            if (diffHours == 1)
+                return "לפני שעה";
+            if (diffHours == 2)
+                return "לפני שעתיים";
+            return "לפני " + diffHours + " שעות";
+        } else if (diffWeeks < 1) {
+            if (diffDays == 1)
+                return "לפני יום";
+            if (diffDays == 2)
+                return "לפני יומיים";
+            return "לפני " + diffDays + " ימים";
+        } else if (diffMonths < 1) {
+            if (diffWeeks == 1)
+                return "לפני שבוע";
+            return "לפני " + diffWeeks + " שבועות";
+        } else if (diffYears < 1) {
+            if (diffMonths == 1)
+                return "לפני חודש";
+            if (diffMonths == 2)
+                return "לפני חודשיים";
+            return "לפני " + diffMonths + "חודשים";
+        } else {
+            if (diffYears == 1)
+                return "לפני שנה";
+            if (diffYears == 2)
+                return "לפני שנתיים";
+            return "לפני " + diffYears + " שנים";
+        }
     }
 }
 

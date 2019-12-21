@@ -13,9 +13,17 @@ public class Book {
     private int num_pages;
     private String description;
     private float avg_rating;
-    private int num_readers;
+    private float avg_age;
 
     public Book() {}
+
+    public float getAvg_age() {
+        return avg_age;
+    }
+
+    public void setAvg_age(float avg_age) {
+        this.avg_age = avg_age;
+    }
 
     public String getId() {
         return id;
@@ -81,15 +89,9 @@ public class Book {
         this.avg_rating = avg_rating;
     }
 
-    public int getNum_readers() {
-        return num_readers;
-    }
 
-    public void setNum_readers(int num_readers) {
-        this.num_readers = num_readers;
-    }
 
-    public Book(String id, String title, ArrayList<String> genres, String author, String publisher, int num_pages, String description, float avg_rating, int num_readers) {
+    public Book(String id, String title, ArrayList<String> genres, String author, String publisher, int num_pages, String description, float avg_rating, float avg_age) {
         this.id = id;
         this.title = title;
         this.genres = genres;
@@ -98,7 +100,8 @@ public class Book {
         this.num_pages = num_pages;
         this.description = description;
         this.avg_rating = avg_rating;
-        this.num_readers = num_readers;
+        //this.num_readers = num_readers;
+        this.avg_age = avg_age;
     }
 
     @NonNull

@@ -16,12 +16,17 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.reading7.BookFragment;
 import com.reading7.MainActivity;
+import com.reading7.Objects.Book;
 import com.reading7.Objects.Post;
 import com.reading7.PublicProfileFragment;
 import com.reading7.R;
@@ -36,6 +41,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import static com.reading7.Utils.RelativeDateDisplay;
 
 public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
 
@@ -199,8 +206,8 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
         ArrayList<Integer> avatar_details = post.getUser_avatar();
         Utils.loadAvatar(mContext, holder.profileImage, avatar_details);
 
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
-        String strDate = dateFormat.format(post.getPost_time().toDate());
+        String strDate = RelativeDateDisplay(Timestamp.now().toDate().getTime() - post.getPost_time().toDate().getTime());
+
         holder.postTime.setText(strDate); // FIXME check this
 
         holder.review_content.setText(post.getReview_content());
@@ -273,6 +280,25 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
             }
         });
 
+        holder.cover.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Query bookRef = FirebaseFirestore.getInstance().collection("Books").whereEqualTo("title",post.getBook_title());
+                bookRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (DocumentSnapshot doc : task.getResult()) {
+                                ((MainActivity) mContext).loadBookFragment(new BookFragment(), doc.toObject(Book.class));
+                                break;
+                            }
+                        }
+                    }
+                });
+            }
+        });
+
+
     }
 
 
@@ -288,8 +314,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
         ArrayList<Integer> avatar_details = post.getUser_avatar();
         Utils.loadAvatar(mContext, holder.profileImage, avatar_details);
 
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
-        String strDate = dateFormat.format(post.getPost_time().toDate());
+        String strDate = RelativeDateDisplay(Timestamp.now().toDate().getTime() - post.getPost_time().toDate().getTime());
         holder.postTime.setText(strDate);
 
         // TODO: deal with profile image

@@ -53,6 +53,9 @@ public class BookFragment extends Fragment
     private int countRaters;
     private RatingBar rankRatingBar;
     private TextView ratingNum;
+    private TextView avgAgeText;
+    private float mAvgAge;
+
 
 
 
@@ -78,7 +81,9 @@ public class BookFragment extends Fragment
                 Bundle args = new Bundle();
                 args.putString("book_id", mBook.getId());
                 args.putString("book_title", mBook.getTitle());
-                args.putFloat("avg", mBook.getAvg_rating());
+                float try1 =Float.parseFloat((String)ratingNum.getText());
+                args.putFloat("avg", Float.parseFloat((String)ratingNum.getText()));
+                args.putFloat("avgAge", mAvgAge);
                 args.putInt("countRaters", countRaters);
 
                 dialog.setArguments(args);
@@ -158,6 +163,7 @@ public class BookFragment extends Fragment
     }
 
     private void getBookReviews() {
+        countRaters=0;
         final List<Review> newlist = new ArrayList<Review>();
         CollectionReference collection = db.collection("Reviews");
         Query query = collection.whereEqualTo("book_id", mBook.getId());
@@ -174,8 +180,11 @@ public class BookFragment extends Fragment
                     }
 
                     lstReviews.addAll(newlist);
-                    Collections.sort(lstReviews,Collections.reverseOrder());
+                    Collections.
+                            sort(lstReviews,Collections.reverseOrder());
                     adapter.notifyDataSetChanged();
+                    TextView countRatersText = (TextView) getActivity().findViewById(R.id.countRaters);
+                    countRatersText.setText(""+countRaters);
 
 
                 }
@@ -245,11 +254,14 @@ public class BookFragment extends Fragment
         }
         textViewgeners.setText(geners);
 
-        rankRatingBar = (RatingBar)getActivity().findViewById(R.id.ratingBar);
+        rankRatingBar = (RatingBar)getActivity().findViewById(R.id.bookRatingBar);
         rankRatingBar.setRating(mBook.getAvg_rating());
 
        ratingNum = (TextView) getActivity().findViewById(R.id.ratingNum);
         ratingNum.setText(Float.toString(mBook.getAvg_rating()));
+
+        avgAgeText = (TextView) getActivity().findViewById(R.id.ageAvg);
+        avgAgeText.setText(AgeString(mBook.getAvg_age()));
 
         TextView textViewAuthor = (TextView) getActivity().findViewById(R.id.author_field);
         textViewAuthor.setText(mBook.getAuthor());
@@ -283,12 +295,23 @@ public class BookFragment extends Fragment
         if (requestCode == 202) {
             float avg = data.getFloatExtra(
                     "avg", 0);
+            mAvgAge = data.getFloatExtra(
+                    "avgAge", 0);
+
+
             rankRatingBar.setRating(avg);
             ratingNum.setText(Float.toString(avg));
+            avgAgeText.setText(AgeString(mAvgAge));
             lstReviews.clear();
             getBookReviews();//overhead
 
         }
+    }
+
+    private String AgeString(float avgAge){
+        int ageInt= (int)avgAge;
+        String ageString =""+ageInt+"-"+(ageInt+1)+"";
+        return ageString;
     }
 
     /*@Override

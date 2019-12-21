@@ -104,92 +104,23 @@
             android:layout_weight="1"
             android:gravity="center">
 
-            <ImageButton
+            <Button
                 android:id="@+id/likeBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/transparent"
-                android:src="@drawable/like"
-                android:tint="@color/lightGrey" />
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@drawable/like">
+            </Button>
 
             <TextView
                 android:id="@+id/likeNum"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="3dp"
-                android:text="3"
-                android:textColor="@color/lightGrey" />
+                android:paddingRight="3dp"
+                android:text="0"
+                android:textColor="@color/black"
+                android:textSize="14sp">
+            </TextView>
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center">
-
-            <ImageButton
-                android:id="@+id/heartBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/transparent"
-                android:src="@drawable/heart_colored"
-                android:tint="@color/lightGrey" />
-
-            <TextView
-                android:id="@+id/heartNum"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="3dp"
-                android:text="100"
-                android:textColor="@color/lightGrey" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center">
-
-            <ImageButton
-                android:id="@+id/happyBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/transparent"
-                android:src="@drawable/happy"
-                android:tint="@color/lightGrey" />
-
-            <TextView
-                android:id="@+id/happyNum"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="3dp"
-                android:text="16"
-                android:textColor="@color/lightGrey" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center">
-
-            <ImageButton
-                android:id="@+id/sadBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/transparent"
-                android:src="@drawable/sad"
-                android:tint="@color/lightGrey" />
-
-            <TextView
-                android:id="@+id/sadNum"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="3dp"
-                android:text="74"
-                android:textColor="@color/lightGrey" />
-        </LinearLayout>
-
 
     </LinearLayout>
 
