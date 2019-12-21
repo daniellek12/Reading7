@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,6 +63,16 @@ public class ProfileFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         getUserInformation();
+
+        ImageButton dc = (ImageButton)getActivity().findViewById(R.id.settings);
+        dc.bringToFront();
+        dc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                Utils.updateBooks();
+                Toast.makeText(getActivity(), "IF YOU TOUCH THIS BUTTON EVER AGAIN ROTEM WILL KILL YOU.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void getUserInformation() {
