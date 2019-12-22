@@ -14,6 +14,7 @@ public class Post implements Comparable {
     private Timestamp post_time;
     private String book_id;
     private String book_title;
+    private String book_author;
 
 
     /* Review */
@@ -64,6 +65,7 @@ public class Post implements Comparable {
 
         this.book_id = review.getBook_id();
         this.book_title = review.getBook_title();
+        this.book_author = review.getBook_author();
 
         this.reviewer_email = review.getReviewer_email();
         this.user_name = review.getReviewer_name();
@@ -246,6 +248,13 @@ public class Post implements Comparable {
         this.user_avatar = user_avatar;
     }
 
+    public String getBook_author() {
+        return book_author;
+    }
+
+    public void setBook_author(String book_author) {
+        this.book_author = book_author;
+    }
 
     @Override
     public int compareTo(Object o) {

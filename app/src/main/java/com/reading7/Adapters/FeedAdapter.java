@@ -33,8 +33,6 @@ import com.reading7.R;
 import com.reading7.Objects.User;
 import com.reading7.Utils;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
@@ -54,31 +52,34 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
 
     public class ReviewPostHolder extends RecyclerView.ViewHolder {
 
+        TextView postTime;
+        TextView userName;
+        CircleImageView profileImage;
         RatingBar ratingBar;
         TextView rating;
         ImageView cover;
         ImageView coverBackground;
-        TextView userName;
-        TextView postTime;
+        TextView bookName;
+        TextView authorName;
         Button likeButton;
         TextView likesNum;
-        CircleImageView profileImage;
-
         TextView review_content;
         TextView review_title;
 
         public ReviewPostHolder(@NonNull View itemView) {
             super(itemView);
 
+            postTime = itemView.findViewById(R.id.postTime);
+            userName = itemView.findViewById(R.id.userName);
+            profileImage = itemView.findViewById(R.id.profileImage);
             ratingBar = itemView.findViewById(R.id.ratingBar);
             rating = itemView.findViewById(R.id.rating);
             cover = itemView.findViewById(R.id.coverImage);
             coverBackground = itemView.findViewById(R.id.coverBackground);
-            userName = itemView.findViewById(R.id.userName);
-            postTime = itemView.findViewById(R.id.postTime);
+            bookName = itemView.findViewById(R.id.bookTitle);
+            authorName = itemView.findViewById(R.id.authorName);
             likeButton = itemView.findViewById(R.id.likeButton);
             likesNum = itemView.findViewById(R.id.likesNum);
-            profileImage = itemView.findViewById(R.id.profileImage);
             review_content = itemView.findViewById(R.id.comment);
             review_title = itemView.findViewById(R.id.title);
         }
@@ -202,6 +203,8 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
         holder.rating.setText(String.valueOf(post.getRank()));
 
         holder.userName.setText(post.getUser_name());
+        holder.bookName.setText(post.getBook_title());
+        holder.authorName.setText(post.getBook_author());
 
         ArrayList<Integer> avatar_details = post.getUser_avatar();
         Utils.loadAvatar(mContext, holder.profileImage, avatar_details);
@@ -214,11 +217,6 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
         holder.review_title.setText(post.getReview_title());
         Utils.showImage(post.getBook_title(), ((ReviewPostHolder) viewHolder).cover,(Activity)mContext);
         Utils.showImage(post.getBook_title(), ((ReviewPostHolder) viewHolder).coverBackground,(Activity)mContext);
-
-        //TODO: deal with profile  image
-        //TODO: load images correctly
-        //holder.cover.setImageResource(mContext.getResources().getIdentifier("cover"+(i+1), "mipmap", mContext.getPackageName()));
-        //holder.coverBackground.setImageResource(mContext.getResources().getIdentifier("cover"+(i+1), "mipmap", mContext.getPackageName()));
 
         final FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
         final DocumentReference userRef = FirebaseFirestore.getInstance().collection("Users").document(mUser.getEmail());

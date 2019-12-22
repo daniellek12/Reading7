@@ -81,6 +81,7 @@ public class BookFragment extends Fragment {
                 Bundle args = new Bundle();
                 args.putString("book_id", mBook.getId());
                 args.putString("book_title", mBook.getTitle());
+                args.putString("book_author", mBook.getAuthor());
                 float try1 =Float.parseFloat((String)ratingNum.getText());
                 args.putFloat("avg", Float.parseFloat((String)ratingNum.getText()));
                 args.putFloat("avgAge", mAvgAge);

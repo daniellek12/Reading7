@@ -9,6 +9,7 @@ public class Review implements Comparable {
     private String review_id;           // random value
     private String book_id;             // key for book
     private String book_title;
+    private String book_author;
     private String reviewer_email;      // key for user
     private String reviewer_name;
     private ArrayList<Integer> reviewer_avatar;
@@ -17,7 +18,7 @@ public class Review implements Comparable {
     private String review_content;      // NEED to decide whether we want to limit the length
     private Timestamp review_time;      // time the review was published // note - constructor gets miliseconds(System.currentTimeMillis())
     private int likes_count;
-    private int reviewer_age;//important age and not birth year
+    private int reviewer_age;           //important age and not birth year
 
     // instead array of comments, we will save collection of comments with the review_id
 
@@ -30,7 +31,7 @@ public class Review implements Comparable {
 
     public Review() {}
 
-    public Review(String review_id, String book_id, String reviewer_email, int reviewer_age,int rank, String review_title, String review_content, Timestamp review_time, String reviewer_name, String book_title, ArrayList<Integer> reviewer_avatar) {
+    public Review(String review_id, String book_id, String reviewer_email, int reviewer_age,int rank, String review_title, String review_content, Timestamp review_time, String reviewer_name, String book_title, String book_author, ArrayList<Integer> reviewer_avatar) {
         this.review_id = review_id;
         this.book_id = book_id;
         this.book_title = book_title;
@@ -151,6 +152,14 @@ public class Review implements Comparable {
 
     public void setReviewer_age(int reviewer_age) {
         this.reviewer_age = reviewer_age;
+    }
+
+    public String getBook_author() {
+        return book_author;
+    }
+
+    public void setBook_author(String book_author) {
+        this.book_author = book_author;
     }
 
     @Override

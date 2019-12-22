@@ -27,7 +27,6 @@ import com.reading7.Objects.Review;
 import com.reading7.Objects.WishList;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
