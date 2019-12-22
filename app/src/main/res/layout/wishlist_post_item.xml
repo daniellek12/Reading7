@@ -10,8 +10,8 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profileImage"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="20dp"
         android:layout_marginRight="20dp"
@@ -27,15 +27,15 @@
         android:layout_toLeftOf="@id/profileImage"
         android:text="אליאנה תדהר"
         android:textColor="@color/black"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:textStyle="bold" />
 
     <ImageView
         android:id="@+id/timeIcon"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
+        android:layout_width="11dp"
+        android:layout_height="11dp"
         android:layout_below="@id/userName"
-        android:layout_marginTop="3dp"
+        android:layout_marginTop="5dp"
         android:layout_toLeftOf="@id/profileImage"
         android:tint="@color/darkGrey"
         app:srcCompat="@drawable/time" />
@@ -45,96 +45,52 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/userName"
+        android:layout_marginTop="2dp"
         android:layout_marginRight="3dp"
-        android:layout_marginBottom="20dp"
         android:layout_toLeftOf="@id/timeIcon"
-        android:text="לפני 3 ימים" />
+        android:text="לפני 3 ימים"
+        android:textSize="12sp" />
+
+    <View
+        android:id="@+id/divider1"
+        android:layout_width="match_parent"
+        android:layout_height=".5dp"
+        android:layout_below="@id/profileImage"
+        android:layout_marginTop="15dp"
+        android:background="?android:attr/listDivider" />
+
+    <ImageView
+        android:id="@+id/coverBackground"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:layout_below="@id/divider1"
+        android:alpha="0.3"
+        android:scaleType="centerCrop"
+        app:srcCompat="@mipmap/cover13" />
 
     <ImageView
         android:id="@+id/coverImage"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_below="@id/postTime"
+        android:layout_width="160dp"
+        android:layout_height="220dp"
+        android:layout_below="@id/divider1"
         android:layout_centerHorizontal="true"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:scaleType="centerCrop"
-        app:srcCompat="@mipmap/cover18" />
+        android:scaleType="fitXY"
+        app:srcCompat="@mipmap/cover13" />
 
-    <ImageView
-        android:id="@+id/coverImage2"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_below="@id/postTime"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="10dp"
-        android:layout_toLeftOf="@id/coverImage"
-        android:alpha="0.1"
-        android:scaleType="centerCrop"
-        app:srcCompat="@mipmap/cover18" />
-
-    <ImageView
-        android:id="@+id/coverImage4"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_below="@id/postTime"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="5dp"
-        android:layout_toRightOf="@id/coverImage"
-        android:alpha="0.1"
-        android:scaleType="centerCrop"
-        app:srcCompat="@mipmap/cover18" />
-
-    <ImageView
-        android:id="@+id/coverImage3"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_below="@id/postTime"
-        android:layout_marginTop="20dp"
-        android:layout_toLeftOf="@id/coverImage2"
-        android:alpha="0.1"
-        android:scaleType="centerCrop"
-        app:srcCompat="@mipmap/cover18" />
-
-    <ImageView
-        android:id="@+id/coverImage5"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_below="@id/postTime"
-        android:layout_marginTop="20dp"
-        android:layout_toRightOf="@id/coverImage4"
-        android:alpha="0.1"
-        android:scaleType="centerCrop"
-        app:srcCompat="@mipmap/cover18" />
-
-    <ImageView
-        android:id="@+id/heart"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_below="@id/coverImage"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="-17dp"
-        android:elevation="5dp"
-        android:tint="@color/white"
-        app:srcCompat="@drawable/heart_colored" />
-
-    <ImageView
-        android:id="@+id/heart2"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_below="@id/coverImage"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="-15dp"
-        android:elevation="5dp"
-        app:srcCompat="@drawable/heart_colored" />
+    <View
+        android:id="@id/divider"
+        android:layout_width="match_parent"
+        android:layout_height=".5dp"
+        android:layout_below="@id/coverBackground"
+        android:background="?android:attr/listDivider" />
 
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/heart"
+        android:layout_below="@id/icon"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:text="@string/wishlist_post_title" />
 
     <TextView
@@ -144,10 +100,23 @@
         android:layout_below="@id/title"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="3dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="15dp"
         android:text="״הארי פוטר ואבן החכמים״"
-        android:textSize="16sp"
+        android:textSize="18sp"
         android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/coverImage"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="-25dp"
+        android:background="@drawable/rounded_corners"
+        android:paddingLeft="3dp"
+        android:paddingRight="3dp"
+        android:tint="@color/colorPrimaryDark"
+        app:srcCompat="@drawable/wishlist_post_icon" />
 
 
 </RelativeLayout>

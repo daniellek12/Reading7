@@ -35,6 +35,7 @@ public class Review implements Comparable {
         this.review_id = review_id;
         this.book_id = book_id;
         this.book_title = book_title;
+        this.book_author = book_author;
         this.reviewer_email = reviewer_email;
         this.reviewer_name = reviewer_name;
         this.reviewer_avatar = reviewer_avatar;

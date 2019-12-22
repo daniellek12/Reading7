@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +41,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static android.text.Layout.JUSTIFICATION_MODE_INTER_WORD;
 import static com.reading7.Utils.RelativeDateDisplay;
 
 public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
@@ -88,6 +90,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
     public class WishListPostHolder extends RecyclerView.ViewHolder {
 
         ImageView cover;
+        ImageView coverBackground;
         TextView userName;
         TextView postTime;
         TextView bookName;
@@ -98,6 +101,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
             super(itemView);
 
             cover = itemView.findViewById(R.id.coverImage);
+            coverBackground = itemView.findViewById(R.id.coverBackground);
             userName =itemView.findViewById(R.id.userName);
             bookName =itemView.findViewById(R.id.bookName);
             postTime =itemView.findViewById(R.id.postTime);
@@ -199,29 +203,31 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
 
         final Post post = posts.get(i);
 
-        holder.ratingBar.setRating(post.getRank());
-        holder.rating.setText(String.valueOf(post.getRank()));
-
-        holder.userName.setText(post.getUser_name());
-        holder.bookName.setText(post.getBook_title());
-        holder.authorName.setText(post.getBook_author());
+        String strDate = RelativeDateDisplay(Timestamp.now().toDate().getTime() - post.getPost_time().toDate().getTime());
+        holder.postTime.setText(strDate); // FIXME check this
 
         ArrayList<Integer> avatar_details = post.getUser_avatar();
         Utils.loadAvatar(mContext, holder.profileImage, avatar_details);
 
-        String strDate = RelativeDateDisplay(Timestamp.now().toDate().getTime() - post.getPost_time().toDate().getTime());
-
-        holder.postTime.setText(strDate); // FIXME check this
-
+        holder.ratingBar.setRating(post.getRank());
+        holder.rating.setText(String.valueOf(post.getRank()));
+        holder.userName.setText(post.getUser_name());
+        holder.bookName.setText("\""+post.getBook_title()+"\"");
+        holder.authorName.setText(post.getBook_author());
         holder.review_content.setText(post.getReview_content());
         holder.review_title.setText(post.getReview_title());
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            holder.review_content.setJustificationMode(JUSTIFICATION_MODE_INTER_WORD);
+        }
+
         Utils.showImage(post.getBook_title(), ((ReviewPostHolder) viewHolder).cover,(Activity)mContext);
         Utils.showImage(post.getBook_title(), ((ReviewPostHolder) viewHolder).coverBackground,(Activity)mContext);
 
+        // set Buttons
+
         final FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
         final DocumentReference userRef = FirebaseFirestore.getInstance().collection("Users").document(mUser.getEmail());
-
-        // set Buttons
         final String id = post.getReview_id();
         userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
 
@@ -271,55 +277,85 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
             }
         });
 
-        holder.profileImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ((MainActivity)mContext).addFragment(new PublicProfileFragment(post.getReviewer_email()));
-            }
-        });
 
-        holder.cover.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Query bookRef = FirebaseFirestore.getInstance().collection("Books").whereEqualTo("title",post.getBook_title());
-                bookRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (DocumentSnapshot doc : task.getResult()) {
-                                ((MainActivity) mContext).addFragment(new BookFragment(doc.toObject(Book.class)));
-                                break;
-                            }
-                        }
-                    }
-                });
-            }
-        });
+        OpenProfileOnClick profileListener = new OpenProfileOnClick(post.getReviewer_email());
+        holder.profileImage.setOnClickListener(profileListener);
+        holder.userName.setOnClickListener(profileListener);
 
-
+        OpenBookOnClick bookListener = new OpenBookOnClick(post.getBook_title());
+        holder.cover.setOnClickListener(bookListener);
+        holder.coverBackground.setOnClickListener(bookListener);
+        holder.bookName.setOnClickListener(bookListener);
     }
 
 
     private void bindWishList(RecyclerView.ViewHolder viewHolder, int i) {
 
         WishListPostHolder holder = (WishListPostHolder) viewHolder;
+
         Post post = posts.get(i);
-
-        holder.bookName.setText(post.getBook_title());
-        Utils.showImage(post.getBook_title(), holder.cover,(Activity)mContext);
-        holder.userName.setText(post.getUser_name());
-
-        ArrayList<Integer> avatar_details = post.getUser_avatar();
-        Utils.loadAvatar(mContext, holder.profileImage, avatar_details);
 
         String strDate = RelativeDateDisplay(Timestamp.now().toDate().getTime() - post.getPost_time().toDate().getTime());
         holder.postTime.setText(strDate);
 
-        // TODO: deal with profile image
+        ArrayList<Integer> avatar_details = post.getUser_avatar();
+        Utils.loadAvatar(mContext, holder.profileImage, avatar_details);
 
+        holder.userName.setText(post.getUser_name());
+        holder.bookName.setText("\""+post.getBook_title()+"\"");
+        Utils.showImage(post.getBook_title(), holder.cover,(Activity)mContext);
+        Utils.showImage(post.getBook_title(), holder.coverBackground,(Activity)mContext);
+
+        // Set Click Listeners //
+        OpenProfileOnClick profileListener = new OpenProfileOnClick(post.getUser_email());
+        holder.profileImage.setOnClickListener(profileListener);
+        holder.userName.setOnClickListener(profileListener);
+
+        OpenBookOnClick bookListener = new OpenBookOnClick(post.getBook_title());
+        holder.cover.setOnClickListener(bookListener);
+        holder.coverBackground.setOnClickListener(bookListener);
+        holder.bookName.setOnClickListener(bookListener);
     }
 
     /*--------------------------------------------------------------------------------------------*/
 
 
+    private class OpenBookOnClick implements View.OnClickListener {
+
+        private String book_title;
+
+        public OpenBookOnClick(String book_title){
+            this.book_title = book_title;
+        }
+
+        @Override
+        public void onClick(View v) {
+            Query bookRef = FirebaseFirestore.getInstance().collection("Books").whereEqualTo("title",this.book_title);
+            bookRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (DocumentSnapshot doc : task.getResult()) {
+                            ((MainActivity) mContext).addFragment(new BookFragment(doc.toObject(Book.class)));
+                            break;
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    private class OpenProfileOnClick implements View.OnClickListener {
+
+        private String user_email;
+
+        public OpenProfileOnClick(String user_email){
+            this.user_email = user_email;
+        }
+
+        @Override
+        public void onClick(View v) {
+            ((MainActivity)mContext).addFragment(new PublicProfileFragment(user_email));
+        }
+    }
 }

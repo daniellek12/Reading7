@@ -58,37 +58,62 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/rating"
         android:layout_alignParentLeft="true"
-        android:layout_marginLeft="20dp"
+        android:layout_marginLeft="10dp"
         android:layout_marginTop="3dp"
+        android:scaleX="0.8"
+        android:scaleY="0.8"
         android:stepSize=".5" />
 
     <TextView
         android:id="@+id/rating"
-        android:layout_width="50dp"
-        android:layout_height="35dp"
+        android:layout_width="45dp"
+        android:layout_height="30dp"
         android:layout_alignParentLeft="true"
-        android:layout_marginLeft="30dp"
+        android:layout_marginLeft="27dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/bubble"
         android:gravity="center"
-        android:paddingRight="10dp"
-        android:text="4.5"
+        android:paddingRight="7dp"
+        android:text="4"
         android:textColor="@color/white"
         android:textSize="14sp"
         android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ratingBar"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
+        android:text="ספר מהמם ממש"
+        android:textColor="@color/black"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="20dp"
+        android:text="ספר מדהים!!!! חובה קריאה , אהבתי ממש אני לא רוצה לעשות לכם ספוילרים אבל הסוף מפתיע בטירוף רוצו לקרוא "
+        android:textColor="@color/black"
+        android:textIsSelectable="false" />
 
     <View
         android:id="@+id/divider1"
         android:layout_width="match_parent"
         android:layout_height=".5dp"
-        android:layout_below="@id/ratingBar"
-        android:layout_marginTop="20dp"
+        android:layout_below="@id/comment"
+        android:layout_marginTop="15dp"
         android:background="?android:attr/listDivider" />
 
     <ImageView
         android:id="@+id/coverBackground"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="220dp"
         android:layout_below="@id/divider1"
         android:alpha="0.3"
         android:scaleType="centerCrop"
@@ -97,7 +122,7 @@
     <ImageView
         android:id="@+id/coverImage"
         android:layout_width="160dp"
-        android:layout_height="200dp"
+        android:layout_height="220dp"
         android:layout_below="@id/divider1"
         android:layout_centerHorizontal="true"
         android:scaleType="fitXY"
@@ -127,7 +152,7 @@
             android:id="@+id/imageView"
             android:layout_width="15dp"
             android:layout_height="15dp"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="7dp"
             android:layout_marginTop="1dp"
             android:tint="@color/darkGrey"
             app:srcCompat="@drawable/book" />
@@ -162,47 +187,16 @@
         android:layout_below="@id/bookDetails"
         android:background="?android:attr/listDivider" />
 
-
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/bookDetails"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="20dp"
-        android:text="ספר מהמם ממש"
-        android:textColor="@color/black"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/comment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/title"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="20dp"
-        android:text="ספר מדהים!!!! חובה קריאה , אהבתי ממש אני לא רוצה לעשות לכם ספוילרים אבל הסוף מפתיע בטירוף רוצו לקרוא "
-        android:textColor="@color/black" />
-
-
-    <View
-        android:id="@+id/divider3"
-        android:layout_width="match_parent"
-        android:layout_height=".5dp"
-        android:layout_below="@id/comment"
-        android:layout_marginTop="20dp"
-        android:background="?android:attr/listDivider" />
-
     <LinearLayout
         android:id="@+id/likeLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/divider3"
+        android:layout_below="@id/bookDetails"
         android:layout_marginStart="15dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
         android:layout_marginEnd="15dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="15dp"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <Button
@@ -214,10 +208,13 @@
         <TextView
             android:id="@+id/likesNum"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginTop="2dp"
+            android:layout_marginRight="3dp"
+            android:gravity="center"
             android:paddingRight="3dp"
             android:text="0"
-            android:textColor="@color/black"
+            android:textColor="@color/darkGrey"
             android:textSize="14sp">
 
         </TextView>

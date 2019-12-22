@@ -90,9 +90,6 @@ public class BookFragment extends Fragment {
                 dialog.setArguments(args);
                 dialog.setTargetFragment(curr, 202);
                 dialog.show(getActivity().getSupportFragmentManager(), "example dialog");
-
-
-
             }
         });
 
