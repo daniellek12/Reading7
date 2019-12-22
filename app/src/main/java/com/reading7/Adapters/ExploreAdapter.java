@@ -84,7 +84,7 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
         viewHolder.cover.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainActivity) mContext).loadBookFragment(new BookFragment(), books.get(j));
+                ((MainActivity) mContext).addFragment(new BookFragment(books.get(j)));
             }
         });
     }

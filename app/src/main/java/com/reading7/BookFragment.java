@@ -41,8 +41,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class BookFragment extends Fragment
-{
+public class BookFragment extends Fragment {
 
     Activity mActivity;
     private FirebaseAuth mAuth;
@@ -56,8 +55,9 @@ public class BookFragment extends Fragment
     private TextView avgAgeText;
     private float mAvgAge;
 
-
-
+    public BookFragment(Book book){
+        this.mBook = book;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -156,10 +156,6 @@ public class BookFragment extends Fragment
 
     public Book getBook() {
         return mBook;
-    }
-
-    public void setBook(Book Book) {
-        this.mBook = Book;
     }
 
     private void getBookReviews() {

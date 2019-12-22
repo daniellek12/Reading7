@@ -102,7 +102,7 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
                     if(review.getReviewer_email().equals(mAuth.getCurrentUser().getEmail()))
                         ((MainActivity) mContext).loadFragment(new ProfileFragment());
                     else
-                    ((MainActivity) mContext).loadPublicProfileFragment(new PublicProfileFragment(), review.getReviewer_email());
+                    ((MainActivity) mContext).addFragment(new PublicProfileFragment(review.getReviewer_email()));
                 }
             });
 

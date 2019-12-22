@@ -117,7 +117,7 @@ public class SearchBooksAdapter extends BaseAdapter implements Filterable {
         holder.container.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainActivity)mContext).loadBookFragment(new BookFragment(), books.get(position));
+                ((MainActivity)mContext).addFragment(new BookFragment(books.get(position)));
                 Utils.closeKeyboard(mContext);
             }
         });

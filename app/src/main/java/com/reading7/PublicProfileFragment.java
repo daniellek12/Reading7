@@ -41,21 +41,22 @@ public class PublicProfileFragment extends Fragment {
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
-    private ArrayList<Review> usersReviews = new ArrayList<>();
-    private ArrayList<WishList> usersWishList = new ArrayList<>();
-    ;
+    private ArrayList<String> usersReviewBookNames = new ArrayList<>();
+    private ArrayList<String> usersWishListBookNames = new ArrayList<>();
     private String user_email;
     private User user;
     private ReadShelfAdapter adapterReviews;
     private WishListAdapter adapterWishList;
 
+    public PublicProfileFragment(String user_email){
+        this.user_email = user_email;
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
-        usersReviews = new ArrayList<>();
         return inflater.inflate(R.layout.public_profile_fragment, null);
     }
 
@@ -66,9 +67,6 @@ public class PublicProfileFragment extends Fragment {
         getUserInformation();
     }
 
-    public void setUser(String user_email) {
-        this.user_email = user_email;
-    }
 
     private void getUserInformation() {
 
@@ -196,7 +194,7 @@ public class PublicProfileFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         final RecyclerView wishlistRV = getActivity().findViewById(R.id.wishlistRV);
         wishlistRV.setLayoutManager(layoutManager);
-        adapterWishList = new WishListAdapter(usersWishList, getActivity());
+        adapterWishList = new WishListAdapter(usersWishListBookNames, getActivity());
         wishlistRV.setAdapter(adapterWishList);
 
         getUserWishList();
@@ -204,13 +202,8 @@ public class PublicProfileFragment extends Fragment {
         getActivity().findViewById(R.id.wishlistTitle).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ArrayList<String> book_names = new ArrayList<String>();
-                for (WishList wishList : usersWishList) {
-                    book_names.add(wishList.getBook_title());
-                }
-
                 String title = getString(R.string.public_my_wishlist) + " " + user.getFull_name();
-                ((MainActivity) getActivity()).loadShelfFragment(new ShelfFragment(book_names, title, user.getEmail(), ShelfFragment.ShelfType.WISHLIST));
+                ((MainActivity) getActivity()).addFragment(new ShelfFragment(usersWishListBookNames, title, user.getEmail(), ShelfFragment.ShelfType.WISHLIST));
             }
         });
 
@@ -221,7 +214,7 @@ public class PublicProfileFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         RecyclerView myBooksRV = getActivity().findViewById(R.id.myBooksRV);
         myBooksRV.setLayoutManager(layoutManager);
-        adapterReviews = new ReadShelfAdapter(usersReviews, getActivity());
+        adapterReviews = new ReadShelfAdapter(usersReviewBookNames, getActivity());
         myBooksRV.setAdapter(adapterReviews);
 
         getUserReviews();
@@ -229,13 +222,8 @@ public class PublicProfileFragment extends Fragment {
         getActivity().findViewById(R.id.mybooksTitle).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ArrayList<String> book_names = new ArrayList<String>();
-                for (Review review : usersReviews) {
-                    book_names.add(review.getBook_title());
-                }
-
                 String title = getString(R.string.public_my_books) + " " + user.getFull_name();
-                ((MainActivity) getActivity()).loadShelfFragment(new ShelfFragment(book_names, title, user.getEmail(), ShelfFragment.ShelfType.MYBOOKS));
+                ((MainActivity) getActivity()).addFragment(new ShelfFragment(usersReviewBookNames, title, user.getEmail(), ShelfFragment.ShelfType.MYBOOKS));
             }
         });
 
@@ -259,11 +247,11 @@ public class PublicProfileFragment extends Fragment {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot doc : task.getResult()) {
-                        usersWishList.add(doc.toObject(WishList.class));
+                        usersWishListBookNames.add(doc.toObject(WishList.class).getBook_title());
                     }
                     adapterWishList.notifyDataSetChanged();
 
-                    if (usersWishList.isEmpty()) {
+                    if (usersWishListBookNames.isEmpty()) {
                         getActivity().findViewById(R.id.wishlistRV).setVisibility(View.INVISIBLE);
                         getActivity().findViewById(R.id.publicProfile_emptyWishlist).setVisibility(View.VISIBLE);
                     } else {
@@ -284,15 +272,15 @@ public class PublicProfileFragment extends Fragment {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot doc : task.getResult()) {
-                        usersReviews.add(doc.toObject(Review.class));
+                        usersReviewBookNames.add(doc.toObject(Review.class).getBook_title());
                     }
 
                     adapterReviews.notifyDataSetChanged();
 
                     TextView reviews_num = getActivity().findViewById(R.id.publicProfile_recommendations);
-                    reviews_num.setText(Integer.toString(usersReviews.size()));
+                    reviews_num.setText(Integer.toString(usersReviewBookNames.size()));
 
-                    if (usersReviews.isEmpty()) {
+                    if (usersReviewBookNames.isEmpty()) {
                         getActivity().findViewById(R.id.myBooksRV).setVisibility(View.INVISIBLE);
                         getActivity().findViewById(R.id.publicProfile_emptyMyBooks).setVisibility(View.VISIBLE);
                     } else {

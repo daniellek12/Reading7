@@ -117,7 +117,7 @@ public class SearchFriendsAdapter extends BaseAdapter implements Filterable {
         holder.container.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainActivity)mContext).loadPublicProfileFragment(new PublicProfileFragment(), users.get(position).getEmail());
+                ((MainActivity)mContext).addFragment(new PublicProfileFragment(users.get(position).getEmail()));
                 Utils.closeKeyboard(mContext);
             }
         });

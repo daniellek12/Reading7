@@ -9,8 +9,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -24,9 +22,8 @@ import com.reading7.MainActivity;
 import com.reading7.Objects.Book;
 import com.reading7.R;
 import com.reading7.Utils;
-import com.reading7.Objects.WishList;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -35,14 +32,14 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
 
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
-    private List<WishList> usersList;
+    private ArrayList<String> bookNames;
     private Context mContext;
 
 
-    public WishListAdapter(List<WishList> list, Context context){
+    public WishListAdapter(ArrayList<String> bookNames, Context context){
         this.mAuth = FirebaseAuth.getInstance();
         this.db = FirebaseFirestore.getInstance();
-        this.usersList = list;
+        this.bookNames = bookNames;
         this.mContext = context;
     }
 
@@ -67,56 +64,44 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
 
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int i) {
 
-        final String book_name = usersList.get(i).getBook_title();
-        Utils.showImage(book_name, viewHolder.cover, (Activity)mContext);
+        final String bookName = bookNames.get(i);
+        Utils.showImage(bookName, viewHolder.cover, (Activity) mContext);
+
         viewHolder.cover.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Query bookRef = FirebaseFirestore.getInstance().collection("Books").whereEqualTo("title",book_name);
+                Query bookRef = FirebaseFirestore.getInstance().collection("Books").whereEqualTo("title",bookName);
                 bookRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            for (DocumentSnapshot doc : task.getResult()) {
-                                ((MainActivity) mContext).loadBookFragment(new BookFragment(), doc.toObject(Book.class));
-                                break;
+                            for (final DocumentSnapshot doc : task.getResult()) {
+                                ((MainActivity) mContext).addFragment(new BookFragment(doc.toObject(Book.class)));
                             }
                         }
                     }
                 });
             }
         });
-
-
     }
 
 
-    public void deleteWishList(String book_title) {
+    public void deleteWishList(String bookName) {
 
         CollectionReference requestsRef = db.collection("Wishlist");
-        Query requestQuery = requestsRef.whereEqualTo("user_email", mAuth.getCurrentUser().getEmail()).whereEqualTo("book_title",book_title);
+        Query requestQuery = requestsRef
+                .whereEqualTo("user_email", mAuth.getCurrentUser().getEmail())
+                .whereEqualTo("book_title",bookName);
         requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()){
-
                     for(QueryDocumentSnapshot document: task.getResult()){
-                        document.getReference().delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        }
+                        document.getReference().delete();
                     }
-
+                }
 
                 else Toast.makeText(mContext, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
             }
@@ -126,7 +111,7 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        return usersList.size();
+        return bookNames.size();
     }
 
 }

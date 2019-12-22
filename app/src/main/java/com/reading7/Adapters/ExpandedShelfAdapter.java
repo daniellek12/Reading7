@@ -91,7 +91,7 @@ public class ExpandedShelfAdapter extends RecyclerView.Adapter<ExpandedShelfAdap
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
                                 for (DocumentSnapshot doc : task.getResult()) {
-                                    ((MainActivity) mContext).loadBookFragment(new BookFragment(), doc.toObject(Book.class));
+                                    ((MainActivity) mContext).addFragment(new BookFragment(doc.toObject(Book.class)));
                                     break;
                                 }
                             }

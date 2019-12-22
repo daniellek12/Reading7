@@ -55,8 +55,8 @@ public class ExploreFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                    Book b = new Book("id","title",new ArrayList<String>(),"author","publisher",2,"summary",3,3);
-                ((MainActivity)getActivity()).loadBookFragment(new BookFragment(),b);
+                Book book = new Book("id","title",new ArrayList<String>(),"author","publisher",2,"summary",3,3);
+                ((MainActivity)getActivity()).addFragment(new BookFragment(book));
             }
         });
         lstBooks = new ArrayList<>();

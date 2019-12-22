@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,8 +42,8 @@ public class ProfileFragment extends Fragment {
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
-    final private List<Review> usersReviews = new ArrayList<Review>();
-    final private List<WishList> usersWishList = new ArrayList<WishList>();
+    final private ArrayList<String> usersReviewBookNames = new ArrayList<String>();
+    final private ArrayList<String> usersWishlistBookNames = new ArrayList<String>();
     private ReadShelfAdapter adapterReviews;
     private WishListAdapter adapterWishList;
 
@@ -121,7 +120,7 @@ public class ProfileFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         final RecyclerView wishlistRV = getActivity().findViewById(R.id.wishlistRV);
         wishlistRV.setLayoutManager(layoutManager);
-        adapterWishList = new WishListAdapter(usersWishList, getActivity());
+        adapterWishList = new WishListAdapter(usersWishlistBookNames, getActivity());
         wishlistRV.setAdapter(adapterWishList);
 
         getUserWishList();
@@ -129,12 +128,7 @@ public class ProfileFragment extends Fragment {
         getActivity().findViewById(R.id.wishlistTitle).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ArrayList<String> book_names = new ArrayList<String>();
-                for(WishList wishList: usersWishList){
-                    book_names.add(wishList.getBook_title());
-                }
-
-                ((MainActivity)getActivity()).loadShelfFragment(new ShelfFragment(book_names,getString(R.string.my_wishlist),mAuth.getCurrentUser().getEmail(), ShelfFragment.ShelfType.WISHLIST));
+                ((MainActivity)getActivity()).addFragment(new ShelfFragment(usersWishlistBookNames,getString(R.string.my_wishlist),mAuth.getCurrentUser().getEmail(), ShelfFragment.ShelfType.WISHLIST));
             }
         });
     }
@@ -144,7 +138,7 @@ public class ProfileFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         RecyclerView myBooksRV = getActivity().findViewById(R.id.myBooksRV);
         myBooksRV.setLayoutManager(layoutManager);
-        adapterReviews = new ReadShelfAdapter(usersReviews, getActivity());
+        adapterReviews = new ReadShelfAdapter(usersReviewBookNames, getActivity());
         myBooksRV.setAdapter(adapterReviews);
 
         getUserReviews();
@@ -152,12 +146,7 @@ public class ProfileFragment extends Fragment {
         getActivity().findViewById(R.id.mybooksTitle).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ArrayList<String> book_names = new ArrayList<String>();
-                for(Review review: usersReviews){
-                    book_names.add(review.getBook_title());
-                }
-
-                ((MainActivity)getActivity()).loadShelfFragment(new ShelfFragment(book_names,getString(R.string.my_books),mAuth.getCurrentUser().getEmail(), ShelfFragment.ShelfType.MYBOOKS));
+                ((MainActivity)getActivity()).addFragment(new ShelfFragment(usersReviewBookNames,getString(R.string.my_books),mAuth.getCurrentUser().getEmail(), ShelfFragment.ShelfType.MYBOOKS));
             }
         });
 
@@ -204,14 +193,14 @@ public class ProfileFragment extends Fragment {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot doc : task.getResult()) {
-                        usersReviews.add(doc.toObject(Review.class));
+                        usersReviewBookNames.add(doc.toObject(Review.class).getBook_title());
                     }
                     adapterReviews.notifyDataSetChanged();
 
                     TextView reviews_num = getActivity().findViewById(R.id.recommendations);
-                    reviews_num.setText(Integer.toString(usersReviews.size()));
+                    reviews_num.setText(Integer.toString(usersReviewBookNames.size()));
 
-                    if(usersReviews.isEmpty()){
+                    if(usersReviewBookNames.isEmpty()){
                         getActivity().findViewById(R.id.myBooksRV).setVisibility(View.INVISIBLE);
                         getActivity().findViewById(R.id.emptyMyBooks).setVisibility(View.VISIBLE);
                     } else {
@@ -232,11 +221,11 @@ public class ProfileFragment extends Fragment {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot doc : task.getResult()) {
-                        usersWishList.add(doc.toObject(WishList.class));
+                        usersWishlistBookNames.add(doc.toObject(WishList.class).getBook_title());
                     }
                     adapterWishList.notifyDataSetChanged();
 
-                    if(usersWishList.isEmpty()){
+                    if(usersWishlistBookNames.isEmpty()){
                         getActivity().findViewById(R.id.wishlistRV).setVisibility(View.INVISIBLE);
                         getActivity().findViewById(R.id.emptyWishlist).setVisibility(View.VISIBLE);
                     } else {
@@ -248,4 +237,16 @@ public class ProfileFragment extends Fragment {
         });
     }
 
+    public void refreshAdapters(){
+        if(adapterWishList != null)
+            adapterWishList.notifyDataSetChanged();
+        if(adapterReviews != null)
+            adapterReviews.notifyDataSetChanged();
+    }
+
+
+    @Override
+    public String toString() {
+        return FirebaseAuth.getInstance().getCurrentUser().getEmail();
+    }
 }

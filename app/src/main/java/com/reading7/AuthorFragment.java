@@ -29,6 +29,11 @@ public class AuthorFragment  extends Fragment {
     private String author_name;
     private SearchBooksAdapter adapter;
 
+
+    public AuthorFragment(String author_name){
+        this.author_name = author_name;
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -43,11 +48,6 @@ public class AuthorFragment  extends Fragment {
         initBooks();
         initBackBtn();
         ((TextView)view.findViewById(R.id.toolbar_title)).setText("הספרים של "+author_name);
-    }
-
-
-    public void setAuthor(String author_name) {
-        this.author_name = author_name;
     }
 
 

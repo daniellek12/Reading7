@@ -115,7 +115,7 @@ public class SearchAuthorsAdapter extends BaseAdapter implements Filterable {
         holder.container.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainActivity)mContext).loadAuthorFragment(new AuthorFragment(), authors.get(position));
+                ((MainActivity)mContext).addFragment(new AuthorFragment(authors.get(position)));
                 Utils.closeKeyboard(mContext);
             }
         });

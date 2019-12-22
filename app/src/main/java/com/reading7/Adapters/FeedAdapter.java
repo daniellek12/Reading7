@@ -276,7 +276,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
         holder.profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainActivity)mContext).loadPublicProfileFragment(new PublicProfileFragment(), post.getReviewer_email());
+                ((MainActivity)mContext).addFragment(new PublicProfileFragment(post.getReviewer_email()));
             }
         });
 
@@ -289,7 +289,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (DocumentSnapshot doc : task.getResult()) {
-                                ((MainActivity) mContext).loadBookFragment(new BookFragment(), doc.toObject(Book.class));
+                                ((MainActivity) mContext).addFragment(new BookFragment(doc.toObject(Book.class)));
                                 break;
                             }
                         }

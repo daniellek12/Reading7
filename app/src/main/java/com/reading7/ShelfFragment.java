@@ -3,6 +3,7 @@ package com.reading7;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,14 +24,12 @@ public class ShelfFragment extends Fragment {
 
     public enum ShelfType{WISHLIST, MYBOOKS};
 
-    private FirebaseFirestore db;
     private ShelfType type;
     private ExpandedShelfAdapter adapter;
     private ArrayList<String> book_names;
     private String title;
     private String owner_email;
     private boolean edit_mode;
-
 
     public ShelfFragment(ArrayList<String> book_names, String title, String owner_email, ShelfType type){
         this.type = type;
@@ -44,7 +43,6 @@ public class ShelfFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        db = FirebaseFirestore.getInstance();
         return inflater.inflate(R.layout.shelf_fragment, null);
     }
 
@@ -65,7 +63,6 @@ public class ShelfFragment extends Fragment {
         initDeleteButton();
         initCloseButton();
     }
-
 
 
     private void initBackButton() {
@@ -97,8 +94,6 @@ public class ShelfFragment extends Fragment {
                     startEditMode();
             }
         });
-
-
     }
 
     private void initDeleteButton() {
@@ -148,6 +143,8 @@ public class ShelfFragment extends Fragment {
         ((TextView)getActivity().findViewById(R.id.toolbar_title)).setText(title);
         ((MainActivity)getActivity()).setBottomNavigationEnabled(true);
 
+        if(FirebaseAuth.getInstance().getCurrentUser().getEmail().equals(owner_email))
+            ((ProfileFragment)getFragmentManager().findFragmentByTag(owner_email)).refreshAdapters();
     }
 
 }
