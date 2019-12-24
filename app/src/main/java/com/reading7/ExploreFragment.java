@@ -234,7 +234,7 @@ public class ExploreFragment extends Fragment {
 //                load_books();
 //            }
 //        });
-
+        // this will load the first block of books for initialization of the explore
         final List<Book> newlist = new ArrayList<>();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         final CollectionReference requestCollectionRef = db.collection("Books");
@@ -248,39 +248,11 @@ public class ExploreFragment extends Fragment {
                         newlist.add(book);
                     }
                     bookList.addAll(newlist);
-                    myAdapter.notifyDataSetChanged();
+                    myAdapter.notifyDataSetChanged();//no problem cause this is the first update
                     lastVisible = task.getResult().getDocuments().get(task.getResult().size() - 1);
                 }
             }
         });
-
-
-//        exploreRV.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//            @Override
-//            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-//                super.onScrollStateChanged(recyclerView, newState);
-//            }
-//
-//            @Override
-//            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-//                super.onScrolled(recyclerView, dx, dy);
-//            }
-//        });
-
-
-//        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                if (task.isSuccessful()) {
-//                    for (DocumentSnapshot document : task.getResult()) {
-//                        Book productModel = document.toObject(Book.class);
-//                        bookList.add(productModel);
-//                    }
-//                    myAdapter.notifyDataSetChanged();
-//                }
-//            }
-//        });
-
     }
 
     private void load_books() {
@@ -289,10 +261,10 @@ public class ExploreFragment extends Fragment {
         final CollectionReference requestCollectionRef = db.collection("Books");
         Query requestQuery = requestCollectionRef.limit(limit);
 
-        GridLayoutManager linearLayoutManager = ((GridLayoutManager) exploreRV.getLayoutManager());
-        int firstVisibleItemPosition = linearLayoutManager.findFirstVisibleItemPosition();
-        int visibleItemCount = linearLayoutManager.getChildCount();
-        final int totalItemCount = linearLayoutManager.getItemCount();
+        GridLayoutManager gridLayoutManager = ((GridLayoutManager) exploreRV.getLayoutManager());
+        int firstVisibleItemPosition = gridLayoutManager.findFirstVisibleItemPosition();
+        int visibleItemCount = gridLayoutManager.getChildCount();
+        final int totalItemCount = gridLayoutManager.getItemCount();
 
         if ((firstVisibleItemPosition + visibleItemCount == totalItemCount) && !isLastItemReached) {
             Query nextQuery = requestCollectionRef.startAfter(lastVisible).limit(limit);
@@ -304,14 +276,10 @@ public class ExploreFragment extends Fragment {
                             Book book = d.toObject(Book.class);
                             bookList.add(book);
                         }
-//                        bookList.addAll(newlist);
-//                        myAdapter.notifyDataSetChanged();
-                        for (int i = totalItemCount ; i < totalItemCount + t.getResult().size() ; i ++){
-                            myAdapter.notifyItemInserted(i);
+                        for (int i = totalItemCount; i < totalItemCount + t.getResult().size(); i++) {
+                            myAdapter.notifyItemInserted(i);//notify updated book ONLY
                         }
-                        //myAdapter.getItemCount();
                         lastVisible = t.getResult().getDocuments().get(t.getResult().size() - 1);
-                        //Toast.makeText(getContext(), "notify", Toast.LENGTH_SHORT).show();
                         loading = true;
 
                         if (t.getResult().size() < limit) {
@@ -321,72 +289,5 @@ public class ExploreFragment extends Fragment {
                 }
             });
         }
-    }
-
-
-    public void getBooks() {
-        final List<Book> newlist = new ArrayList<>();
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        final CollectionReference requestCollectionRef = db.collection("Books");
-
-        Query requestQuery = requestCollectionRef.limit(limit);
-
-        requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (DocumentSnapshot document : task.getResult()) {
-                        Book book = document.toObject(Book.class);
-                        newlist.add(book);
-                    }
-                    bookList.addAll(newlist);
-                    myAdapter.notifyDataSetChanged();
-                    lastVisible = task.getResult().getDocuments().get(task.getResult().size() - 1);
-
-                    RecyclerView.OnScrollListener onScrollListener = new RecyclerView.OnScrollListener() {
-                        @Override
-                        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                            super.onScrollStateChanged(recyclerView, newState);
-                            if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
-                                isScrolling = true;
-                            }
-                        }
-
-                        @Override
-                        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                            super.onScrolled(recyclerView, dx, dy);
-
-                            LinearLayoutManager linearLayoutManager = ((LinearLayoutManager) recyclerView.getLayoutManager());
-                            int firstVisibleItemPosition = linearLayoutManager.findFirstVisibleItemPosition();
-                            int visibleItemCount = linearLayoutManager.getChildCount();
-                            int totalItemCount = linearLayoutManager.getItemCount();
-
-                            if (isScrolling && (firstVisibleItemPosition + visibleItemCount == totalItemCount) && !isLastItemReached) {
-                                isScrolling = false;
-                                Query nextQuery = requestCollectionRef.startAfter(lastVisible).limit(limit);
-                                nextQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<QuerySnapshot> t) {
-                                        if (t.isSuccessful()) {
-                                            for (DocumentSnapshot d : t.getResult()) {
-                                                Book book = d.toObject(Book.class);
-                                                newlist.add(book);
-                                            }
-                                            bookList.addAll(newlist);
-                                            myAdapter.notifyDataSetChanged();
-                                            lastVisible = t.getResult().getDocuments().get(t.getResult().size() - 1);
-
-                                            if (t.getResult().size() < limit) {
-                                                isLastItemReached = true;
-                                            }
-                                        }
-                                    }
-                                });
-                            }
-                        }
-                    };
-                }
-            }
-        });
     }
 }

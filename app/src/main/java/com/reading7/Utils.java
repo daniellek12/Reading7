@@ -184,7 +184,7 @@ public class Utils {
                             .load(task.getResult()).thumbnail(0.5f).apply(new RequestOptions()
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .skipMemoryCache(true).dontAnimate()
-                    ).into(view);
+                    ).into(view);//caching dowloaded files
 
                 } else {
                     throw new AssertionError("OPPS ".concat(img_path).concat(imageFileName));
