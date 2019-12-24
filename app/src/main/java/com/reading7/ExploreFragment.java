@@ -311,7 +311,7 @@ public class ExploreFragment extends Fragment {
                         }
                         //myAdapter.getItemCount();
                         lastVisible = t.getResult().getDocuments().get(t.getResult().size() - 1);
-                        Toast.makeText(getContext(), "notify", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getContext(), "notify", Toast.LENGTH_SHORT).show();
                         loading = true;
 
                         if (t.getResult().size() < limit) {
