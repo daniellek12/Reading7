@@ -1,10 +1,13 @@
 package com.reading7;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -23,6 +26,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -30,15 +34,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class ExploreFragment extends Fragment {
 
-    List<Book> lstBooks ;
-    ExploreAdapter myAdapter;
-    RecyclerView exploreRV;
-    private int limit = 8;
+    private RecyclerView exploreRV;
+    private ExploreAdapter myAdapter;
+    private int limit = 11;
+    private boolean loading = true;
 
 
     private DocumentSnapshot lastVisible;
     private boolean isScrolling = false;
     private boolean isLastItemReached = false;
+
+    private final List<Book> bookList = new ArrayList<>();
+
 
     @Nullable
     @Override
@@ -49,30 +56,28 @@ public class ExploreFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ((BottomNavigationView)getActivity().findViewById(R.id.navigation)).setSelectedItemId(R.id.navigation_explore);
+        ((BottomNavigationView) getActivity().findViewById(R.id.navigation)).setSelectedItemId(R.id.navigation_explore);
 
         getActivity().findViewById(R.id.notifications).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                Book book = new Book("id","title",new ArrayList<String>(),"author","publisher",2,"summary",3,3);
-                ((MainActivity)getActivity()).addFragment(new BookFragment(book));
+                Book book = new Book("id", "title", new ArrayList<String>(), "author", "publisher", 2, "summary", 3, 3);
+                ((MainActivity) getActivity()).addFragment(new BookFragment(book));
             }
         });
-        lstBooks = new ArrayList<>();
         initPlaylists();
         initExplore();
         initAppBar();
     }
 
 
-
-    private void initAppBar(){
+    private void initAppBar() {
 
         getActivity().findViewById(R.id.search).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainActivity)getActivity()).loadFragment(new SearchFragment());
+                ((MainActivity) getActivity()).loadFragment(new SearchFragment());
                 Utils.openKeyboard(getContext());
             }
         });
@@ -81,7 +86,7 @@ public class ExploreFragment extends Fragment {
 
     private ArrayList<String> getPlaylistsNames() {
 
-        ArrayList<String> names =new ArrayList<String>();
+        ArrayList<String> names = new ArrayList<String>();
         names.add("דרמה");
         names.add("קומיקס");
         names.add("אימה");
@@ -95,38 +100,38 @@ public class ExploreFragment extends Fragment {
 
     private ArrayList<Float> getRatings() {
 
-        ArrayList<Float> ratings =new ArrayList<Float>();
-        ratings.add((float)3.5);
-        ratings.add((float)4);
-        ratings.add((float)1.12);
-        ratings.add((float)5);
-        ratings.add((float)4.5);
-        ratings.add((float)3);
-        ratings.add((float)3.5);
-        ratings.add((float)4);
-        ratings.add((float)2);
-        ratings.add((float)5);
-        ratings.add((float)4);
-        ratings.add((float)2);
-        ratings.add((float)3.5);
-        ratings.add((float)4);
-        ratings.add((float)2.5);
-        ratings.add((float)5);
-        ratings.add((float)3.5);
-        ratings.add((float)2);
-        ratings.add((float)3.5);
-        ratings.add((float)4);
-        ratings.add((float)3);
-        ratings.add((float)5);
-        ratings.add((float)4);
-        ratings.add((float)5);
+        ArrayList<Float> ratings = new ArrayList<Float>();
+        ratings.add((float) 3.5);
+        ratings.add((float) 4);
+        ratings.add((float) 1.12);
+        ratings.add((float) 5);
+        ratings.add((float) 4.5);
+        ratings.add((float) 3);
+        ratings.add((float) 3.5);
+        ratings.add((float) 4);
+        ratings.add((float) 2);
+        ratings.add((float) 5);
+        ratings.add((float) 4);
+        ratings.add((float) 2);
+        ratings.add((float) 3.5);
+        ratings.add((float) 4);
+        ratings.add((float) 2.5);
+        ratings.add((float) 5);
+        ratings.add((float) 3.5);
+        ratings.add((float) 2);
+        ratings.add((float) 3.5);
+        ratings.add((float) 4);
+        ratings.add((float) 3);
+        ratings.add((float) 5);
+        ratings.add((float) 4);
+        ratings.add((float) 5);
 
         return ratings;
     }
 
     private ArrayList<Integer> getCovers() {
 
-        ArrayList<Integer> covers =new ArrayList<Integer>();
+        ArrayList<Integer> covers = new ArrayList<Integer>();
         covers.add(1);
         covers.add(2);
         covers.add(3);
@@ -156,58 +161,170 @@ public class ExploreFragment extends Fragment {
     }
 
 
-    private void initPlaylists(){
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL,false);
+    private void initPlaylists() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         RecyclerView playlistsRV = getActivity().findViewById(R.id.playlistsRV);
         playlistsRV.setLayoutManager(layoutManager);
-        StoryPlaylistAdapter adapter = new StoryPlaylistAdapter(getActivity(),getPlaylistsNames(),getCovers());
+        StoryPlaylistAdapter adapter = new StoryPlaylistAdapter(getActivity(), getPlaylistsNames(), getCovers());
         playlistsRV.setAdapter(adapter);
     }
 
-    private void initExplore(){
+    private void initExplore() {
 
-        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(),6);
+        final GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 6);
 
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-                                            @Override
-                                            public int getSpanSize(int position) {
-                                                // 11 is the sum of items in one repeated section
-                                                switch (position % 11) {
-                                                    // first two items span 3 columns each
-                                                    case 0:
-                                                    case 1:
-                                                        return 3;
-                                                    // next 3 items span 2 columns each
-                                                    case 2:
-                                                    case 3:
-                                                    case 4:
-                                                    case 5:
-                                                    case 6:
-                                                    case 7:
-                                                    case 8:
-                                                    case 9:
-                                                    case 10:
-                                                        return 2;
-                                                }
-                                                throw new IllegalStateException("internal error");
-                                            }
-                                        });
+            @Override
+            public int getSpanSize(int position) {
+                // 11 is the sum of items in one repeated section
+                switch (position % 11) {
+                    // first two items span 3 columns each
+                    case 0:
+                    case 1:
+                        return 3;
+                    // next 3 items span 2 columns each
+                    case 2:
+                    case 3:
+                    case 4:
+                    case 5:
+                    case 6:
+                    case 7:
+                    case 8:
+                    case 9:
+                    case 10:
+                        return 2;
+                }
+                throw new IllegalStateException("internal error");
+            }
+        });
 
         exploreRV = getActivity().findViewById(R.id.exploreRV);
         exploreRV.setLayoutManager(layoutManager);
 
-        myAdapter = new ExploreAdapter(getContext(),getActivity(),lstBooks);
-        exploreRV.setAdapter(myAdapter);
-        getBooks();
+        myAdapter = new ExploreAdapter(getContext(), getActivity(), bookList);
+        myAdapter.setHasStableIds(true);
 
+        exploreRV.setAdapter(myAdapter);
+
+        exploreRV.setHasFixedSize(true);
+        exploreRV.setItemViewCacheSize(22);
+        exploreRV.setDrawingCacheEnabled(true);
+        exploreRV.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+
+        exploreRV.setNestedScrollingEnabled(false);
+
+        NestedScrollView nestedScrollView = getActivity().findViewById(R.id.nested_test);
+        nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+//                Toast.makeText(getContext(), "scrolling", Toast.LENGTH_SHORT).show();
+                if (scrollY == (v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight())) {
+                    if (loading) {
+                        load_books();
+                    }
+                    loading = false;
+                }
+            }
+        });
+
+//        Button load_more = getActivity().findViewById(R.id.load_more_btn);
+//        load_more.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                load_books();
+//            }
+//        });
+
+        final List<Book> newlist = new ArrayList<>();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final CollectionReference requestCollectionRef = db.collection("Books");
+        Query requestQuery = requestCollectionRef.limit(limit);
+        requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (DocumentSnapshot document : task.getResult()) {
+                        Book book = document.toObject(Book.class);
+                        newlist.add(book);
+                    }
+                    bookList.addAll(newlist);
+                    myAdapter.notifyDataSetChanged();
+                    lastVisible = task.getResult().getDocuments().get(task.getResult().size() - 1);
+                }
+            }
+        });
+
+
+//        exploreRV.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+//                super.onScrollStateChanged(recyclerView, newState);
+//            }
+//
+//            @Override
+//            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//            }
+//        });
+
+
+//        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                if (task.isSuccessful()) {
+//                    for (DocumentSnapshot document : task.getResult()) {
+//                        Book productModel = document.toObject(Book.class);
+//                        bookList.add(productModel);
+//                    }
+//                    myAdapter.notifyDataSetChanged();
+//                }
+//            }
+//        });
 
     }
 
+    private void load_books() {
+        final List<Book> newlist = new ArrayList<>();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final CollectionReference requestCollectionRef = db.collection("Books");
+        Query requestQuery = requestCollectionRef.limit(limit);
 
-    public void getBooks(){
+        GridLayoutManager linearLayoutManager = ((GridLayoutManager) exploreRV.getLayoutManager());
+        int firstVisibleItemPosition = linearLayoutManager.findFirstVisibleItemPosition();
+        int visibleItemCount = linearLayoutManager.getChildCount();
+        final int totalItemCount = linearLayoutManager.getItemCount();
 
-        lstBooks.clear();
+        if ((firstVisibleItemPosition + visibleItemCount == totalItemCount) && !isLastItemReached) {
+            Query nextQuery = requestCollectionRef.startAfter(lastVisible).limit(limit);
+            nextQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> t) {
+                    if (t.isSuccessful()) {
+                        for (DocumentSnapshot d : t.getResult()) {
+                            Book book = d.toObject(Book.class);
+                            bookList.add(book);
+                        }
+//                        bookList.addAll(newlist);
+//                        myAdapter.notifyDataSetChanged();
+                        for (int i = totalItemCount ; i < totalItemCount + t.getResult().size() ; i ++){
+                            myAdapter.notifyItemInserted(i);
+                        }
+                        //myAdapter.getItemCount();
+                        lastVisible = t.getResult().getDocuments().get(t.getResult().size() - 1);
+                        Toast.makeText(getContext(), "notify", Toast.LENGTH_SHORT).show();
+                        loading = true;
+
+                        if (t.getResult().size() < limit) {
+                            isLastItemReached = true;
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+
+    public void getBooks() {
         final List<Book> newlist = new ArrayList<>();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         final CollectionReference requestCollectionRef = db.collection("Books");
@@ -222,7 +339,7 @@ public class ExploreFragment extends Fragment {
                         Book book = document.toObject(Book.class);
                         newlist.add(book);
                     }
-                    lstBooks.addAll(newlist);
+                    bookList.addAll(newlist);
                     myAdapter.notifyDataSetChanged();
                     lastVisible = task.getResult().getDocuments().get(task.getResult().size() - 1);
 
@@ -255,7 +372,7 @@ public class ExploreFragment extends Fragment {
                                                 Book book = d.toObject(Book.class);
                                                 newlist.add(book);
                                             }
-                                            lstBooks.addAll(newlist);
+                                            bookList.addAll(newlist);
                                             myAdapter.notifyDataSetChanged();
                                             lastVisible = t.getResult().getDocuments().get(t.getResult().size() - 1);
 
@@ -268,25 +385,8 @@ public class ExploreFragment extends Fragment {
                             }
                         }
                     };
-                    exploreRV.addOnScrollListener(onScrollListener);
                 }
             }
         });
-
-
-//        requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                if (task.isSuccessful()) {
-//
-//                    for (QueryDocumentSnapshot document : task.getResult()) {
-//                        newlist.add(document.toObject(Book.class));
-//                    }
-//                    lstBooks.addAll(newlist);
-//                    myAdapter.notifyDataSetChanged();
-//
-//                }
-//            }
-//        });
     }
 }

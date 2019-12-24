@@ -2,6 +2,7 @@ package com.reading7;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.reading7.Adapters.ReadShelfAdapter;
 import com.reading7.Adapters.WishListAdapter;
 import com.reading7.Objects.Review;
@@ -68,6 +71,8 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
 //                Utils.updateBooks();
+
+
                 Toast.makeText(getActivity(), "IF YOU TOUCH THIS BUTTON EVER AGAIN ROTEM WILL KILL YOU.", Toast.LENGTH_SHORT).show();
             }
         });

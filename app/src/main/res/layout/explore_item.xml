@@ -13,9 +13,9 @@
 
         <ImageView
             android:id="@+id/coverImage"
+            android:background="?attr/selectableItemBackground"
             android:layout_width="match_parent"
             android:layout_height="150dp"
-            android:background="@android:color/transparent"
             android:scaleType="fitXY"
             app:srcCompat="@mipmap/cover1" />
 

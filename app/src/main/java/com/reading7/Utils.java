@@ -17,6 +17,8 @@ import androidx.annotation.NonNull;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -171,19 +173,22 @@ public class Utils {
      */
     public static void showImage(final String imageFileName, final ImageView view, final Activity activity) {
         StorageReference mStorageRef;
-        mStorageRef = FirebaseStorage.getInstance().getReference("images/" + convertTitle(imageFileName) + ".jpg");
+        final String img_path = "images/" + convertTitle(imageFileName) + ".jpg";
+        mStorageRef = FirebaseStorage.getInstance().getReference(img_path);
 
         mStorageRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
             @Override
             public void onComplete(@NonNull Task<Uri> task) {
                 if (task.isSuccessful()) {
                     Glide.with(activity)
-                            .load(task.getResult())
-                            .into(view);
+                            .load(task.getResult()).thumbnail(0.5f).apply(new RequestOptions()
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .skipMemoryCache(true).dontAnimate()
+                    ).into(view);
 
                 } else {
-//                    throw new AssertionError("OPPS".concat(imageFileName));
-                    Toast.makeText(activity, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    throw new AssertionError("OPPS ".concat(img_path).concat(imageFileName));
+//                    Toast.makeText(activity, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
             }

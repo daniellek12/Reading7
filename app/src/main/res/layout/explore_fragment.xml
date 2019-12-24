@@ -69,6 +69,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:id="@+id/nested_test"
         android:fillViewport="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:background="@color/white">
@@ -103,6 +104,11 @@
                 android:paddingLeft="3dp"
                 android:paddingRight="3dp"
                 android:paddingBottom="2dp" />
+<!--            <Button-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:id="@+id/load_more_btn"-->
+<!--                android:layout_gravity="center_horizontal"/>-->
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
