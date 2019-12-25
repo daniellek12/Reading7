@@ -109,7 +109,7 @@ public class Utils {
                 }
                 if (st.startsWith("Num Pages: ")) {
                     String[] sst = st.split("Num Pages: ");
-                    num_pages = sst[1];
+                    num_pages = sst[1].replace("\t","").replace(" ","");
                 }
                 if (st.startsWith("Author: ")) {
                     String[] sst = st.split("Author: ");
@@ -141,6 +141,7 @@ public class Utils {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {
+                        Log.d("Utils", "Uploaded book: ".concat(t));
                         //Toast.makeText(LoginActivity, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
 
                     } else {

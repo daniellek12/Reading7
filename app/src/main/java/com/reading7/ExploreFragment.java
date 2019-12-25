@@ -21,6 +21,7 @@ import com.reading7.Adapters.ExploreAdapter;
 import com.reading7.Adapters.StoryPlaylistAdapter;
 import com.reading7.Objects.Book;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,6 +58,7 @@ public class ExploreFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ((BottomNavigationView) getActivity().findViewById(R.id.navigation)).setSelectedItemId(R.id.navigation_explore);
+
 
         getActivity().findViewById(R.id.notifications).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -220,7 +222,9 @@ public class ExploreFragment extends Fragment {
 //                Toast.makeText(getContext(), "scrolling", Toast.LENGTH_SHORT).show();
                 if (scrollY == (v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight())) {
                     if (loading) {
+                        showProgressBar();
                         load_books();
+//                        hideProgressBar();
                     }
                     loading = false;
                 }
@@ -289,5 +293,17 @@ public class ExploreFragment extends Fragment {
                 }
             });
         }
+    }
+
+    private void showProgressBar(){
+//        disableClicks();
+//        getActivity().findViewById(R.id.explore_progress_background).setVisibility(View.VISIBLE);
+        getActivity().findViewById(R.id.explore_progress_bar).setVisibility(View.VISIBLE);
+    }
+
+    private void hideProgressBar(){
+//        enableClicks();
+//        getActivity().findViewById(R.id.explore_progress_background).setVisibility(View.GONE);
+        getActivity().findViewById(R.id.explore_progress_bar).setVisibility(View.GONE);
     }
 }

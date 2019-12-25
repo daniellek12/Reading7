@@ -29,6 +29,7 @@ import com.reading7.Adapters.WishListAdapter;
 import com.reading7.Objects.Review;
 import com.reading7.Objects.WishList;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
@@ -70,9 +71,11 @@ public class ProfileFragment extends Fragment {
         dc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Utils.updateBooks();
-
-
+//                try {
+//                    Utils.convertTxtToBook(getContext());
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
                 Toast.makeText(getActivity(), "IF YOU TOUCH THIS BUTTON EVER AGAIN ROTEM WILL KILL YOU.", Toast.LENGTH_SHORT).show();
             }
         });
