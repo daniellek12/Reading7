@@ -48,10 +48,9 @@ public class MainActivity extends AppCompatActivity
     public boolean addFragment(Fragment fragment) {
 
         if (fragment != null) {
-
             getSupportFragmentManager()
                     .beginTransaction()
-                    .add(R.id.fragmant_container, fragment)
+                    .add(R.id.fragmant_container, fragment, fragment.toString())
                     .addToBackStack(fragment.getClass().toString())
                     .commit();
             return true;

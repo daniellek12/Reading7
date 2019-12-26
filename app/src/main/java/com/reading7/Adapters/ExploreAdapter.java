@@ -79,7 +79,6 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
         Utils.showImage(books.get(i).getTitle(), viewHolder.cover, mActivity);
         //viewHolder.cover.setImageResource(mContext.getResources().getIdentifier("cover"+(i+1), "mipmap", mContext.getPackageName()));
 
-
         final int j = i;
         viewHolder.cover.setOnClickListener(new View.OnClickListener() {
             @Override
