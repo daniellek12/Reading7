@@ -1,6 +1,7 @@
 package com.reading7;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import com.reading7.Adapters.ExploreAdapter;
 import com.reading7.Adapters.StoryPlaylistAdapter;
 import com.reading7.Objects.Book;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,6 +54,7 @@ public class ExploreFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ((BottomNavigationView) getActivity().findViewById(R.id.navigation)).setSelectedItemId(R.id.navigation_explore);
+
 
         getActivity().findViewById(R.id.notifications).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -207,17 +210,17 @@ public class ExploreFragment extends Fragment {
         exploreRV.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
 
         exploreRV.setNestedScrollingEnabled(false);
+        showProgressBar();
 
         NestedScrollView nestedScrollView = getActivity().findViewById(R.id.nested_test);
         nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-//                Toast.makeText(getContext(), "scrolling", Toast.LENGTH_SHORT).show();
                 if (scrollY == (v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight())) {
-                    if (loading) {
-                        load_books();
-                    }
-                    loading = false;
+//                    Toast.makeText(getContext(), "scrolling", Toast.LENGTH_SHORT).show();
+                    load_books();
+//                        hideProgressBar();
+
                 }
             }
         });
@@ -269,8 +272,9 @@ public class ExploreFragment extends Fragment {
                     if (t.isSuccessful()) {
                         for (DocumentSnapshot d : t.getResult()) {
                             Book book = d.toObject(Book.class);
-                            bookList.add(book);
+                            newlist.add(book);
                         }
+                        bookList.addAll(newlist);
                         for (int i = totalItemCount; i < totalItemCount + t.getResult().size(); i++) {
                             myAdapter.notifyItemInserted(i);//notify updated book ONLY
                         }
@@ -281,8 +285,23 @@ public class ExploreFragment extends Fragment {
                             isLastItemReached = true;
                         }
                     }
+                    else {
+                        Log.d("Explore", "Load books failed");
+                    }
                 }
             });
         }
+    }
+
+    private void showProgressBar(){
+//        disableClicks();
+//        getActivity().findViewById(R.id.explore_progress_background).setVisibility(View.VISIBLE);
+        getActivity().findViewById(R.id.explore_progress_bar).setVisibility(View.VISIBLE);
+    }
+
+    private void hideProgressBar(){
+//        enableClicks();
+//        getActivity().findViewById(R.id.explore_progress_background).setVisibility(View.GONE);
+        getActivity().findViewById(R.id.explore_progress_bar).setVisibility(View.GONE);
     }
 }
