@@ -174,7 +174,7 @@ public class Utils {
      */
     public static void showImage(final String imageFileName, final ImageView view, final Activity activity) {
         StorageReference mStorageRef;
-        final String img_path = "images/" + convertTitle(imageFileName) + ".jpg";
+        final String img_path = "test/" + convertTitle(imageFileName) + ".jpg";
         mStorageRef = FirebaseStorage.getInstance().getReference(img_path);
 
         mStorageRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {

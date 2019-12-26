@@ -2,6 +2,7 @@ package com.reading7;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -214,19 +215,17 @@ public class ExploreFragment extends Fragment {
         exploreRV.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
 
         exploreRV.setNestedScrollingEnabled(false);
+        showProgressBar();
 
         NestedScrollView nestedScrollView = getActivity().findViewById(R.id.nested_test);
         nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-//                Toast.makeText(getContext(), "scrolling", Toast.LENGTH_SHORT).show();
                 if (scrollY == (v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight())) {
-                    if (loading) {
-                        showProgressBar();
-                        load_books();
+//                    Toast.makeText(getContext(), "scrolling", Toast.LENGTH_SHORT).show();
+                    load_books();
 //                        hideProgressBar();
-                    }
-                    loading = false;
+
                 }
             }
         });
@@ -278,8 +277,9 @@ public class ExploreFragment extends Fragment {
                     if (t.isSuccessful()) {
                         for (DocumentSnapshot d : t.getResult()) {
                             Book book = d.toObject(Book.class);
-                            bookList.add(book);
+                            newlist.add(book);
                         }
+                        bookList.addAll(newlist);
                         for (int i = totalItemCount; i < totalItemCount + t.getResult().size(); i++) {
                             myAdapter.notifyItemInserted(i);//notify updated book ONLY
                         }
@@ -289,6 +289,9 @@ public class ExploreFragment extends Fragment {
                         if (t.getResult().size() < limit) {
                             isLastItemReached = true;
                         }
+                    }
+                    else {
+                        Log.d("Explore", "Load books failed");
                     }
                 }
             });
