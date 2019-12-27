@@ -66,7 +66,7 @@ public class SearchBooksFragment extends Fragment implements androidx.appcompat.
 
                 adapter = new SearchBooksAdapter(getContext(), books);
                 list.setAdapter(adapter);
-                onQueryTextChange(((androidx.appcompat.widget.SearchView) getActivity().findViewById(R.id.searchView)).getQuery().toString());
+//                onQueryTextChange(((androidx.appcompat.widget.SearchView) getActivity().findViewById(R.id.searchView)).getQuery().toString());
             }
         });
 
@@ -79,7 +79,7 @@ public class SearchBooksFragment extends Fragment implements androidx.appcompat.
 //        Filter filter = adapter.getFilter();
 //        filter.filter(string);
 //        return true;
-        return true;
+        return false;
     }
 
     @Override
@@ -90,19 +90,27 @@ public class SearchBooksFragment extends Fragment implements androidx.appcompat.
 //        return true;
 //        Toast.makeText(getContext(), "TEXT CHANGED", Toast.LENGTH_SHORT).show();
 
-        books.clear();
-//        Toast.makeText(getContext(), "Searched: ".concat(string), Toast.LENGTH_SHORT).show();
+        if (string.equals("")){
+            adapter.notifyDataSetChanged();
+            return true;
+        }
         CollectionReference requestBooksRef = FirebaseFirestore.getInstance().collection("Books");
-        requestBooksRef.whereEqualTo("title", string).limit(2).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//        requestBooksRef.whereEqualTo("title", string).limit(2).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        final ArrayList<Book> newlist = new ArrayList<>();
+        requestBooksRef.orderBy("title").startAt(string).endAt(string + "\uf8ff").limit(4).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                books.clear();
 
                 for (QueryDocumentSnapshot document : task.getResult()) {
                     Book book = document.toObject(Book.class);
 
-                    if (!books.contains(book))
-                        books.add(book);
+//                    if (!books.contains(book))
+//                        books.add(book);
+                    newlist.add(book);
                 }
+                books.addAll(newlist);
+//                Toast.makeText(getContext(), "list size: ".concat(Integer.toString(books.size())), Toast.LENGTH_SHORT).show();
                 adapter.notifyDataSetChanged();
             }
         });
