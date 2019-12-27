@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -52,31 +53,32 @@ public class SearchBooksFragment extends Fragment implements androidx.appcompat.
 //        }
 
         CollectionReference requestBooksRef = FirebaseFirestore.getInstance().collection("Books");
-        requestBooksRef.whereEqualTo("title",((androidx.appcompat.widget.SearchView)getActivity().findViewById(R.id.searchView)).getQuery().toString() ).limit(2).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        requestBooksRef.whereEqualTo("title", ((androidx.appcompat.widget.SearchView) getActivity().findViewById(R.id.searchView)).getQuery().toString()).limit(2).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
                 for (QueryDocumentSnapshot document : task.getResult()) {
                     Book book = document.toObject(Book.class);
 
-                    if(!books.contains(book))
+                    if (!books.contains(book))
                         books.add(book);
                 }
 
                 adapter = new SearchBooksAdapter(getContext(), books);
                 list.setAdapter(adapter);
-                onQueryTextChange(((androidx.appcompat.widget.SearchView)getActivity().findViewById(R.id.searchView)).getQuery().toString());
+                onQueryTextChange(((androidx.appcompat.widget.SearchView) getActivity().findViewById(R.id.searchView)).getQuery().toString());
             }
         });
 
-        ((SearchFragment)getParentFragment()).initViewPagerOnPageChanged();
+        ((SearchFragment) getParentFragment()).initViewPagerOnPageChanged();
     }
 
     @Override
     public boolean onQueryTextSubmit(String string) {
-        if(adapter == null) return false;
-        Filter filter = adapter.getFilter();
-        filter.filter(string);
+//        if(adapter == null) return false;
+//        Filter filter = adapter.getFilter();
+//        filter.filter(string);
+//        return true;
         return true;
     }
 
@@ -86,8 +88,25 @@ public class SearchBooksFragment extends Fragment implements androidx.appcompat.
 //        Filter filter = adapter.getFilter();
 //        filter.filter(string);
 //        return true;
+//        Toast.makeText(getContext(), "TEXT CHANGED", Toast.LENGTH_SHORT).show();
 
-        return false;
+        books.clear();
+//        Toast.makeText(getContext(), "Searched: ".concat(string), Toast.LENGTH_SHORT).show();
+        CollectionReference requestBooksRef = FirebaseFirestore.getInstance().collection("Books");
+        requestBooksRef.whereEqualTo("title", string).limit(2).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    Book book = document.toObject(Book.class);
+
+                    if (!books.contains(book))
+                        books.add(book);
+                }
+                adapter.notifyDataSetChanged();
+            }
+        });
+        return true;
     }
 
 }
