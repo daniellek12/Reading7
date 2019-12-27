@@ -178,9 +178,7 @@ public class BookFragment extends Fragment {
                             sort(lstReviews,Collections.reverseOrder());
                     adapter.notifyDataSetChanged();
                     TextView countRatersText = (TextView) getActivity().findViewById(R.id.countRaters);
-                    countRatersText.setText(""+countRaters);
-
-
+                    countRatersText.setText("" + countRaters);
                 }
             }
         });

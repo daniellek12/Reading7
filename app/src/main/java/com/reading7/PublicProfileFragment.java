@@ -105,7 +105,7 @@ public class PublicProfileFragment extends Fragment {
 
 
                         user = new User(userName, user_email, birthDate, followers, following, lastSearches,
-                                favouriteBooks, favouriteGenres, likedReviews);
+                                favouriteBooks, favouriteGenres, likedReviews, avatar_details);
 
                         initFollowButton();
                         initWishlist();
@@ -246,6 +246,7 @@ public class PublicProfileFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
+                    usersWishListBookNames.clear();
                     for (QueryDocumentSnapshot doc : task.getResult()) {
                         usersWishListBookNames.add(doc.toObject(WishList.class).getBook_title());
                     }
@@ -271,6 +272,7 @@ public class PublicProfileFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
+                    usersReviewBookNames.clear();
                     for (QueryDocumentSnapshot doc : task.getResult()) {
                         usersReviewBookNames.add(doc.toObject(Review.class).getBook_title());
                     }

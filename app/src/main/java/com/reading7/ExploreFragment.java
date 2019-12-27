@@ -1,14 +1,10 @@
 package com.reading7;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.Button;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -40,7 +36,6 @@ public class ExploreFragment extends Fragment {
     private ExploreAdapter myAdapter;
     private int limit = 11;
     private boolean loading = true;
-
 
     private DocumentSnapshot lastVisible;
     private boolean isScrolling = false;
