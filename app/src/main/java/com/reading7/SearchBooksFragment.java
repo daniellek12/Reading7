@@ -45,14 +45,14 @@ public class SearchBooksFragment extends Fragment implements androidx.appcompat.
 
         final ListView list = getActivity().findViewById(R.id.booksListView);
 
-        if(adapter != null){
-            list.setAdapter(adapter);
-            onQueryTextChange(((androidx.appcompat.widget.SearchView)getActivity().findViewById(R.id.searchView)).getQuery().toString());
-            return;
-        }
+//        if(adapter != null){
+//            list.setAdapter(adapter);
+//            onQueryTextChange(((androidx.appcompat.widget.SearchView)getActivity().findViewById(R.id.searchView)).getQuery().toString());
+//            return;
+//        }
 
         CollectionReference requestBooksRef = FirebaseFirestore.getInstance().collection("Books");
-        requestBooksRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        requestBooksRef.whereEqualTo("title",((androidx.appcompat.widget.SearchView)getActivity().findViewById(R.id.searchView)).getQuery().toString() ).limit(2).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
@@ -82,10 +82,12 @@ public class SearchBooksFragment extends Fragment implements androidx.appcompat.
 
     @Override
     public boolean onQueryTextChange(String string) {
-        if(adapter == null) return false;
-        Filter filter = adapter.getFilter();
-        filter.filter(string);
-        return true;
+//        if(adapter == null) return false;
+//        Filter filter = adapter.getFilter();
+//        filter.filter(string);
+//        return true;
+
+        return false;
     }
 
 }

@@ -42,28 +42,28 @@ import java.util.Calendar;
 public class Utils {
 
 
-    public static void updateBooks() {
-        final FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        db.collection("Books").get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (final QueryDocumentSnapshot document : task.getResult()) {
-                                db.collection("Books").document(document.getId()).update("avg_age", 0).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Log.d("Utils", "Updated ".concat(document.get("title").toString()));
-                                    }
-                                });
-                            }
-                        } else {
-                            Log.d("Utils", "Error getting documents: ", task.getException());
-                        }
-                    }
-                });
-    }
+//    public static void updateBooks() {
+//        final FirebaseFirestore db = FirebaseFirestore.getInstance();
+//
+//        db.collection("Books").get()//VERY BAD!!!!!!!!!!!!!!!!!
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if (task.isSuccessful()) {
+//                            for (final QueryDocumentSnapshot document : task.getResult()) {
+//                                db.collection("Books").document(document.getId()).update("avg_age", 0).addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                    @Override
+//                                    public void onSuccess(Void aVoid) {
+//                                        Log.d("Utils", "Updated ".concat(document.get("title").toString()));
+//                                    }
+//                                });
+//                            }
+//                        } else {
+//                            Log.d("Utils", "Error getting documents: ", task.getException());
+//                        }
+//                    }
+//                });
+//    }
 
     public static void convertTxtToBook(final Context context) throws IOException {
         FirebaseFirestore db = FirebaseFirestore.getInstance();

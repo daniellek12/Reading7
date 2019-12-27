@@ -60,22 +60,23 @@ public class QuestionnaireActivity extends AppCompatActivity {
                 finish();
             }
         });
+        //TODO reimplement this, Ask Rotem
 
-        CollectionReference requestCollectionRef = FirebaseFirestore.getInstance().collection("Books");
-        requestCollectionRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-
-                for(QueryDocumentSnapshot document: task.getResult()){
-                    Book book = document.toObject(Book.class);
-                    books.add(book);
-                }
-                adapter = new AutoCompleteAdapter(QuestionnaireActivity.this, books);
-                AutoCompleteTextView edit_text = findViewById(R.id.auto_complete);
-                edit_text.setAdapter(adapter);
-                edit_text.setThreshold(1);
-            }
-        });
+//        CollectionReference requestCollectionRef = FirebaseFirestore.getInstance().collection("Books");
+//        requestCollectionRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//
+//                for(QueryDocumentSnapshot document: task.getResult()){
+//                    Book book = document.toObject(Book.class);
+//                    books.add(book);
+//                }
+//                adapter = new AutoCompleteAdapter(QuestionnaireActivity.this, books);
+//                AutoCompleteTextView edit_text = findViewById(R.id.auto_complete);
+//                edit_text.setAdapter(adapter);
+//                edit_text.setThreshold(1);
+//            }
+//        });
 
 
 

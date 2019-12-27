@@ -51,23 +51,24 @@ public class SearchAuthorsFragment extends Fragment implements androidx.appcompa
             onQueryTextChange(((androidx.appcompat.widget.SearchView)getActivity().findViewById(R.id.searchView)).getQuery().toString());
             return;
         }
+        //TODO reimplement this, ask Rotem
 
-        CollectionReference requestUsersRef = FirebaseFirestore.getInstance().collection("Books");
-        requestUsersRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-
-                for (QueryDocumentSnapshot document : task.getResult()) {
-                    Book book = document.toObject(Book.class);
-                    if(!authors.contains(book.getAuthor()))
-                        authors.add(book.getAuthor());
-                }
-
-                adapter = new SearchAuthorsAdapter(getContext(), authors);
-                list.setAdapter(adapter);
-                onQueryTextChange(((androidx.appcompat.widget.SearchView)getActivity().findViewById(R.id.searchView)).getQuery().toString());
-            }
-        });
+//        CollectionReference requestUsersRef = FirebaseFirestore.getInstance().collection("Books");
+//        requestUsersRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//
+//                for (QueryDocumentSnapshot document : task.getResult()) {
+//                    Book book = document.toObject(Book.class);
+//                    if(!authors.contains(book.getAuthor()))
+//                        authors.add(book.getAuthor());
+//                }
+//
+//                adapter = new SearchAuthorsAdapter(getContext(), authors);
+//                list.setAdapter(adapter);
+//                onQueryTextChange(((androidx.appcompat.widget.SearchView)getActivity().findViewById(R.id.searchView)).getQuery().toString());
+//            }
+//        });
     }
 
     @Override

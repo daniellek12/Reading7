@@ -45,22 +45,23 @@ public class SignUpStep2 extends Fragment {
         final AutoCompleteTextView edit_text = getView().findViewById(R.id.auto_complete);
         edit_text.clearFocus();
 
-        CollectionReference requestCollectionRef = FirebaseFirestore.getInstance().collection("Books");
-        requestCollectionRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-
-                for(QueryDocumentSnapshot document: task.getResult()){
-                    Book book = document.toObject(Book.class);
-                    books.add(book);
-                }
-                adapter = new AutoCompleteAdapter(getContext(), books);
-                AutoCompleteTextView edit_text = getView().findViewById(R.id.auto_complete);
-                edit_text.setAdapter(adapter);
-                edit_text.setThreshold(1);
-                edit_text.clearFocus();
-            }
-        });
+        //TODO re-implement this, ask Rotem
+//        CollectionReference requestCollectionRef = FirebaseFirestore.getInstance().collection("Books");
+//        requestCollectionRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//
+//                for(QueryDocumentSnapshot document: task.getResult()){
+//                    Book book = document.toObject(Book.class);
+//                    books.add(book);
+//                }
+//                adapter = new AutoCompleteAdapter(getContext(), books);
+//                AutoCompleteTextView edit_text = getView().findViewById(R.id.auto_complete);
+//                edit_text.setAdapter(adapter);
+//                edit_text.setThreshold(1);
+//                edit_text.clearFocus();
+//            }
+//        });
 
         edit_text.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

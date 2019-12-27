@@ -63,24 +63,27 @@ public class AuthorFragment  extends Fragment {
 
     private void initBooks() {
 
-        final ListView list = getActivity().findViewById(R.id.booksRV);
+        //TODO re-implement this correctly without fuck the firebase's resources up
+        //If needed, ask me (Rotem) how to or I'll do it some day.......................
 
-        CollectionReference requestBooksRef = FirebaseFirestore.getInstance().collection("Books");
-        requestBooksRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-
-                for (QueryDocumentSnapshot document : task.getResult()) {
-                    Book book = document.toObject(Book.class);
-
-                    if(!books.contains(book) && book.getAuthor().equals(author_name))
-                        books.add(book);
-                }
-
-                adapter = new SearchBooksAdapter(getContext(), books);
-                list.setAdapter(adapter);
-            }
-        });
+//        final ListView list = getActivity().findViewById(R.id.booksRV);
+//
+//        CollectionReference requestBooksRef = FirebaseFirestore.getInstance().collection("Books");
+//        requestBooksRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//
+//                for (QueryDocumentSnapshot document : task.getResult()) {
+//                    Book book = document.toObject(Book.class);
+//
+//                    if(!books.contains(book) && book.getAuthor().equals(author_name))
+//                        books.add(book);
+//                }
+//
+//                adapter = new SearchBooksAdapter(getContext(), books);
+//                list.setAdapter(adapter);
+//            }
+//        });
 
 
     }
