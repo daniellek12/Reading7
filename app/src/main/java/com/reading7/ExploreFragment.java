@@ -20,6 +20,8 @@ import com.reading7.Objects.Book;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -36,6 +38,8 @@ public class ExploreFragment extends Fragment {
     private ExploreAdapter myAdapter;
     private int limit = 11;
     private boolean loading = true;
+    private String mGenre;
+    private int first;
 
     private DocumentSnapshot lastVisible;
     private boolean isScrolling = false;
@@ -60,13 +64,17 @@ public class ExploreFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                Book book = new Book("id", "title", new ArrayList<String>(), "author", "publisher", 2, "summary", 3, 3);
+                Book book = new Book("id", "title", new ArrayList<String>(), new ArrayList<String>(), "author", "publisher", 2, "summary", 3, 3);
                 ((MainActivity) getActivity()).addFragment(new BookFragment(book));
             }
         });
-        initPlaylists();
+        mGenre="";
+        first=0;
         initExplore();
         initAppBar();
+        initPlaylists();
+
+
     }
 
 
@@ -86,8 +94,10 @@ public class ExploreFragment extends Fragment {
 
         ArrayList<String> names = new ArrayList<String>();
         names.add("דרמה");
-        names.add("קומיקס");
+        names.add("אהבה");
         names.add("אימה");
+        names.add("מדע");
+        names.add("קומדיה");
         names.add("היסטוריה");
         names.add("מתח");
         names.add("מדע בדיוני");
@@ -163,7 +173,7 @@ public class ExploreFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         RecyclerView playlistsRV = getActivity().findViewById(R.id.playlistsRV);
         playlistsRV.setLayoutManager(layoutManager);
-        StoryPlaylistAdapter adapter = new StoryPlaylistAdapter(getActivity(), getPlaylistsNames(), getCovers());
+        StoryPlaylistAdapter adapter = new StoryPlaylistAdapter(getActivity(), getPlaylistsNames(), getCovers(),bookList,myAdapter,this);
         playlistsRV.setAdapter(adapter);
     }
 
@@ -233,6 +243,13 @@ public class ExploreFragment extends Fragment {
 //            }
 //        });
         // this will load the first block of books for initialization of the explore
+        first_load_books();
+
+    }
+
+
+    private void first_load_books(){
+        //mGenre=genre;
         final List<Book> newlist = new ArrayList<>();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         final CollectionReference requestCollectionRef = db.collection("Books");
@@ -242,7 +259,9 @@ public class ExploreFragment extends Fragment {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (DocumentSnapshot document : task.getResult()) {
+
                         Book book = document.toObject(Book.class);
+                        //if(Utils.isBookFromGenre(book,mGenre))
                         newlist.add(book);
                     }
                     bookList.addAll(newlist);
@@ -253,19 +272,65 @@ public class ExploreFragment extends Fragment {
         });
     }
 
-    private void load_books() {
+    public void first_load_genre_books(final String genre){
+
+        if(mGenre!=genre)//changed genre
+            first=0;
+        mGenre=genre;
+
+
         final List<Book> newlist = new ArrayList<>();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         final CollectionReference requestCollectionRef = db.collection("Books");
-        Query requestQuery = requestCollectionRef.limit(limit);
+        Query requestQuery;
+
+        if(first ==0) {
+            bookList.clear();
+            requestQuery = requestCollectionRef.whereArrayContains("actual_genres",mGenre).limit(limit);
+            first=1;
+        }
+        else
+            requestQuery = requestCollectionRef.whereArrayContains("actual_genres",mGenre).startAfter(lastVisible).limit(limit);
+        requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (DocumentSnapshot document : task.getResult()) {
+
+                        Book book = document.toObject(Book.class);
+                            newlist.add(book);
+                    }
+                    bookList.addAll(newlist);
+                    lastVisible = task.getResult().getDocuments().get(task.getResult().size() - 1);
+                    myAdapter.notifyDataSetChanged();//no problem cause this is the first update
+
+                }
+            }
+        });
+
+
+    }
+
+    private void load_books() {
+
+        final List<Book> newlist = new ArrayList<>();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final CollectionReference requestCollectionRef = db.collection("Books");
+        Query requestQuery;
+        requestQuery = requestCollectionRef.limit(limit);
+
 
         GridLayoutManager gridLayoutManager = ((GridLayoutManager) exploreRV.getLayoutManager());
         int firstVisibleItemPosition = gridLayoutManager.findFirstVisibleItemPosition();
         int visibleItemCount = gridLayoutManager.getChildCount();
         final int totalItemCount = gridLayoutManager.getItemCount();
 
-        if ((firstVisibleItemPosition + visibleItemCount == totalItemCount) && !isLastItemReached) {
-            Query nextQuery = requestCollectionRef.startAfter(lastVisible).limit(limit);
+        if (((firstVisibleItemPosition + visibleItemCount == totalItemCount) && !isLastItemReached)) {
+            Query nextQuery;
+            if(mGenre=="")
+                nextQuery = requestCollectionRef.startAfter(lastVisible).limit(limit);
+            else
+              nextQuery = requestCollectionRef.whereArrayContains("actual_genres",mGenre).startAfter(lastVisible).limit(limit);
             nextQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> t) {
@@ -273,6 +338,7 @@ public class ExploreFragment extends Fragment {
                         for (DocumentSnapshot d : t.getResult()) {
                             Book book = d.toObject(Book.class);
                             newlist.add(book);
+
                         }
                         bookList.addAll(newlist);
                         for (int i = totalItemCount; i < totalItemCount + t.getResult().size(); i++) {

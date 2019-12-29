@@ -14,6 +14,7 @@ public class Book {
     private String description;
     private float avg_rating;
     private float avg_age;
+    private ArrayList<String> actual_genres;
 
     public Book() {}
 
@@ -91,7 +92,7 @@ public class Book {
 
 
 
-    public Book(String id, String title, ArrayList<String> genres, String author, String publisher, int num_pages, String description, float avg_rating, float avg_age) {
+    public Book(String id, String title, ArrayList<String> genres,ArrayList<String> actual_genres, String author, String publisher, int num_pages, String description, float avg_rating, float avg_age) {
         this.id = id;
         this.title = title;
         this.genres = genres;
@@ -100,8 +101,17 @@ public class Book {
         this.num_pages = num_pages;
         this.description = description;
         this.avg_rating = avg_rating;
+        this.actual_genres=actual_genres;
         //this.num_readers = num_readers;
         this.avg_age = avg_age;
+    }
+
+    public ArrayList<String> getActual_genres() {
+        return actual_genres;
+    }
+
+    public void setActual_genres(ArrayList<String> actual_genres) {
+        this.actual_genres = actual_genres;
     }
 
     @NonNull

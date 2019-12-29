@@ -22,8 +22,11 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
@@ -38,6 +41,10 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Utils {
 
@@ -131,7 +138,10 @@ public class Utils {
             }
             final String t = title;
 
-            Book b = new Book("", title, genersarray, author, publisher, Integer.parseInt(num_pages), summary, 0,0);
+            Book b = new Book("", title, genersarray,new ArrayList<String>(), author, publisher, Integer.parseInt(num_pages), summary, 0,0);
+            ArrayList<String> actual_genres=MapGenreToBook(b);
+
+            b.setActual_genres(actual_genres);
             if (b.getTitle().equals("")) {
                 throw new AssertionError(name);
             }
@@ -294,7 +304,28 @@ public class Utils {
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
     }
 
-    public static String RelativeDateDisplay(long timeDifferenceMilliseconds) {
+
+
+    public static ArrayList<String> MapGenreToBook(Book b){
+        ArrayList<String> genres=new ArrayList<String>();
+        ArrayList<String> names = new ArrayList<String>();
+        names.add("דרמה");
+        names.add("אהבה");
+        names.add("אימה");
+        names.add("מדע");
+        names.add("קומדיה");
+        names.add("היסטוריה");
+        names.add("מתח");
+        names.add("מדע בדיוני");
+        names.add("הרפתקאות");
+        for (String genre:names){
+            if(isBookFromGenre(b,genre))
+                genres.add(genre);
+
+        }
+        return genres;
+    }
+    public static   String RelativeDateDisplay(long timeDifferenceMilliseconds) {
         long diffSeconds = timeDifferenceMilliseconds / 1000;
         long diffMinutes = timeDifferenceMilliseconds / (60 * 1000);
         long diffHours = timeDifferenceMilliseconds / (60 * 60 * 1000);
@@ -338,6 +369,99 @@ public class Utils {
                 return "לפני שנתיים";
             return "לפני " + diffYears + " שנים";
         }
+    }
+
+    public static boolean isBookFromGenre(Book book, String g){
+        if(g.equals(""))
+            return true;
+        ArrayList<String> generes = new ArrayList<>();
+        switch (g){
+            case "הרפתקאות": generes.add("סדרת הרפתקאותיו של מייקל ויי");
+                generes.add("הרפתקאות לילדים");
+                generes.add("הרפתקאות");break;
+            case "מדע בדיוני": generes.add("פנטזיה");
+                generes.add("מדע בדיוני לילדים");
+                generes.add("מדע בדיוני צעיר");
+                generes.add("פנטזיה ישראלית");
+                generes.add("מותחן מדע בדיוני");
+                generes.add("מד\"ב ופנטזיה");
+                generes.add("פנטזיה צעירה");break;
+
+            case "היסטוריה": generes.add("היסטוריה");
+                generes.add("היסטוריה לילדים");
+                generes.add("היסטוריה ופוליטיקה");
+                generes.add("היסטוריה אלטרנטיבית");
+                generes.add("היסטוריה של העת העתיקה וימי הביניים");break;
+
+            case "אהבה": generes.add("אהבה ראשונה");
+                generes.add("אהבה נכזבת");
+                generes.add("אהבה");
+                generes.add("אהבה מאוחרת");
+                generes.add("אהבה ממבט ראשון");
+                generes.add("אהבה ממבט שני");break;
+
+            case "מתח": generes.add("מתח מושלג");
+                generes.add("מתח צעיר");
+                generes.add("מתח ישראלי");
+                generes.add("דואטים, טרילוגיות וסדרות מתח");
+                generes.add("מתח");
+                generes.add("מותחן מדע בדיוני");
+                generes.add("מותחן עתידני");
+                generes.add("מתח ופעולה");break;
+
+                case "אימה": generes.add("אימה");
+                generes.add("מותחן אימה");break;
+
+            case "מדע": generes.add("מדעים");
+                generes.add("מדע לילדים");
+                generes.add("סדרת סיירת המדע");
+                generes.add("מדע בדיוני");
+                generes.add("מדע פופולארי");
+                break;
+            case "קומדיה": generes.add("קומדיה");
+                generes.add("קומדיה רומנטית");
+                generes.add("ילדי הקומדיה");
+                generes.add("ספרים מצחיקים");
+                break;
+
+            case "דרמה": generes.add("דרמה");
+                generes.add("ספרים מרגשים");break;
+
+                default:return false;
+
+
+
+        }
+
+
+
+        if(Collections.disjoint(book.getGenres(),generes))
+            return false;
+        return true;
+    }
+
+    public static void addToEachBookTheFieldGenres(){
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final CollectionReference requestCollectionRef = db.collection("Books");
+        requestCollectionRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (DocumentSnapshot document : task.getResult()) {
+                        Book book = document.toObject(Book.class);
+                        book.setActual_genres(MapGenreToBook(book));
+                        final DocumentReference bookRef = FirebaseFirestore.getInstance().collection("Books").document(book.getId());
+                        requestCollectionRef.add(book);
+                    }
+
+                }
+            }});
+
+
+
+
+
     }
 
 }
