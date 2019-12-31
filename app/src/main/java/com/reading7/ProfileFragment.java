@@ -85,6 +85,7 @@ public class ProfileFragment extends Fragment {
 
         FirebaseUser mUser = mAuth.getCurrentUser();
         DocumentReference userRef = db.collection("Users").document(mUser.getEmail());
+        disableClicks();
 
         userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -114,6 +115,7 @@ public class ProfileFragment extends Fragment {
                         initLogOutBtn();
                         initWishlist();
                         initMyBookslist();
+                        enableClicks();
 
                     } else Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
 
@@ -182,12 +184,14 @@ public class ProfileFragment extends Fragment {
     }
 
     private void disableClicks() {
-        //getActivity().findViewById(R.id.settings).setEnabled(false);
+        getActivity().findViewById(R.id.settings).setEnabled(false);
+        ((MainActivity)getActivity()).setBottomNavigationEnabled(false);
         getActivity().findViewById(R.id.logout).setEnabled(false);
     }
 
     private void enableClicks() {
-        //getActivity().findViewById(R.id.settings).setEnabled(true);
+        getActivity().findViewById(R.id.settings).setEnabled(true);
+        ((MainActivity)getActivity()).setBottomNavigationEnabled(true);
         getActivity().findViewById(R.id.logout).setEnabled(true);
     }
 
