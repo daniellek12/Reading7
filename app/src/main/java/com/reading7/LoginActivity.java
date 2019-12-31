@@ -23,6 +23,8 @@ import com.reading7.Objects.User;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.IOException;
+
 public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
@@ -42,6 +44,11 @@ public class LoginActivity extends AppCompatActivity {
 
         setUpLoginBtn();
         setUpSignupBtn();
+        /*try {
+            Utils.convertTxtToBook(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
     }
 
     protected void redirectAgain() {

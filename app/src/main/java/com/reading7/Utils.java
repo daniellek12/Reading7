@@ -73,8 +73,28 @@ public class Utils {
 //    }
 
     public static void convertTxtToBook(final Context context) throws IOException {
+        Map<String,Integer> counts= new HashMap<String,Integer>();//for random genres
+        counts.put("הרפתקאות",0);
+        counts.put("דרמה",0);
+        counts.put("אהבה",0);
+        counts.put("אימה",0);
+        counts.put("מדע",0);
+        counts.put("קומדיה",0);
+        counts.put("היסטוריה",0);
+        counts.put("מדע בדיוני",0);
+        counts.put("מתח",0);
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         for (String name : context.getAssets().list("")) {
+            //for random genres
+            int run=0;
+            for (String key : counts.keySet()) {
+                if ((!(key.equals("אימה")))&&counts.get(key) <= 50) ;
+                    run = 1;
+            }
+            if(run==0)
+                break;
+            //for random genres
             if (!(name.contains(".")))
                 continue;
             if (name.contains("huangli.idf")) {
@@ -141,6 +161,20 @@ public class Utils {
             Book b = new Book("", title, genersarray,new ArrayList<String>(), author, publisher, Integer.parseInt(num_pages), summary, 0,0);
             ArrayList<String> actual_genres=MapGenreToBook(b);
 
+            //for random genres
+            int add= 0;
+            for(String genre: actual_genres){
+                if((counts.get(genre) + 1)<=50) {
+                    add = 1;
+                    counts.put(genre,counts.get(genre) + 1);
+                }
+
+            }
+            if(add==0)
+                continue;
+            //for random genres
+
+
             b.setActual_genres(actual_genres);
             if (b.getTitle().equals("")) {
                 throw new AssertionError(name);
@@ -151,7 +185,7 @@ public class Utils {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {
-                        Log.d("Utils", "Uploaded book: ".concat(t));
+                        //Log.d("Utils", "Uploaded book: ".concat(t));
                         //Toast.makeText(LoginActivity, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
 
                     } else {
@@ -378,27 +412,120 @@ public class Utils {
         switch (g){
             case "הרפתקאות": generes.add("סדרת הרפתקאותיו של מייקל ויי");
                 generes.add("הרפתקאות לילדים");
-                generes.add("הרפתקאות");break;
+                generes.add("הרפתקאות");
+                generes.add("סדרת הקאובויים");
+                generes.add("סדרת הנסיכה סופיה הראשונה");
+                generes.add("סדרת פרנקלין הצב");
+                generes.add("סיפורי מסע");
+                generes.add("מסעות לילדים");
+                generes.add("פיות");
+                generes.add("ספורט לילדים");
+                generes.add("סדרת להתבגר");
+                generes.add("קומיקס לילדים");
+                generes.add("לוחמים");
+                generes.add("סדרת טולי תעלולי");
+                generes.add("דינוזאורים");
+                generes.add("סדרת ספטימוס היפ");
+                break;
             case "מדע בדיוני": generes.add("פנטזיה");
                 generes.add("מדע בדיוני לילדים");
                 generes.add("מדע בדיוני צעיר");
                 generes.add("פנטזיה ישראלית");
                 generes.add("מותחן מדע בדיוני");
                 generes.add("מד\"ב ופנטזיה");
+                generes.add("טרילוגיית העולם שמעבר");
+                generes.add("מבוסס על סיפורי אגדות");
+                generes.add("ממלכות קסומות");
+                generes.add("מדע בדיוני");
+                generes.add("דמיון וקסם");
+                generes.add("רומנטיקה על-טבעית");
+                generes.add("מותחן על-טבעי");
+                generes.add("ללכת לאיבוד");
+                generes.add("תולעי ספרים");
+                generes.add("מיתולוגיה");
+                generes.add("פנטזיה ישראלית");
+                generes.add("ערפדים");
+                generes.add("גיבורי על");
+                generes.add("סגולות");
+                generes.add("חדי קרן");
+                generes.add("סדרת קהילים נגד וספרים");
+                generes.add("סדרת הקמע");
+                generes.add("סדרת ספטימוס היפ");
+                generes.add("סדרת צמרמורת");
                 generes.add("פנטזיה צעירה");break;
 
             case "היסטוריה": generes.add("היסטוריה");
                 generes.add("היסטוריה לילדים");
                 generes.add("היסטוריה ופוליטיקה");
                 generes.add("היסטוריה אלטרנטיבית");
-                generes.add("היסטוריה של העת העתיקה וימי הביניים");break;
+                generes.add("היסטוריה של העת העתיקה וימי הביניים");
+                generes.add("דור שלישי לשואה");
+                generes.add("חסידי אומות העולם");
+                generes.add("יהדות הונגריה");
+                generes.add("רב־תרבותיות לילדים");
+                generes.add("נשים בשואה");
+                generes.add("יהדות המזרח");
+                generes.add("שואה מזוית לא יהודית");
+                generes.add("פילוסופיה עתיקה");
+                generes.add("מבוסס על סיפורי התנ\"ך");
+                        generes.add("מלחמות ישראל");
+                generes.add("שואה וגבורה");
+                generes.add("מיתולוגיה לילדים");
+                generes.add("דור שני לשואה");
+                generes.add("סיפורים של חיילים");
+                generes.add("היסטוריה של העת העתיקה וימי הביניים");
+                generes.add("משפחות בשואה");
+                generes.add("תולדות ישראל");
+                generes.add("מלחמת העולם הראשונה");
+                generes.add("שואה - העולם שלפני");
+                generes.add("מלחמת לבנון");
+                generes.add("מסע בזמן");
+                generes.add("קבצי מכתבים");
+                generes.add("איראן");
+                generes.add("דינוזאורים");
+                generes.add("ארגנטינה");
+                generes.add("העת העתיקה");
+                generes.add("זכרונות וביוגרפיה");
+                generes.add("שנות השמונים");
+                generes.add("פלסטינים");
+                generes.add("רנסנס והעת החדשה");
+                generes.add("קולוניאליזם");
+                generes.add("הגירה");
+                generes.add("המאה ה־19");
+                generes.add("היסטוריה");
+                generes.add("ההתנתקות");
+                generes.add("דרום ארה\"ב");
+                        generes.add("פריז");
+                generes.add("לוחמים");
+                generes.add("סדרת נוכרייה (זרה)");
+                break;
 
             case "אהבה": generes.add("אהבה ראשונה");
                 generes.add("אהבה נכזבת");
                 generes.add("אהבה");
                 generes.add("אהבה מאוחרת");
                 generes.add("אהבה ממבט ראשון");
-                generes.add("אהבה ממבט שני");break;
+                generes.add("אהבה ממבט שני");
+                generes.add("להיות מתבגר");
+                generes.add("חג מולד רומנטי");
+                generes.add("רומנטיקה בפריז");
+                generes.add("בריטים רומנטיים");
+                generes.add("קומדיה רומנטית");
+                generes.add("רומנטיקה במאפיה");
+                generes.add("רומנטיקה בעבודה");
+                generes.add("רומנטיקה על-טבעית");
+                generes.add("רומנים קצרצרים");
+                generes.add("מיליונרים רומנטיים");
+                generes.add("רומנטיקה שמחממת את הלב");
+                generes.add("רומן משפחתי");
+                generes.add("רומנטיקה גדולה ויפה");
+                generes.add("אהבה ממבט ראשון");
+                generes.add("צרפתים רומנטיים");
+                generes.add("רומן פסיכולוגי");
+                generes.add("רומנטיקה ממבט ראשו");
+                generes.add("רוסים רומנטיים");
+                generes.add("סדרת יומני הנסיכה");
+                break;
 
             case "מתח": generes.add("מתח מושלג");
                 generes.add("מתח צעיר");
@@ -407,25 +534,82 @@ public class Utils {
                 generes.add("מתח");
                 generes.add("מותחן מדע בדיוני");
                 generes.add("מותחן עתידני");
-                generes.add("מתח ופעולה");break;
+                generes.add("מתח ופעולה");
+                generes.add("מותחן פשע");
+                generes.add("סדרת משימה עולמית");
+                generes.add("קרימינולוגיה");
+                generes.add("בלשים ישראליים");
+                generes.add("מותחן חופשה");
+                generes.add("אקשן ישראלי");
+                generes.add("מותחן שוד");
+                generes.add("מותחן על-טבעי");
+                generes.add("אקשן");
+                generes.add("CIA");
+                generes.add("פשע אמיתי");
+                generes.add("עמים ילידים");
+                generes.add("לוחמים");
+                generes.add("רצח");
+                generes.add("מותחן סקנדינבי");
+                generes.add("מותחן פוליטי");break;
 
                 case "אימה": generes.add("אימה");
-                generes.add("מותחן אימה");break;
+                generes.add("מותחן אימה");
+                generes.add("רצח");;break;
+
 
             case "מדע": generes.add("מדעים");
                 generes.add("מדע לילדים");
                 generes.add("סדרת סיירת המדע");
                 generes.add("מדע בדיוני");
                 generes.add("מדע פופולארי");
+                generes.add("מוח");
+                generes.add("כלכלה התנהגותית");
+                generes.add("נפש");
+                generes.add("דינוזאורים");
+                generes.add("שירה חברתית פוליטית");
+                generes.add("ארכיטקטורה");
+                generes.add("כלכלה לילדים");
+                generes.add("פיזיקה");
+                generes.add("אנתרופולוגיה");
+                generes.add("הייטק ודיגיטל");
+                generes.add("מתמטיקה");
+                generes.add("קבלת החלטות");
+                generes.add("רפואה");
+                generes.add("מספרים ראשונים");
+                generes.add("מדעים");
+                generes.add("ספרים עם זיקה לטבע");
+                generes.add("אקולוגיה לילדים");
+                generes.add("גוף האדם");
+                generes.add("עתידנות");
+                generes.add("חנונים");
                 break;
             case "קומדיה": generes.add("קומדיה");
                 generes.add("קומדיה רומנטית");
                 generes.add("ילדי הקומדיה");
                 generes.add("ספרים מצחיקים");
+                generes.add("הומור שחור");
+                generes.add("חנונים");
+                generes.add("סאטירה");
+                generes.add("קומדיה רומנטית");
+                generes.add("הומור בריטי");
+                generes.add("קומיקס לילדים");
+                generes.add("ספרים מצחיקים");
                 break;
 
             case "דרמה": generes.add("דרמה");
-                generes.add("ספרים מרגשים");break;
+                generes.add("ספרים מרגשים");
+                generes.add("סדרת יומני הנסיכה");
+                generes.add("נפש");
+                generes.add("מבעד לעיני ילדים");
+                generes.add("סדרת המאבק שלי");
+                generes.add("יתומים");
+                generes.add("להיות מתבגר");
+                generes.add("חטיפה");
+                generes.add("שכול");
+                generes.add("הורים מתגרשים");
+                generes.add("זהות מגדרית");
+                generes.add("סאגה משפחתית");
+                generes.add("דילמות של ילדים");break;
 
                 default:return false;
 
@@ -440,7 +624,7 @@ public class Utils {
         return true;
     }
 
-    public static void addToEachBookTheFieldGenres(){
+    public static void addToEachBookTheFieldGenres() {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         final CollectionReference requestCollectionRef = db.collection("Books");
@@ -452,7 +636,32 @@ public class Utils {
                         Book book = document.toObject(Book.class);
                         book.setActual_genres(MapGenreToBook(book));
                         final DocumentReference bookRef = FirebaseFirestore.getInstance().collection("Books").document(book.getId());
-                        requestCollectionRef.add(book);
+                        bookRef.set(book);
+                    }
+
+                }
+            }
+        });
+    }
+    public static void deleteDoubleBooks(){
+
+        final ArrayList<Book>list=new ArrayList<>();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final CollectionReference requestCollectionRef = db.collection("Books");
+        requestCollectionRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (DocumentSnapshot document : task.getResult()) {
+                        Book book = document.toObject(Book.class);
+                        if(!(list.contains(book)))
+                            list.add(book);
+                        else
+                        {
+                            final DocumentReference bookRef = FirebaseFirestore.getInstance().collection("Books").document(book.getId());
+                            bookRef.delete();
+                        }
+
                     }
 
                 }

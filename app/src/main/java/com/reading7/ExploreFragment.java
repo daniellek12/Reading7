@@ -344,6 +344,8 @@ public class ExploreFragment extends Fragment {
                         for (int i = totalItemCount; i < totalItemCount + t.getResult().size(); i++) {
                             myAdapter.notifyItemInserted(i);//notify updated book ONLY
                         }
+                        if(t.getResult().size()==0)
+                            return;
                         lastVisible = t.getResult().getDocuments().get(t.getResult().size() - 1);
                         loading = true;
 
