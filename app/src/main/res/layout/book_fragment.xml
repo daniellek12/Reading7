@@ -69,24 +69,74 @@
             android:gravity="right"/>
 
 
+        <LinearLayout
+            android:id="@+id/raters_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_toEndOf="@id/ratingNum"
+            android:layout_below="@id/genres"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="5dp"
+            android:layoutDirection="rtl">
+
+            <TextView
+                android:id="@+id/raters_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:textColor="@color/darkGrey"
+                android:textSize="14sp"
+                android:text="("/>
+
             <TextView
                 android:id="@+id/countRaters"
-                android:layout_width="200dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/genres"
-                android:text="count raters"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="25dp"
-                android:gravity="right"/>
+                android:textColor="@color/darkGrey"
+                android:textSize="14sp"
+                android:text="count raters" />
+
+            <TextView
+                android:id="@+id/raters_label2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:textColor="@color/darkGrey"
+                android:textSize="14sp"
+                android:text=" מדרגים)"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ages_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@id/pages_layout"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="15dp"
+            android:layout_alignParentRight="true"
+            android:layoutDirection="rtl">
+
+            <TextView
+                android:id="@+id/ages_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:textColor="@color/darkGrey"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:text="גיל קוראים ממוצע: "/>
+
             <TextView
                 android:id="@+id/ageAvg"
-                android:layout_width="200dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/countRaters"
-                android:text="age"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="25dp"
-                android:gravity="right"/>
+                android:layout_marginStart="10dp"
+                android:textColor="@color/darkGrey"
+                android:textSize="14sp"/>
+        </LinearLayout>
+
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -156,8 +206,8 @@
             style="@style/Widget.AppCompat.RatingBar.Indicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/ageAvg"
-            android:layout_marginTop="2dp"
+            android:layout_below="@+id/genres"
+            android:layout_marginTop="5dp"
             android:progressTint="@color/gold"
             android:secondaryProgressTint="@color/gold2"
             android:indeterminateTint="@color/gold2"
@@ -174,11 +224,11 @@
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@id/bookRatingBar"
             android:layout_below="@id/genres"
-            android:layout_marginTop="11dp"
+            android:layout_marginTop="15dp"
             android:layout_marginRight="-15dp"
             android:text="3.555555"
             android:textStyle="bold"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:maxLength="3"/>
 
         <LinearLayout
@@ -194,10 +244,9 @@
 
             <TextView
                 android:id="@+id/author"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_weight="1"
                 android:textColor="@color/darkGrey"
                 android:textSize="14sp"
                 android:textStyle="bold"
@@ -206,10 +255,10 @@
 
             <TextView
                 android:id="@+id/author_field"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
                 android:layout_centerHorizontal="true"
+                android:layout_marginStart="10dp"
                 android:textColor="@color/darkGrey"
                 android:textSize="14sp"
                 android:text="ג'יי קיי רולינג"/>
@@ -229,10 +278,9 @@
 
             <TextView
                 android:id="@+id/publisher"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_weight="1"
                 android:textColor="@color/darkGrey"
                 android:textSize="14sp"
                 android:textStyle="bold"
@@ -241,9 +289,9 @@
 
             <TextView
                 android:id="@+id/publisher_field"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
+                android:layout_marginStart="10dp"
                 android:layout_centerHorizontal="true"
                 android:textColor="@color/darkGrey"
                 android:textSize="14sp"
@@ -264,10 +312,9 @@
 
             <TextView
                 android:id="@+id/pages"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_weight="1"
                 android:textColor="@color/darkGrey"
                 android:textSize="14sp"
                 android:textStyle="bold"
@@ -276,9 +323,9 @@
 
             <TextView
                 android:id="@+id/pages_field"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
+                android:layout_marginStart="10dp"
                 android:layout_centerHorizontal="true"
                 android:textColor="@color/darkGrey"
                 android:textSize="14sp"
@@ -291,7 +338,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_below="@id/pages_layout"
+            android:layout_below="@id/ages_layout"
             android:layout_marginTop="7dp"
             android:layout_marginRight="15dp"
             android:layout_marginLeft="15dp"
