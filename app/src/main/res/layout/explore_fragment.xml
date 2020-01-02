@@ -29,7 +29,7 @@
                 android:layout_marginLeft="24dp"
                 android:src="@drawable/notification"
                 android:tint="@color/darkGrey"
-                android:visibility="visible" />
+                android:visibility="gone" />
 
             <ImageView
                 android:id="@+id/wishlist"
@@ -39,7 +39,7 @@
                 android:layout_marginLeft="16dp"
                 android:src="@drawable/heart_colored"
                 android:tint="@color/darkGrey"
-                android:visibility="visible" />
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/toolbar_title"
