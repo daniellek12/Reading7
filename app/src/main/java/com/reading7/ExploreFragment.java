@@ -73,8 +73,6 @@ public class ExploreFragment extends Fragment {
         initExplore();
         initAppBar();
         initPlaylists();
-
-
     }
 
 
@@ -229,8 +227,6 @@ public class ExploreFragment extends Fragment {
                 if (scrollY == (v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight())) {
 //                    Toast.makeText(getContext(), "scrolling", Toast.LENGTH_SHORT).show();
                     load_books();
-//                        hideProgressBar();
-
                 }
             }
         });
@@ -244,6 +240,8 @@ public class ExploreFragment extends Fragment {
 //        });
         // this will load the first block of books for initialization of the explore
         first_load_books();
+        enableClicks();
+//        hideProgressBar();
 
     }
 
@@ -356,20 +354,35 @@ public class ExploreFragment extends Fragment {
                     else {
                         Log.d("Explore", "Load books failed");
                     }
+                    hideProgressBar();
                 }
             });
         }
     }
 
     private void showProgressBar(){
-//        disableClicks();
+        disableClicks();
 //        getActivity().findViewById(R.id.explore_progress_background).setVisibility(View.VISIBLE);
         getActivity().findViewById(R.id.explore_progress_bar).setVisibility(View.VISIBLE);
     }
 
     private void hideProgressBar(){
-//        enableClicks();
+        enableClicks();
 //        getActivity().findViewById(R.id.explore_progress_background).setVisibility(View.GONE);
-        getActivity().findViewById(R.id.explore_progress_bar).setVisibility(View.GONE);
+//        getActivity().findViewById(R.id.explore_progress_bar).setVisibility(View.GONE);
+    }
+
+    private void disableClicks() {
+        getActivity().findViewById(R.id.search).setEnabled(false);
+//        getActivity().findViewById(R.id.notifications).setEnabled(false);
+        ((MainActivity)getActivity()).setBottomNavigationEnabled(false);
+
+
+    }
+
+    private void enableClicks() {
+        getActivity().findViewById(R.id.search).setEnabled(true);
+//        getActivity().findViewById(R.id.notifications).setEnabled(true);
+        ((MainActivity)getActivity()).setBottomNavigationEnabled(true);
     }
 }

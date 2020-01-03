@@ -1,6 +1,7 @@
 package com.reading7.Adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -112,7 +113,13 @@ public class SearchFriendsAdapter extends BaseAdapter implements Filterable {
         holder.name.setText(users.get(position).getFull_name());
         holder.toDelete.setVisibility(View.GONE);
         holder.image.setImageDrawable(mContext.getResources().getDrawable(R.drawable.avatar_layout));
-        Utils.loadAvatar(mContext, holder.image, users.get(position).getAvatar_details());
+        ArrayList<Integer> ad = users.get(position).getAvatar_details();
+//        Log.d("SFA", ad.toString());
+        if (ad.size() <= 0){
+            Log.d("SFA", users.get(position).getFull_name());
+        }else {
+            Utils.loadAvatar(mContext, holder.image, ad);
+        }
 
         holder.container.setOnClickListener(new View.OnClickListener() {
             @Override

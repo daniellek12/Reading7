@@ -76,7 +76,7 @@ public class SearchFragment extends Fragment implements androidx.appcompat.widge
         TabsPagerAdapter tabsPagerAdapter = new TabsPagerAdapter(getChildFragmentManager());
 
         tabsPagerAdapter.addFragment(new SearchBooksFragment(), "ספרים");
-        tabsPagerAdapter.addFragment(new SearchAuthorsFragment(), "סופרים");
+//        tabsPagerAdapter.addFragment(new SearchAuthorsFragment(), "סופרים");
         tabsPagerAdapter.addFragment(new SearchFriendsFragment(), "חברים");
 
         final ViewPager viewPager = getActivity().findViewById(R.id.viewPager);
@@ -99,14 +99,26 @@ public class SearchFragment extends Fragment implements androidx.appcompat.widge
             public void onPageSelected(int position) {
 
                 String s = searchView.getQuery().toString();
+                //FIXME commented code is correct for 3 tabs (Books, Authors and members search). current code works only for 2 tabs (Books and members)
+//                switch (position){
+//                    case 0:
+//                        ((SearchBooksFragment)((TabsPagerAdapter)viewPager.getAdapter()).getItem(position)).onQueryTextChange(s);
+//                        break;
+//                    case 1:
+//                        ((SearchAuthorsFragment)((TabsPagerAdapter)viewPager.getAdapter()).getItem(position)).onQueryTextChange(s);
+//                        break;
+//                    case 2:
+//                        ((SearchFriendsFragment)((TabsPagerAdapter)viewPager.getAdapter()).getItem(position)).onQueryTextChange(s);
+//                        break;
+//                }
                 switch (position){
                     case 0:
                         ((SearchBooksFragment)((TabsPagerAdapter)viewPager.getAdapter()).getItem(position)).onQueryTextChange(s);
                         break;
+//                    case 1:
+//                        ((SearchAuthorsFragment)((TabsPagerAdapter)viewPager.getAdapter()).getItem(position)).onQueryTextChange(s);
+//                        break;
                     case 1:
-                        ((SearchAuthorsFragment)((TabsPagerAdapter)viewPager.getAdapter()).getItem(position)).onQueryTextChange(s);
-                        break;
-                    case 2:
                         ((SearchFriendsFragment)((TabsPagerAdapter)viewPager.getAdapter()).getItem(position)).onQueryTextChange(s);
                         break;
                 }
@@ -150,10 +162,11 @@ public class SearchFragment extends Fragment implements androidx.appcompat.widge
             case 0:
                 ((SearchBooksFragment)frag).onQueryTextChange(s);
                 break;
+                //FIXME currently only books and members allowed
+//            case 1:
+//                ((SearchAuthorsFragment)frag).onQueryTextChange(s);
+//                break;
             case 1:
-                ((SearchAuthorsFragment)frag).onQueryTextChange(s);
-                break;
-            case 2:
                 ((SearchFriendsFragment)frag).onQueryTextChange(s);
                 break;
         }

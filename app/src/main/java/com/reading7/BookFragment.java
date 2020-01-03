@@ -160,6 +160,7 @@ public class BookFragment extends Fragment {
         countRaters=0;
         final List<Review> newlist = new ArrayList<Review>();
         CollectionReference collection = db.collection("Reviews");
+        ((MainActivity)getActivity()).setBottomNavigationEnabled(false);
         Query query = collection.whereEqualTo("book_id", mBook.getId());
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -179,6 +180,7 @@ public class BookFragment extends Fragment {
                     adapter.notifyDataSetChanged();
                     TextView countRatersText = (TextView) getActivity().findViewById(R.id.countRaters);
                     countRatersText.setText("" + countRaters);
+                    ((MainActivity)getActivity()).setBottomNavigationEnabled(true);
                 }
             }
         });
