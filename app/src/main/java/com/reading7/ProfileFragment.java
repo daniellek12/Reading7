@@ -115,7 +115,7 @@ public class ProfileFragment extends Fragment {
                         initLogOutBtn();
                         initWishlist();
                         initMyBookslist();
-                        enableClicks();
+
 
                     } else Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
 
@@ -219,6 +219,7 @@ public class ProfileFragment extends Fragment {
                         getActivity().findViewById(R.id.emptyMyBooks).setVisibility(View.INVISIBLE);
                     }
                 }
+                enableClicks();
             }
         });
     }

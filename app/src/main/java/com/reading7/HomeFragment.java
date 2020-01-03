@@ -108,6 +108,7 @@ public class HomeFragment extends Fragment {
 
                     }
                 }
+                getActivity().findViewById(R.id.home_progress_bar).setVisibility(View.GONE);
             }
         });
     }
