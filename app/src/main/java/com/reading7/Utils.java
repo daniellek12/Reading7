@@ -73,7 +73,7 @@ public class Utils {
 //    }
 
     public static void convertTxtToBook(final Context context) throws IOException {
-        Map<String,Integer> counts= new HashMap<String,Integer>();//for random genres
+        /*Map<String,Integer> counts= new HashMap<String,Integer>();//for random genres
         counts.put("הרפתקאות",0);
         counts.put("דרמה",0);
         counts.put("אהבה",0);
@@ -82,19 +82,19 @@ public class Utils {
         counts.put("קומדיה",0);
         counts.put("היסטוריה",0);
         counts.put("מדע בדיוני",0);
-        counts.put("מתח",0);
+        counts.put("מתח",0);*/
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         for (String name : context.getAssets().list("")) {
             //for random genres
-            int run=0;
+            /*int run=0;
             for (String key : counts.keySet()) {
                 if ((!(key.equals("אימה")))&&counts.get(key) <= 50) ;
                     run = 1;
             }
             if(run==0)
                 break;
-            //for random genres
+            //for random genres*/
             if (!(name.contains(".")))
                 continue;
             if (name.contains("huangli.idf")) {
@@ -161,7 +161,7 @@ public class Utils {
             Book b = new Book("", title, genersarray,new ArrayList<String>(), author, publisher, Integer.parseInt(num_pages), summary, 0,0);
             ArrayList<String> actual_genres=MapGenreToBook(b);
 
-            //for random genres
+            /*//for random genres
             int add= 0;
             for(String genre: actual_genres){
                 if((counts.get(genre) + 1)<=50) {
@@ -172,7 +172,7 @@ public class Utils {
             }
             if(add==0)
                 continue;
-            //for random genres
+            //for random genres*/
 
 
             b.setActual_genres(actual_genres);
@@ -426,6 +426,20 @@ public class Utils {
                 generes.add("סדרת טולי תעלולי");
                 generes.add("דינוזאורים");
                 generes.add("סדרת ספטימוס היפ");
+                generes.add("סדרת סיירת המדע");
+                generes.add("אומץ לב");
+                generes.add("גיבורות בלתי נשכחות");
+                generes.add("ילדי הפרחים");
+                generes.add("סדרת השרביט והחרב");
+                generes.add("אוטו פיקשן");
+                generes.add("סדרת בלי מעצורים - 39 רמזים");
+                generes.add("סרטי דיסני");
+                generes.add("נסיכות");
+                generes.add("סדרת שר הטבעות");
+                generes.add("סדרות אנימציה");
+                generes.add("סדרת בני לוריאן");
+                generes.add("סדרת בגידה - 39 רמזים");
+                generes.add("FBI");
                 break;
             case "מדע בדיוני": generes.add("פנטזיה");
                 generes.add("מדע בדיוני לילדים");
@@ -435,6 +449,14 @@ public class Utils {
                 generes.add("מד\"ב ופנטזיה");
                 generes.add("טרילוגיית העולם שמעבר");
                 generes.add("מבוסס על סיפורי אגדות");
+                generes.add("סדרת בני לוריאן");
+                generes.add("מדע בדיוני לילדים");
+                generes.add("סדרת עולמטה");
+                generes.add("סדרת השרביט והחרב");
+                generes.add("מותחן מדע בדיוני");
+                generes.add("סדרת פייבלהייבן");
+                generes.add("סדרת שר הטבעות");
+                generes.add("סדרת המעבר");
                 generes.add("ממלכות קסומות");
                 generes.add("מדע בדיוני");
                 generes.add("דמיון וקסם");
@@ -462,6 +484,36 @@ public class Utils {
                 generes.add("דור שלישי לשואה");
                 generes.add("חסידי אומות העולם");
                 generes.add("יהדות הונגריה");
+                generes.add("קובה");
+                generes.add("ציונות");
+                generes.add("יהדות גרמניה");
+                generes.add("סן פרנסיסקו");
+                generes.add("צרפת");
+                generes.add("סין");
+                generes.add("סוריאליזם");
+                generes.add("קנדה");
+                generes.add("חגים לילדים");
+                generes.add("תאילנד");
+                generes.add("העלייה השנייה");
+                generes.add("בודהיזם");
+                generes.add("קוריאה");
+                generes.add("ישראל");
+                generes.add("אפגניסטן");
+                generes.add("מרי בשואה");
+                generes.add("המזרח הרחוק");
+                generes.add("אנגליה הויקטוריאנית");
+                generes.add("גרמניה");
+                generes.add("ארץ ישראל");
+                generes.add("היסטוריה יהודית");
+                generes.add("מלחמת יום כיפור");
+                generes.add("סדרת מנהרת הזמן");
+                generes.add("מלחמת העצמאות");
+                generes.add("רומן היסטורי");
+                generes.add("העלייה הראשונה");
+                generes.add("המלחמה הקרה");
+                generes.add("ילדים בשואה");
+                generes.add("ניצולי שואה");
+                generes.add("נאצים ועוזריהם");
                 generes.add("רב־תרבותיות לילדים");
                 generes.add("נשים בשואה");
                 generes.add("יהדות המזרח");
@@ -504,6 +556,22 @@ public class Utils {
                 generes.add("אהבה נכזבת");
                 generes.add("אהבה");
                 generes.add("אהבה מאוחרת");
+                generes.add("מותחן רומנטי");
+                generes.add("רומן רומנטי");
+                generes.add("אהבה");
+                generes.add("סדרת גיבורים אמיתיים");
+                generes.add("רומן גרפי צעיר");
+                generes.add("סוד רומנטי");
+                generes.add("רומנטיקה בהוליווד");
+                generes.add("רומנטיקה עכשווית");
+                generes.add("רומנטיקת אהבה/שנאה");
+                generes.add("הזדמנות נוספת לרומנטיקה");
+                generes.add("רומנטיקה ספורטיבית");
+                generes.add("תעלומה רומנטית");
+                generes.add("רומנטיקה אסורה");
+                generes.add("מתאבקים רומנטים");
+                generes.add("רומנטיקה תנ\"כית");
+                        generes.add("אהבה בשואה");
                 generes.add("אהבה ממבט ראשון");
                 generes.add("אהבה ממבט שני");
                 generes.add("להיות מתבגר");
@@ -529,6 +597,14 @@ public class Utils {
 
             case "מתח": generes.add("מתח מושלג");
                 generes.add("מתח צעיר");
+                generes.add("סדרת סודות אפלים");
+                generes.add("המוסד");
+                generes.add("בלש לילדים");
+                generes.add("מותחן משפטי");
+                generes.add("מאפיה");
+                generes.add("\"שב\"כ");
+                        generes.add("תעלומה");
+                generes.add("טרילוגיות וסדרות מתח");
                 generes.add("מתח ישראלי");
                 generes.add("דואטים, טרילוגיות וסדרות מתח");
                 generes.add("מתח");
@@ -550,6 +626,10 @@ public class Utils {
                 generes.add("לוחמים");
                 generes.add("רצח");
                 generes.add("מותחן סקנדינבי");
+                generes.add("סדרת בני לוריאן");
+                generes.add("מותחן פסיכולוגי");
+                generes.add("סדרת שרלוק הולמס");
+                generes.add("בלשי");
                 generes.add("מותחן פוליטי");break;
 
                 case "אימה": generes.add("אימה");
@@ -563,6 +643,14 @@ public class Utils {
                 generes.add("מדע בדיוני");
                 generes.add("מדע פופולארי");
                 generes.add("מוח");
+                generes.add("טבעונות");
+                generes.add("בורסה");
+                generes.add("כסף");
+                generes.add("סדרת ממציאים ומגלים");
+                generes.add("פוליטיקה");
+                generes.add("דיפלומטיה");
+                generes.add("יוגה ומיינדפולנס לילדים");
+                generes.add("אוריינות לילדים");
                 generes.add("כלכלה התנהגותית");
                 generes.add("נפש");
                 generes.add("דינוזאורים");
@@ -589,6 +677,8 @@ public class Utils {
                 generes.add("ספרים מצחיקים");
                 generes.add("הומור שחור");
                 generes.add("חנונים");
+                generes.add("הומור");
+                generes.add("הומור ונונסנס לילדים");
                 generes.add("סאטירה");
                 generes.add("קומדיה רומנטית");
                 generes.add("הומור בריטי");
@@ -609,6 +699,27 @@ public class Utils {
                 generes.add("הורים מתגרשים");
                 generes.add("זהות מגדרית");
                 generes.add("סאגה משפחתית");
+                generes.add("אבות ובנים");
+                generes.add("התבגרות");
+                generes.add("נוער בסיכון");
+                generes.add("פרגמנטים");
+                generes.add("העצמה נשית");
+                generes.add("נוער בסיכון");
+                generes.add("סרטן והחלמה");
+                generes.add("מודעות");
+                generes.add("שמנופוביה");
+                generes.add("סליחות וחשבונות נפש");
+                generes.add("מבוסס על שייקספיר");
+                generes.add("אימוץ לילדים");
+                generes.add("רגשות לילדים");
+                generes.add("אוטיזם");
+                generes.add("שירות צבאי");
+                generes.add("ערבים ישראלים");
+                generes.add("דיכאון");
+                generes.add("התאבדות");
+                generes.add("גאווה");
+                generes.add("ספרות נשית");
+                generes.add("אלימות במשפחה");
                 generes.add("דילמות של ילדים");break;
 
                 default:return false;
