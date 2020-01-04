@@ -22,7 +22,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -40,7 +42,6 @@ public class ExploreFragment extends Fragment {
     private boolean loading = true;
     private String mGenre;
     private int first;
-
     private DocumentSnapshot lastVisible;
     private boolean isScrolling = false;
     private boolean isLastItemReached = false;
@@ -70,6 +71,7 @@ public class ExploreFragment extends Fragment {
         });
         mGenre="";
         first=0;
+
         initExplore();
         initAppBar();
         initPlaylists();
@@ -272,8 +274,14 @@ public class ExploreFragment extends Fragment {
 
     public void first_load_genre_books(final String genre){
 
-        if(mGenre!=genre)//changed genre
-            first=0;
+        if(mGenre!=genre) {//changed genre
+            first = 0;
+        }
+        else{//pressed the same genre
+            first_load_books();
+            mGenre=genre;
+            return;
+        }
         mGenre=genre;
 
 
