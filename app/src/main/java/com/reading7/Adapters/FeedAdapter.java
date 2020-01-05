@@ -358,4 +358,6 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
             ((MainActivity)mContext).addFragment(new PublicProfileFragment(user_email));
         }
     }
+
+
 }

@@ -31,7 +31,7 @@
             android:layout_height="200dp"
             android:background="@drawable/yellow_books_background"
             android:scaleType="centerInside"
-            app:srcCompat="@mipmap/cover2"
+            app:srcCompat="@mipmap/cover23"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="15dp" />
 

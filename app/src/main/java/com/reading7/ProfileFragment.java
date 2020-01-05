@@ -67,7 +67,8 @@ public class ProfileFragment extends Fragment {
         getUserInformation();
 
         ImageButton dc = (ImageButton)getActivity().findViewById(R.id.settings);
-        dc.bringToFront();
+        dc.setVisibility(View.GONE);
+        /*dc.bringToFront();
         dc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -76,9 +77,10 @@ public class ProfileFragment extends Fragment {
 //                } catch (IOException e) {
 //                    e.printStackTrace();
 //                }
+
                 Toast.makeText(getActivity(), "IF YOU TOUCH THIS BUTTON EVER AGAIN ROTEM WILL KILL YOU.", Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
     }
 
     private void getUserInformation() {

@@ -118,7 +118,7 @@
         android:layout_below="@id/divider1"
         android:alpha="0.3"
         android:scaleType="centerCrop"
-        app:srcCompat="@mipmap/cover13" />
+        app:srcCompat="@mipmap/cover23" />
 
     <ImageView
         android:id="@+id/coverImage"
@@ -127,7 +127,7 @@
         android:layout_below="@id/divider1"
         android:layout_centerHorizontal="true"
         android:scaleType="fitXY"
-        app:srcCompat="@mipmap/cover13" />
+        app:srcCompat="@mipmap/cover23" />
 
     <View
         android:id="@id/divider"
