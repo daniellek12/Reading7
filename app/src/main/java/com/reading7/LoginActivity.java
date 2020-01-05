@@ -1,7 +1,10 @@
 package com.reading7;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,13 +17,18 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.reading7.Objects.AdminClass;
+import com.reading7.Objects.Book;
 import com.reading7.Objects.User;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.IOException;
@@ -38,8 +46,43 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
+        DocumentReference docRef = FirebaseFirestore.getInstance().collection("Admin").document("VersionOkay");
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document != null) {
+                        AdminClass adminClass = document.toObject(AdminClass.class);
+                        if (!(BuildConfig.VERSION_NAME.equals(adminClass.getLast_version()))) {
+                            Log.d("Login", "build config version is: ".concat(BuildConfig.VERSION_NAME));
+                            Log.d("Login", "firebase version is: ".concat(adminClass.getLast_version()));
+                            new AlertDialog.Builder(LoginActivity.this)
+                                    .setTitle("גרסה ישנה")
+                                    .setMessage("חכו לעדכונים :)")
+
+                                    // Specifying a listener allows you to take an action before dismissing the dialog.
+                                    // The dialog is automatically dismissed when a dialog button is clicked.
+                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            finish();
+                                        }
+                                    })
+                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                    .setCancelable(false)
+                                    .show();
+                        }
+                    } else {
+                        Log.d("Utils| check version", "No such document");
+                    }
+                } else {
+                    Log.d("Utils| check version", "get failed with ", task.getException());
+                }
+            }
+        });
+
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser != null)
+        if (currentUser != null)
             redirectAgain();
 
         setUpLoginBtn();
@@ -58,14 +101,14 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    protected void redirectToMain(){
+    protected void redirectToMain() {
         final Intent intent = new Intent(this, MainActivity.class);
         CollectionReference requestCollectionRef = db.collection("Users");
-        Query requestQuery = requestCollectionRef.whereEqualTo("email",mAuth.getCurrentUser().getEmail());
+        Query requestQuery = requestCollectionRef.whereEqualTo("email", mAuth.getCurrentUser().getEmail());
         requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()){
+                if (task.isSuccessful()) {
 
                     User user = new User();
                     for (QueryDocumentSnapshot document : task.getResult()) {
@@ -74,8 +117,8 @@ public class LoginActivity extends AppCompatActivity {
 
 //                    if(user.getConnected() == 0) {
 //                        editUserFlagIn();
-                        startActivity(intent);
-                        finish();
+                    startActivity(intent);
+                    finish();
 //                    }
 //
 //                    else {
@@ -89,11 +132,11 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private boolean checkEnteredDetails(String email, String password){
+    private boolean checkEnteredDetails(String email, String password) {
 
         //Animation shake = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.shake_animation);
 
-        if(email.equals("")) {
+        if (email.equals("")) {
 //            findViewById(R.id.mail_icon).startAnimation(shake);
 //
 //            if(password.equals(""))
@@ -103,7 +146,7 @@ public class LoginActivity extends AppCompatActivity {
             return false;
         }
 
-        if(password.equals("")) {
+        if (password.equals("")) {
             //findViewById(R.id.password_icon).startAnimation(shake);
             findViewById(R.id.enter_details).setVisibility(View.VISIBLE);
             return false;
@@ -113,7 +156,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    private void setUpLoginBtn(){
+    private void setUpLoginBtn() {
         Button login = findViewById(R.id.login_button);
         login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,46 +169,41 @@ public class LoginActivity extends AppCompatActivity {
 
                 showProgressBar();
 
-                String email = ((EditText)findViewById(R.id.email)).getText().toString();
-                String password = ((EditText)findViewById(R.id.password)).getText().toString();
+                String email = ((EditText) findViewById(R.id.email)).getText().toString();
+                String password = ((EditText) findViewById(R.id.password)).getText().toString();
 
-                if(checkEnteredDetails(email,password)) {
+                if (checkEnteredDetails(email, password)) {
                     mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
                                 redirectToMain();
-                            }
-
-                            else {
+                            } else {
                                 hideProgressBar();
 
-                                if(task.getException().getMessage().equals("There is no user record corresponding to this identifier. The user may have been deleted.")
+                                if (task.getException().getMessage().equals("There is no user record corresponding to this identifier. The user may have been deleted.")
                                         || task.getException().getMessage().equals("The email address is badly formatted.")
                                         || task.getException().getMessage().equals("The password is invalid or the user does not have a password."))
                                     findViewById(R.id.wrong_details).setVisibility(View.VISIBLE);
 
-                                else if(task.getException().getMessage().equals("A network error (such as timeout, interrupted connection or unreachable host) has occurred.")
+                                else if (task.getException().getMessage().equals("A network error (such as timeout, interrupted connection or unreachable host) has occurred.")
                                         || task.getException().getMessage().equals("An internal error has occurred. [7:]"))
                                     findViewById(R.id.no_internet).setVisibility(View.VISIBLE);
 
 
-                                else Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                else
+                                    Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
-                }
-
-                else hideProgressBar();
+                } else hideProgressBar();
 
             }
         });
     }
 
 
-
-
-    private void setUpSignupBtn(){
+    private void setUpSignupBtn() {
 
         Button signup = findViewById(R.id.signup_btn);
         signup.setOnClickListener(new View.OnClickListener() {
@@ -180,14 +218,14 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    private void disableClicks(){
+    private void disableClicks() {
 
         findViewById(R.id.email).setEnabled(false);
         findViewById(R.id.password).setEnabled(false);
         findViewById(R.id.signup_btn).setEnabled(false);
     }
 
-    private void enableClicks(){
+    private void enableClicks() {
 
         findViewById(R.id.email).setEnabled(true);
         findViewById(R.id.password).setEnabled(true);
@@ -195,14 +233,14 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    private void showProgressBar(){
+    private void showProgressBar() {
         findViewById(R.id.login_button).setVisibility(View.GONE);
         disableClicks();
         findViewById(R.id.progress_background).setVisibility(View.VISIBLE);
         findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
     }
 
-    private void hideProgressBar(){
+    private void hideProgressBar() {
         findViewById(R.id.login_button).setVisibility(View.VISIBLE);
         enableClicks();
         findViewById(R.id.progress_background).setVisibility(View.GONE);
