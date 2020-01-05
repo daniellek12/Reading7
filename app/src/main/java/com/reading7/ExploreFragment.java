@@ -22,7 +22,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -40,7 +42,6 @@ public class ExploreFragment extends Fragment {
     private boolean loading = true;
     private String mGenre;
     private int first;
-
     private DocumentSnapshot lastVisible;
     private boolean isScrolling = false;
     private boolean isLastItemReached = false;
@@ -70,9 +71,12 @@ public class ExploreFragment extends Fragment {
         });
         mGenre="";
         first=0;
-        initExplore();
+        showProgressBar();
         initAppBar();
         initPlaylists();
+        initExplore();
+
+
     }
 
 
@@ -240,13 +244,14 @@ public class ExploreFragment extends Fragment {
 //        });
         // this will load the first block of books for initialization of the explore
         first_load_books();
-        enableClicks();
 //        hideProgressBar();
 
     }
 
 
     private void first_load_books(){
+        showProgressBar();
+
         //mGenre=genre;
         final List<Book> newlist = new ArrayList<>();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -265,15 +270,22 @@ public class ExploreFragment extends Fragment {
                     bookList.addAll(newlist);
                     myAdapter.notifyDataSetChanged();//no problem cause this is the first update
                     lastVisible = task.getResult().getDocuments().get(task.getResult().size() - 1);
+                    hideProgressBar();
                 }
             }
         });
     }
 
     public void first_load_genre_books(final String genre){
-
-        if(mGenre!=genre)//changed genre
-            first=0;
+        showProgressBar();
+        if(mGenre!=genre) {//changed genre
+            first = 0;
+        }
+        else{//pressed the same genre
+            first_load_books();
+            mGenre="";
+            return;
+        }
         mGenre=genre;
 
 
@@ -301,6 +313,8 @@ public class ExploreFragment extends Fragment {
                     bookList.addAll(newlist);
                     lastVisible = task.getResult().getDocuments().get(task.getResult().size() - 1);
                     myAdapter.notifyDataSetChanged();//no problem cause this is the first update
+                    hideProgressBar();
+
 
                 }
             }
@@ -310,6 +324,7 @@ public class ExploreFragment extends Fragment {
     }
 
     private void load_books() {
+        showProgressBar();
 
         final List<Book> newlist = new ArrayList<>();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -360,7 +375,7 @@ public class ExploreFragment extends Fragment {
         }
     }
 
-    private void showProgressBar(){
+    public void showProgressBar(){
         disableClicks();
 //        getActivity().findViewById(R.id.explore_progress_background).setVisibility(View.VISIBLE);
         getActivity().findViewById(R.id.explore_progress_bar).setVisibility(View.VISIBLE);
@@ -369,19 +384,21 @@ public class ExploreFragment extends Fragment {
     private void hideProgressBar(){
         enableClicks();
 //        getActivity().findViewById(R.id.explore_progress_background).setVisibility(View.GONE);
-//        getActivity().findViewById(R.id.explore_progress_bar).setVisibility(View.GONE);
+        //getActivity().findViewById(R.id.explore_progress_bar).setVisibility(View.GONE);
     }
 
     private void disableClicks() {
-        getActivity().findViewById(R.id.search).setEnabled(false);
-//        getActivity().findViewById(R.id.notifications).setEnabled(false);
         ((MainActivity)getActivity()).setBottomNavigationEnabled(false);
+        getActivity().findViewById(R.id.search).setEnabled(false);
+        getActivity().findViewById(R.id.playlistsRV).setEnabled(false);
+//        getActivity().findViewById(R.id.notifications).setEnabled(false);
 
 
     }
 
     private void enableClicks() {
         getActivity().findViewById(R.id.search).setEnabled(true);
+        getActivity().findViewById(R.id.playlistsRV).setEnabled(true);
 //        getActivity().findViewById(R.id.notifications).setEnabled(true);
         ((MainActivity)getActivity()).setBottomNavigationEnabled(true);
     }

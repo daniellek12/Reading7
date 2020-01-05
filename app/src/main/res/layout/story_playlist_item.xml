@@ -27,7 +27,7 @@
                 android:id="@+id/coverImage"
                 android:layout_width="match_parent"
                 android:layout_height="90dp"
-                android:background="@mipmap/cover1"
+                android:background="@mipmap/cover23"
                 android:scaleType="centerCrop" />
 
         </androidx.cardview.widget.CardView>

@@ -490,7 +490,6 @@ public class Utils {
                 generes.add("סן פרנסיסקו");
                 generes.add("צרפת");
                 generes.add("סין");
-                generes.add("סוריאליזם");
                 generes.add("קנדה");
                 generes.add("חגים לילדים");
                 generes.add("תאילנד");

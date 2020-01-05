@@ -28,6 +28,7 @@ import com.reading7.ProfileFragment;
 import com.reading7.PublicProfileFragment;
 import com.reading7.R;
 import com.reading7.Objects.Review;
+import com.reading7.Utils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -96,6 +97,8 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
         viewHolder.postTime.setText(strDate);
         viewHolder.reviewTitle.setText(review.getReview_title());
         viewHolder.reviewContent.setText((review.getReview_content()));
+        Utils.loadAvatar(mContext, viewHolder.profileImage , review.getReviewer_avatar());
+
         viewHolder.profileImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
