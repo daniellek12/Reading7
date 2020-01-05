@@ -279,7 +279,7 @@ public class ExploreFragment extends Fragment {
         }
         else{//pressed the same genre
             first_load_books();
-            mGenre=genre;
+            mGenre="";
             return;
         }
         mGenre=genre;
