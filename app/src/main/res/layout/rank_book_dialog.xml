@@ -1,53 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layoutDirection="rtl">
+    android:background="@color/white"
+    android:layoutDirection="rtl"
+    android:orientation="vertical">
 
 
-    <TextView
-        android:id="@+id/textView2"
+    <ImageView
+        android:id="@+id/imageView3"
         android:layout_width="match_parent"
+        android:layout_height="60dp"
+        app:srcCompat="@color/colorPrimaryDark" />
+
+    <ImageView
+        android:id="@+id/bubble"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:gravity="center_horizontal"
-        android:text="מה דעתך על הספר?"
-        android:textSize="20sp"
-        android:textStyle="italic" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
+        app:srcCompat="@drawable/question_bubble" />
 
     <RatingBar
         android:id="@+id/ratingBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_below="@id/bubble"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:numStars="5"
+        android:progressTint="@color/colorPrimaryDark"
         android:rating="0"
+        android:scaleX="0.9"
+        android:scaleY="0.9"
+        android:secondaryProgressTint="@color/colorPrimaryDark"
         android:stepSize="1" />
 
     <EditText
         android:id="@+id/FeedbackTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/ratingBar"
+        android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
-        android:ems="10"
-        android:gravity="top"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/edittext_border_background_light"
         android:hint="דעתך על הספר במשפט"
-        android:inputType="textMultiLine"
-        android:lines="1" />
-
+        android:inputType="text"
+        android:lines="1"
+        android:paddingLeft="10dp"
+        android:paddingTop="10dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="10dp"
+        android:textColorHint="@color/lightGrey"
+        android:textSize="14sp" />
 
 
     <EditText
         android:id="@+id/FeedbackContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:ems="10"
+        android:layout_below="@id/FeedbackTitle"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/edittext_border_background_light"
         android:gravity="top"
-        android:hint="פירוט"
+        android:hint="@string/review_content"
         android:inputType="textMultiLine"
-        android:lines="5" />
+        android:lines="8"
+        android:paddingLeft="10dp"
+        android:paddingTop="10dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="10dp"
+        android:textColorHint="@color/lightGrey"
+        android:textSize="14sp" />
+
+    <Button
+        android:id="@+id/ok"
+        android:layout_width="130dp"
+        android:layout_height="40dp"
+        android:layout_below="@id/FeedbackContent"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/rounded_button"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:text="@string/add_review"
+        android:textColor="@color/white" />
+
+    <Button
+        android:id="@+id/cancel"
+        android:layout_width="130dp"
+        android:layout_height="40dp"
+        android:layout_below="@id/FeedbackContent"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/rounded_button"
+        android:backgroundTint="@color/grey"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:text="@string/cancel"
+        android:textColor="@color/darkGrey" />
 
 
-</LinearLayout>
+</RelativeLayout>

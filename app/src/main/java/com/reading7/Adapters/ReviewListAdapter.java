@@ -28,6 +28,7 @@ import com.reading7.ProfileFragment;
 import com.reading7.PublicProfileFragment;
 import com.reading7.R;
 import com.reading7.Objects.Review;
+import com.reading7.Utils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -87,30 +88,27 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
     public void onBindViewHolder(@NonNull final ReviewListAdapter.ViewHolder viewHolder, int i) {
 
         final Review review = reviews.get(i);
-        viewHolder.ratingBar.setRating(review.getRank());
+
+        Utils.loadAvatar(mContext, viewHolder.profileImage, review.getReviewer_avatar());
         viewHolder.userName.setText(review.getReviewer_name());
+
         Date date = review.getReview_time().toDate();
-
         String strDate = RelativeDateDisplay(Timestamp.now().toDate().getTime() - date.getTime());
-
         viewHolder.postTime.setText(strDate);
+
+        viewHolder.ratingBar.setRating(review.getRank());
+
         viewHolder.reviewTitle.setText(review.getReview_title());
         viewHolder.reviewContent.setText((review.getReview_content()));
-        viewHolder.profileImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(review.getReviewer_email().equals(mAuth.getCurrentUser().getEmail()))
-                        ((MainActivity) mContext).loadFragment(new ProfileFragment());
-                    else
-                        ((MainActivity) mContext).addFragment(new PublicProfileFragment(review.getReviewer_email()));
-                }
-            });
+
+        viewHolder.profileImage.setOnClickListener(new OpenProfileOnClick(review.getReviewer_email()));
+        viewHolder.userName.setOnClickListener(new OpenProfileOnClick(review.getReviewer_email()));
 
 
         // Actions added to support Like button mechanics
         final String id = review.getReview_id();
 
-        if (LikedReviews.contains(id)) viewHolder.likeBtn.setBackground(mContext.getResources().getDrawable(R.drawable.like_colored));
+        if (LikedReviews.contains(id)) viewHolder.likeBtn.setBackground(mContext.getResources().getDrawable(R.drawable.like_colored)); //FIXME: often crushes because likedReviews is null.
         else viewHolder.likeBtn.setBackground(mContext.getResources().getDrawable(R.drawable.like));
         viewHolder.likeNum.setText(Integer.toString(review.getLikes_count()));
         viewHolder.likeBtn.setOnClickListener(new View.OnClickListener() {
@@ -161,13 +159,31 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             profileImage = itemView.findViewById(R.id.profileImage);
-            ratingBar = itemView.findViewById(R.id.rating);
+            ratingBar = itemView.findViewById(R.id.ratingBar);
             userName = itemView.findViewById(R.id.userName);
             postTime = itemView.findViewById(R.id.postTime);
-            reviewTitle = itemView.findViewById(R.id.review_title);
+            reviewTitle = itemView.findViewById(R.id.title);
             reviewContent = itemView.findViewById(R.id.review);
             likeNum = itemView.findViewById(R.id.likeNum);
             likeBtn = itemView.findViewById(R.id.likeBtn);
+        }
+    }
+
+
+    private class OpenProfileOnClick implements View.OnClickListener {
+
+        private String user_email;
+
+        public OpenProfileOnClick(String user_email){
+            this.user_email = user_email;
+        }
+
+        @Override
+        public void onClick(View v) {
+            if(user_email.equals(mAuth.getCurrentUser().getEmail()))
+                ((MainActivity) mContext).loadFragment(new ProfileFragment());
+            else
+                ((MainActivity) mContext).addFragment(new PublicProfileFragment(user_email));
         }
     }
 }

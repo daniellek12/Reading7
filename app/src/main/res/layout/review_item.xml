@@ -1,67 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="3dp"
+    android:layout_marginBottom="3dp"
     android:background="@color/white"
-    android:paddingTop="10dp"
-    android:layoutDirection="rtl">
+    android:layoutDirection="rtl"
+    android:paddingTop="10dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profileImage"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_alignParentTop="false"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="2dp"
+        android:layout_marginTop="10dp"
         android:layout_marginRight="20dp"
         android:elevation="3dp"
-        android:src="@mipmap/cover15" />
+        android:src="@drawable/avatar_layout"
+        app:civ_circle_background_color="@color/white" />
 
     <TextView
         android:id="@+id/userName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_toLeftOf="@id/profileImage"
         android:text="אליאנה תדהר"
         android:textColor="@color/black"
-        android:textStyle="bold"
-        android:layout_toLeftOf="@id/profileImage"/>
+        android:textSize="12sp"
+        android:textStyle="bold" />
 
-    <RatingBar
-        android:id="@+id/rating"
-        style="@style/Widget.AppCompat.RatingBar.Small"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="15dp"
+    <ImageView
+        android:id="@+id/timeIcon"
+        android:layout_width="11dp"
+        android:layout_height="11dp"
+        android:layout_below="@id/userName"
         android:layout_marginTop="5dp"
-        android:stepSize=".5" />
-
-    <TextView
-        android:id="@+id/review_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/postTime"
-        android:layout_marginRight="25dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="10dp"
-        android:layout_alignParentRight="true"
-        android:text="ספר מדהים!!!!"
-        android:textStyle="bold"/>
-
-    <TextView
-        android:id="@+id/review"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/review_title"
-        android:layout_marginRight="25dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="2dp"
-        android:layout_alignParentRight="true"
-        android:text="ספר מדהים!!!! חובה קריאה , אהבתי ממש
-אני לא רוצה לעשות לכם ספוילרים אבל הסוף מפתיע בטירוף רוצו לקרוא " />
-
+        android:layout_toLeftOf="@id/profileImage"
+        android:tint="@color/darkGrey"
+        app:srcCompat="@drawable/time" />
 
     <TextView
         android:id="@+id/postTime"
@@ -69,10 +47,46 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/userName"
         android:layout_marginTop="2dp"
-        android:layout_toLeftOf="@id/profileImage"
-        android:layout_marginRight="10dp"
-        android:text="24.10.19"
-        android:textColor="@color/lightGrey" />
+        android:layout_marginRight="3dp"
+        android:layout_toLeftOf="@id/timeIcon"
+        android:text="לפני 3 ימים"
+        android:textSize="12sp" />
+
+    <RatingBar
+        android:id="@+id/ratingBar"
+        style="@style/Widget.AppCompat.RatingBar.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="15dp"
+        android:progressBackgroundTint="@color/colorPrimaryDark"
+        android:progressTint="@color/colorPrimaryDark"
+        android:secondaryProgressTint="@color/colorPrimaryDark"
+        android:stepSize=".5" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/timeIcon"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="20dp"
+        android:text="ספר מהמם ממש"
+        android:textColor="@color/black"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/review"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="20dp"
+        android:text="ספר מדהים!!!! חובה קריאה , אהבתי ממש אני לא רוצה לעשות לכם ספוילרים אבל הסוף מפתיע בטירוף רוצו לקרוא "
+        android:textColor="@color/black"
+        android:textIsSelectable="false" />
 
 
     <View
@@ -80,48 +94,44 @@
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_below="@id/review"
-        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="20dp"
         android:background="?android:attr/listDivider" />
 
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/likeLayout"
-        android:layout_below="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/divider"
         android:layout_alignParentBottom="true"
-        android:gravity="center"
+        android:gravity="center_vertical"
         android:layoutDirection="rtl"
         android:orientation="horizontal"
-        android:paddingLeft="30dp"
-        android:paddingTop="7dp"
-        android:paddingRight="30dp"
-        android:paddingBottom="7dp">
+        android:paddingLeft="20dp"
+        android:paddingTop="10dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="10dp">
 
-        <LinearLayout
+        <Button
+            android:id="@+id/likeBtn"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/like"></Button>
+
+        <TextView
+            android:id="@+id/likeNum"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center">
+            android:layout_marginTop="2dp"
+            android:layout_marginRight="5dp"
+            android:layout_toLeftOf="@id/likeBtn"
+            android:text="0"
+            android:textColor="@color/darkGrey"
+            android:textSize="14sp"></TextView>
 
-            <Button
-                android:id="@+id/likeBtn"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:background="@drawable/like">
-            </Button>
-
-            <TextView
-                android:id="@+id/likeNum"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingRight="3dp"
-                android:text="0"
-                android:textColor="@color/black"
-                android:textSize="14sp">
-            </TextView>
-        </LinearLayout>
-
-    </LinearLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

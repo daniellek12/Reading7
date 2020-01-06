@@ -82,7 +82,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
             authorName = itemView.findViewById(R.id.authorName);
             likeButton = itemView.findViewById(R.id.likeButton);
             likesNum = itemView.findViewById(R.id.likesNum);
-            review_content = itemView.findViewById(R.id.comment);
+            review_content = itemView.findViewById(R.id.review);
             review_title = itemView.findViewById(R.id.title);
         }
     }
@@ -196,11 +196,6 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
     private void bindReview(RecyclerView.ViewHolder viewHolder, int i) {
 
         final ReviewPostHolder holder = (ReviewPostHolder)viewHolder;
-
-        //Set ratingbar color
-        Drawable rating = holder.ratingBar.getProgressDrawable();
-        rating.setColorFilter(Color.parseColor("#FFC21C"), PorterDuff.Mode.SRC_ATOP);
-
         final Post post = posts.get(i);
 
         String strDate = RelativeDateDisplay(Timestamp.now().toDate().getTime() - post.getPost_time().toDate().getTime());

@@ -1,2 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+
+    <dimen name="book_fragment_cover_height">280dp</dimen>
+
+</resources>

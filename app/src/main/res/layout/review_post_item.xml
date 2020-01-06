@@ -63,7 +63,9 @@
         android:layout_marginTop="3dp"
         android:scaleX="0.8"
         android:scaleY="0.8"
-        android:stepSize=".5" />
+        android:stepSize=".5"
+        android:progressTint="@color/colorPrimaryDark"
+        android:progressBackgroundTint="@color/colorPrimaryDark"/>
 
     <TextView
         android:id="@+id/rating"
@@ -92,7 +94,7 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/comment"
+        android:id="@+id/review"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/title"
@@ -107,7 +109,7 @@
         android:id="@+id/divider1"
         android:layout_width="match_parent"
         android:layout_height=".5dp"
-        android:layout_below="@id/comment"
+        android:layout_below="@id/review"
         android:layout_marginTop="15dp"
         android:background="?android:attr/listDivider" />
 

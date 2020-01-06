@@ -18,7 +18,6 @@
 
 
     <!--Home Feed-->
-    <string name="add_review">רוצה להמליץ על ספר?</string>
     <string name="wishlist_post_title">הוסיף לרשימת המשאלות את הספר</string>
 
     <!--Login-->
@@ -81,8 +80,7 @@
     <string name="cont">המשך</string>
     <string name="choose_last_book">מהו הספר האחרון שקראת?</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
     <string name="adventures">הרפתקאות</string>
     <string name="fantasy">פנטזיה</string>
     <string name="history">היסטוריה</string>
@@ -95,5 +93,22 @@
     <string name="favourite_geners_title">מהם הז׳אנרים האהובים עלייך?</string>
     <string name="romance">אהבה</string>
     <string name="back">חזור</string>
+
+
+    <string name="summary">תקציר</string>
+    <string name="reviews">ביקורות</string>
+    <string name="add_to_wishlist">הוספה לרשימת המשאלות</string>
+    <string name="add_review">הוספת ביקורת</string>
+    <string name="reviewers">מבקרים</string>
+    <string name="publisher">הוצאת</string>
+    <string name="no_rank">עדיין לא דורג</string>
+    <string name="one_reviewer">מבקר אחד</string>
+    <string name="remove_from_wishlist">הסרה מרשימת המשאלות</string>
+    <string name="edit_review">ערוך ביקורת</string>
+    <string name="you_read_it">קראת את הספר הזה</string>
+    <string name="rank_dialog_title">מה דעתך על הספר?</string>
+    <string name="review_content">פירוט</string>
+    <string name="cancel">ביטול</string>
+
 
 </resources>
