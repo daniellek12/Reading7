@@ -23,12 +23,25 @@
             cardview:cardCornerRadius="20dp"
             cardview:cardElevation="4dp">
 
-            <ImageView
-                android:id="@+id/coverImage"
-                android:layout_width="match_parent"
-                android:layout_height="90dp"
-                android:background="@mipmap/cover23"
-                android:scaleType="centerCrop" />
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ProgressBar
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_centerInParent="true"
+                    android:indeterminateTint="@color/lightGrey"
+                    android:progressTint="@color/lightGrey"
+                    android:secondaryProgressTint="@color/lightGrey" />
+
+                <ImageView
+                    android:id="@+id/coverImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="90dp"
+                    android:background="@color/transparent"
+                    android:scaleType="centerCrop" />
+            </RelativeLayout>
 
         </androidx.cardview.widget.CardView>
 

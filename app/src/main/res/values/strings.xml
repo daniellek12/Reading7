@@ -109,6 +109,7 @@
     <string name="rank_dialog_title">מה דעתך על הספר?</string>
     <string name="review_content">פירוט</string>
     <string name="cancel">ביטול</string>
+    <string name="book_details">פרטי הספר</string>
 
 
 </resources>

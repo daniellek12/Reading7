@@ -7,23 +7,35 @@
     android:padding="10dp"
     android:id="@+id/container">
 
+    <RelativeLayout
+        android:id="@+id/coverLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/cover"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_alignParentRight="true"
+        <ProgressBar
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerInParent="true"
+            android:indeterminateTint="@color/lightGrey"
+            android:progressTint="@color/lightGrey"
+            android:secondaryProgressTint="@color/lightGrey" />
 
-        android:src="@mipmap/cover23"
-        app:civ_border_color="@color/darkGrey"
-        app:civ_border_width="0.5dp" />
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/cover"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:src="@color/transparent"
+            app:civ_border_color="@color/darkGrey"
+            app:civ_border_width="0.5dp" />
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginRight="10dp"
-        android:layout_toLeftOf="@+id/cover"
+        android:layout_toLeftOf="@+id/coverLayout"
         android:orientation="vertical">
 
         <TextView

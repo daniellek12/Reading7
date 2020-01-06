@@ -2,5 +2,6 @@
 <resources>
 
     <dimen name="book_fragment_cover_height">280dp</dimen>
+    <dimen name="toolbar_height">60dp</dimen>
 
 </resources>

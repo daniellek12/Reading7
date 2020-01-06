@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -64,7 +65,6 @@ public class BookFragment extends Fragment {
     private TextView avgAgeText;
     private float mAvgAge;
 
-
     private boolean isWishlist = false;
     private boolean isRanked = false;
     private int mRank;
@@ -95,6 +95,7 @@ public class BookFragment extends Fragment {
         initWishlistButton();
         initRankButton();
         initAlreadyReadButton();
+        initBackButton();
         initScrollView();
     }
 
@@ -145,7 +146,7 @@ public class BookFragment extends Fragment {
 
         final List<Review> newlist = new ArrayList<Review>();
         CollectionReference collection = db.collection("Reviews");
-        ((MainActivity)getActivity()).setBottomNavigationEnabled(false);
+        ((MainActivity) getActivity()).setBottomNavigationEnabled(false);
         Query query = collection.whereEqualTo("book_id", mBook.getId());
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -168,7 +169,7 @@ public class BookFragment extends Fragment {
                     else
                         countRatersText.setText(countRaters + " " + getResources().getString(R.string.reviewers));
 
-                    ((MainActivity)getActivity()).setBottomNavigationEnabled(true);
+                    ((MainActivity) getActivity()).setBottomNavigationEnabled(true);
                 }
             }
         });
@@ -214,6 +215,16 @@ public class BookFragment extends Fragment {
                     mSummary.setMaxLines(3);
                     mSummary.setEllipsize(TextUtils.TruncateAt.END);
                 }
+            }
+        });
+    }
+
+    private void initBackButton(){
+        ImageButton backButton = getActivity().findViewById(R.id.bookBackButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().onBackPressed();
             }
         });
     }
@@ -301,7 +312,7 @@ public class BookFragment extends Fragment {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful() && !(task.getResult().isEmpty())) {
                     isRanked = true;
-                    for(DocumentSnapshot doc: task.getResult()){
+                    for (DocumentSnapshot doc : task.getResult()) {
                         Review review = doc.toObject(Review.class);
                         mRank = review.getRank();
                         mReviewTitle = review.getReview_title();
@@ -436,12 +447,12 @@ public class BookFragment extends Fragment {
     /**
      * Scrolls the nestedScrollView to the wanted initial position
      */
-    private void initScrollView(){
+    private void initScrollView() {
 
         final View view = getActivity().findViewById(R.id.summary);
         final NestedScrollView scrollView = getActivity().findViewById(R.id.nestedScrollView);
 
-        //scrollView.getViewTreeObserver().addOnScrollChangedListener(new ScrollPositionObserver());
+        scrollView.getViewTreeObserver().addOnScrollChangedListener(new ScrollPositionObserver());
 
         scrollView.post(new Runnable() {
             @Override
@@ -456,12 +467,16 @@ public class BookFragment extends Fragment {
 
         private int coverHeight;
         private ImageView cover;
+        private int toolbarHeight;
+        private androidx.appcompat.widget.Toolbar toolbar;
         private NestedScrollView scrollView;
 
         public ScrollPositionObserver() {
-            cover = getActivity().findViewById(R.id.bookCoverImage);
             scrollView = getActivity().findViewById(R.id.nestedScrollView);
+            cover = getActivity().findViewById(R.id.bookCoverImage);
             coverHeight = getResources().getDimensionPixelSize(R.dimen.book_fragment_cover_height);
+            toolbar = getActivity().findViewById(R.id.toolBar);
+            toolbarHeight = getResources().getDimensionPixelSize(R.dimen.toolbar_height);
         }
 
         @Override
@@ -469,10 +484,11 @@ public class BookFragment extends Fragment {
             int scrollY = Math.min(Math.max(scrollView.getScrollY(), 0), coverHeight);
 
             // changing position of ImageView
-            //cover.setTranslationY(scrollY / (float)1.5);
+            cover.setTranslationY(1 - scrollY / 2);
 
-            // alpha you could set to ActionBar background
-            float alpha = scrollY / (float) coverHeight;
+            // changing alpha of toolbar
+            float alpha = 1 - (scrollY / (float) toolbarHeight);
+            toolbar.setAlpha(alpha);
         }
     }
 

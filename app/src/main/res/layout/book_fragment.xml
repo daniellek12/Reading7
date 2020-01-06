@@ -9,17 +9,63 @@
     tools:context=".BookFragment">
 
 
-    <ImageView
-        android:id="@+id/bookCoverImage"
-        android:layout_width="240dp"
-        android:layout_height="@dimen/book_fragment_cover_height"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolBar"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:layout_alignParentTop="true"
+        android:background="@color/colorPrimaryDark"
+        android:elevation="21dp"
+        android:layoutDirection="rtl">
+
+        <TextView
+            android:id="@+id/toolbar_title"
+            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/book_details"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+
+        <ImageButton
+            android:id="@+id/bookBackButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginRight="16dp"
+            android:background="@color/transparent"
+            android:elevation="10dp"
+            android:src="@drawable/arrow_right"
+            android:tint="@color/white"
+            android:visibility="visible" />
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="80dp"
         android:elevation="10dp"
-        android:scaleType="fitXY"
-        android:src="@mipmap/cover2"
-        android:translationZ="10dp" />
+        android:translationZ="10dp">
+
+        <ProgressBar
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerInParent="true"
+            android:indeterminateTint="@color/lightGrey"
+            android:progressTint="@color/lightGrey"
+            android:secondaryProgressTint="@color/lightGrey" />
+
+        <ImageView
+            android:id="@+id/bookCoverImage"
+            android:layout_width="240dp"
+            android:layout_height="@dimen/book_fragment_cover_height"
+            android:scaleType="fitXY"
+            android:src="@color/transparent" />
+    </RelativeLayout>
 
 
     <ImageView
@@ -28,7 +74,7 @@
         android:layout_height="300dp"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="70dp"
         android:alpha="0.3"
         android:background="@drawable/rounded_corners"
         android:elevation="10dp"
@@ -45,7 +91,7 @@
             android:id="@+id/scrollLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="340dp"
+            android:layout_marginTop="360dp"
             android:background="@drawable/edittext_background"
             android:elevation="50dp">>
 

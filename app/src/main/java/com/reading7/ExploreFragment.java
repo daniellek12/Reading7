@@ -75,8 +75,6 @@ public class ExploreFragment extends Fragment {
         initAppBar();
         initPlaylists();
         initExplore();
-
-
     }
 
 
