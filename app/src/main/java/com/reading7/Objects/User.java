@@ -18,6 +18,8 @@ public class User {
     private ArrayList<String> favourite_genres;
     private ArrayList<String> liked_reviews;
 
+    private Boolean is_private;                     //true if profile listed as private
+
     public User() {
         this.full_name = "";
         this.email = "";
@@ -29,6 +31,7 @@ public class User {
         this.favourite_genres = new ArrayList<>();
         this.liked_reviews = new ArrayList<>();
         this.avatar_details = new ArrayList<>();
+        this.is_private = false; // default is public (as in Instagram)
     }
 
     public User(String full_name, String email, String birth_date, ArrayList<Integer> avatar_details) {
@@ -45,7 +48,7 @@ public class User {
     }
 
 
-    public User(String full_name, String email, String birth_date, ArrayList<String> followers, ArrayList<String> following, ArrayList<String> last_searches, ArrayList<String> favourite_books, ArrayList<String> favourite_genres, ArrayList<String> liked_reviews) {
+    public User(String full_name, String email, String birth_date, ArrayList<String> followers, ArrayList<String> following, ArrayList<String> last_searches, ArrayList<String> favourite_books, ArrayList<String> favourite_genres, ArrayList<String> liked_reviews, Boolean is_private) {
         this.full_name = full_name;
         this.email = email;
         this.birth_date = birth_date;
@@ -54,12 +57,13 @@ public class User {
         this.last_searches = last_searches;
         this.favourite_books = favourite_books;
         this.favourite_genres = favourite_genres;
-        this.liked_reviews = liked_reviews;;
+        this.liked_reviews = liked_reviews;
+        this.is_private = is_private;
     }
 
     //TODO: REMOVE WHEN THE AVATAR WILL WORK
 
-    public User(String full_name, String email, String birth_date, ArrayList<String> followers, ArrayList<String> following, ArrayList<String> last_searches, ArrayList<String> favourite_books, ArrayList<String> favourite_genres, ArrayList<String> liked_reviews, ArrayList<Integer> avatar_details) {
+    public User(String full_name, String email, String birth_date, ArrayList<String> followers, ArrayList<String> following, ArrayList<String> last_searches, ArrayList<String> favourite_books, ArrayList<String> favourite_genres, ArrayList<String> liked_reviews, ArrayList<Integer> avatar_details, Boolean is_private) {
         this.full_name = full_name;
         this.email = email;
         this.birth_date = birth_date;
@@ -70,6 +74,7 @@ public class User {
         this.favourite_genres = favourite_genres;
         this.liked_reviews = liked_reviews;
         this.avatar_details = avatar_details;
+        this.is_private = is_private;
     }
 
     public String getFull_name() {
@@ -90,6 +95,14 @@ public class User {
 
     public String getBirth_date() {
         return birth_date;
+    }
+
+    public Boolean getIs_private() {
+        return is_private;
+    }
+
+    public void setIs_private(Boolean is_private) {
+        this.is_private = is_private;
     }
 
     public void setBirth_date(String birth_date) {

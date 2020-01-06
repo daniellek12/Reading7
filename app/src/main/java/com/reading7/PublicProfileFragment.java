@@ -33,6 +33,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.reading7.Utils.calculateAge;
@@ -48,7 +49,7 @@ public class PublicProfileFragment extends Fragment {
     private ReadShelfAdapter adapterReviews;
     private WishListAdapter adapterWishList;
 
-    public PublicProfileFragment(String user_email){
+    public PublicProfileFragment(String user_email) {
         this.user_email = user_email;
     }
 
@@ -69,6 +70,9 @@ public class PublicProfileFragment extends Fragment {
 
 
     private void getUserInformation() {
+
+        getActivity().findViewById(R.id.private_alert).setVisibility(View.GONE);
+        getActivity().findViewById(R.id.classified_data).setVisibility(View.GONE);
 
         DocumentReference userRef = db.collection("Users").document(this.user_email);
         disableClicks();
@@ -103,10 +107,13 @@ public class PublicProfileFragment extends Fragment {
 
                         ArrayList<String> likedReviews = (ArrayList<String>) document.getData().get("liked_reviews");
 
+                        Boolean is_private = (Boolean) document.getData().get("is_private");
+
 
                         user = new User(userName, user_email, birthDate, followers, following, lastSearches,
-                                favouriteBooks, favouriteGenres, likedReviews, avatar_details);
+                                favouriteBooks, favouriteGenres, likedReviews, avatar_details, is_private);
 
+                        check_private();
                         initFollowButton();
                         initWishlist();
                         initMyBookslist();
@@ -119,6 +126,15 @@ public class PublicProfileFragment extends Fragment {
         });
     }
 
+    private void check_private() {
+        if (!user.getIs_private() || user.getFollowers().contains(mAuth.getCurrentUser().getEmail())) {
+            getActivity().findViewById(R.id.private_alert).setVisibility(View.GONE);
+            getActivity().findViewById(R.id.classified_data).setVisibility(View.VISIBLE);
+        } else {
+            getActivity().findViewById(R.id.private_alert).setVisibility(View.VISIBLE);
+            getActivity().findViewById(R.id.classified_data).setVisibility(View.GONE);
+        }
+    }
 
     private void initFollowButton() {
 

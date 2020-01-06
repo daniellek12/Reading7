@@ -6,7 +6,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +40,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.reading7.Utils.calculateAge;
@@ -60,13 +64,13 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ((BottomNavigationView)getActivity().findViewById(R.id.navigation)).setSelectedItemId(R.id.navigation_profile);
+        ((BottomNavigationView) getActivity().findViewById(R.id.navigation)).setSelectedItemId(R.id.navigation_profile);
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         getUserInformation();
 
-        ImageButton dc = (ImageButton)getActivity().findViewById(R.id.settings);
+        ImageButton dc = (ImageButton) getActivity().findViewById(R.id.settings);
         dc.setVisibility(View.GONE);
         /*dc.bringToFront();
         dc.setOnClickListener(new View.OnClickListener() {
@@ -114,14 +118,17 @@ public class ProfileFragment extends Fragment {
                         arr = (ArrayList<String>) document.getData().get("following");
                         following.setText(Integer.toString(arr.size()));
 
+                        initPrivateBtn();
                         initLogOutBtn();
                         initWishlist();
                         initMyBookslist();
 
 
-                    } else Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    } else
+                        Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
 
-                } else Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                } else
+                    Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -139,7 +146,7 @@ public class ProfileFragment extends Fragment {
         getActivity().findViewById(R.id.wishlistTitle).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainActivity)getActivity()).addFragment(new ShelfFragment(usersWishlistBookNames,getString(R.string.my_wishlist),mAuth.getCurrentUser().getEmail(), ShelfFragment.ShelfType.WISHLIST));
+                ((MainActivity) getActivity()).addFragment(new ShelfFragment(usersWishlistBookNames, getString(R.string.my_wishlist), mAuth.getCurrentUser().getEmail(), ShelfFragment.ShelfType.WISHLIST));
             }
         });
     }
@@ -157,10 +164,45 @@ public class ProfileFragment extends Fragment {
         getActivity().findViewById(R.id.mybooksTitle).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainActivity)getActivity()).addFragment(new ShelfFragment(usersReviewBookNames,getString(R.string.my_books),mAuth.getCurrentUser().getEmail(), ShelfFragment.ShelfType.MYBOOKS));
+                ((MainActivity) getActivity()).addFragment(new ShelfFragment(usersReviewBookNames, getString(R.string.my_books), mAuth.getCurrentUser().getEmail(), ShelfFragment.ShelfType.MYBOOKS));
             }
         });
 
+    }
+
+    private void initPrivateBtn() {
+        final Switch sw = (Switch) getActivity().findViewById(R.id.private_switch);
+        DocumentReference userRef = db.collection("Users").document(mAuth.getCurrentUser().getEmail());
+        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Boolean is_private = (Boolean) document.getData().get("is_private");
+                        sw.setChecked(is_private);
+                        sw.setVisibility(View.VISIBLE);
+                    } else
+                        Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+
+                } else
+                    Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        sw.bringToFront();
+        sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                disableClicks();
+                if (isChecked) {
+                    db.collection("Users").document(mAuth.getCurrentUser().getEmail()).update("is_private", true);
+                    enableClicks();
+                } else {
+                    db.collection("Users").document(mAuth.getCurrentUser().getEmail()).update("is_private", false);
+                    enableClicks();
+                }
+            }
+        });
     }
 
     private void initLogOutBtn() {
@@ -187,14 +229,16 @@ public class ProfileFragment extends Fragment {
 
     private void disableClicks() {
         getActivity().findViewById(R.id.settings).setEnabled(false);
-        ((MainActivity)getActivity()).setBottomNavigationEnabled(false);
+        ((MainActivity) getActivity()).setBottomNavigationEnabled(false);
         getActivity().findViewById(R.id.logout).setEnabled(false);
+        getActivity().findViewById(R.id.private_switch).setEnabled(false);
     }
 
     private void enableClicks() {
         getActivity().findViewById(R.id.settings).setEnabled(true);
-        ((MainActivity)getActivity()).setBottomNavigationEnabled(true);
+        ((MainActivity) getActivity()).setBottomNavigationEnabled(true);
         getActivity().findViewById(R.id.logout).setEnabled(true);
+        getActivity().findViewById(R.id.private_switch).setEnabled(true);
     }
 
     private void getUserReviews() {
@@ -213,7 +257,7 @@ public class ProfileFragment extends Fragment {
                     TextView reviews_num = getActivity().findViewById(R.id.recommendations);
                     reviews_num.setText(Integer.toString(usersReviewBookNames.size()));
 
-                    if(usersReviewBookNames.isEmpty()){
+                    if (usersReviewBookNames.isEmpty()) {
                         getActivity().findViewById(R.id.myBooksRV).setVisibility(View.INVISIBLE);
                         getActivity().findViewById(R.id.emptyMyBooks).setVisibility(View.VISIBLE);
                     } else {
@@ -239,7 +283,7 @@ public class ProfileFragment extends Fragment {
                     }
                     adapterWishList.notifyDataSetChanged();
 
-                    if(usersWishlistBookNames.isEmpty()){
+                    if (usersWishlistBookNames.isEmpty()) {
                         getActivity().findViewById(R.id.wishlistRV).setVisibility(View.INVISIBLE);
                         getActivity().findViewById(R.id.emptyWishlist).setVisibility(View.VISIBLE);
                     } else {
@@ -251,10 +295,10 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    public void refreshAdapters(){
-        if(adapterWishList != null)
+    public void refreshAdapters() {
+        if (adapterWishList != null)
             adapterWishList.notifyDataSetChanged();
-        if(adapterReviews != null)
+        if (adapterReviews != null)
             adapterReviews.notifyDataSetChanged();
     }
 
