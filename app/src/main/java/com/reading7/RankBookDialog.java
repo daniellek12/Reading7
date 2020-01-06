@@ -2,11 +2,10 @@ package com.reading7;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
 
@@ -14,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
-import com.bumptech.glide.util.Util;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
@@ -46,6 +44,10 @@ public class RankBookDialog extends AppCompatDialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         super.onCreateDialog(savedInstanceState);
+
+        db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+
         final String book_id = getArguments().getString("book_id");
         final String book_title = getArguments().getString("book_title");
         final String book_author = getArguments().getString("book_author");
@@ -53,15 +55,14 @@ public class RankBookDialog extends AppCompatDialogFragment {
         final int numOfRaters = getArguments().getInt("countRaters");
         final float currAge = getArguments().getFloat("avgAge");
 
-        db = FirebaseFirestore.getInstance();
-        mAuth = FirebaseAuth.getInstance();
         RatingBar avg = getActivity().findViewById(R.id.ratingBar);
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        view = inflater.inflate(R.layout.rank_book_dialog, null);
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        view = getActivity().getLayoutInflater().inflate(R.layout.rank_book_dialog, null);
         final RatingBar rateStar = view.findViewById(R.id.ratingBar);
         final EditText titleText = view.findViewById(R.id.FeedbackTitle);
         final EditText contentText = view.findViewById(R.id.FeedbackContent);
+
         mReview = null;
         CollectionReference requestCollectionRef = db.collection("Reviews");
         Query requestQuery = requestCollectionRef.whereEqualTo("reviewer_email", mAuth.getCurrentUser().getEmail()).whereEqualTo("book_id", book_id);
@@ -76,6 +77,7 @@ public class RankBookDialog extends AppCompatDialogFragment {
                         rateStar.setRating(mReview.getRank());
                         titleText.setText(mReview.getReview_title());
                         contentText.setText(mReview.getReview_content());
+                        ((Button)view.findViewById(R.id.ok)).setText("שמור שינויים");
                     }
 
                 }
@@ -83,9 +85,9 @@ public class RankBookDialog extends AppCompatDialogFragment {
         });
 
 
-        builder.setView(view).setPositiveButton("הוסף ביקורת", new DialogInterface.OnClickListener() {
+        view.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
+            public void onClick(View view) {
                 final int rank = (int) rateStar.getRating();
                 final String review_title = titleText.getText().toString();
                 final String review_content = contentText.getText().toString();
@@ -105,7 +107,7 @@ public class RankBookDialog extends AppCompatDialogFragment {
                             userAge = Utils.calculateAge(user.getBirth_date());
                             if (mReview == null) {
 
-                                mReview = new Review("", book_id, mAuth.getCurrentUser().getEmail(),Utils.calculateAge(user.getBirth_date()), rank, review_title, review_content, Timestamp.now(), user.getFull_name(), book_title, book_author, user.getAvatar_details());
+                                mReview = new Review("", book_id, mAuth.getCurrentUser().getEmail(), Utils.calculateAge(user.getBirth_date()), rank, review_title, review_content, Timestamp.now(), user.getFull_name(), book_title, book_author, user.getAvatar_details());
                                 mReview.setReview_id(newReview.getId());
                                 final float newAvg = ((numOfRaters * currAvg) + rank) / (numOfRaters + 1);
                                 final float newAge = ((numOfRaters * currAge) + userAge) / (numOfRaters + 1);
@@ -113,15 +115,10 @@ public class RankBookDialog extends AppCompatDialogFragment {
                                                                                  @Override
                                                                                  public void onComplete(@NonNull Task<Void> task) {
                                                                                      if (task.isSuccessful()) {
-                                                                                         UpdateBook(newAge,newAvg, book_id);
+                                                                                         UpdateBook(newAge, newAvg, book_id);
                                                                                      }
-
                                                                                  }
-
-
                                                                              }
-
-
                                 );
 
                             } else {
@@ -148,7 +145,7 @@ public class RankBookDialog extends AppCompatDialogFragment {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
-                                            UpdateBook(newAge,newAvg, book_id);
+                                            UpdateBook(newAge, newAvg, book_id);
                                         }
                                     }
                                 });
@@ -157,19 +154,24 @@ public class RankBookDialog extends AppCompatDialogFragment {
                         }
                     }
                 });
-            }
-        }).setNegativeButton("בטל", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
 
+                dismiss();
             }
         });
 
+        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+            }
+        });
+
+        builder.setView(view);
         return builder.create();
     }
 
 
-    public void UpdateBook(final float newAge,final float newAvg, String book_id) {
+    public void UpdateBook(final float newAge, final float newAvg, String book_id) {
 
         DocumentReference ref = db.collection("Books").document(book_id);
         final Map<String, Object> updates = new HashMap<String, Object>();
@@ -181,25 +183,21 @@ public class RankBookDialog extends AppCompatDialogFragment {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    //listener.applyAvg(newAvg);
-                    sendResult(202, newAvg,newAge);
-
-
+                    sendResult(202, newAvg, newAge);
                 }
             }
         });
     }
 
 
-    private void sendResult(int REQUEST_CODE, float newAvg,float newAge) {
+    private void sendResult(int REQUEST_CODE, float newAvg, float newAge) {
+
         Intent intent = new Intent();
         intent.putExtra("avg", newAvg);
         intent.putExtra("avgAge", newAge);
 
-        getTargetFragment().onActivityResult(
-                getTargetRequestCode(), REQUEST_CODE, intent);
+        getTargetFragment().onActivityResult(getTargetRequestCode(), REQUEST_CODE, intent);
     }
-
 
 
   /*  @Override

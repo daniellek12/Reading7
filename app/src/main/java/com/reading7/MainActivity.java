@@ -3,7 +3,16 @@ package com.reading7;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.reading7.Objects.User;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +22,8 @@ import androidx.fragment.app.FragmentManager;
 public class MainActivity extends AppCompatActivity
         implements BottomNavigationView.OnNavigationItemSelectedListener {
 
+    private User mUser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,6 +32,8 @@ public class MainActivity extends AppCompatActivity
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(this);
         loadFragment(new ExploreFragment());
+
+        initCurrentUser();
     }
 
 
@@ -102,6 +115,27 @@ public class MainActivity extends AppCompatActivity
             bottomNavigationView.setAlpha((float) 1);
         else
             bottomNavigationView.setAlpha((float) 0.5);
+    }
+
+
+    private void initCurrentUser(){
+
+        CollectionReference requestCollectionRef = FirebaseFirestore.getInstance().collection("Users");
+        Query requestQuery = requestCollectionRef.whereEqualTo("email", FirebaseAuth.getInstance().getCurrentUser().getEmail());
+        requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        mUser = document.toObject(User.class);
+                    }
+                }
+            }
+        });
+    }
+
+    public User getCurrentUser() {
+        return mUser;
     }
 
 }

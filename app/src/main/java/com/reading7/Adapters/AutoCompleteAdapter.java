@@ -6,16 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.Filter;
-import android.widget.Filterable;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.reading7.BookFragment;
-import com.reading7.MainActivity;
 import com.reading7.Objects.Book;
-import com.reading7.QuestionnaireActivity;
 import com.reading7.Utils;
 import com.reading7.R;
 
