@@ -119,7 +119,7 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_alignParentRight="true"
-            android:background="@drawable/like"></Button>
+            android:background="@drawable/like"/>
 
         <TextView
             android:id="@+id/likeNum"

@@ -108,7 +108,7 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
         // Actions added to support Like button mechanics
         final String id = review.getReview_id();
 
-        if (LikedReviews.contains(id)) viewHolder.likeBtn.setBackground(mContext.getResources().getDrawable(R.drawable.like_colored)); //FIXME: often crushes because likedReviews is null.
+        if (LikedReviews.contains(id)) viewHolder.likeBtn.setBackground(mContext.getResources().getDrawable(R.drawable.like_colored));
         else viewHolder.likeBtn.setBackground(mContext.getResources().getDrawable(R.drawable.like));
         viewHolder.likeNum.setText(Integer.toString(review.getLikes_count()));
         viewHolder.likeBtn.setOnClickListener(new View.OnClickListener() {

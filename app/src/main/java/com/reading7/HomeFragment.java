@@ -58,6 +58,7 @@ public class HomeFragment extends Fragment {
     //  -   order of posts - SET TO BE ORDERED BY TIMESTAMP
     //  -   take posts from different collections
     private void createPosts(final RecyclerView postsRV) {
+        disableClicks();
         // first: get my followers, and filter reviews and wishlists according to the ids we get
         FirebaseUser mUser = mAuth.getCurrentUser();
         DocumentReference userRef = db.collection("Users").document(mUser.getEmail());
@@ -96,7 +97,9 @@ public class HomeFragment extends Fragment {
                                             Collections.sort(posts, new Post.SortByDate());
                                             FeedAdapter adapter = new FeedAdapter(getActivity(), posts);
                                             postsRV.setAdapter(adapter);
+                                            enableClicks();
                                         }
+
                                     });
                                 }
                             });
@@ -104,10 +107,13 @@ public class HomeFragment extends Fragment {
                         } else {
                             FeedAdapter adapter = new FeedAdapter(getActivity(), posts);
                             postsRV.setAdapter(adapter);
+                            enableClicks();
+
                         }
 
                     }
                 }
+                getActivity().findViewById(R.id.home_progress_bar).setVisibility(View.GONE);
             }
         });
     }
@@ -119,6 +125,20 @@ public class HomeFragment extends Fragment {
         RecyclerView postsRV = getActivity().findViewById(R.id.posts);
         postsRV.setLayoutManager(layoutManager);
         createPosts(postsRV);
+    }
+
+    private void disableClicks() {
+       // getActivity().findViewById(R.id.search).setEnabled(false);
+//        getActivity().findViewById(R.id.notifications).setEnabled(false);
+        ((MainActivity)getActivity()).setBottomNavigationEnabled(false);
+
+
+    }
+
+    private void enableClicks() {
+    //    getActivity().findViewById(R.id.search).setEnabled(true);
+//        getActivity().findViewById(R.id.notifications).setEnabled(true);
+        ((MainActivity)getActivity()).setBottomNavigationEnabled(true);
     }
 }
 

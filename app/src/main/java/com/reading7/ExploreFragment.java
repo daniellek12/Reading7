@@ -20,7 +20,11 @@ import com.reading7.Objects.Book;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -36,7 +40,8 @@ public class ExploreFragment extends Fragment {
     private ExploreAdapter myAdapter;
     private int limit = 11;
     private boolean loading = true;
-
+    private String mGenre;
+    private int first;
     private DocumentSnapshot lastVisible;
     private boolean isScrolling = false;
     private boolean isLastItemReached = false;
@@ -60,13 +65,18 @@ public class ExploreFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                Book book = new Book("id", "title", new ArrayList<String>(), "author", "publisher", 2, "summary", 3, 3);
+                Book book = new Book("id", "title", new ArrayList<String>(), new ArrayList<String>(), "author", "publisher", 2, "summary", 3, 3);
                 ((MainActivity) getActivity()).addFragment(new BookFragment(book));
             }
         });
+        mGenre="";
+        first=0;
+        showProgressBar();
+        initAppBar();
         initPlaylists();
         initExplore();
-        initAppBar();
+
+
     }
 
 
@@ -86,8 +96,10 @@ public class ExploreFragment extends Fragment {
 
         ArrayList<String> names = new ArrayList<String>();
         names.add("דרמה");
-        names.add("קומיקס");
+        names.add("אהבה");
         names.add("אימה");
+        names.add("מדע");
+        names.add("קומדיה");
         names.add("היסטוריה");
         names.add("מתח");
         names.add("מדע בדיוני");
@@ -163,7 +175,7 @@ public class ExploreFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         RecyclerView playlistsRV = getActivity().findViewById(R.id.playlistsRV);
         playlistsRV.setLayoutManager(layoutManager);
-        StoryPlaylistAdapter adapter = new StoryPlaylistAdapter(getActivity(), getPlaylistsNames(), getCovers());
+        StoryPlaylistAdapter adapter = new StoryPlaylistAdapter(getActivity(), getPlaylistsNames(), getCovers(),bookList,myAdapter,this);
         playlistsRV.setAdapter(adapter);
     }
 
@@ -219,8 +231,6 @@ public class ExploreFragment extends Fragment {
                 if (scrollY == (v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight())) {
 //                    Toast.makeText(getContext(), "scrolling", Toast.LENGTH_SHORT).show();
                     load_books();
-//                        hideProgressBar();
-
                 }
             }
         });
@@ -233,6 +243,16 @@ public class ExploreFragment extends Fragment {
 //            }
 //        });
         // this will load the first block of books for initialization of the explore
+        first_load_books();
+//        hideProgressBar();
+
+    }
+
+
+    private void first_load_books(){
+        showProgressBar();
+
+        //mGenre=genre;
         final List<Book> newlist = new ArrayList<>();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         final CollectionReference requestCollectionRef = db.collection("Books");
@@ -242,30 +262,88 @@ public class ExploreFragment extends Fragment {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (DocumentSnapshot document : task.getResult()) {
+
                         Book book = document.toObject(Book.class);
+                        //if(Utils.isBookFromGenre(book,mGenre))
                         newlist.add(book);
                     }
                     bookList.addAll(newlist);
                     myAdapter.notifyDataSetChanged();//no problem cause this is the first update
                     lastVisible = task.getResult().getDocuments().get(task.getResult().size() - 1);
+                    hideProgressBar();
                 }
             }
         });
     }
 
-    private void load_books() {
+    public void first_load_genre_books(final String genre){
+        showProgressBar();
+        if(mGenre!=genre) {//changed genre
+            first = 0;
+        }
+        else{//pressed the same genre
+            first_load_books();
+            mGenre="";
+            return;
+        }
+        mGenre=genre;
+
+
         final List<Book> newlist = new ArrayList<>();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         final CollectionReference requestCollectionRef = db.collection("Books");
-        Query requestQuery = requestCollectionRef.limit(limit);
+        Query requestQuery;
+
+        if(first ==0) {
+            bookList.clear();
+            requestQuery = requestCollectionRef.whereArrayContains("actual_genres",mGenre).limit(limit);
+            first=1;
+        }
+        else
+            requestQuery = requestCollectionRef.whereArrayContains("actual_genres",mGenre).startAfter(lastVisible).limit(limit);
+        requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (DocumentSnapshot document : task.getResult()) {
+
+                        Book book = document.toObject(Book.class);
+                            newlist.add(book);
+                    }
+                    bookList.addAll(newlist);
+                    lastVisible = task.getResult().getDocuments().get(task.getResult().size() - 1);
+                    myAdapter.notifyDataSetChanged();//no problem cause this is the first update
+                    hideProgressBar();
+
+
+                }
+            }
+        });
+
+
+    }
+
+    private void load_books() {
+        showProgressBar();
+
+        final List<Book> newlist = new ArrayList<>();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final CollectionReference requestCollectionRef = db.collection("Books");
+        Query requestQuery;
+        requestQuery = requestCollectionRef.limit(limit);
+
 
         GridLayoutManager gridLayoutManager = ((GridLayoutManager) exploreRV.getLayoutManager());
         int firstVisibleItemPosition = gridLayoutManager.findFirstVisibleItemPosition();
         int visibleItemCount = gridLayoutManager.getChildCount();
         final int totalItemCount = gridLayoutManager.getItemCount();
 
-        if ((firstVisibleItemPosition + visibleItemCount == totalItemCount) && !isLastItemReached) {
-            Query nextQuery = requestCollectionRef.startAfter(lastVisible).limit(limit);
+        if (((firstVisibleItemPosition + visibleItemCount == totalItemCount) && !isLastItemReached)) {
+            Query nextQuery;
+            if(mGenre=="")
+                nextQuery = requestCollectionRef.startAfter(lastVisible).limit(limit);
+            else
+              nextQuery = requestCollectionRef.whereArrayContains("actual_genres",mGenre).startAfter(lastVisible).limit(limit);
             nextQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> t) {
@@ -273,11 +351,14 @@ public class ExploreFragment extends Fragment {
                         for (DocumentSnapshot d : t.getResult()) {
                             Book book = d.toObject(Book.class);
                             newlist.add(book);
+
                         }
                         bookList.addAll(newlist);
                         for (int i = totalItemCount; i < totalItemCount + t.getResult().size(); i++) {
                             myAdapter.notifyItemInserted(i);//notify updated book ONLY
                         }
+                        if(t.getResult().size()==0)
+                            return;
                         lastVisible = t.getResult().getDocuments().get(t.getResult().size() - 1);
                         loading = true;
 
@@ -288,20 +369,37 @@ public class ExploreFragment extends Fragment {
                     else {
                         Log.d("Explore", "Load books failed");
                     }
+                    hideProgressBar();
                 }
             });
         }
     }
 
-    private void showProgressBar(){
-//        disableClicks();
+    public void showProgressBar(){
+        disableClicks();
 //        getActivity().findViewById(R.id.explore_progress_background).setVisibility(View.VISIBLE);
         getActivity().findViewById(R.id.explore_progress_bar).setVisibility(View.VISIBLE);
     }
 
     private void hideProgressBar(){
-//        enableClicks();
+        enableClicks();
 //        getActivity().findViewById(R.id.explore_progress_background).setVisibility(View.GONE);
-        getActivity().findViewById(R.id.explore_progress_bar).setVisibility(View.GONE);
+        //getActivity().findViewById(R.id.explore_progress_bar).setVisibility(View.GONE);
+    }
+
+    private void disableClicks() {
+        ((MainActivity)getActivity()).setBottomNavigationEnabled(false);
+        getActivity().findViewById(R.id.search).setEnabled(false);
+        getActivity().findViewById(R.id.playlistsRV).setEnabled(false);
+//        getActivity().findViewById(R.id.notifications).setEnabled(false);
+
+
+    }
+
+    private void enableClicks() {
+        getActivity().findViewById(R.id.search).setEnabled(true);
+        getActivity().findViewById(R.id.playlistsRV).setEnabled(true);
+//        getActivity().findViewById(R.id.notifications).setEnabled(true);
+        ((MainActivity)getActivity()).setBottomNavigationEnabled(true);
     }
 }

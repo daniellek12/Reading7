@@ -71,7 +71,7 @@ public class PublicProfileFragment extends Fragment {
     private void getUserInformation() {
 
         DocumentReference userRef = db.collection("Users").document(this.user_email);
-
+        disableClicks();
         userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -290,6 +290,7 @@ public class PublicProfileFragment extends Fragment {
                         getActivity().findViewById(R.id.publicProfile_emptyMyBooks).setVisibility(View.INVISIBLE);
                     }
                 }
+                enableClicks();
             }
         });
     }

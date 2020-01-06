@@ -1,50 +1,34 @@
 {
   "project_info": {
-    "project_number": "976546079344",
-    "firebase_url": "https://reading7-1cbff.firebaseio.com",
-    "project_id": "reading7-1cbff",
-    "storage_bucket": "reading7-1cbff.appspot.com"
+    "project_number": "145044503795",
+    "firebase_url": "https://reading7-production.firebaseio.com",
+    "project_id": "reading7-production",
+    "storage_bucket": "reading7-production.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:976546079344:android:ee7558ea9ab87db6c58ab5",
+        "mobilesdk_app_id": "1:145044503795:android:7b9c4dbcd71debe5480b86",
         "android_client_info": {
           "package_name": "com.reading7"
         }
       },
       "oauth_client": [
         {
-          "client_id": "976546079344-ivabondb6uo2pjtpp10p4l91mh3uqtlj.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.reading7",
-            "certificate_hash": "66485c565a46f030af0407edabdc130a14c2a46e"
-          }
-        },
-        {
-          "client_id": "976546079344-to3g9pkddti9kd7c6tub863lo7nst02m.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.reading7",
-            "certificate_hash": "cd554097e011eaf82f6e734abc2ee0b755ab236a"
-          }
-        },
-        {
-          "client_id": "976546079344-u039st7pju80t8ruabtmqnihlrj05qhk.apps.googleusercontent.com",
+          "client_id": "145044503795-32c6nm9c04s7vkvkie8fisecnub1e3eb.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDn231kbgw-UpLvZ1T6_04p4NRCO77Onyc"
+          "current_key": "AIzaSyCQn6wZWNfcEaFf3EJthBBW9mnzrPUqcsA"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "976546079344-u039st7pju80t8ruabtmqnihlrj05qhk.apps.googleusercontent.com",
+              "client_id": "145044503795-32c6nm9c04s7vkvkie8fisecnub1e3eb.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
