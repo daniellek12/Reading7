@@ -145,6 +145,7 @@ public class BookFragment extends Fragment {
 
         final List<Review> newlist = new ArrayList<Review>();
         CollectionReference collection = db.collection("Reviews");
+        ((MainActivity)getActivity()).setBottomNavigationEnabled(false);
         Query query = collection.whereEqualTo("book_id", mBook.getId());
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -166,6 +167,8 @@ public class BookFragment extends Fragment {
                         countRatersText.setText(getResources().getString(R.string.one_reviewer));
                     else
                         countRatersText.setText(countRaters + " " + getResources().getString(R.string.reviewers));
+
+                    ((MainActivity)getActivity()).setBottomNavigationEnabled(true);
                 }
             }
         });
