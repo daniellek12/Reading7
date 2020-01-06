@@ -99,6 +99,7 @@ public class HomeFragment extends Fragment {
                                             postsRV.setAdapter(adapter);
                                             enableClicks();
                                         }
+
                                     });
                                 }
                             });
@@ -106,6 +107,8 @@ public class HomeFragment extends Fragment {
                         } else {
                             FeedAdapter adapter = new FeedAdapter(getActivity(), posts);
                             postsRV.setAdapter(adapter);
+                            enableClicks();
+
                         }
 
                     }
