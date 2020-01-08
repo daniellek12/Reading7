@@ -92,9 +92,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:layout_marginBottom="5dp"
+                android:layout_marginBottom="15dp"
+                android:clipToPadding="false"
                 android:layoutDirection="rtl"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp">
 
             </androidx.recyclerview.widget.RecyclerView>
 

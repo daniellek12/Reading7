@@ -69,8 +69,8 @@ public class ExploreFragment extends Fragment {
                 ((MainActivity) getActivity()).addFragment(new BookFragment(book));
             }
         });
-        mGenre="";
-        first=0;
+        mGenre = "";
+        first = 0;
         showProgressBar();
         initAppBar();
         initPlaylists();
@@ -93,49 +93,20 @@ public class ExploreFragment extends Fragment {
     private ArrayList<String> getPlaylistsNames() {
 
         ArrayList<String> names = new ArrayList<String>();
+        names.add("בשבילך");
+        names.add("הרפתקאות");
+        names.add("מדע בדיוני");
+        names.add("היסטוריה");
         names.add("דרמה");
         names.add("אהבה");
         names.add("אימה");
         names.add("מדע");
         names.add("קומדיה");
-        names.add("היסטוריה");
         names.add("מתח");
-        names.add("מדע בדיוני");
-        names.add("הרפתקאות");
 
         return names;
     }
 
-    private ArrayList<Float> getRatings() {
-
-        ArrayList<Float> ratings = new ArrayList<Float>();
-        ratings.add((float) 3.5);
-        ratings.add((float) 4);
-        ratings.add((float) 1.12);
-        ratings.add((float) 5);
-        ratings.add((float) 4.5);
-        ratings.add((float) 3);
-        ratings.add((float) 3.5);
-        ratings.add((float) 4);
-        ratings.add((float) 2);
-        ratings.add((float) 5);
-        ratings.add((float) 4);
-        ratings.add((float) 2);
-        ratings.add((float) 3.5);
-        ratings.add((float) 4);
-        ratings.add((float) 2.5);
-        ratings.add((float) 5);
-        ratings.add((float) 3.5);
-        ratings.add((float) 2);
-        ratings.add((float) 3.5);
-        ratings.add((float) 4);
-        ratings.add((float) 3);
-        ratings.add((float) 5);
-        ratings.add((float) 4);
-        ratings.add((float) 5);
-
-        return ratings;
-    }
 
     private ArrayList<Integer> getCovers() {
 
@@ -173,7 +144,7 @@ public class ExploreFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         RecyclerView playlistsRV = getActivity().findViewById(R.id.playlistsRV);
         playlistsRV.setLayoutManager(layoutManager);
-        StoryPlaylistAdapter adapter = new StoryPlaylistAdapter(getActivity(), getPlaylistsNames(), getCovers(),bookList,myAdapter,this);
+        StoryPlaylistAdapter adapter = new StoryPlaylistAdapter(getActivity(), getPlaylistsNames(), bookList, myAdapter, this);
         playlistsRV.setAdapter(adapter);
     }
 
@@ -247,7 +218,7 @@ public class ExploreFragment extends Fragment {
     }
 
 
-    private void first_load_books(){
+    private void first_load_books() {
         showProgressBar();
 
         //mGenre=genre;
@@ -274,51 +245,55 @@ public class ExploreFragment extends Fragment {
         });
     }
 
-    public void first_load_genre_books(final String genre){
+    public void first_load_genre_books(final String genre) {
+
         showProgressBar();
-        if(mGenre!=genre) {//changed genre
+
+        //changed genre
+        if (!mGenre.equals(genre))
             first = 0;
-        }
-        else{//pressed the same genre
+
+            //pressed the same genre
+        else {
             first_load_books();
-            mGenre="";
+            mGenre = "";
             return;
         }
-        mGenre=genre;
 
+        mGenre = genre;
+
+        if(genre.equals("בשבילך")){
+            first_load_books();
+            return;
+        }
 
         final List<Book> newlist = new ArrayList<>();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         final CollectionReference requestCollectionRef = db.collection("Books");
         Query requestQuery;
 
-        if(first ==0) {
+        if (first == 0) {
             bookList.clear();
-            requestQuery = requestCollectionRef.whereArrayContains("actual_genres",mGenre).limit(limit);
-            first=1;
-        }
-        else
-            requestQuery = requestCollectionRef.whereArrayContains("actual_genres",mGenre).startAfter(lastVisible).limit(limit);
+            requestQuery = requestCollectionRef.whereArrayContains("actual_genres", mGenre).limit(limit);
+            first = 1;
+        } else
+            requestQuery = requestCollectionRef.whereArrayContains("actual_genres", mGenre).startAfter(lastVisible).limit(limit);
+
         requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (DocumentSnapshot document : task.getResult()) {
-
                         Book book = document.toObject(Book.class);
-                            newlist.add(book);
+                        newlist.add(book);
                     }
                     bookList.addAll(newlist);
                     lastVisible = task.getResult().getDocuments().get(task.getResult().size() - 1);
-                    myAdapter.notifyDataSetChanged();//no problem cause this is the first update
+                    myAdapter.notifyDataSetChanged(); //no problem cause this is the first update
                     hideProgressBar();
-
-
                 }
             }
         });
-
-
     }
 
     private void load_books() {
@@ -338,10 +313,10 @@ public class ExploreFragment extends Fragment {
 
         if (((firstVisibleItemPosition + visibleItemCount == totalItemCount) && !isLastItemReached)) {
             Query nextQuery;
-            if(mGenre=="")
+            if (mGenre == "")
                 nextQuery = requestCollectionRef.startAfter(lastVisible).limit(limit);
             else
-              nextQuery = requestCollectionRef.whereArrayContains("actual_genres",mGenre).startAfter(lastVisible).limit(limit);
+                nextQuery = requestCollectionRef.whereArrayContains("actual_genres", mGenre).startAfter(lastVisible).limit(limit);
             nextQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> t) {
@@ -355,7 +330,7 @@ public class ExploreFragment extends Fragment {
                         for (int i = totalItemCount; i < totalItemCount + t.getResult().size(); i++) {
                             myAdapter.notifyItemInserted(i);//notify updated book ONLY
                         }
-                        if(t.getResult().size()==0)
+                        if (t.getResult().size() == 0)
                             return;
                         lastVisible = t.getResult().getDocuments().get(t.getResult().size() - 1);
                         loading = true;
@@ -363,8 +338,7 @@ public class ExploreFragment extends Fragment {
                         if (t.getResult().size() < limit) {
                             isLastItemReached = true;
                         }
-                    }
-                    else {
+                    } else {
                         Log.d("Explore", "Load books failed");
                     }
                     hideProgressBar();
@@ -373,20 +347,21 @@ public class ExploreFragment extends Fragment {
         }
     }
 
-    public void showProgressBar(){
+
+    public void showProgressBar() {
         disableClicks();
 //        getActivity().findViewById(R.id.explore_progress_background).setVisibility(View.VISIBLE);
         getActivity().findViewById(R.id.explore_progress_bar).setVisibility(View.VISIBLE);
     }
 
-    private void hideProgressBar(){
+    private void hideProgressBar() {
         enableClicks();
 //        getActivity().findViewById(R.id.explore_progress_background).setVisibility(View.GONE);
         //getActivity().findViewById(R.id.explore_progress_bar).setVisibility(View.GONE);
     }
 
     private void disableClicks() {
-        ((MainActivity)getActivity()).setBottomNavigationEnabled(false);
+        ((MainActivity) getActivity()).setBottomNavigationEnabled(false);
         getActivity().findViewById(R.id.search).setEnabled(false);
         getActivity().findViewById(R.id.playlistsRV).setEnabled(false);
 //        getActivity().findViewById(R.id.notifications).setEnabled(false);
@@ -398,6 +373,6 @@ public class ExploreFragment extends Fragment {
         getActivity().findViewById(R.id.search).setEnabled(true);
         getActivity().findViewById(R.id.playlistsRV).setEnabled(true);
 //        getActivity().findViewById(R.id.notifications).setEnabled(true);
-        ((MainActivity)getActivity()).setBottomNavigationEnabled(true);
+        ((MainActivity) getActivity()).setBottomNavigationEnabled(true);
     }
 }

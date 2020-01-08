@@ -323,6 +323,64 @@ public class Utils {
     }
 
 
+    /**
+     * Returns the genre icon drawable.
+     */
+    public static Drawable getDrawableForGenre(Context context, String genre, Boolean filled) {
+
+        Drawable drawable = null;
+
+        switch (genre) {
+            case "בשבילך":
+                drawable = filled ? context.getResources().getDrawable(R.drawable.star_filled) :
+                                    context.getResources().getDrawable(R.drawable.star);
+                break;
+            case "אהבה":
+                drawable = filled ? context.getResources().getDrawable(R.drawable.genre_romance_filled) :
+                        context.getResources().getDrawable(R.drawable.genre_romance);
+                break;
+            case "הרפתקאות":
+                drawable = filled ? context.getResources().getDrawable(R.drawable.genre_adventures_filled) :
+                        context.getResources().getDrawable(R.drawable.genre_adventures);
+                break;
+            case "דרמה":
+                drawable = filled ? context.getResources().getDrawable(R.drawable.genre_drama_filled) :
+                        context.getResources().getDrawable(R.drawable.genre_drama);
+                break;
+            case "מדע בדיוני":
+                drawable = filled ? context.getResources().getDrawable(R.drawable.genre_fantasy_filled) :
+                        context.getResources().getDrawable(R.drawable.genre_fantasy);
+                break;
+            case "קומדיה":
+                drawable = filled ? context.getResources().getDrawable(R.drawable.genre_comedy_filled) :
+                        context.getResources().getDrawable(R.drawable.genre_comedy);
+                break;
+            case "היסטוריה":
+                drawable = filled ? context.getResources().getDrawable(R.drawable.genre_history_filled) :
+                        context.getResources().getDrawable(R.drawable.genre_history);
+                break;
+            case "מדע":
+                drawable = filled ? context.getResources().getDrawable(R.drawable.genre_science_filled) :
+                        context.getResources().getDrawable(R.drawable.genre_science);
+                break;
+            case "מתח":
+                drawable = filled ? context.getResources().getDrawable(R.drawable.genre_thriller_filled) :
+                        context.getResources().getDrawable(R.drawable.genre_thriller);
+                break;
+            case "אימה":
+                drawable = filled ? context.getResources().getDrawable(R.drawable.genre_horror_filled) :
+                        context.getResources().getDrawable(R.drawable.genre_horror);
+                break;
+            default:
+                drawable = filled ? context.getResources().getDrawable(R.drawable.genre_adventures_filled) :
+                        context.getResources().getDrawable(R.drawable.genre_adventures);
+                break;
+        }
+
+        return drawable;
+    }
+
+
     public static void closeKeyboard(Context context) {
 
         InputMethodManager imm = (InputMethodManager) context.getSystemService(context.INPUT_METHOD_SERVICE);

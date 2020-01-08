@@ -110,6 +110,7 @@
     <string name="review_content">פירוט</string>
     <string name="cancel">ביטול</string>
     <string name="book_details">פרטי הספר</string>
+    <string name="pages">עמודים</string>
 
 
 </resources>

@@ -334,6 +334,33 @@
                 android:background="@color/grey"
                 android:clipToPadding="false" />
 
+            <LinearLayout
+                android:id="@+id/numPagesLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/numPages"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="458"
+                    android:textColor="@color/lightGrey"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/numPagesTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/pages"
+                    android:textColor="@color/lightGrey"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
         </RelativeLayout>
     </androidx.core.widget.NestedScrollView>
 </RelativeLayout>

@@ -122,9 +122,6 @@ public class BookFragment extends Fragment {
         TextView textViewPublisher = getActivity().findViewById(R.id.publisher);
         textViewPublisher.setText(getResources().getString(R.string.publisher) + " " + mBook.getPublisher());
 
-//        TextView textViewPages = getActivity().findViewById(R.id.pages_field);
-//        textViewPages.setText(Integer.toString(mBook.getNum_pages()));
-
         TextView textViewTitle = getActivity().findViewById(R.id.book_name);
         textViewTitle.setText(mBook.getTitle());
 
@@ -137,9 +134,16 @@ public class BookFragment extends Fragment {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             textViewSummary.setJustificationMode(JUSTIFICATION_MODE_INTER_WORD);
         }
+
+        String pages = Integer.toString(mBook.getNum_pages());
+        if (pages.equals("-1")) {
+            getActivity().findViewById(R.id.numPagesLayout).setVisibility(View.GONE);
+        } else {
+            TextView textViewPages = getActivity().findViewById(R.id.numPages);
+            textViewPages.setText(pages);
+        }
+
         initScrollView();
-
-
     }
 
     private void getBookReviews() {
@@ -219,7 +223,7 @@ public class BookFragment extends Fragment {
         });
     }
 
-    private void initBackButton(){
+    private void initBackButton() {
         ImageButton backButton = getActivity().findViewById(R.id.bookBackButton);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
