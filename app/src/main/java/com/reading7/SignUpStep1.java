@@ -2,6 +2,7 @@ package com.reading7;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -25,7 +26,7 @@ import java.util.Calendar;
 import java.util.Locale;
 
 
-public class SignUpStep1 extends Fragment implements EditAvatarDialog.EditAvatarDialogListener {
+public class SignUpStep1 extends Fragment {
 
     private ArrayList<Integer> avatar_details = new ArrayList<Integer>();
 
@@ -125,7 +126,8 @@ public class SignUpStep1 extends Fragment implements EditAvatarDialog.EditAvatar
             @Override
             public void onClick(View view) {
                 EditAvatarDialog dialog = new EditAvatarDialog(avatar_details);
-                dialog.show(getChildFragmentManager(), "edit avater");
+                dialog.setTargetFragment(SignUpStep1.this, 100);
+                dialog.show(getActivity().getSupportFragmentManager(), "edit avater");
             }
         });
     }
@@ -169,10 +171,18 @@ public class SignUpStep1 extends Fragment implements EditAvatarDialog.EditAvatar
         getView().findViewById(R.id.illegal_birth_date).setVisibility(View.INVISIBLE);
     }
 
-    @Override
-    public void getAvatarDetails(ArrayList<Integer> details) {
-        this.avatar_details = details;
-        Utils.loadAvatar(getContext(), (CircleImageView) getView().findViewById(R.id.profile_image), avatar_details);
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Make sure fragment codes match up
+        if (requestCode == 100) {
+            this.avatar_details = data.getIntegerArrayListExtra("avatar_details");
+            Utils.loadAvatar(getContext(),(CircleImageView) getView().findViewById(R.id.profile_image), avatar_details);
+        }
     }
+
+//    @Override
+//    public void getAvatarDetails(ArrayList<Integer> details) {
+//        this.avatar_details = details;
+//        Utils.loadAvatar(getContext(), (CircleImageView) getView().findViewById(R.id.profile_image), avatar_details);
+//    }
 
 }

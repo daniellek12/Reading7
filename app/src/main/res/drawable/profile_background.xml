@@ -9,7 +9,6 @@
         android:width="1100dp">
         <shape android:shape="oval" >
             <solid android:color="@color/white"/>
-
         </shape>
     </item>
 

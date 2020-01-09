@@ -4,16 +4,65 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/transparent"
-    tools:context=".SignUpStep1"
-    android:layoutDirection="rtl">
+    android:background="@color/white"
+    android:layoutDirection="rtl"
+    tools:context=".EditProfileFragment">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolBar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/white"
+        android:elevation="1dp"
+        android:layoutDirection="rtl">
+
+        <ImageButton
+            android:id="@+id/backButton"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="right"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@color/transparent"
+            android:scaleType="fitXY"
+            android:src="@drawable/arrow_right"
+            android:tint="@color/darkGrey" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/edit_profile_string"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginLeft="20dp"
+            android:text="@string/save"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="14sp" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="left"
+            android:layout_marginLeft="25dp"
+            android:visibility="gone"/>
+
+
+    </androidx.appcompat.widget.Toolbar>
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profile_image"
         android:layout_width="100dp"
         android:layout_height="100dp"
+        android:layout_below="@id/toolBar"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="25dp"
         android:elevation="5dp"
         android:src="@drawable/avatar_layout"
         android:tint="@color/white"
@@ -21,19 +70,40 @@
         app:civ_border_width="2dp"
         app:civ_circle_background_color="@color/white" />
 
+    <ImageButton
+        android:id="@+id/editIcon"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_below="@id/profile_image"
+        android:layout_marginTop="-20dp"
+        android:layout_marginRight="-30dp"
+        android:layout_toLeftOf="@id/profile_image"
+        android:background="@drawable/rounded_button"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:elevation="10dp"
+        android:padding="5dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/edit"
+        android:tint="@color/white" />
+
+    <View
+        android:id="@+id/divider12"
+        android:layout_width="match_parent"
+        android:layout_height="0.2dp"
+        android:layout_below="@id/profile_image"
+        android:layout_marginTop="25dp"
+        android:background="?android:attr/listDivider" />
+
     <EditText
         android:id="@+id/name_edit"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_below="@id/profile_image"
-        android:layout_marginLeft="40dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="40dp"
-        android:layout_marginBottom="10dp"
+        android:layout_below="@id/divider12"
+        android:layout_margin="10dp"
         android:background="@drawable/edittext_background"
         android:drawableStart="@drawable/user"
         android:drawableLeft="@drawable/user"
-        android:drawablePadding="10dp"
+        android:drawablePadding="15dp"
         android:drawableTint="@color/transparentPrimaryDark"
         android:gravity="center_vertical|start"
         android:hint="@string/user_name"
@@ -47,75 +117,29 @@
         android:textAlignment="viewStart"
         android:textSize="14sp" />
 
-
-    <EditText
-        android:id="@+id/email_edit"
+    <View
+        android:id="@+id/divider15"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="0.2dp"
         android:layout_below="@id/name_edit"
-        android:layout_marginBottom="10dp"
-        android:layout_marginRight="40dp"
-        android:layout_marginLeft="40dp"
-        android:background="@drawable/edittext_background"
-        android:inputType="textEmailAddress"
-        android:lines="1"
-        android:maxLines="1"
-        android:singleLine="true"
-        android:textSize="14sp"
-        android:hint="@string/email"
-        android:paddingLeft="10dp"
-        android:paddingRight="15dp"
-        android:textAlignment="viewStart"
-        android:gravity="center_vertical|start"
-        android:drawableStart="@drawable/email"
-        android:drawableLeft="@drawable/email"
-        android:drawableTint="@color/transparentPrimaryDark"
-        android:drawablePadding="10dp"/>
-
-
-    <EditText
-        android:id="@+id/password_edit"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_below="@id/email_edit"
-        android:layout_marginBottom="10dp"
-        android:layout_marginRight="40dp"
-        android:layout_marginLeft="40dp"
-        android:background="@drawable/edittext_background"
-        android:inputType="textPassword"
-        android:lines="1"
-        android:maxLines="1"
-        android:singleLine="true"
-        android:textSize="14sp"
-        android:hint="@string/password"
-        android:paddingLeft="10dp"
-        android:paddingRight="15dp"
-        android:textAlignment="viewStart"
-        android:gravity="center_vertical|start"
-        android:drawableStart="@drawable/password"
-        android:drawableLeft="@drawable/password"
-        android:drawableTint="@color/transparentPrimaryDark"
-        android:drawablePadding="10dp"/>
-
+        android:background="?android:attr/listDivider" />
 
     <EditText
         android:id="@+id/birth_date_edit"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_below="@id/password_edit"
-        android:layout_marginLeft="40dp"
-        android:layout_marginRight="40dp"
-        android:layout_marginBottom="10dp"
+        android:layout_below="@id/divider15"
+        android:layout_margin="10dp"
         android:background="@drawable/edittext_background"
         android:clickable="true"
-        android:focusable="false"
         android:drawableStart="@drawable/gift"
         android:drawableLeft="@drawable/gift"
-        android:drawablePadding="10dp"
+        android:drawablePadding="15dp"
         android:drawableTint="@color/transparentPrimaryDark"
+        android:editable="false"
+        android:focusable="false"
         android:gravity="center_vertical|start"
         android:hint="@string/age"
-        android:editable="false"
         android:lines="1"
         android:maxLines="1"
         android:paddingLeft="10dp"
@@ -124,15 +148,52 @@
         android:textAlignment="viewStart"
         android:textSize="14sp" />
 
+    <View
+        android:id="@+id/divider16"
+        android:layout_width="match_parent"
+        android:layout_height="0.2dp"
+        android:layout_below="@id/birth_date_edit"
+        android:background="?android:attr/listDivider" />
+
+    <LinearLayout
+        android:id="@+id/email_exists"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/divider16"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="10dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="invisible">
+
+        <ImageView
+            android:id="@+id/error7"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_marginLeft="3dp"
+            android:src="@drawable/ic_error" />
+
+        <TextView
+            android:id="@+id/email_exists_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:text="@string/email_exists"
+            android:textColor="@color/colorAccent"
+            android:textSize="12sp"
+            android:visibility="visible" />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/illegal_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_below="@id/divider16"
         android:layout_centerHorizontal="true"
         android:layout_gravity="right"
-        android:layout_marginTop="500dp"
+        android:layout_marginTop="30dp"
         android:layout_marginRight="5dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
@@ -160,10 +221,10 @@
         android:id="@+id/illegal_mail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_below="@id/divider16"
         android:layout_centerHorizontal="true"
         android:layout_gravity="right"
-        android:layout_marginTop="500dp"
+        android:layout_marginTop="30dp"
         android:layout_marginRight="5dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
@@ -188,44 +249,13 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/illegal_password"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="right"
-        android:layout_marginTop="500dp"
-        android:layout_marginRight="5dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:visibility="invisible">
-
-        <ImageView
-            android:id="@+id/error3"
-            android:layout_width="14dp"
-            android:layout_height="14dp"
-            android:layout_marginLeft="3dp"
-            android:src="@drawable/ic_error" />
-
-        <TextView
-            android:id="@+id/illegal_pass_txt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:text="@string/illegal_password"
-            android:textColor="@color/colorAccent"
-            android:textSize="12sp"
-            android:visibility="visible" />
-    </LinearLayout>
-
-    <LinearLayout
         android:id="@+id/illegal_birth_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_below="@id/divider16"
         android:layout_centerHorizontal="true"
         android:layout_gravity="right"
-        android:layout_marginTop="500dp"
+        android:layout_marginTop="30dp"
         android:layout_marginRight="5dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
@@ -248,5 +278,6 @@
             android:textSize="12sp"
             android:visibility="visible" />
     </LinearLayout>
+
 
 </RelativeLayout>

@@ -28,7 +28,7 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 
-public class SignUpActivity extends AppCompatActivity implements EditAvatarDialog.EditAvatarDialogListener {
+public class SignUpActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private ViewPager viewPager;
@@ -242,9 +242,9 @@ public class SignUpActivity extends AppCompatActivity implements EditAvatarDialo
         enableClicks();
     }
 
-    @Override
-    public void getAvatarDetails(ArrayList<Integer> details) {
-        Fragment frag = ((TabsPagerAdapter) viewPager.getAdapter()).getItem(viewPager.getCurrentItem());
-        ((SignUpStep1) frag).getAvatarDetails(details);
-    }
+//    @Override
+//    public void getAvatarDetails(ArrayList<Integer> details) {
+//        Fragment frag = ((TabsPagerAdapter) viewPager.getAdapter()).getItem(viewPager.getCurrentItem());
+//        ((SignUpStep1) frag).getAvatarDetails(details);
+//    }
 }

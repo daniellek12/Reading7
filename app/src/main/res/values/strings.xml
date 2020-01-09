@@ -42,6 +42,10 @@
     <string name="illegal_age">אנא הכנס תאריך לידה חוקי</string>
     <string name="illegal_school">אנא בחר בית ספר מהרשימה</string>
     <string name="email_exists">כתובת האימייל כבר קיימת במערכת</string>
+    <string name="cont">המשך</string>
+    <string name="choose_last_book">מהו הספר האחרון שקראת?</string>
+    <string name="favourite_geners_title">מהם הז׳אנרים האהובים עלייך?</string>
+    <string name="back">חזור</string>
 
     <!--Profile-->
     <string name="my_wishlist">רשימת המשאלות שלי</string>
@@ -51,11 +55,12 @@
     <string name="first_place">1</string>
     <string name="second_place">2</string>
     <string name="third_place">3</string>
-    <string name="edit_profile_string">ערוך פרופיל</string>
+    <string name="edit_profile_string">עריכת פרופיל</string>
     <string name="show_all">הצג הכל</string>
     <string name="empty_wishlist">עדיין לא הוספת ספרים לרשימת המשאלות.</string>
     <string name="empty_mybooks">עדיין לא הוספת ספרים לרשימת הספרים שקראת.</string>
-
+    <string name="log_out">התנתקות</string>
+    <string name="privacy_settings">פרטיות והתראות</string>
 
     <!--Public Profile-->
     <string name="unfollow_button">עוקב</string>
@@ -64,7 +69,6 @@
     <string name="public_empty_mybooks">עדיין לא הוסיף ספרים לרשימת הספרים שקרא.</string>
     <string name="public_my_wishlist">רשימת המשאלות של</string>
     <string name="public_my_books">ספרים שקרא</string>
-
 
     <!--Edit Avatar-->
     <string name="skin_color">צבע עור</string>
@@ -77,10 +81,7 @@
     <string name="accessories_title">אביזרים</string>
     <string name="glasses">משקפיים</string>
 
-    <string name="cont">המשך</string>
-    <string name="choose_last_book">מהו הספר האחרון שקראת?</string>
-
-
+    <!--Genres-->
     <string name="adventures">הרפתקאות</string>
     <string name="fantasy">פנטזיה</string>
     <string name="history">היסטוריה</string>
@@ -90,11 +91,9 @@
     <string name="science">מדע</string>
     <string name="teens">התבגרות</string>
     <string name="thriller">מתח</string>
-    <string name="favourite_geners_title">מהם הז׳אנרים האהובים עלייך?</string>
     <string name="romance">אהבה</string>
-    <string name="back">חזור</string>
 
-
+    <!--Book Fragment-->
     <string name="summary">תקציר</string>
     <string name="reviews">ביקורות</string>
     <string name="add_to_wishlist">הוספה לרשימת המשאלות</string>
@@ -111,6 +110,10 @@
     <string name="cancel">ביטול</string>
     <string name="book_details">פרטי הספר</string>
     <string name="pages">עמודים</string>
-
+    <string name="save">שמירה</string>
+    <string name="private_profile_title">פרופיל פרטי</string>
+    <string name="private_profile_explanation">כאשר הפרופיל שלך מוגדר כפרטי, רק העוקבים שלך יוכלו לצפות בו.</string>
+    <string name="notifications_title">התראות</string>
+    <string name="notification_explanation">קבלת התראות על עוקבים חדשים, לייקים ותגובות לביקורות שלך.</string>
 
 </resources>

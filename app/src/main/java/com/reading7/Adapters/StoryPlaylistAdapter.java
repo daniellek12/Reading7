@@ -20,6 +20,7 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class StoryPlaylistAdapter extends RecyclerView.Adapter<StoryPlaylistAdapter.ViewHolder> {
 

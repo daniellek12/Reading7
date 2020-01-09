@@ -63,6 +63,7 @@
             android:id="@+id/bookCoverImage"
             android:layout_width="240dp"
             android:layout_height="@dimen/book_fragment_cover_height"
+            android:layout_centerHorizontal="true"
             android:scaleType="fitXY"
             android:src="@color/transparent" />
     </RelativeLayout>
