@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
@@ -24,7 +25,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class EditAvatarDialog extends AppCompatDialogFragment {
 
     private ArrayList<Integer> avatar_details;
-    private EditAvatarDialogListener listener;
+//    private EditAvatarDialogListener listener;
 
     private CircleImageView avatar;
     private LayerDrawable layer;
@@ -56,7 +57,7 @@ public class EditAvatarDialog extends AppCompatDialogFragment {
         builder.setView(view).setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                listener.getAvatarDetails(avatar_details);
+                sendResult(100);
             }
         });
 
@@ -314,19 +315,29 @@ public class EditAvatarDialog extends AppCompatDialogFragment {
     }
 
 
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
+    private void sendResult(int REQUEST_CODE) {
 
-        try {
-            listener = (EditAvatarDialogListener) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException();
-        }
+        Intent intent = new Intent();
+        intent.putExtra("avatar_details", avatar_details);
+
+        getTargetFragment().onActivityResult(getTargetRequestCode(), REQUEST_CODE, intent);
     }
 
-    public interface EditAvatarDialogListener {
-        void getAvatarDetails(ArrayList<Integer> details);
-    }
+
+
+//    @Override
+//    public void onAttach(@NonNull Context context) {
+//        super.onAttach(context);
+//
+//        try {
+//            listener = (EditAvatarDialogListener) context;
+//        } catch (ClassCastException e) {
+//            throw new ClassCastException();
+//        }
+//    }
+
+//    public interface EditAvatarDialogListener {
+//        void getAvatarDetails(ArrayList<Integer> details);
+//    }
 
 }

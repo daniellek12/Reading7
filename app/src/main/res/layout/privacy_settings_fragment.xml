@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PrivacySettingsFragment"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolBar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/white"
+        android:elevation="1dp"
+        android:layoutDirection="rtl">
+
+        <ImageButton
+            android:id="@+id/backButton"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="right"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@color/transparent"
+            android:scaleType="fitXY"
+            android:src="@drawable/arrow_right"
+            android:tint="@color/darkGrey" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/privacy_settings"
+            android:textSize="18sp" />
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layoutDirection="rtl"
+        android:padding="20dp">
+
+        <TextView
+            android:id="@+id/private_profile_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/private_profile_title"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/private_profile_explanation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/private_profile_title"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="3dp"
+            android:layout_toRightOf="@id/private_profile_switch"
+            android:text="@string/private_profile_explanation"
+            android:textSize="12sp" />
+
+        <Switch
+            android:id="@+id/private_profile_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="40dp"
+            android:buttonTint="@color/colorPrimary"
+            android:enabled="false"
+            android:thumbTint="@color/colorPrimaryDark" />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/divider13"
+        android:layout_width="match_parent"
+        android:layout_height="0.2dp"
+        android:background="?android:attr/listDivider" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layoutDirection="rtl"
+        android:padding="20dp">
+
+        <TextView
+            android:id="@+id/notification_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/notifications_title"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/notification_explanation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/notification_title"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="3dp"
+            android:layout_toRightOf="@id/notificationSwitch"
+            android:text="@string/notification_explanation"
+            android:textSize="12sp" />
+
+        <Switch
+            android:id="@+id/notificationSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="40dp"
+            android:buttonTint="@color/colorPrimaryDark"
+            android:checked="true"
+            android:thumbTint="@color/colorPrimaryDark" />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/divider14"
+        android:layout_width="match_parent"
+        android:layout_height="0.2dp"
+        android:background="?android:attr/listDivider" />
+
+
+</LinearLayout>

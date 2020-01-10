@@ -11,11 +11,12 @@
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:background="@drawable/profile_background">
 
             <de.hdodenhof.circleimageview.CircleImageView
@@ -29,7 +30,7 @@
                 android:src="@drawable/avatar_layout"
                 app:civ_border_color="@color/white"
                 app:civ_border_width="2dp"
-                app:civ_circle_background_color="@color/white"/>
+                app:civ_circle_background_color="@color/white" />
 
             <TextView
                 android:id="@+id/publicProfile_userName"
@@ -193,10 +194,10 @@
             <View
                 android:id="@+id/divider1"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="0.2dp"
                 android:layout_below="@id/countersLayout"
                 android:layout_marginLeft="20dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="30dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="15dp"
                 android:background="?android:attr/listDivider" />
@@ -207,7 +208,7 @@
                 android:layout_height="match_parent"
                 android:layout_below="@id/divider1"
                 android:gravity="center"
-                android:text="PRIVATE!!"/>
+                android:text="PRIVATE!!" />
 
             <RelativeLayout
                 android:id="@+id/classified_data"
@@ -240,26 +241,26 @@
                     android:id="@+id/wishlistRV"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="100dp"
                     android:layout_below="@+id/wishlistTitle"
                     android:layout_marginTop="20dp"
                     android:clipToPadding="false"
                     android:layoutDirection="rtl"
+                    android:minHeight="100dp"
                     android:orientation="horizontal"
                     android:paddingLeft="20dp"
                     android:paddingRight="10dp"
-                    android:visibility="invisible"/>
+                    android:visibility="invisible" />
 
                 <RelativeLayout
                     android:id="@+id/publicProfile_emptyWishlist"
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
                     android:layout_below="@+id/wishlistTitle"
-                    android:layoutDirection="rtl"
+                    android:layout_margin="20dp"
                     android:background="@drawable/rounded_button"
                     android:backgroundTint="@color/grey"
-                    android:layout_margin="20dp"
-                    android:elevation="2dp">
+                    android:elevation="2dp"
+                    android:layoutDirection="rtl">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -274,10 +275,10 @@
                 <View
                     android:id="@+id/divider2"
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
+                    android:layout_height="0.2dp"
                     android:layout_below="@+id/wishlistRV"
                     android:layout_marginLeft="20dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="15dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginBottom="15dp"
                     android:background="?android:attr/listDivider" />
@@ -309,26 +310,26 @@
                     android:id="@+id/myBooksRV"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="100dp"
                     android:layout_below="@+id/mybooksTitle"
                     android:layout_marginTop="20dp"
                     android:clipToPadding="false"
                     android:layoutDirection="rtl"
+                    android:minHeight="100dp"
                     android:orientation="horizontal"
                     android:paddingLeft="20dp"
                     android:paddingRight="10dp"
-                    android:visibility="invisible"/>
+                    android:visibility="invisible" />
 
                 <RelativeLayout
                     android:id="@+id/publicProfile_emptyMyBooks"
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
                     android:layout_below="@+id/mybooksTitle"
-                    android:layoutDirection="rtl"
+                    android:layout_margin="20dp"
                     android:background="@drawable/rounded_button"
                     android:backgroundTint="@color/grey"
-                    android:layout_margin="20dp"
-                    android:elevation="2dp">
+                    android:elevation="2dp"
+                    android:layoutDirection="rtl">
 
                     <TextView
                         android:layout_width="wrap_content"

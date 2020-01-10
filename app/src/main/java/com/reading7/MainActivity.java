@@ -18,6 +18,7 @@ import com.reading7.Objects.User;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -181,5 +182,9 @@ public class MainActivity extends AppCompatActivity
     public User getCurrentUser() {
         return mUser;
     }
+    public void setCurrentUser( User user) {
+        this.mUser = user;
+    }
+
 
 }

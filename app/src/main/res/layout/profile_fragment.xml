@@ -10,30 +10,51 @@
     tools:context=".ProfileFragment"
     android:layoutDirection="rtl">
 
-    <Switch
-        android:id="@+id/private_switch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="20dp"
-        android:visibility="gone"/>
-
-    <ImageButton
-        android:id="@+id/settings"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="20dp"
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
         android:background="@color/transparent"
-        android:scaleType="fitXY"
-        android:src="@drawable/settings"
-        android:tint="@color/white" />
+        android:elevation="10dp"
+        android:layoutDirection="rtl">
+
+        <ImageButton
+            android:id="@+id/options"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_gravity="right"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@color/transparent"
+            android:scaleType="fitXY"
+            android:src="@drawable/menu"
+            android:tint="@color/white" />
+
+        <ImageButton
+            android:id="@+id/notifications"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_gravity="left"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:background="@color/transparent"
+            android:src="@drawable/notification_white"
+            android:tint="@color/white" />
+
+    </androidx.appcompat.widget.Toolbar>
+
+<!--    <Switch-->
+<!--        android:id="@+id/private_switch"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_alignParentLeft="true"-->
+<!--        android:layout_marginLeft="20dp"-->
+<!--        android:layout_marginTop="20dp"-->
+<!--        android:visibility="gone" />-->
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -46,7 +67,7 @@
                 android:layout_height="100dp"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="40dp"
                 android:elevation="5dp"
                 android:src="@drawable/avatar_layout"
                 app:civ_border_color="@color/white"
@@ -198,10 +219,10 @@
             <View
                 android:id="@+id/divider1"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="0.2dp"
                 android:layout_below="@id/countersLayout"
                 android:layout_marginLeft="20dp"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="30dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="15dp"
                 android:background="?android:attr/listDivider" />
@@ -271,10 +292,10 @@
             <View
                 android:id="@+id/divider2"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="0.2dp"
                 android:layout_below="@+id/wishlistRV"
                 android:layout_marginLeft="20dp"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="15dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="15dp"
                 android:background="?android:attr/listDivider" />
@@ -341,17 +362,6 @@
                     android:textSize="14sp" />
             </RelativeLayout>
 
-            <TextView
-                android:id="@+id/logout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/myBooksRV"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
-                android:clickable="true"
-                android:text="התנתק"
-                android:textSize="14sp" />
             <!--        <Button-->
             <!--            android:layout_width="wrap_content"-->
             <!--            android:layout_height="wrap_content"-->
@@ -359,18 +369,145 @@
             <!--            android:layout_below="@id/logout"-->
             <!--            android:id="@+id/dont_click"/>-->
 
-            <ProgressBar
-                android:id="@+id/progressBar2"
-                style="?android:attr/progressBarStyle"
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_alignParentBottom="true"
-                android:layout_marginBottom="25dp"
-                android:visibility="gone" />
-
 
         </RelativeLayout>
 
     </androidx.core.widget.NestedScrollView>
+
+    <RelativeLayout
+        android:id="@+id/optionsMenuLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="10dp"
+        android:visibility="gone">
+
+        <View
+            android:id="@+id/optionsDummy"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.3" />
+
+        <LinearLayout
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:layout_marginRight="23dp"
+            android:background="@drawable/rounded_corners"
+            android:elevation="10dp"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/editProfileButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="20dp"
+                android:paddingTop="15dp"
+                android:paddingRight="20dp"
+                android:paddingBottom="15dp">
+
+                <ImageView
+                    android:id="@+id/editIcon"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/edit"
+                    android:tint="@color/darkGrey" />
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
+                    android:layout_toLeftOf="@id/editIcon"
+                    android:text="@string/edit_profile_string"
+                    android:textColor="@color/darkGrey" />
+            </RelativeLayout>
+
+            <View
+                android:id="@+id/divider10"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider" />
+
+            <RelativeLayout
+                android:id="@+id/privacyButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:paddingTop="15dp"
+                android:paddingRight="20dp"
+                android:paddingBottom="15dp">
+
+                <ImageView
+                    android:id="@+id/privacyIcon"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/privacy"
+                    android:tint="@color/darkGrey" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
+                    android:layout_toLeftOf="@id/privacyIcon"
+                    android:text="@string/privacy_settings"
+                    android:textColor="@color/darkGrey" />
+            </RelativeLayout>
+
+            <View
+                android:id="@+id/divider11"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider" />
+
+            <RelativeLayout
+                android:id="@+id/logoutButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:paddingTop="15dp"
+                android:paddingRight="20dp"
+                android:paddingBottom="15dp">
+
+                <ImageView
+                    android:id="@+id/logoutIcon"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/logout"
+                    android:tint="@color/darkGrey" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
+                    android:layout_toLeftOf="@id/logoutIcon"
+                    android:text="@string/log_out"
+                    android:textColor="@color/darkGrey" />
+
+                <ProgressBar
+                    android:id="@+id/progressBar2"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:background="@color/white"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
 
 </RelativeLayout>

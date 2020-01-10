@@ -18,7 +18,7 @@
         android:layout_toRightOf="@id/fantasy"
         android:background="@drawable/rounded_corners"
         android:backgroundTint="@color/grey"
-        android:drawableTop="@drawable/genre_advuntures"
+        android:drawableTop="@drawable/genre_adventures"
         android:drawablePadding="5dp"
         android:drawableTint="@color/colorPrimaryDark"
         android:padding="15dp"

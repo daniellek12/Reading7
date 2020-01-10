@@ -8,8 +8,10 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -136,7 +138,7 @@ public class Utils {
                 }
                 if (st.startsWith("Num Pages: ")) {
                     String[] sst = st.split("Num Pages: ");
-                    num_pages = sst[1].replace("\t","").replace(" ","");
+                    num_pages = sst[1].replace("\t", "").replace(" ", "");
                 }
                 if (st.startsWith("Author: ")) {
                     String[] sst = st.split("Author: ");
@@ -158,8 +160,8 @@ public class Utils {
             }
             final String t = title;
 
-            Book b = new Book("", title, genersarray,new ArrayList<String>(), author, publisher, Integer.parseInt(num_pages), summary, 0,0);
-            ArrayList<String> actual_genres=MapGenreToBook(b);
+            Book b = new Book("", title, genersarray, new ArrayList<String>(), author, publisher, Integer.parseInt(num_pages), summary, 0, 0);
+            ArrayList<String> actual_genres = MapGenreToBook(b);
 
             /*//for random genres
             int add= 0;
@@ -323,6 +325,84 @@ public class Utils {
     }
 
 
+    /**
+     * Returns the genre icon drawable.
+     */
+    public static Drawable getDrawableForGenre(Context context, String genre, Boolean filled) {
+
+        Drawable drawable = null;
+
+        switch (genre) {
+            case "בשבילך":
+                drawable = filled ? context.getResources().getDrawable(R.drawable.star_filled) :
+                        context.getResources().getDrawable(R.drawable.star);
+                break;
+            case "אהבה":
+                drawable = filled ? context.getResources().getDrawable(R.drawable.genre_romance_filled) :
+                        context.getResources().getDrawable(R.drawable.genre_romance);
+                break;
+            case "הרפתקאות":
+                drawable = filled ? context.getResources().getDrawable(R.drawable.genre_adventures_filled) :
+                        context.getResources().getDrawable(R.drawable.genre_adventures);
+                break;
+            case "דרמה":
+                drawable = filled ? context.getResources().getDrawable(R.drawable.genre_drama_filled) :
+                        context.getResources().getDrawable(R.drawable.genre_drama);
+                break;
+            case "מדע בדיוני":
+                drawable = filled ? context.getResources().getDrawable(R.drawable.genre_fantasy_filled) :
+                        context.getResources().getDrawable(R.drawable.genre_fantasy);
+                break;
+            case "קומדיה":
+                drawable = filled ? context.getResources().getDrawable(R.drawable.genre_comedy_filled) :
+                        context.getResources().getDrawable(R.drawable.genre_comedy);
+                break;
+            case "היסטוריה":
+                drawable = filled ? context.getResources().getDrawable(R.drawable.genre_history_filled) :
+                        context.getResources().getDrawable(R.drawable.genre_history);
+                break;
+            case "מדע":
+                drawable = filled ? context.getResources().getDrawable(R.drawable.genre_science_filled) :
+                        context.getResources().getDrawable(R.drawable.genre_science);
+                break;
+            case "מתח":
+                drawable = filled ? context.getResources().getDrawable(R.drawable.genre_thriller_filled) :
+                        context.getResources().getDrawable(R.drawable.genre_thriller);
+                break;
+            case "אימה":
+                drawable = filled ? context.getResources().getDrawable(R.drawable.genre_horror_filled) :
+                        context.getResources().getDrawable(R.drawable.genre_horror);
+                break;
+            default:
+                drawable = filled ? context.getResources().getDrawable(R.drawable.genre_adventures_filled) :
+                        context.getResources().getDrawable(R.drawable.genre_adventures);
+                break;
+        }
+
+        return drawable;
+    }
+
+
+    /**
+     * Enables/Disables all child views in a view group.
+     *
+     * @param viewGroup the view group
+     * @param enabled true to enable, false to disable
+     */
+    public static void enableDisableClicks(Activity activity, ViewGroup viewGroup, boolean enabled) {
+        int childCount = viewGroup.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            View view = viewGroup.getChildAt(i);
+            view.setEnabled(enabled);
+            if (view instanceof ViewGroup) {
+                enableDisableClicks(activity, (ViewGroup) view, enabled);
+            }
+        }
+
+        ((MainActivity)activity).setBottomNavigationEnabled(enabled);
+    }
+
+
     public static void closeKeyboard(Context context) {
 
         InputMethodManager imm = (InputMethodManager) context.getSystemService(context.INPUT_METHOD_SERVICE);
@@ -339,9 +419,8 @@ public class Utils {
     }
 
 
-
-    public static ArrayList<String> MapGenreToBook(Book b){
-        ArrayList<String> genres=new ArrayList<String>();
+    public static ArrayList<String> MapGenreToBook(Book b) {
+        ArrayList<String> genres = new ArrayList<String>();
         ArrayList<String> names = new ArrayList<String>();
         names.add("דרמה");
         names.add("אהבה");
@@ -352,28 +431,29 @@ public class Utils {
         names.add("מתח");
         names.add("מדע בדיוני");
         names.add("הרפתקאות");
-        for (String genre:names){
-            if(isBookFromGenre(b,genre))
+        for (String genre : names) {
+            if (isBookFromGenre(b, genre))
                 genres.add(genre);
 
         }
         return genres;
     }
-    public static   String RelativeDateDisplay(long timeDifferenceMilliseconds) {
+
+    public static String RelativeDateDisplay(long timeDifferenceMilliseconds) {
         long diffSeconds = timeDifferenceMilliseconds / 1000;
         long diffMinutes = timeDifferenceMilliseconds / (60 * 1000);
         long diffHours = timeDifferenceMilliseconds / (60 * 60 * 1000);
         long diffDays = timeDifferenceMilliseconds / (60 * 60 * 1000 * 24);
         long diffWeeks = timeDifferenceMilliseconds / (60 * 60 * 1000 * 24 * 7);
         long diffMonths = (long) (timeDifferenceMilliseconds / (60 * 60 * 1000 * 24 * 30.41666666));
-        long diffYears = timeDifferenceMilliseconds / ((long)60 * 60 * 1000 * 24 * 365);
+        long diffYears = timeDifferenceMilliseconds / ((long) 60 * 60 * 1000 * 24 * 365);
 
         if (diffMinutes < 1) {
             return "הרגע";
         } else if (diffHours < 1) {
-            if (diffMinutes  == 1)
+            if (diffMinutes == 1)
                 return "לפני דקה";
-            return  "לפני " + diffMinutes + " דקות";
+            return "לפני " + diffMinutes + " דקות";
         } else if (diffDays < 1) {
             if (diffHours == 1)
                 return "לפני שעה";
@@ -405,12 +485,14 @@ public class Utils {
         }
     }
 
-    public static boolean isBookFromGenre(Book book, String g){
-        if(g.equals(""))
+    public static boolean isBookFromGenre(Book book, String g) {
+        if (g.equals(""))
             return true;
+
         ArrayList<String> generes = new ArrayList<>();
-        switch (g){
-            case "הרפתקאות": generes.add("סדרת הרפתקאותיו של מייקל ויי");
+        switch (g) {
+            case "הרפתקאות":
+                generes.add("סדרת הרפתקאותיו של מייקל ויי");
                 generes.add("הרפתקאות לילדים");
                 generes.add("הרפתקאות");
                 generes.add("סדרת הקאובויים");
@@ -441,7 +523,8 @@ public class Utils {
                 generes.add("סדרת בגידה - 39 רמזים");
                 generes.add("FBI");
                 break;
-            case "מדע בדיוני": generes.add("פנטזיה");
+            case "מדע בדיוני":
+                generes.add("פנטזיה");
                 generes.add("מדע בדיוני לילדים");
                 generes.add("מדע בדיוני צעיר");
                 generes.add("פנטזיה ישראלית");
@@ -474,9 +557,11 @@ public class Utils {
                 generes.add("סדרת הקמע");
                 generes.add("סדרת ספטימוס היפ");
                 generes.add("סדרת צמרמורת");
-                generes.add("פנטזיה צעירה");break;
+                generes.add("פנטזיה צעירה");
+                break;
 
-            case "היסטוריה": generes.add("היסטוריה");
+            case "היסטוריה":
+                generes.add("היסטוריה");
                 generes.add("היסטוריה לילדים");
                 generes.add("היסטוריה ופוליטיקה");
                 generes.add("היסטוריה אלטרנטיבית");
@@ -519,7 +604,7 @@ public class Utils {
                 generes.add("שואה מזוית לא יהודית");
                 generes.add("פילוסופיה עתיקה");
                 generes.add("מבוסס על סיפורי התנ\"ך");
-                        generes.add("מלחמות ישראל");
+                generes.add("מלחמות ישראל");
                 generes.add("שואה וגבורה");
                 generes.add("מיתולוגיה לילדים");
                 generes.add("דור שני לשואה");
@@ -546,12 +631,13 @@ public class Utils {
                 generes.add("היסטוריה");
                 generes.add("ההתנתקות");
                 generes.add("דרום ארה\"ב");
-                        generes.add("פריז");
+                generes.add("פריז");
                 generes.add("לוחמים");
                 generes.add("סדרת נוכרייה (זרה)");
                 break;
 
-            case "אהבה": generes.add("אהבה ראשונה");
+            case "אהבה":
+                generes.add("אהבה ראשונה");
                 generes.add("אהבה נכזבת");
                 generes.add("אהבה");
                 generes.add("אהבה מאוחרת");
@@ -570,7 +656,7 @@ public class Utils {
                 generes.add("רומנטיקה אסורה");
                 generes.add("מתאבקים רומנטים");
                 generes.add("רומנטיקה תנ\"כית");
-                        generes.add("אהבה בשואה");
+                generes.add("אהבה בשואה");
                 generes.add("אהבה ממבט ראשון");
                 generes.add("אהבה ממבט שני");
                 generes.add("להיות מתבגר");
@@ -594,7 +680,8 @@ public class Utils {
                 generes.add("סדרת יומני הנסיכה");
                 break;
 
-            case "מתח": generes.add("מתח מושלג");
+            case "מתח":
+                generes.add("מתח מושלג");
                 generes.add("מתח צעיר");
                 generes.add("סדרת סודות אפלים");
                 generes.add("המוסד");
@@ -602,7 +689,7 @@ public class Utils {
                 generes.add("מותחן משפטי");
                 generes.add("מאפיה");
                 generes.add("\"שב\"כ");
-                        generes.add("תעלומה");
+                generes.add("תעלומה");
                 generes.add("טרילוגיות וסדרות מתח");
                 generes.add("מתח ישראלי");
                 generes.add("דואטים, טרילוגיות וסדרות מתח");
@@ -629,14 +716,17 @@ public class Utils {
                 generes.add("מותחן פסיכולוגי");
                 generes.add("סדרת שרלוק הולמס");
                 generes.add("בלשי");
-                generes.add("מותחן פוליטי");break;
+                generes.add("מותחן פוליטי");
+                break;
 
-                case "אימה": generes.add("אימה");
+            case "אימה":
+                generes.add("אימה");
                 generes.add("מותחן אימה");
-                generes.add("רצח");;break;
+                generes.add("רצח");
+                break;
 
-
-            case "מדע": generes.add("מדעים");
+            case "מדע":
+                generes.add("מדעים");
                 generes.add("מדע לילדים");
                 generes.add("סדרת סיירת המדע");
                 generes.add("מדע בדיוני");
@@ -670,7 +760,9 @@ public class Utils {
                 generes.add("עתידנות");
                 generes.add("חנונים");
                 break;
-            case "קומדיה": generes.add("קומדיה");
+
+            case "קומדיה":
+                generes.add("קומדיה");
                 generes.add("קומדיה רומנטית");
                 generes.add("ילדי הקומדיה");
                 generes.add("ספרים מצחיקים");
@@ -685,7 +777,8 @@ public class Utils {
                 generes.add("ספרים מצחיקים");
                 break;
 
-            case "דרמה": generes.add("דרמה");
+            case "דרמה":
+                generes.add("דרמה");
                 generes.add("ספרים מרגשים");
                 generes.add("סדרת יומני הנסיכה");
                 generes.add("נפש");
@@ -719,17 +812,16 @@ public class Utils {
                 generes.add("גאווה");
                 generes.add("ספרות נשית");
                 generes.add("אלימות במשפחה");
-                generes.add("דילמות של ילדים");break;
+                generes.add("דילמות של ילדים");
+                break;
 
-                default:return false;
-
-
+            default:
+                return false;
 
         }
 
 
-
-        if(Collections.disjoint(book.getGenres(),generes))
+        if (Collections.disjoint(book.getGenres(), generes))
             return false;
         return true;
     }
@@ -753,9 +845,10 @@ public class Utils {
             }
         });
     }
-    public static void deleteDoubleBooks(){
 
-        final ArrayList<Book>list=new ArrayList<>();
+    public static void deleteDoubleBooks() {
+
+        final ArrayList<Book> list = new ArrayList<>();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         final CollectionReference requestCollectionRef = db.collection("Books");
         requestCollectionRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -764,10 +857,9 @@ public class Utils {
                 if (task.isSuccessful()) {
                     for (DocumentSnapshot document : task.getResult()) {
                         Book book = document.toObject(Book.class);
-                        if(!(list.contains(book)))
+                        if (!(list.contains(book)))
                             list.add(book);
-                        else
-                        {
+                        else {
                             final DocumentReference bookRef = FirebaseFirestore.getInstance().collection("Books").document(book.getId());
                             bookRef.delete();
                         }
@@ -775,13 +867,12 @@ public class Utils {
                     }
 
                 }
-            }});
-
-
-
+            }
+        });
 
 
     }
+
 
 }
 
