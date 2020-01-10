@@ -22,6 +22,7 @@ public class Post implements Comparable {
     private String reviewer_email;
     private int rank;
     private ArrayList<Integer> user_avatar;
+    private boolean is_notify;
 
     private String review_title;
     private String review_content;
@@ -74,7 +75,7 @@ public class Post implements Comparable {
         this.rank = review.getRank();
         this.review_content = review.getReview_content();
         this.review_title = review.getReview_title();
-
+        this.is_notify= review.getIs_notify();
         this.likes_count = review.getLikes_count();
     }
 
@@ -104,6 +105,14 @@ public class Post implements Comparable {
 
 
 /*---------------------------------------Getters/Setters------------------------------------------*/
+
+    public boolean getIs_notify() {
+        return is_notify;
+    }
+
+    public void setIs_notify(boolean is_notify) {
+        this.is_notify = is_notify;
+    }
 
     public String getPost_id() {
         return post_id;

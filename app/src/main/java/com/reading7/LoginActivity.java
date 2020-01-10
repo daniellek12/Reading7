@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
@@ -18,12 +19,15 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.reading7.Objects.User;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
@@ -52,6 +56,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     protected void redirectAgain() {
+
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
@@ -74,7 +79,8 @@ public class LoginActivity extends AppCompatActivity {
 
 //                    if(user.getConnected() == 0) {
 //                        editUserFlagIn();
-                        startActivity(intent);
+                    editTokenId();
+                    startActivity(intent);
                         finish();
 //                    }
 //
@@ -207,6 +213,24 @@ public class LoginActivity extends AppCompatActivity {
         enableClicks();
         findViewById(R.id.progress_background).setVisibility(View.GONE);
         findViewById(R.id.progressBar).setVisibility(View.GONE);
+    }
+
+
+    private void editTokenId(){
+
+        String token_id = FirebaseInstanceId.getInstance().getToken();
+        String user_email = mAuth.getCurrentUser().getEmail();
+
+        Map<String,Object> tokenMap = new HashMap<>();
+        tokenMap.put("token_id", token_id);
+        tokenMap.put("is_notify", true);//TODO REMOVE THIS LATER -Only after we will have page to turn off notifications_ASK ADVA_
+        db.collection("Users").document(user_email).update(tokenMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+
+            }
+        });
+
     }
 
 }

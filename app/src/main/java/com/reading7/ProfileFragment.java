@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,6 +35,8 @@ import com.reading7.Objects.WishList;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -215,6 +218,19 @@ public class ProfileFragment extends Fragment {
                 disableClicks();
                 logout.setVisibility(View.GONE);
                 getActivity().findViewById(R.id.progressBar2).setVisibility(View.VISIBLE);
+                removeTokenId();
+
+            }
+        });
+    }
+
+    private void removeTokenId(){
+
+        Map<String,Object> removeToken = new HashMap<>();
+        removeToken.put("token_id","");
+        db.collection("Users").document(mAuth.getCurrentUser().getEmail()).update(removeToken).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
                 signOut();
             }
         });
@@ -249,6 +265,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
+                    usersReviewBookNames.clear();
                     for (QueryDocumentSnapshot doc : task.getResult()) {
                         usersReviewBookNames.add(doc.toObject(Review.class).getBook_title());
                     }
@@ -278,6 +295,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
+                    usersWishlistBookNames.clear();
                     for (QueryDocumentSnapshot doc : task.getResult()) {
                         usersWishlistBookNames.add(doc.toObject(WishList.class).getBook_title());
                     }

@@ -12,6 +12,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -20,12 +21,15 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.reading7.BookFragment;
 import com.reading7.MainActivity;
 import com.reading7.Objects.Book;
+import com.reading7.Objects.Review;
 import com.reading7.R;
 import com.reading7.ShelfFragment;
 import com.reading7.Utils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -188,24 +192,54 @@ public class ExpandedShelfAdapter extends RecyclerView.Adapter<ExpandedShelfAdap
         if (this.type != ShelfFragment.ShelfType.MYBOOKS)
             throw new AssertionError("Wrong adapter type!");
 
-        for (String book_name : toDelete) {
+        for (final String book_name : toDelete) {
             CollectionReference requestsRef = db.collection("Reviews");
             Query requestQuery = requestsRef.whereEqualTo("reviewer_email", mAuth.getCurrentUser().getEmail())
-                                            .whereEqualTo("book_title", book_name);
+                    .whereEqualTo("book_title", book_name);
             requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
+                            final Review review = document.toObject(Review.class);
                             document.getReference().delete();
-                        }
-                    }
+                            final DocumentReference bookRef = FirebaseFirestore.getInstance().collection("Books").document(review.getBook_id());
 
-                    else Toast.makeText(mContext, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            bookRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        final DocumentSnapshot doc = task.getResult();
+                                        if (doc.exists()) {
+                                            Book book = (doc.toObject(Book.class));
+                                            double newAvg,newAvgAge;
+                                            if(book.getRaters_count()  ==1)
+                                            {newAvg =0; newAvgAge=0;}
+                                            else {
+                                                newAvg = ((book.getAvg_rating() * book.getRaters_count()) - review.getRank()) / (book.getRaters_count() - 1);
+                                                newAvgAge = ((book.getAvg_age() * book.getRaters_count()) - review.getReviewer_age()) / (book.getRaters_count() - 1);
+                                            }
+                                            final Map<String, Object> updates = new HashMap<String, Object>();
+
+                                            updates.put("avg_rating", newAvg);
+                                            updates.put("avg_age", newAvgAge);
+                                            updates.put("raters_count", book.getRaters_count()-1);
+                                            bookRef.update(updates);
+                                        }
+                                    }
+                                }
+                            });
+
+                        }
+
+                    }
                 }
             });
         }
     }
+
+
 
 
 }

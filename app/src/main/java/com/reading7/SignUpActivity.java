@@ -17,6 +17,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.reading7.Adapters.TabsPagerAdapter;
 import com.reading7.Objects.User;
 
@@ -161,6 +162,8 @@ public class SignUpActivity extends AppCompatActivity implements EditAvatarDialo
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
 
+                    String token_id = FirebaseInstanceId.getInstance().getToken();
+                    user.setToken_id(token_id);
                     DocumentReference newUser = FirebaseFirestore.getInstance().collection("Users").document(user.getEmail());
                     newUser.set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override

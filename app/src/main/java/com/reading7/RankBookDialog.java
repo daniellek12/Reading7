@@ -107,7 +107,7 @@ public class RankBookDialog extends AppCompatDialogFragment {
                             userAge = Utils.calculateAge(user.getBirth_date());
                             if (mReview == null) {
 
-                                mReview = new Review("", book_id, mAuth.getCurrentUser().getEmail(), Utils.calculateAge(user.getBirth_date()), rank, review_title, review_content, Timestamp.now(), user.getFull_name(), book_title, book_author, user.getAvatar_details());
+                                mReview = new Review("", book_id, mAuth.getCurrentUser().getEmail(), Utils.calculateAge(user.getBirth_date()), rank, review_title, review_content, Timestamp.now(), user.getFull_name(), book_title, book_author, user.getAvatar_details(),user.getIs_notify());
                                 mReview.setReview_id(newReview.getId());
                                 final float newAvg = ((numOfRaters * currAvg) + rank) / (numOfRaters + 1);
                                 final float newAge = ((numOfRaters * currAge) + userAge) / (numOfRaters + 1);
@@ -115,7 +115,7 @@ public class RankBookDialog extends AppCompatDialogFragment {
                                                                                  @Override
                                                                                  public void onComplete(@NonNull Task<Void> task) {
                                                                                      if (task.isSuccessful()) {
-                                                                                         UpdateBook(newAge, newAvg, book_id);
+                                                                                         UpdateBook(newAge, newAvg, book_id,numOfRaters+1);
                                                                                      }
                                                                                  }
                                                                              }
@@ -129,6 +129,8 @@ public class RankBookDialog extends AppCompatDialogFragment {
                                 updates.put("rank", rank);
                                 updates.put("review_title", review_title);
                                 updates.put("review_content", review_content);
+                                updates.put("review_time", Timestamp.now());
+
                                 final float newAvg;
                                 final float newAge;
 
@@ -145,7 +147,7 @@ public class RankBookDialog extends AppCompatDialogFragment {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
-                                            UpdateBook(newAge, newAvg, book_id);
+                                            UpdateBook(newAge, newAvg, book_id,numOfRaters);
                                         }
                                     }
                                 });
@@ -171,13 +173,15 @@ public class RankBookDialog extends AppCompatDialogFragment {
     }
 
 
-    public void UpdateBook(final float newAge, final float newAvg, String book_id) {
+    public void UpdateBook(final float newAge, final float newAvg, String book_id,int numOfRaters) {
 
         DocumentReference ref = db.collection("Books").document(book_id);
         final Map<String, Object> updates = new HashMap<String, Object>();
 
         updates.put("avg_rating", newAvg);
         updates.put("avg_age", newAge);
+        updates.put("raters_count", numOfRaters);
+
 
         ref.update(updates).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

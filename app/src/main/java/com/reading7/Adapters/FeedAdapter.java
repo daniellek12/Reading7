@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,6 +36,8 @@ import com.reading7.Objects.User;
 import com.reading7.Utils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -48,6 +51,12 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
 
     ArrayList<Post> posts;
     Context mContext;
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+    User mUser;
+
+
+
 
     /*-------------------------------------- View Holders ----------------------------------------*/
 
@@ -114,9 +123,14 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
     /*--------------------------------------------------------------------------------------------*/
 
 
-    public FeedAdapter(Context context, ArrayList<Post> posts) {
+    public FeedAdapter(Context context, ArrayList<Post> posts,User mUser) {
         this.posts = posts;
         this.mContext = context;
+        this.mAuth = FirebaseAuth.getInstance();
+        this.db = FirebaseFirestore.getInstance();
+        this.mUser = mUser;
+
+
     }
 
 
@@ -224,6 +238,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
         final FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
         final DocumentReference userRef = FirebaseFirestore.getInstance().collection("Users").document(mUser.getEmail());
         final String id = post.getReview_id();
+        final String book_title = post.getBook_title();
         userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
 
             @Override
@@ -253,6 +268,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
                                     holder.likesNum.setText(String.valueOf(curr_num - 1));
 
                                 } else {
+                                    //add like
                                     user.add_like(id);
 
                                     post.setLikes_count(curr_num+1);
@@ -261,6 +277,8 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
 
                                     holder.likeButton.setBackground(mContext.getResources().getDrawable(R.drawable.like_colored));
                                     holder.likesNum.setText(String.valueOf(curr_num + 1));
+
+                                    addNotificationLike(post.getReviewer_email(),book_title,post.getIs_notify());
                                 }
                             }
                         });
@@ -351,6 +369,28 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
         @Override
         public void onClick(View v) {
             ((MainActivity)mContext).addFragment(new PublicProfileFragment(user_email));
+        }
+    }
+
+    private void addNotificationLike(String to_email,String book_title,boolean is_notify){
+        if(is_notify&& (!(to_email.equals(mAuth.getCurrentUser().getEmail())))) {
+            db = FirebaseFirestore.getInstance();
+
+            Map<String, Object> notificationMessegae = new HashMap<>();
+
+            notificationMessegae.put("type", mContext.getResources().getString(R.string.like_notificiation));
+            notificationMessegae.put("from", mAuth.getCurrentUser().getEmail());
+            notificationMessegae.put("user_name", mUser.getFull_name());
+            notificationMessegae.put("book_title", book_title);
+            notificationMessegae.put("time", Timestamp.now());
+            notificationMessegae.put("user_avatar", mUser.getAvatar_details());
+
+
+            db.collection("Users/" + to_email + "/Notifications").add(notificationMessegae).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                @Override
+                public void onSuccess(DocumentReference documentReference) {
+                }
+            });
         }
     }
 

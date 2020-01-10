@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -24,6 +25,8 @@ import com.reading7.Objects.WishList;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -42,6 +45,7 @@ public class HomeFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         return inflater.inflate(R.layout.home_fragment, null);
+
     }
 
 
@@ -95,7 +99,7 @@ public class HomeFragment extends Fragment {
                                                 }
                                             }
                                             Collections.sort(posts, new Post.SortByDate());
-                                            FeedAdapter adapter = new FeedAdapter(getActivity(), posts);
+                                            FeedAdapter adapter = new FeedAdapter(getActivity(), posts, ((MainActivity)getActivity()).getUser());
                                             postsRV.setAdapter(adapter);
                                             enableClicks();
                                         }
@@ -105,7 +109,7 @@ public class HomeFragment extends Fragment {
                             });
                             // create posts according to reviews)
                         } else {
-                            FeedAdapter adapter = new FeedAdapter(getActivity(), posts);
+                            FeedAdapter adapter = new FeedAdapter(getActivity(), posts,((MainActivity)getActivity()).getUser());
                             postsRV.setAdapter(adapter);
                             enableClicks();
 
@@ -140,6 +144,9 @@ public class HomeFragment extends Fragment {
 //        getActivity().findViewById(R.id.notifications).setEnabled(true);
         ((MainActivity)getActivity()).setBottomNavigationEnabled(true);
     }
+
+
+
 }
 
 

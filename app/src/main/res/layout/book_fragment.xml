@@ -8,6 +8,17 @@
     android:layoutDirection="rtl"
     tools:context=".BookFragment">
 
+    <TextView
+        android:id="@+id/ageAvg"
+        style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/book_details"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolBar"

@@ -78,7 +78,8 @@ public class WishListAdapter extends RecyclerView.Adapter<WishListAdapter.ViewHo
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (final DocumentSnapshot doc : task.getResult()) {
-                                ((MainActivity) mContext).addFragment(new BookFragment(doc.toObject(Book.class)));
+                                Book b = doc.toObject(Book.class);
+                                ((MainActivity) mContext).loadFragment(new BookFragment(b));
                             }
                         }
                     }

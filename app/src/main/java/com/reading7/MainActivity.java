@@ -1,5 +1,6 @@
 package com.reading7;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -12,6 +13,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.reading7.Objects.Book;
 import com.reading7.Objects.User;
 
 import androidx.annotation.NonNull;
@@ -31,9 +33,51 @@ public class MainActivity extends AppCompatActivity
 
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(this);
-        loadFragment(new ExploreFragment());
 
         initCurrentUser();
+
+
+        Intent intent = getIntent();
+
+        if(intent.getStringExtra("type") != null) {
+
+            String type = intent.getStringExtra("type");
+
+            if(type.equals( getResources().getString(R.string.follow_notificiation))) {
+                //TODO change to follow request page in the future
+                addFragment(new PublicProfileFragment(intent.getStringExtra("from_email")));
+                return;
+            }
+
+            if(type.equals(getResources().getString(R.string.like_notificiation))){
+
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                String book_title = intent.getStringExtra("book_title");
+                CollectionReference requestCollectionRef = db.collection("Books");
+                Query requestQuery = requestCollectionRef.whereEqualTo("title",book_title);
+                requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+
+                            Book b = null;
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                b = document.toObject(Book.class);
+                               addFragment(new BookFragment(b));
+                                return;
+                            }
+
+                        }
+                    }
+                });
+            }
+        }
+
+        else loadFragment(new ExploreFragment());
+    }
+
+    public User getUser(){
+        return mUser;
     }
 
 

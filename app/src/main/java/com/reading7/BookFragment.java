@@ -58,6 +58,7 @@ public class BookFragment extends Fragment {
     private Book mBook;
     private List<Review> lstReviews;
     private ReviewListAdapter adapter;
+    private Review mReview;
 
     private int countRaters;
     private RatingBar rankRatingBar;
@@ -70,6 +71,7 @@ public class BookFragment extends Fragment {
     private int mRank;
     private String mReviewTitle;
     private String mReviewContent;
+     boolean flag_reviewed;
 
     public BookFragment(Book book) {
         this.mBook = book;
@@ -77,10 +79,11 @@ public class BookFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
+        flag_reviewed =false;
         mAuth = FirebaseAuth.getInstance();
         countRaters = 0;
         db = FirebaseFirestore.getInstance();
+        mReview=null;
         return inflater.inflate(R.layout.book_fragment, container, false);
     }
 
@@ -113,8 +116,9 @@ public class BookFragment extends Fragment {
         ratingNum = getActivity().findViewById(R.id.ratingNum);
         ratingNum.setText(Float.toString(mBook.getAvg_rating()));
 
-//        avgAgeText = (TextView) getActivity().findViewById(R.id.ageAvg);
-//        avgAgeText.setText(AgeString(mBook.getAvg_age()));
+       avgAgeText = (TextView) getActivity().findViewById(R.id.ageAvg);
+        avgAgeText.setText(AgeString(mBook.getAvg_age()));
+        mAvgAge=mBook.getAvg_age();
 
         TextView textViewAuthor = getActivity().findViewById(R.id.author);
         textViewAuthor.setText(mBook.getAuthor() + ", ");
@@ -143,7 +147,8 @@ public class BookFragment extends Fragment {
     }
 
     private void getBookReviews() {
-
+        countRaters = 0;
+        lstReviews.clear();
         final List<Review> newlist = new ArrayList<Review>();
         CollectionReference collection = db.collection("Reviews");
         ((MainActivity) getActivity()).setBottomNavigationEnabled(false);
@@ -161,15 +166,8 @@ public class BookFragment extends Fragment {
 
                     lstReviews.addAll(newlist);
                     Collections.sort(lstReviews, Collections.reverseOrder());
-                    adapter.notifyDataSetChanged();
+                    findMyReview();
 
-                    TextView countRatersText = getActivity().findViewById(R.id.reviwersNum);
-                    if (countRaters == 1)
-                        countRatersText.setText(getResources().getString(R.string.one_reviewer));
-                    else
-                        countRatersText.setText(countRaters + " " + getResources().getString(R.string.reviewers));
-
-                    ((MainActivity) getActivity()).setBottomNavigationEnabled(true);
                 }
             }
         });
@@ -179,10 +177,14 @@ public class BookFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         RecyclerView postsRV = getActivity().findViewById(R.id.reviews);
         postsRV.setLayoutManager(layoutManager);
-        adapter = new ReviewListAdapter(getActivity(), lstReviews);
+        adapter = new ReviewListAdapter(getActivity(), lstReviews,this);
         postsRV.setAdapter(adapter);
 
         getBookReviews();
+    }
+
+    public boolean isFlag_reviewed() {
+        return flag_reviewed;
     }
 
     private void initOpenSummary() {
@@ -334,7 +336,7 @@ public class BookFragment extends Fragment {
                 args.putString("book_id", mBook.getId());
                 args.putString("book_title", mBook.getTitle());
                 args.putString("book_author", mBook.getAuthor());
-                args.putFloat("avg", Float.parseFloat((String) ratingNum.getText()));
+                args.putFloat("avg", Float.parseFloat(ratingNum.getText().toString()));
                 args.putFloat("avgAge", mAvgAge);
                 args.putInt("countRaters", countRaters);
 
@@ -377,7 +379,7 @@ public class BookFragment extends Fragment {
                 args.putString("book_id", mBook.getId());
                 args.putString("book_title", mBook.getTitle());
                 args.putString("book_author", mBook.getAuthor());
-                args.putFloat("avg", Float.parseFloat((String) ratingNum.getText()));
+                args.putFloat("avg", Float.parseFloat(ratingNum.getText().toString()));
                 args.putFloat("avgAge", mAvgAge);
                 args.putInt("countRaters", countRaters);
 
@@ -388,6 +390,7 @@ public class BookFragment extends Fragment {
         });
 
     }
+
 
 
     private String AgeString(float avgAge) {
@@ -428,7 +431,7 @@ public class BookFragment extends Fragment {
 
             rankRatingBar.setRating(avg);
             ratingNum.setText(Float.toString(avg));
-//            avgAgeText.setText(AgeString(mAvgAge));
+            avgAgeText.setText(AgeString(mAvgAge));
             lstReviews.clear();
             getBookReviews();//overhead
 
@@ -490,6 +493,45 @@ public class BookFragment extends Fragment {
             float alpha = 1 - (scrollY / (float) toolbarHeight);
             toolbar.setAlpha(alpha);
         }
+    }
+
+    private void findMyReview() {
+
+        //should i for the array to find my review or should i do firebase query
+/*
+        mReview = null;
+        CollectionReference requestCollectionRef = db.collection("Reviews");
+        Query requestQuery = requestCollectionRef.whereEqualTo("reviewer_email", mAuth.getCurrentUser().getEmail()).whereEqualTo("book_title", mBook.getTitle());
+        requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        mReview = document.toObject(Review.class);
+                    }
+                    if (mReview != null) {
+                        flag_reviewed=true;
+                        lstReviews.remove(mReview);
+                        lstReviews.add(0,mReview);
+
+                    }*/
+                    for(Review r:lstReviews){
+                        if(r.getReviewer_email().equals(mAuth.getCurrentUser().getEmail())) {
+                            flag_reviewed=true;
+                            lstReviews.remove(r);
+                            lstReviews.add(0,r);
+                        }
+                    }
+                    adapter.notifyDataSetChanged();
+
+                    TextView countRatersText = getActivity().findViewById(R.id.reviwersNum);
+                    if (countRaters == 1)
+                        countRatersText.setText(getResources().getString(R.string.one_reviewer));
+                    else
+                        countRatersText.setText(countRaters + " " + getResources().getString(R.string.reviewers));
+
+                    ((MainActivity) getActivity()).setBottomNavigationEnabled(true);
+
     }
 
 }

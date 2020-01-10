@@ -17,8 +17,9 @@ public class User {
     private ArrayList<String> favourite_books;      // top books to view on profile
     private ArrayList<String> favourite_genres;
     private ArrayList<String> liked_reviews;
-
+    private String token_id;
     private Boolean is_private;                     //true if profile listed as private
+    private Boolean is_notify;
 
     public User() {
         this.full_name = "";
@@ -32,6 +33,8 @@ public class User {
         this.liked_reviews = new ArrayList<>();
         this.avatar_details = new ArrayList<>();
         this.is_private = false; // default is public (as in Instagram)
+        this.token_id="";
+        this.is_notify= true;
     }
 
     public User(String full_name, String email, String birth_date, ArrayList<Integer> avatar_details) {
@@ -45,6 +48,9 @@ public class User {
         this.favourite_genres = new ArrayList<>();
         this.liked_reviews = new ArrayList<>();
         this.avatar_details = avatar_details;
+        this.token_id="";
+        this.is_notify= true;
+
     }
 
 
@@ -59,6 +65,9 @@ public class User {
         this.favourite_genres = favourite_genres;
         this.liked_reviews = liked_reviews;
         this.is_private = is_private;
+        this.token_id="";
+        this.is_notify= true;
+
     }
 
     //TODO: REMOVE WHEN THE AVATAR WILL WORK
@@ -75,6 +84,16 @@ public class User {
         this.liked_reviews = liked_reviews;
         this.avatar_details = avatar_details;
         this.is_private = is_private;
+        this.token_id="";
+        this.is_notify=true;
+    }
+
+    public String getToken_id() {
+        return token_id;
+    }
+
+    public void setToken_id(String token_id) {
+        this.token_id = token_id;
     }
 
     public String getFull_name() {
@@ -171,5 +190,13 @@ public class User {
 
     public void setAvatar_details(ArrayList<Integer> avatar_details) {
         this.avatar_details = avatar_details;
+    }
+
+    public Boolean getIs_notify() {
+        return is_notify;
+    }
+
+    public void setIs_notify(Boolean is_notify) {
+        this.is_notify = is_notify;
     }
 }

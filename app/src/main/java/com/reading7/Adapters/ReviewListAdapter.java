@@ -8,13 +8,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -22,6 +25,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.reading7.BookFragment;
 import com.reading7.MainActivity;
 import com.reading7.Objects.User;
 import com.reading7.ProfileFragment;
@@ -34,7 +38,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -47,18 +53,25 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
     Context mContext;
     private FirebaseAuth mAuth;
     private FirebaseFirestore mFirestore;
+    private FirebaseFirestore db;
+    private Fragment fragment;
 
+
+    private  User real_user;
     // More Fields to support Like button
     private final FirebaseUser mUser;
     private final DocumentReference userRef;
     private ArrayList<String> LikedReviews;
 
 
-    public ReviewListAdapter(Context context, List<Review> reviews) {
+    public ReviewListAdapter(Context context, List<Review> reviews, Fragment fragment) {
         mAuth = FirebaseAuth.getInstance();
         mFirestore = FirebaseFirestore.getInstance();
         this.reviews = reviews;
         this.mContext = context;
+        this.db = FirebaseFirestore.getInstance();
+        this.fragment= fragment;
+
 
         this.mUser = mAuth.getCurrentUser();
         this.userRef = mFirestore.collection("Users").document(mUser.getEmail());
@@ -69,8 +82,8 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
                 if (task.isSuccessful()) {
                     final DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        final User user = document.toObject(User.class);
-                        LikedReviews = user.getLiked_reviews(); // Update Local array
+                        real_user = document.toObject(User.class);
+                        LikedReviews = real_user .getLiked_reviews(); // Update Local array
                     }
                 }
             }
@@ -88,6 +101,9 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
     public void onBindViewHolder(@NonNull final ReviewListAdapter.ViewHolder viewHolder, int i) {
 
         final Review review = reviews.get(i);
+        if(i==0&&((BookFragment)fragment).isFlag_reviewed()){
+           viewHolder.relativeLayout.setBackgroundColor(0xffffff);
+        }
 
         Utils.loadAvatar(mContext, viewHolder.profileImage, review.getReviewer_avatar());
         viewHolder.userName.setText(review.getReviewer_name());
@@ -107,6 +123,7 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
 
         // Actions added to support Like button mechanics
         final String id = review.getReview_id();
+        final String book_title= review.getBook_title();
 
         if (LikedReviews.contains(id)) viewHolder.likeBtn.setBackground(mContext.getResources().getDrawable(R.drawable.like_colored));
         else viewHolder.likeBtn.setBackground(mContext.getResources().getDrawable(R.drawable.like));
@@ -134,6 +151,8 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
 
                     viewHolder.likeBtn.setBackground(mContext.getResources().getDrawable(R.drawable.like_colored));
                     viewHolder.likeNum.setText(String.valueOf(curr_num + 1));
+                    addNotificationLike(review.getReviewer_email(),book_title,review.getIs_notify());
+
                 }
             }
         });
@@ -147,6 +166,7 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
+        RelativeLayout relativeLayout;
         RatingBar ratingBar;
         TextView userName;
         TextView postTime;
@@ -158,6 +178,7 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            relativeLayout =itemView.findViewById(R.id.review_item);
             profileImage = itemView.findViewById(R.id.profileImage);
             ratingBar = itemView.findViewById(R.id.ratingBar);
             userName = itemView.findViewById(R.id.userName);
@@ -184,6 +205,30 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
                 ((MainActivity) mContext).loadFragment(new ProfileFragment());
             else
                 ((MainActivity) mContext).addFragment(new PublicProfileFragment(user_email));
+        }
+    }
+
+
+
+    private void addNotificationLike(String to_email,String book_title,boolean is_notify){
+        if(is_notify&& (!(to_email.equals(mAuth.getCurrentUser().getEmail())))){
+            db = FirebaseFirestore.getInstance();
+
+            Map<String, Object> notificationMessegae = new HashMap<>();
+
+            notificationMessegae.put("type", mContext.getResources().getString(R.string.like_notificiation));
+            notificationMessegae.put("from", mAuth.getCurrentUser().getEmail());
+            notificationMessegae.put("user_name", real_user.getFull_name());
+            notificationMessegae.put("book_title", book_title);
+            notificationMessegae.put("time", Timestamp.now());
+            notificationMessegae.put("user_avatar", real_user.getAvatar_details());
+
+
+            db.collection("Users/" + to_email + "/Notifications").add(notificationMessegae).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                @Override
+                public void onSuccess(DocumentReference documentReference) {
+                }
+            });
         }
     }
 }

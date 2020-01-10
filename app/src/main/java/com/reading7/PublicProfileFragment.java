@@ -9,7 +9,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -27,6 +29,8 @@ import com.reading7.Objects.User;
 import com.reading7.Objects.WishList;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -171,6 +175,10 @@ public class PublicProfileFragment extends Fragment {
                     userRef = db.collection("Users").document(user.getEmail());
                     userRef.update("followers", FieldValue.arrayUnion(user_me.getEmail()));
 
+                    //Notification
+                    addNotificationFollow(user.getEmail(),user.getIs_notify());
+
+
                 } else {
 
                     follow.setText(follow_string);
@@ -310,4 +318,27 @@ public class PublicProfileFragment extends Fragment {
             }
         });
     }
+
+    private void addNotificationFollow(String to_email,boolean is_notify) {
+        if (is_notify) {
+            db = FirebaseFirestore.getInstance();
+
+            Map<String, Object> notificationMessegae = new HashMap<>();
+
+            notificationMessegae.put("type", getContext().getResources().getString(R.string.follow_notificiation));
+            notificationMessegae.put("from", mAuth.getCurrentUser().getEmail());
+            notificationMessegae.put("user_name", ((MainActivity)getActivity()).getCurrentUser().getFull_name());
+            notificationMessegae.put("book_title", "follow_notification");//not relvant
+            notificationMessegae.put("time", Timestamp.now());
+            notificationMessegae.put("user_avatar", ((MainActivity)getActivity()).getCurrentUser().getAvatar_details());
+
+
+            db.collection("Users/" + to_email + "/Notifications").add(notificationMessegae).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                @Override
+                public void onSuccess(DocumentReference documentReference) {
+                }
+            });
+        }
+    }
+
 }

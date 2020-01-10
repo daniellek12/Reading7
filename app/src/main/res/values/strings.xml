@@ -66,6 +66,11 @@
     <string name="public_my_books">ספרים שקרא</string>
 
 
+    <!--Notifications-->
+    <string name="follow_notificiation">נוסף לך עוקב חדש</string>
+    <string name="like_notificiation">קיבלת לייק על הביקורת שלך</string>
+
+
     <!--Edit Avatar-->
     <string name="skin_color">צבע עור</string>
     <string name="hair_color">צבע שיער</string>

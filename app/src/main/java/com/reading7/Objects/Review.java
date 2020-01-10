@@ -19,6 +19,7 @@ public class Review implements Comparable {
     private Timestamp review_time;      // time the review was published // note - constructor gets miliseconds(System.currentTimeMillis())
     private int likes_count;
     private int reviewer_age;           //important age and not birth year
+    private boolean is_notify;
 
     // instead array of comments, we will save collection of comments with the review_id
 
@@ -31,7 +32,7 @@ public class Review implements Comparable {
 
     public Review() {}
 
-    public Review(String review_id, String book_id, String reviewer_email, int reviewer_age,int rank, String review_title, String review_content, Timestamp review_time, String reviewer_name, String book_title, String book_author, ArrayList<Integer> reviewer_avatar) {
+    public Review(String review_id, String book_id, String reviewer_email, int reviewer_age,int rank, String review_title, String review_content, Timestamp review_time, String reviewer_name, String book_title, String book_author, ArrayList<Integer> reviewer_avatar,boolean is_notify) {
         this.review_id = review_id;
         this.book_id = book_id;
         this.book_title = book_title;
@@ -45,8 +46,10 @@ public class Review implements Comparable {
         this.review_time = review_time;
         this.likes_count = 0;
         this.reviewer_age = reviewer_age;
+        this.is_notify=is_notify;
 
     }
+
 
 
     public String getBook_title() {
@@ -168,4 +171,11 @@ public class Review implements Comparable {
         return (review_time.compareTo(((Review) o).review_time));
     }
 
+    public boolean getIs_notify() {
+        return is_notify;
+    }
+
+    public void setIs_notify(boolean is_notify) {
+        this.is_notify = is_notify;
+    }
 }

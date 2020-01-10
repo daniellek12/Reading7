@@ -15,6 +15,7 @@ public class Book {
     private float avg_rating;
     private float avg_age;
     private ArrayList<String> actual_genres;
+    private int raters_count;
 
     public Book() {}
 
@@ -104,6 +105,15 @@ public class Book {
         this.actual_genres=actual_genres;
         //this.num_readers = num_readers;
         this.avg_age = avg_age;
+        this.raters_count = 0;
+    }
+
+    public int getRaters_count() {
+        return raters_count;
+    }
+
+    public void setRaters_count(int raters_count) {
+        this.raters_count = raters_count;
     }
 
     public ArrayList<String> getActual_genres() {
