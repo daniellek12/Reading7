@@ -34,6 +34,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.reading7.Objects.Book;
+import com.reading7.Objects.User;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -725,8 +726,8 @@ public class Utils {
                 generes.add("רצח");
                 break;
 
-            case "מדע":
-                generes.add("מדעים");
+
+            case "מדע": generes.add("מדעים");
                 generes.add("מדע לילדים");
                 generes.add("סדרת סיירת המדע");
                 generes.add("מדע בדיוני");
@@ -846,7 +847,26 @@ public class Utils {
         });
     }
 
-    public static void deleteDoubleBooks() {
+
+    public static void addFieldToUser() {
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final CollectionReference requestCollectionRef = db.collection("Users");
+        requestCollectionRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (DocumentSnapshot document : task.getResult()) {
+                        User user = document.toObject(User.class);
+                        final DocumentReference bookRef = FirebaseFirestore.getInstance().collection("Users").document(user.getEmail());
+                        bookRef.update("is_private", false);
+                    }
+                }
+            }
+        });
+    }
+
+    public static void deleteDoubleBooks(){
 
         final ArrayList<Book> list = new ArrayList<>();
         FirebaseFirestore db = FirebaseFirestore.getInstance();

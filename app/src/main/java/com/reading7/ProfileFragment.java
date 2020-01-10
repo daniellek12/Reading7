@@ -2,18 +2,18 @@ package com.reading7;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,14 +25,15 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.reading7.Adapters.ReadShelfAdapter;
 import com.reading7.Adapters.WishListAdapter;
 import com.reading7.Objects.Review;
 import com.reading7.Objects.WishList;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -69,13 +70,13 @@ public class ProfileFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
         getUserInformation();
 
-        initOptionsMenu();
-//        ImageButton dc = (ImageButton) getActivity().findViewById(R.id.settings);
-//        dc.setVisibility(View.GONE);
-        /*dc.bringToFront();
+        ImageButton dc = (ImageButton) getActivity().findViewById(R.id.settings);
+        dc.setVisibility(View.GONE);
+        dc.bringToFront();
         dc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Utils.addFieldToUser();
 //                try {
 //                    Utils.convertTxtToBook(getContext());
 //                } catch (IOException e) {
@@ -84,7 +85,7 @@ public class ProfileFragment extends Fragment {
 
                 Toast.makeText(getActivity(), "IF YOU TOUCH THIS BUTTON EVER AGAIN ROTEM WILL KILL YOU.", Toast.LENGTH_SHORT).show();
             }
-        });*/
+        });
     }
 
     private void getUserInformation() {
@@ -118,7 +119,7 @@ public class ProfileFragment extends Fragment {
                         arr = (ArrayList<String>) document.getData().get("following");
                         following.setText(Integer.toString(arr.size()));
 
-                        //initPrivateBtn();
+                        initPrivateBtn();
                         initLogOutBtn();
                         initWishlist();
                         initMyBookslist();
@@ -170,63 +171,50 @@ public class ProfileFragment extends Fragment {
 
     }
 
-//    private void initPrivateBtn() {
-//        final Switch sw = (Switch) getActivity().findViewById(R.id.private_switch);
-//        DocumentReference userRef = db.collection("Users").document(mAuth.getCurrentUser().getEmail());
-//        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                if (task.isSuccessful()) {
-//                    DocumentSnapshot document = task.getResult();
-//                    if (document.exists()) {
-//                        Boolean is_private = (Boolean) document.getData().get("is_private");
-//                        sw.setChecked(is_private);
-//                        sw.setVisibility(View.VISIBLE);
-//                    } else
-//                        Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-//
-//                } else
-//                    Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//
-//        sw.bringToFront();
-//        sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                disableClicks();
-//                if (isChecked) {
-//                    db.collection("Users").document(mAuth.getCurrentUser().getEmail()).update("is_private", true);
-//                    enableClicks();
-//                } else {
-//                    db.collection("Users").document(mAuth.getCurrentUser().getEmail()).update("is_private", false);
-//                    enableClicks();
-//                }
-//            }
-//        });
-//    }
-
-    private void initLogOutBtn() {
-
-        final RelativeLayout logoutButton = getActivity().findViewById(R.id.logoutButton);
-        logoutButton.setOnClickListener(new View.OnClickListener() {
+    private void initPrivateBtn() {
+        final Switch sw = (Switch) getActivity().findViewById(R.id.private_switch);
+        DocumentReference userRef = db.collection("Users").document(mAuth.getCurrentUser().getEmail());
+        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onClick(View view) {
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Boolean is_private = (Boolean) document.getData().get("is_private");
+                        sw.setChecked(is_private);
+                        sw.setVisibility(View.VISIBLE);
+                    } else
+                        Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                } else
+                    Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
 
+        sw.bringToFront();
+        sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 disableClicks();
-                getActivity().findViewById(R.id.progressBar2).setVisibility(View.VISIBLE);
-                removeTokenId();
-
+                if (isChecked) {
+                    db.collection("Users").document(mAuth.getCurrentUser().getEmail()).update("is_private", true);
+                    enableClicks();
+                } else {
+                    db.collection("Users").document(mAuth.getCurrentUser().getEmail()).update("is_private", false);
+                    enableClicks();
+                }
             }
         });
     }
 
-    private void removeTokenId(){
+    private void initLogOutBtn() {
 
-        Map<String,Object> removeToken = new HashMap<>();
-        removeToken.put("token_id","");
-        db.collection("Users").document(mAuth.getCurrentUser().getEmail()).update(removeToken).addOnSuccessListener(new OnSuccessListener<Void>() {
+        final TextView logout = getActivity().findViewById(R.id.logout);
+        logout.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onSuccess(Void aVoid) {
+            public void onClick(View view) {
+
+                disableClicks();
+                logout.setVisibility(View.GONE);
+                getActivity().findViewById(R.id.progressBar2).setVisibility(View.VISIBLE);
                 signOut();
             }
         });
@@ -239,62 +227,18 @@ public class ProfileFragment extends Fragment {
         getActivity().finish();
     }
 
-    private void initOptionsMenu(){
-
-        final RelativeLayout optionsLayout = getActivity().findViewById(R.id.optionsMenuLayout);
-        final ImageButton optionsButton = getActivity().findViewById(R.id.options);
-
-        optionsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                optionsLayout.setVisibility(View.VISIBLE);
-            }
-        });
-
-        getActivity().findViewById(R.id.optionsDummy).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                optionsLayout.setVisibility(View.GONE);
-            }
-        });
-
-        initLogOutBtn();
-
-        final RelativeLayout editProfileButton = getActivity().findViewById(R.id.editProfileButton);
-        editProfileButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ((MainActivity)getActivity()).loadFragment(new EditProfileFragment());
-                optionsLayout.setVisibility(View.GONE);
-            }
-        });
-
-        final RelativeLayout privacyButton = getActivity().findViewById(R.id.privacyButton);
-        privacyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ((MainActivity)getActivity()).loadFragment(new PrivacySettingsFragment());
-                optionsLayout.setVisibility(View.GONE);
-            }
-        });
-    }
-
     private void disableClicks() {
-        getActivity().findViewById(R.id.options).setEnabled(false);
+        getActivity().findViewById(R.id.settings).setEnabled(false);
         ((MainActivity) getActivity()).setBottomNavigationEnabled(false);
-        getActivity().findViewById(R.id.logoutButton).setEnabled(false);
-        getActivity().findViewById(R.id.privacyButton).setEnabled(false);
-        getActivity().findViewById(R.id.editProfileButton).setEnabled(false);
-        //getActivity().findViewById(R.id.private_switch).setEnabled(false);
+        getActivity().findViewById(R.id.logout).setEnabled(false);
+        getActivity().findViewById(R.id.private_switch).setEnabled(false);
     }
 
     private void enableClicks() {
-        getActivity().findViewById(R.id.options).setEnabled(true);
+        getActivity().findViewById(R.id.settings).setEnabled(true);
         ((MainActivity) getActivity()).setBottomNavigationEnabled(true);
-        getActivity().findViewById(R.id.logoutButton).setEnabled(true);
-        getActivity().findViewById(R.id.privacyButton).setEnabled(true);
-        getActivity().findViewById(R.id.editProfileButton).setEnabled(true);
-        //getActivity().findViewById(R.id.private_switch).setEnabled(true);
+        getActivity().findViewById(R.id.logout).setEnabled(true);
+        getActivity().findViewById(R.id.private_switch).setEnabled(true);
     }
 
     private void getUserReviews() {
@@ -305,7 +249,6 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
-                    usersReviewBookNames.clear();
                     for (QueryDocumentSnapshot doc : task.getResult()) {
                         usersReviewBookNames.add(doc.toObject(Review.class).getBook_title());
                     }
@@ -335,7 +278,6 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
-                    usersWishlistBookNames.clear();
                     for (QueryDocumentSnapshot doc : task.getResult()) {
                         usersWishlistBookNames.add(doc.toObject(WishList.class).getBook_title());
                     }
@@ -365,7 +307,4 @@ public class ProfileFragment extends Fragment {
     public String toString() {
         return FirebaseAuth.getInstance().getCurrentUser().getEmail();
     }
-
-
-
 }
