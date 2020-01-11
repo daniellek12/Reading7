@@ -121,5 +121,7 @@
     <string name="private_profile_explanation">כאשר הפרופיל שלך מוגדר כפרטי, רק העוקבים שלך יוכלו לצפות בו.</string>
     <string name="notifications_title">התראות</string>
     <string name="notification_explanation">קבלת התראות על עוקבים חדשים, לייקים ותגובות לביקורות שלך.</string>
+    <string name="empty_list">עדיין לא הוספת ספרים לרשימה זו.</string>
+    <string name="add_custom_list">הוסף רשימה חדשה</string>
 
 </resources>
