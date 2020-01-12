@@ -5,36 +5,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.measurement.api.AppMeasurementSdk;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.reading7.Adapters.FeedAdapter;
 import com.reading7.Adapters.NotificationListAdapter;
-import com.reading7.Objects.Book;
 import com.reading7.Objects.Notification;
-import com.reading7.Objects.Post;
-import com.reading7.Objects.Review;
-import com.reading7.Objects.WishList;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.EventListener;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -43,6 +29,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class NotificationsFragment extends Fragment {
+
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private List<Notification> notifications = new ArrayList<Notification>();
@@ -59,19 +46,18 @@ public class NotificationsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ((BottomNavigationView)getActivity().findViewById(R.id.navigation)).setSelectedItemId(R.id.navigation_home);
 
         initNotifications();
     }
 
 
-
     private void createNotifications(final RecyclerView notificationsRV) {
+
         disableClicks();
         final ArrayList<Notification> newlist = new ArrayList<>();
         FirebaseUser mUser = mAuth.getCurrentUser();
         final CollectionReference requestCollectionRef = db.collection("Users").document(mUser.getEmail()).collection("Notifications");
-        Query requestQuery = requestCollectionRef.limit(100);//TODO change to chunks with limit
+        Query requestQuery = requestCollectionRef.limit(100); //TODO change to chunks with limit
         requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -96,7 +82,7 @@ public class NotificationsFragment extends Fragment {
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         RecyclerView notificationsRV = getActivity().findViewById(R.id.notifications);
-       notificationsRV.setLayoutManager(layoutManager);
+        notificationsRV.setLayoutManager(layoutManager);
         createNotifications(notificationsRV);
     }
 
@@ -113,8 +99,6 @@ public class NotificationsFragment extends Fragment {
 //        getActivity().findViewById(R.id.notifications).setEnabled(true);
         ((MainActivity)getActivity()).setBottomNavigationEnabled(true);
     }
-
-
 
 }
 

@@ -4,10 +4,12 @@ package com.reading7.Adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.icu.text.RelativeDateTimeFormatter;
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -115,8 +117,8 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
         TextView title;
         TextView content;
         CircleImageView profileImage;
-        ImageView deleteBtn;
-        ImageView clickNotificationBtn;
+        ImageButton deleteBtn;
+        ImageButton clickNotificationBtn;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -125,9 +127,8 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
             addingTime = itemView.findViewById(R.id.notificationTime);
             content = itemView.findViewById(R.id.content);
             title = itemView.findViewById(R.id.title);
-            deleteBtn=itemView.findViewById(R.id.deleteBtn);
+            deleteBtn = itemView.findViewById(R.id.deleteBtn);
             clickNotificationBtn = itemView.findViewById(R.id.clickNotificationBtn);
-
         }
     }
 
