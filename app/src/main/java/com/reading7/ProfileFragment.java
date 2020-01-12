@@ -88,7 +88,7 @@ public class ProfileFragment extends Fragment {
 
         FirebaseUser mUser = mAuth.getCurrentUser();
         DocumentReference userRef = db.collection("Users").document(mUser.getEmail());
-        disableClicks();
+        Utils.enableDisableClicks(getActivity(), (ViewGroup)getView(), false);
 
         userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -130,6 +130,7 @@ public class ProfileFragment extends Fragment {
         });
     }
 
+
     private void initWishlist() {
 
         final ShelfFragment wishlistShelf = new ShelfFragment(usersWishlistBookNames, getString(R.string.my_wishlist), mAuth.getCurrentUser().getEmail(), ShelfFragment.ShelfType.WISHLIST);
@@ -146,6 +147,32 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 ((MainActivity) getActivity()).addFragment(wishlistShelf);
+            }
+        });
+    }
+
+    private void getUserWishList() {
+
+        CollectionReference collection = db.collection("Wishlist");
+        Query query = collection.whereEqualTo("user_email", mAuth.getCurrentUser().getEmail());
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    usersWishlistBookNames.clear();
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                        usersWishlistBookNames.add(doc.toObject(WishList.class).getBook_title());
+                    }
+                    adapterWishList.notifyDataSetChanged();
+
+                    if (usersWishlistBookNames.isEmpty()) {
+                        getActivity().findViewById(R.id.wishlistRV).setVisibility(View.INVISIBLE);
+                        getActivity().findViewById(R.id.emptyWishlist).setVisibility(View.VISIBLE);
+                    } else {
+                        getActivity().findViewById(R.id.wishlistRV).setVisibility(View.VISIBLE);
+                        getActivity().findViewById(R.id.emptyWishlist).setVisibility(View.INVISIBLE);
+                    }
+                }
             }
         });
     }
@@ -170,74 +197,36 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-//    private void initPrivateBtn() {
-//        final Switch sw = (Switch) getActivity().findViewById(R.id.private_switch);
-//        DocumentReference userRef = db.collection("Users").document(mAuth.getCurrentUser().getEmail());
-//        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                if (task.isSuccessful()) {
-//                    DocumentSnapshot document = task.getResult();
-//                    if (document.exists()) {
-//                        Boolean is_private = (Boolean) document.getData().get("is_private");
-//                        sw.setChecked(is_private);
-//                        sw.setVisibility(View.VISIBLE);
-//                    } else
-//                        Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-//
-//                } else
-//                    Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//
-//        sw.bringToFront();
-//        sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                disableClicks();
-//                if (isChecked) {
-//                    db.collection("Users").document(mAuth.getCurrentUser().getEmail()).update("is_private", true);
-//                    enableClicks();
-//                } else {
-//                    db.collection("Users").document(mAuth.getCurrentUser().getEmail()).update("is_private", false);
-//                    enableClicks();
-//                }
-//            }
-//        });
-//    }
+    private void getUserReviews() {
 
-    private void initLogOutBtn() {
-
-        final RelativeLayout logoutButton = getActivity().findViewById(R.id.logoutButton);
-        logoutButton.setOnClickListener(new View.OnClickListener() {
+        CollectionReference collection = db.collection("Reviews");
+        Query query = collection.whereEqualTo("reviewer_email", mAuth.getCurrentUser().getEmail());
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onClick(View view) {
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    usersReviewBookNames.clear();
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                        usersReviewBookNames.add(doc.toObject(Review.class).getBook_title());
+                    }
+                    adapterReviews.notifyDataSetChanged();
 
-                disableClicks();
-                getActivity().findViewById(R.id.progressBar2).setVisibility(View.VISIBLE);
-                removeTokenId();
+                    TextView reviews_num = getActivity().findViewById(R.id.recommendations);
+                    reviews_num.setText(Integer.toString(usersReviewBookNames.size()));
 
+                    if (usersReviewBookNames.isEmpty()) {
+                        getActivity().findViewById(R.id.myBooksRV).setVisibility(View.INVISIBLE);
+                        getActivity().findViewById(R.id.emptyMyBooks).setVisibility(View.VISIBLE);
+                    } else {
+                        getActivity().findViewById(R.id.myBooksRV).setVisibility(View.VISIBLE);
+                        getActivity().findViewById(R.id.emptyMyBooks).setVisibility(View.INVISIBLE);
+                    }
+                }
+                Utils.enableDisableClicks(getActivity(), (ViewGroup)getView(), true);
             }
         });
     }
 
-    private void removeTokenId(){
-
-        Map<String,Object> removeToken = new HashMap<>();
-        removeToken.put("token_id","");
-        db.collection("Users").document(mAuth.getCurrentUser().getEmail()).update(removeToken).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                signOut();
-            }
-        });
-    }
-
-    private void signOut() {
-        mAuth.signOut();
-        Intent intent = new Intent(getActivity(), LoginActivity.class);
-        startActivity(intent);
-        getActivity().finish();
-    }
 
     private void initOptionsMenu(){
 
@@ -289,79 +278,41 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    private void disableClicks() {
-        getActivity().findViewById(R.id.options).setEnabled(false);
-        ((MainActivity) getActivity()).setBottomNavigationEnabled(false);
-        getActivity().findViewById(R.id.logoutButton).setEnabled(false);
-        getActivity().findViewById(R.id.privacyButton).setEnabled(false);
-        getActivity().findViewById(R.id.editProfileButton).setEnabled(false);
-        getActivity().findViewById(R.id.notificationsBtn).setEnabled(false);
-    }
+    private void initLogOutBtn() {
 
-    private void enableClicks() {
-        getActivity().findViewById(R.id.options).setEnabled(true);
-        ((MainActivity) getActivity()).setBottomNavigationEnabled(true);
-        getActivity().findViewById(R.id.logoutButton).setEnabled(true);
-        getActivity().findViewById(R.id.privacyButton).setEnabled(true);
-        getActivity().findViewById(R.id.editProfileButton).setEnabled(true);
-        getActivity().findViewById(R.id.notificationsBtn).setEnabled(true);
-    }
-
-    private void getUserReviews() {
-
-        CollectionReference collection = db.collection("Reviews");
-        Query query = collection.whereEqualTo("reviewer_email", mAuth.getCurrentUser().getEmail());
-        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        final RelativeLayout logoutButton = getActivity().findViewById(R.id.logoutButton);
+        logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    usersReviewBookNames.clear();
-                    for (QueryDocumentSnapshot doc : task.getResult()) {
-                        usersReviewBookNames.add(doc.toObject(Review.class).getBook_title());
-                    }
-                    adapterReviews.notifyDataSetChanged();
+            public void onClick(View view) {
 
-                    TextView reviews_num = getActivity().findViewById(R.id.recommendations);
-                    reviews_num.setText(Integer.toString(usersReviewBookNames.size()));
+                Utils.enableDisableClicks(getActivity(), (ViewGroup)getView(), false);
+                getActivity().findViewById(R.id.progressBar2).setVisibility(View.VISIBLE);
+                removeTokenId();
 
-                    if (usersReviewBookNames.isEmpty()) {
-                        getActivity().findViewById(R.id.myBooksRV).setVisibility(View.INVISIBLE);
-                        getActivity().findViewById(R.id.emptyMyBooks).setVisibility(View.VISIBLE);
-                    } else {
-                        getActivity().findViewById(R.id.myBooksRV).setVisibility(View.VISIBLE);
-                        getActivity().findViewById(R.id.emptyMyBooks).setVisibility(View.INVISIBLE);
-                    }
-                }
-                enableClicks();
             }
         });
     }
 
-    private void getUserWishList() {
+    private void signOut() {
+        mAuth.signOut();
+        Intent intent = new Intent(getActivity(), LoginActivity.class);
+        startActivity(intent);
+        getActivity().finish();
+    }
 
-        CollectionReference collection = db.collection("Wishlist");
-        Query query = collection.whereEqualTo("user_email", mAuth.getCurrentUser().getEmail());
-        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+
+    private void removeTokenId(){
+
+        Map<String,Object> removeToken = new HashMap<>();
+        removeToken.put("token_id","");
+        db.collection("Users").document(mAuth.getCurrentUser().getEmail()).update(removeToken).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    usersWishlistBookNames.clear();
-                    for (QueryDocumentSnapshot doc : task.getResult()) {
-                        usersWishlistBookNames.add(doc.toObject(WishList.class).getBook_title());
-                    }
-                    adapterWishList.notifyDataSetChanged();
-
-                    if (usersWishlistBookNames.isEmpty()) {
-                        getActivity().findViewById(R.id.wishlistRV).setVisibility(View.INVISIBLE);
-                        getActivity().findViewById(R.id.emptyWishlist).setVisibility(View.VISIBLE);
-                    } else {
-                        getActivity().findViewById(R.id.wishlistRV).setVisibility(View.VISIBLE);
-                        getActivity().findViewById(R.id.emptyWishlist).setVisibility(View.INVISIBLE);
-                    }
-                }
+            public void onSuccess(Void aVoid) {
+                signOut();
             }
         });
     }
+
 
     public void refreshAdapters() {
         if (adapterWishList != null)
@@ -369,7 +320,6 @@ public class ProfileFragment extends Fragment {
         if (adapterReviews != null)
             adapterReviews.notifyDataSetChanged();
     }
-
 
     @Override
     public String toString() {

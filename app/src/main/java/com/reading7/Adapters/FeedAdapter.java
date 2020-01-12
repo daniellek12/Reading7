@@ -223,8 +223,20 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
         holder.userName.setText(post.getUser_name());
         holder.bookName.setText("\""+post.getBook_title()+"\"");
         holder.authorName.setText(post.getBook_author());
-        holder.review_content.setText(post.getReview_content());
-        holder.review_title.setText(post.getReview_title());
+
+        if(post.getReview_content().equals(""))
+            holder.review_content.setVisibility(View.GONE);
+        else {
+            holder.review_content.setVisibility(View.VISIBLE);
+            holder.review_content.setText(post.getReview_content());
+        }
+
+        if(post.getReview_title().equals(""))
+            holder.review_title.setVisibility(View.GONE);
+        else {
+            holder.review_title.setVisibility(View.VISIBLE);
+            holder.review_title.setText(post.getReview_title());
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             holder.review_content.setJustificationMode(JUSTIFICATION_MODE_INTER_WORD);
@@ -393,6 +405,5 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
             });
         }
     }
-
 
 }

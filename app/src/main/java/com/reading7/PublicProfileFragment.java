@@ -71,14 +71,13 @@ public class PublicProfileFragment extends Fragment {
         getUserInformation();
     }
 
-
     private void getUserInformation() {
 
         getActivity().findViewById(R.id.private_alert).setVisibility(View.GONE);
         getActivity().findViewById(R.id.classified_data).setVisibility(View.GONE);
 
         DocumentReference userRef = db.collection("Users").document(this.user_email);
-        disableClicks();
+        Utils.enableDisableClicks(getActivity(), (ViewGroup)getView(), false);
         userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -138,6 +137,7 @@ public class PublicProfileFragment extends Fragment {
             getActivity().findViewById(R.id.classified_data).setVisibility(View.GONE);
         }
     }
+
 
     private void initFollowButton() {
 
@@ -212,6 +212,29 @@ public class PublicProfileFragment extends Fragment {
         });
     }
 
+    private void addNotificationFollow(String to_email,boolean is_notify) {
+        if (is_notify) {
+            db = FirebaseFirestore.getInstance();
+
+            Map<String, Object> notificationMessegae = new HashMap<>();
+
+            notificationMessegae.put("type", getContext().getResources().getString(R.string.follow_notificiation));
+            notificationMessegae.put("from", mAuth.getCurrentUser().getEmail());
+            notificationMessegae.put("user_name", ((MainActivity)getActivity()).getCurrentUser().getFull_name());
+            notificationMessegae.put("book_title", "follow_notification");//not relvant
+            notificationMessegae.put("time", Timestamp.now());
+            notificationMessegae.put("user_avatar", ((MainActivity)getActivity()).getCurrentUser().getAvatar_details());
+
+
+            db.collection("Users/" + to_email + "/Notifications").add(notificationMessegae).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                @Override
+                public void onSuccess(DocumentReference documentReference) {
+                }
+            });
+        }
+    }
+
+
     private void initWishlist() {
 
         String title = getString(R.string.public_my_wishlist) + " " + user.getFull_name();
@@ -231,36 +254,6 @@ public class PublicProfileFragment extends Fragment {
                 ((MainActivity) getActivity()).addFragment(wishlistShelf);
             }
         });
-    }
-
-    private void initMyBookslist() {
-
-        String title = getString(R.string.public_my_books) + " " + user.getFull_name();
-        final ShelfFragment myBooksShelf = new ShelfFragment(usersReviewBookNames, title, user.getEmail(), ShelfFragment.ShelfType.MYBOOKS);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-        RecyclerView myBooksRV = getActivity().findViewById(R.id.myBooksRV);
-        myBooksRV.setLayoutManager(layoutManager);
-        adapterReviews = new ProfileShelfAdapter(getActivity(), usersReviewBookNames, myBooksShelf);
-        myBooksRV.setAdapter(adapterReviews);
-
-        getUserReviews();
-
-        getActivity().findViewById(R.id.mybooksTitle).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ((MainActivity) getActivity()).addFragment(myBooksShelf);
-            }
-        });
-
-
-    }
-
-    private void disableClicks() {
-
-    }
-
-    private void enableClicks() {
-
     }
 
     private void getUserWishList() {
@@ -289,6 +282,28 @@ public class PublicProfileFragment extends Fragment {
         });
     }
 
+    private void initMyBookslist() {
+
+        String title = getString(R.string.public_my_books) + " " + user.getFull_name();
+        final ShelfFragment myBooksShelf = new ShelfFragment(usersReviewBookNames, title, user.getEmail(), ShelfFragment.ShelfType.MYBOOKS);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        RecyclerView myBooksRV = getActivity().findViewById(R.id.myBooksRV);
+        myBooksRV.setLayoutManager(layoutManager);
+        adapterReviews = new ProfileShelfAdapter(getActivity(), usersReviewBookNames, myBooksShelf);
+        myBooksRV.setAdapter(adapterReviews);
+
+        getUserReviews();
+
+        getActivity().findViewById(R.id.mybooksTitle).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((MainActivity) getActivity()).addFragment(myBooksShelf);
+            }
+        });
+
+
+    }
+
     private void getUserReviews() {
 
         CollectionReference collection = db.collection("Reviews");
@@ -315,31 +330,8 @@ public class PublicProfileFragment extends Fragment {
                         getActivity().findViewById(R.id.publicProfile_emptyMyBooks).setVisibility(View.INVISIBLE);
                     }
                 }
-                enableClicks();
+                Utils.enableDisableClicks(getActivity(), (ViewGroup)getView(), true);
             }
         });
     }
-
-    private void addNotificationFollow(String to_email,boolean is_notify) {
-        if (is_notify) {
-            db = FirebaseFirestore.getInstance();
-
-            Map<String, Object> notificationMessegae = new HashMap<>();
-
-            notificationMessegae.put("type", getContext().getResources().getString(R.string.follow_notificiation));
-            notificationMessegae.put("from", mAuth.getCurrentUser().getEmail());
-            notificationMessegae.put("user_name", ((MainActivity)getActivity()).getCurrentUser().getFull_name());
-            notificationMessegae.put("book_title", "follow_notification");//not relvant
-            notificationMessegae.put("time", Timestamp.now());
-            notificationMessegae.put("user_avatar", ((MainActivity)getActivity()).getCurrentUser().getAvatar_details());
-
-
-            db.collection("Users/" + to_email + "/Notifications").add(notificationMessegae).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                @Override
-                public void onSuccess(DocumentReference documentReference) {
-                }
-            });
-        }
-    }
-
 }

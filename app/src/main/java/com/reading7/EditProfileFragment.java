@@ -13,14 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -60,6 +57,7 @@ public class EditProfileFragment extends Fragment {
         initBackButton();
         initAvatarDialog();
         initDatePicker();
+        initChangePasswordDialog();
         initSaveButton();
     }
 
@@ -160,6 +158,17 @@ public class EditProfileFragment extends Fragment {
         });
     }
 
+    private void initChangePasswordDialog() {
+
+        getView().findViewById(R.id.changePasswordButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ChangePasswordDialog dialog = new ChangePasswordDialog();
+                dialog.show(getActivity().getSupportFragmentManager(), "change password dialog");
+            }
+        });
+    }
+
 
     private String getNewName() {
         String name = ((EditText) getView().findViewById(R.id.name_edit)).getText().toString();
@@ -167,14 +176,6 @@ public class EditProfileFragment extends Fragment {
             return null;
 
         return name;
-    }
-
-    private String getNewEmail() {
-        String email = ((EditText) getView().findViewById(R.id.email_edit)).getText().toString();
-        if (email.equals("") || !(email.matches("[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}")))
-            return null;
-
-        return email;
     }
 
     private String getNewBirthDate() {

@@ -121,5 +121,12 @@
     <string name="private_profile_explanation">כאשר הפרופיל שלך מוגדר כפרטי, רק העוקבים שלך יוכלו לצפות בו.</string>
     <string name="notifications_title">התראות</string>
     <string name="notification_explanation">קבלת התראות על עוקבים חדשים, לייקים ותגובות לביקורות שלך.</string>
+    <string name="change_password">שינוי סיסמה</string>
+    <string name="old_password">סיסמה נוכחית</string>
+    <string name="new_password">סיסמה חדשה</string>
+    <string name="wrong_password">סיסמה שגויה</string>
+    <string name="password_change_success">הסיסמה שונתה בהצלחה</string>
+    <string name="try_again">משהו השתבש, נסה שוב</string>
+    <string name="enter_password">הכנס את סיסמתך הנוכחית</string>
 
 </resources>
