@@ -61,11 +61,13 @@
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="3dp"
+        android:indeterminateTint="@color/colorPrimaryDark"
+        android:progressBackgroundTint="@color/colorPrimaryDark"
+        android:progressTint="@color/colorPrimaryDark"
         android:scaleX="0.8"
         android:scaleY="0.8"
-        android:stepSize=".5"
-        android:progressTint="@color/colorPrimaryDark"
-        android:progressBackgroundTint="@color/colorPrimaryDark"/>
+        android:secondaryProgressTint="@color/colorPrimaryDark"
+        android:stepSize=".5" />
 
     <TextView
         android:id="@+id/rating"

@@ -21,9 +21,15 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.reading7.Objects.Review;
 import com.reading7.Objects.User;
+import com.reading7.Objects.WishList;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,6 +41,7 @@ public class EditProfileFragment extends Fragment {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private User user;
+
 
     @Nullable
     @Override
@@ -60,9 +67,6 @@ public class EditProfileFragment extends Fragment {
 
         User user = ((MainActivity) getActivity()).getCurrentUser();
 
-//        TextView userEmail = getActivity().findViewById(R.id.email_edit);
-//        userEmail.setText(user.getEmail());
-
         TextView userName = getActivity().findViewById(R.id.name_edit);
         userName.setText(user.getFull_name());
 
@@ -72,6 +76,7 @@ public class EditProfileFragment extends Fragment {
         CircleImageView profileImage = getActivity().findViewById(R.id.profile_image);
         Utils.loadAvatar(getContext(), profileImage, user.getAvatar_details());
     }
+
 
     private void initBackButton() {
         getView().findViewById(R.id.backButton).setOnClickListener(new View.OnClickListener() {
@@ -89,9 +94,8 @@ public class EditProfileFragment extends Fragment {
             public void onClick(View view) {
 
                 setLoadingMode(true);
-                dissapearErrorMasseges();
 
-                final String name = getName(), birthday = getBirthDate();
+                final String name = getNewName(), birthday = getNewBirthDate();
                 if (name == null) {
                     getActivity().findViewById(R.id.illegal_name).setVisibility(View.VISIBLE);
                     setLoadingMode(false);
@@ -103,12 +107,10 @@ public class EditProfileFragment extends Fragment {
                     return;
                 }
 
-                DocumentReference userRef = FirebaseFirestore.getInstance().collection("Users").document(user.getEmail());
-                userRef.update("full_name", name, "birth_date", birthday, "avatar_details", user.getAvatar_details());
+                updateReviews(name,Utils.calculateAge(birthday), user.getAvatar_details());
+                updateWishlists(name, user.getAvatar_details());
+                updateUser(name, birthday);
 
-                user.setBirth_date(birthday);
-                user.setFull_name(name);
-                ((MainActivity)getActivity()).setCurrentUser(user);
                 getActivity().onBackPressed();
             }
         });
@@ -158,7 +160,8 @@ public class EditProfileFragment extends Fragment {
         });
     }
 
-    private String getName() {
+
+    private String getNewName() {
         String name = ((EditText) getView().findViewById(R.id.name_edit)).getText().toString();
         if (name.equals("") || !(name.matches("[\u0590-\u05fe]+(( )[\u0590-\u05fe]+)*")))
             return null;
@@ -166,7 +169,7 @@ public class EditProfileFragment extends Fragment {
         return name;
     }
 
-    private String getEmail() {
+    private String getNewEmail() {
         String email = ((EditText) getView().findViewById(R.id.email_edit)).getText().toString();
         if (email.equals("") || !(email.matches("[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}")))
             return null;
@@ -174,7 +177,7 @@ public class EditProfileFragment extends Fragment {
         return email;
     }
 
-    private String getBirthDate() {
+    private String getNewBirthDate() {
         String birth_date = ((EditText) getView().findViewById(R.id.birth_date_edit)).getText().toString();
         if (birth_date.equals("")) {
             return "";
@@ -182,12 +185,57 @@ public class EditProfileFragment extends Fragment {
         return birth_date;
     }
 
-    private void dissapearErrorMasseges() {
-        getActivity().findViewById(R.id.illegal_mail).setVisibility(View.INVISIBLE);
-        getActivity().findViewById(R.id.illegal_name).setVisibility(View.INVISIBLE);
-        getActivity().findViewById(R.id.illegal_birth_date).setVisibility(View.INVISIBLE);
-        getActivity().findViewById(R.id.email_exists).setVisibility(View.INVISIBLE);
+
+    private void updateReviews(final String newName, final int newAge, final ArrayList<Integer> newAvatar) {
+
+        CollectionReference reviews = FirebaseFirestore.getInstance().collection("Reviews");
+        Query query = reviews.whereEqualTo("reviewer_email", user.getEmail());
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for(DocumentSnapshot doc: task.getResult()){
+                        Review review = doc.toObject(Review.class);
+                        FirebaseFirestore.getInstance()
+                                .collection("Reviews")
+                                .document(review.getReview_id())
+                                .update("reviewer_name", newName, "reviewer_age", newAge, "reviewer_avatar", newAvatar);
+                    }
+                }
+            }
+        });
     }
+
+    private void updateWishlists(final String newName, final ArrayList<Integer> newAvatar) {
+
+        CollectionReference wishlists = FirebaseFirestore.getInstance().collection("Wishlist");
+        Query query = wishlists.whereEqualTo("user_email", user.getEmail());
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for(DocumentSnapshot doc: task.getResult()){
+                        WishList wishlist = doc.toObject(WishList.class);
+                        FirebaseFirestore.getInstance()
+                                .collection("Wishlist")
+                                .document(wishlist.getId())
+                                .update("user_name", newName,"user_avatar", newAvatar);
+                    }
+                }
+            }
+        });
+    }
+
+    private void updateUser(String newName, String newBirthday) {
+
+        DocumentReference userRef = FirebaseFirestore.getInstance().collection("Users").document(user.getEmail());
+        userRef.update("full_name", newName, "birth_date", newBirthday, "avatar_details", user.getAvatar_details());
+
+        user.setBirth_date(newBirthday);
+        user.setFull_name(newName);
+        ((MainActivity)getActivity()).setCurrentUser(user);
+    }
+
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Make sure fragment codes match up
@@ -197,10 +245,19 @@ public class EditProfileFragment extends Fragment {
         }
     }
 
+
+    private void dissapearErrorMasseges() {
+        getActivity().findViewById(R.id.illegal_mail).setVisibility(View.INVISIBLE);
+        getActivity().findViewById(R.id.illegal_name).setVisibility(View.INVISIBLE);
+        getActivity().findViewById(R.id.illegal_birth_date).setVisibility(View.INVISIBLE);
+        getActivity().findViewById(R.id.email_exists).setVisibility(View.INVISIBLE);
+    }
+
     private void setLoadingMode(Boolean isLoading) {
 
         if(isLoading){
             Utils.enableDisableClicks(getActivity(), (ViewGroup)getView(), false);
+            dissapearErrorMasseges();
             getView().findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
             getView().findViewById(R.id.save).setVisibility(View.GONE);
         } else {
@@ -209,6 +266,5 @@ public class EditProfileFragment extends Fragment {
             getView().findViewById(R.id.save).setVisibility(View.VISIBLE);
         }
     }
-
 
 }

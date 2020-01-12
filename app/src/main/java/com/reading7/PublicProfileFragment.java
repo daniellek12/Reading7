@@ -22,8 +22,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.reading7.Adapters.ReadShelfAdapter;
-import com.reading7.Adapters.WishListAdapter;
+import com.reading7.Adapters.ProfileShelfAdapter;
 import com.reading7.Objects.Review;
 import com.reading7.Objects.User;
 import com.reading7.Objects.WishList;
@@ -50,8 +49,8 @@ public class PublicProfileFragment extends Fragment {
     private ArrayList<String> usersWishListBookNames = new ArrayList<>();
     private String user_email;
     private User user;
-    private ReadShelfAdapter adapterReviews;
-    private WishListAdapter adapterWishList;
+    private ProfileShelfAdapter adapterReviews;
+    private ProfileShelfAdapter adapterWishList;
 
     public PublicProfileFragment(String user_email) {
         this.user_email = user_email;
@@ -215,10 +214,13 @@ public class PublicProfileFragment extends Fragment {
 
     private void initWishlist() {
 
+        String title = getString(R.string.public_my_wishlist) + " " + user.getFull_name();
+        final ShelfFragment wishlistShelf = new ShelfFragment(usersWishListBookNames, title, user.getEmail(), ShelfFragment.ShelfType.WISHLIST);
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         final RecyclerView wishlistRV = getActivity().findViewById(R.id.wishlistRV);
         wishlistRV.setLayoutManager(layoutManager);
-        adapterWishList = new WishListAdapter(usersWishListBookNames, getActivity());
+        adapterWishList = new ProfileShelfAdapter(getActivity(), usersWishListBookNames, wishlistShelf);
         wishlistRV.setAdapter(adapterWishList);
 
         getUserWishList();
@@ -226,19 +228,19 @@ public class PublicProfileFragment extends Fragment {
         getActivity().findViewById(R.id.wishlistTitle).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String title = getString(R.string.public_my_wishlist) + " " + user.getFull_name();
-                ((MainActivity) getActivity()).addFragment(new ShelfFragment(usersWishListBookNames, title, user.getEmail(), ShelfFragment.ShelfType.WISHLIST));
+                ((MainActivity) getActivity()).addFragment(wishlistShelf);
             }
         });
-
     }
 
     private void initMyBookslist() {
 
+        String title = getString(R.string.public_my_books) + " " + user.getFull_name();
+        final ShelfFragment myBooksShelf = new ShelfFragment(usersReviewBookNames, title, user.getEmail(), ShelfFragment.ShelfType.MYBOOKS);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         RecyclerView myBooksRV = getActivity().findViewById(R.id.myBooksRV);
         myBooksRV.setLayoutManager(layoutManager);
-        adapterReviews = new ReadShelfAdapter(usersReviewBookNames, getActivity());
+        adapterReviews = new ProfileShelfAdapter(getActivity(), usersReviewBookNames, myBooksShelf);
         myBooksRV.setAdapter(adapterReviews);
 
         getUserReviews();
@@ -246,8 +248,7 @@ public class PublicProfileFragment extends Fragment {
         getActivity().findViewById(R.id.mybooksTitle).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String title = getString(R.string.public_my_books) + " " + user.getFull_name();
-                ((MainActivity) getActivity()).addFragment(new ShelfFragment(usersReviewBookNames, title, user.getEmail(), ShelfFragment.ShelfType.MYBOOKS));
+                ((MainActivity) getActivity()).addFragment(myBooksShelf);
             }
         });
 

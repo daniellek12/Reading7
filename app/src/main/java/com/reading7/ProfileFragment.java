@@ -5,10 +5,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,8 +23,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.reading7.Adapters.ReadShelfAdapter;
-import com.reading7.Adapters.WishListAdapter;
+import com.reading7.Adapters.ProfileShelfAdapter;
 import com.reading7.Objects.Review;
 import com.reading7.Objects.WishList;
 
@@ -50,8 +47,8 @@ public class ProfileFragment extends Fragment {
     private FirebaseFirestore db;
     final private ArrayList<String> usersReviewBookNames = new ArrayList<String>();
     final private ArrayList<String> usersWishlistBookNames = new ArrayList<String>();
-    private ReadShelfAdapter adapterReviews;
-    private WishListAdapter adapterWishList;
+    private ProfileShelfAdapter adapterReviews;
+    private ProfileShelfAdapter adapterWishList;
 
     @Nullable
     @Override
@@ -135,10 +132,12 @@ public class ProfileFragment extends Fragment {
 
     private void initWishlist() {
 
+        final ShelfFragment wishlistShelf = new ShelfFragment(usersWishlistBookNames, getString(R.string.my_wishlist), mAuth.getCurrentUser().getEmail(), ShelfFragment.ShelfType.WISHLIST);
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         final RecyclerView wishlistRV = getActivity().findViewById(R.id.wishlistRV);
         wishlistRV.setLayoutManager(layoutManager);
-        adapterWishList = new WishListAdapter(usersWishlistBookNames, getActivity());
+        adapterWishList = new ProfileShelfAdapter(getActivity(), usersWishlistBookNames, wishlistShelf);
         wishlistRV.setAdapter(adapterWishList);
 
         getUserWishList();
@@ -146,17 +145,19 @@ public class ProfileFragment extends Fragment {
         getActivity().findViewById(R.id.wishlistTitle).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainActivity) getActivity()).addFragment(new ShelfFragment(usersWishlistBookNames, getString(R.string.my_wishlist), mAuth.getCurrentUser().getEmail(), ShelfFragment.ShelfType.WISHLIST));
+                ((MainActivity) getActivity()).addFragment(wishlistShelf);
             }
         });
     }
 
     private void initMyBookslist() {
 
+        final ShelfFragment myBooksShelf = new ShelfFragment(usersReviewBookNames, getString(R.string.my_books), mAuth.getCurrentUser().getEmail(), ShelfFragment.ShelfType.MYBOOKS);
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         RecyclerView myBooksRV = getActivity().findViewById(R.id.myBooksRV);
         myBooksRV.setLayoutManager(layoutManager);
-        adapterReviews = new ReadShelfAdapter(usersReviewBookNames, getActivity());
+        adapterReviews = new ProfileShelfAdapter(getActivity(), usersReviewBookNames, myBooksShelf);
         myBooksRV.setAdapter(adapterReviews);
 
         getUserReviews();
@@ -164,10 +165,9 @@ public class ProfileFragment extends Fragment {
         getActivity().findViewById(R.id.mybooksTitle).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainActivity) getActivity()).addFragment(new ShelfFragment(usersReviewBookNames, getString(R.string.my_books), mAuth.getCurrentUser().getEmail(), ShelfFragment.ShelfType.MYBOOKS));
+                ((MainActivity) getActivity()).addFragment(myBooksShelf);
             }
         });
-
     }
 
 //    private void initPrivateBtn() {
