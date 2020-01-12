@@ -277,6 +277,16 @@ public class ProfileFragment extends Fragment {
                 optionsLayout.setVisibility(View.GONE);
             }
         });
+
+        ImageButton notificationBtn = getActivity().findViewById(R.id.notificationsBtn);
+        notificationBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                ((MainActivity)getActivity()).loadFragment(new NotificationsFragment());
+                optionsLayout.setVisibility(View.GONE);
+            }
+
+        });
     }
 
     private void disableClicks() {
@@ -285,7 +295,7 @@ public class ProfileFragment extends Fragment {
         getActivity().findViewById(R.id.logoutButton).setEnabled(false);
         getActivity().findViewById(R.id.privacyButton).setEnabled(false);
         getActivity().findViewById(R.id.editProfileButton).setEnabled(false);
-        //getActivity().findViewById(R.id.private_switch).setEnabled(false);
+        getActivity().findViewById(R.id.notificationsBtn).setEnabled(false);
     }
 
     private void enableClicks() {
@@ -294,7 +304,7 @@ public class ProfileFragment extends Fragment {
         getActivity().findViewById(R.id.logoutButton).setEnabled(true);
         getActivity().findViewById(R.id.privacyButton).setEnabled(true);
         getActivity().findViewById(R.id.editProfileButton).setEnabled(true);
-        //getActivity().findViewById(R.id.private_switch).setEnabled(true);
+        getActivity().findViewById(R.id.notificationsBtn).setEnabled(true);
     }
 
     private void getUserReviews() {
