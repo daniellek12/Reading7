@@ -95,11 +95,19 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
         viewHolder.addingTime.setText(strDate);
 
         viewHolder.title.setText("Notification from "+(notification.getUser_name()));
-        viewHolder.content.setText((notification.getType()));
-        viewHolder.clickNotificationBtn.setOnClickListener(new OpenBookOnClick(notification.getBook_title()));
+        if(notification.getBook_title().equals("follow_notification")) {
+            viewHolder.clickNotificationBtn.setOnClickListener(new OpenProfileOnClick(notification.getFrom()));
+            viewHolder.content.setText((notification.getType()));
+
+        }
+        else {
+            viewHolder.clickNotificationBtn.setOnClickListener(new OpenBookOnClick(notification.getBook_title()));
+            viewHolder.content.setText((notification.getType())+" על הספר "+notification.getBook_title());
+
+        }
         viewHolder.profileImage.setOnClickListener(new OpenProfileOnClick(notification.getFrom()));
         viewHolder.userName.setOnClickListener(new OpenProfileOnClick(notification.getFrom()));
-        viewHolder.deleteBtn.setOnClickListener(new DeleteNotificationOnClick(notification));
+        viewHolder.deleteBtn.setOnClickListener(new DeleteNotificationOnClick(notification,i));
 
 
     }
@@ -146,7 +154,7 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
             if(user_email.equals(mAuth.getCurrentUser().getEmail()))
                 ((MainActivity) mContext).loadFragment(new ProfileFragment());
             else
-                ((MainActivity) mContext).addFragment(new PublicProfileFragment(user_email));
+                ((MainActivity) mContext).loadFragment(new PublicProfileFragment(user_email));
         }
     }
 
@@ -187,9 +195,11 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
     private class DeleteNotificationOnClick implements View.OnClickListener {
 
         Notification notification;
+        int i;
 
-        public DeleteNotificationOnClick(Notification notification) {
+        public DeleteNotificationOnClick(Notification notification, int i) {
             this.notification = notification;
+            this.i = i;
         }
 
         @Override
@@ -203,6 +213,9 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             document.getReference().delete();
+                            notifications.remove(document.toObject(Notification.class));
+                            notifyItemRemoved(i);
+
                         }
                     } else
                         Toast.makeText(mContext, task.getException().getMessage(), Toast.LENGTH_SHORT).show();

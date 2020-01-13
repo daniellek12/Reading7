@@ -87,4 +87,16 @@ public class Notification {
             return -a.time.compareTo(b.time);
         }
     }
+
+    @Override
+    public boolean equals(Object object)
+    {
+        boolean same = false;
+
+        if (object != null && object instanceof Notification) {
+            same = (this.book_title.equals(((Notification) object).book_title)) && (this.type.equals(((Notification) object).type)) && (this.user_name.equals(((Notification) object).user_name));
+        }
+
+        return same;
+    }
 }

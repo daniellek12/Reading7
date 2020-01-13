@@ -57,15 +57,17 @@ public class NotificationsFragment extends Fragment {
         final ArrayList<Notification> newlist = new ArrayList<>();
         FirebaseUser mUser = mAuth.getCurrentUser();
         final CollectionReference requestCollectionRef = db.collection("Users").document(mUser.getEmail()).collection("Notifications");
-        Query requestQuery = requestCollectionRef.limit(100); //TODO change to chunks with limit
+        Query requestQuery = requestCollectionRef.limit(30); //TODO change to chunks with limit
         requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (DocumentSnapshot document : task.getResult()) {
                         Notification n = document.toObject(Notification.class);
-                        newlist.add(n);
+                        if (!newlist.contains(n))
+                            newlist.add(n);
                     }
+
                     notifications.addAll(newlist);
                     Collections.sort(notifications, new Notification.SortByDate());
                     NotificationListAdapter adapter = new NotificationListAdapter(getActivity(), notifications,getActivity());
