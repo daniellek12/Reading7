@@ -51,6 +51,7 @@ public class User {
         this.favourite_genres = new ArrayList<>();
         this.liked_reviews = new ArrayList<>();
         this.avatar_details = avatar_details;
+        this.is_private = false;
         this.token_id = "";
         this.is_notify = true;
 
