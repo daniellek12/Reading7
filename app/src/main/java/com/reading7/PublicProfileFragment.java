@@ -1,5 +1,6 @@
 package com.reading7;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -77,7 +78,7 @@ public class PublicProfileFragment extends Fragment {
         getActivity().findViewById(R.id.classified_data).setVisibility(View.GONE);
 
         DocumentReference userRef = db.collection("Users").document(this.user_email);
-        Utils.enableDisableClicks(getActivity(), (ViewGroup)getView(), false);
+        Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), false);
         userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -101,6 +102,8 @@ public class PublicProfileFragment extends Fragment {
                         ArrayList<String> following = (ArrayList<String>) document.getData().get("following");
                         ((TextView) getActivity().findViewById(R.id.publicProfile_following)).setText(Integer.toString(following.size()));
 
+                        ArrayList<String> follow_requests = (ArrayList<String>) document.getData().get("follow_requests");
+
                         ArrayList<String> favouriteBooks = (ArrayList<String>) document.getData().get("favourite_books");
 
                         ArrayList<String> lastSearches = (ArrayList<String>) document.getData().get("last_searches");
@@ -112,7 +115,7 @@ public class PublicProfileFragment extends Fragment {
                         Boolean is_private = (Boolean) document.getData().get("is_private");
 
 
-                        user = new User(userName, user_email, birthDate, followers, following, lastSearches,
+                        user = new User(userName, user_email, birthDate, followers, following, follow_requests, lastSearches,
                                 favouriteBooks, favouriteGenres, likedReviews, avatar_details, is_private);
 
                         check_private();
@@ -144,6 +147,7 @@ public class PublicProfileFragment extends Fragment {
         Button follow = getActivity().findViewById(R.id.follow);
         final String follow_string = getResources().getString(R.string.follow_button);
         final String unfollow_string = getResources().getString(R.string.unfollow_button);
+        final String request_string = getResources().getString(R.string.request_string);
 
         final FirebaseUser user_me = mAuth.getCurrentUser();
 
@@ -151,6 +155,9 @@ public class PublicProfileFragment extends Fragment {
             follow.setText(unfollow_string);
             follow.setBackgroundTintList(getResources().getColorStateList(R.color.colorPrimary));
 
+        } else if (user.getFollow_requests().contains(user_me.getEmail())) {
+            follow.setText(request_string);
+            follow.setBackgroundTintList(getResources().getColorStateList(R.color.black));
         } else {
             follow.setText(follow_string);
             follow.setBackgroundTintList(getResources().getColorStateList(R.color.colorAccent));
@@ -160,26 +167,36 @@ public class PublicProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Button follow = getActivity().findViewById(R.id.follow);
-                if (follow.getText().equals(follow_string)) {
-
+                if (follow.getText().equals(follow_string)) { // follow the user
                     if (user_me.getEmail().equals(user.getEmail()))
                         throw new AssertionError("YOU CANT FOLLOW YOURSELF!!!!");
+                    if (!user.getIs_private()) {
 
-                    follow.setText(unfollow_string);
-                    follow.setBackgroundTintList(getResources().getColorStateList(R.color.colorPrimary));
+                        follow.setText(unfollow_string);
+                        follow.setBackgroundTintList(getResources().getColorStateList(R.color.colorPrimary));
 
-                    DocumentReference userRef = db.collection("Users").document(user_me.getEmail());
-                    userRef.update("following", FieldValue.arrayUnion(user.getEmail()));
+                        DocumentReference userRef = db.collection("Users").document(user_me.getEmail());
+                        userRef.update("following", FieldValue.arrayUnion(user.getEmail()));
 
-                    userRef = db.collection("Users").document(user.getEmail());
-                    userRef.update("followers", FieldValue.arrayUnion(user_me.getEmail()));
+                        userRef = db.collection("Users").document(user.getEmail());
+                        userRef.update("followers", FieldValue.arrayUnion(user_me.getEmail()));
 
-                    //Notification
-                    addNotificationFollow(user.getEmail(),user.getIs_notify());
+                        /* currently commented until notifications will work */
+                        //Notification
+//                        addNotificationFollow(user.getEmail(), user.getIs_notify());
+                    } else { //user is private!
+                        follow.setText(request_string);
+                        follow.setBackgroundTintList(getResources().getColorStateList(R.color.black));
 
+                        DocumentReference userRef;
+                        //FIXME should we add who I requested to follow for each user?
+//                        userRef = db.collection("Users").document(user_me.getEmail());
+//                        userRef.update("following", FieldValue.arrayUnion(user.getEmail()));
 
-                } else {
-
+                        userRef = db.collection("Users").document(user.getEmail());
+                        userRef.update("follow_requests", FieldValue.arrayUnion(user_me.getEmail()));
+                    }
+                } else { // already following
                     follow.setText(follow_string);
                     follow.setBackgroundTintList(getResources().getColorStateList(R.color.colorAccent));
 
@@ -188,6 +205,9 @@ public class PublicProfileFragment extends Fragment {
 
                     userRef = db.collection("Users").document(user.getEmail());
                     userRef.update("followers", FieldValue.arrayRemove(user_me.getEmail()));
+
+                    userRef = db.collection("Users").document(user.getEmail());
+                    userRef.update("follow_requests", FieldValue.arrayRemove(user_me.getEmail()));
                 }
                 //update screen correctly!
                 DocumentReference userRef = db.collection("Users").document(user.getEmail());
@@ -212,7 +232,7 @@ public class PublicProfileFragment extends Fragment {
         });
     }
 
-    private void addNotificationFollow(String to_email,boolean is_notify) {
+    private void addNotificationFollow(String to_email, boolean is_notify) {
         if (is_notify) {
             db = FirebaseFirestore.getInstance();
 
@@ -220,10 +240,10 @@ public class PublicProfileFragment extends Fragment {
 
             notificationMessegae.put("type", getContext().getResources().getString(R.string.follow_notificiation));
             notificationMessegae.put("from", mAuth.getCurrentUser().getEmail());
-            notificationMessegae.put("user_name", ((MainActivity)getActivity()).getCurrentUser().getFull_name());
+            notificationMessegae.put("user_name", ((MainActivity) getActivity()).getCurrentUser().getFull_name());
             notificationMessegae.put("book_title", "follow_notification");//not relvant
             notificationMessegae.put("time", Timestamp.now());
-            notificationMessegae.put("user_avatar", ((MainActivity)getActivity()).getCurrentUser().getAvatar_details());
+            notificationMessegae.put("user_avatar", ((MainActivity) getActivity()).getCurrentUser().getAvatar_details());
 
 
             db.collection("Users/" + to_email + "/Notifications").add(notificationMessegae).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -330,7 +350,7 @@ public class PublicProfileFragment extends Fragment {
                         getActivity().findViewById(R.id.publicProfile_emptyMyBooks).setVisibility(View.INVISIBLE);
                     }
                 }
-                Utils.enableDisableClicks(getActivity(), (ViewGroup)getView(), true);
+                Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), true);
             }
         });
     }

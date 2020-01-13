@@ -849,7 +849,7 @@ public class Utils {
                     for (DocumentSnapshot document : task.getResult()) {
                         User user = document.toObject(User.class);
                         final DocumentReference bookRef = FirebaseFirestore.getInstance().collection("Users").document(user.getEmail());
-                        bookRef.update("is_private", false);
+                        bookRef.update("follow_requests", new ArrayList<String>());
                     }
                 }
             }
