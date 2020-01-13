@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -25,6 +24,7 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -42,18 +42,34 @@ public class NotificationsFragment extends Fragment {
         return inflater.inflate(R.layout.notification_fragment, null);
     }
 
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         initNotifications();
+        initBackButton();
     }
 
+    private void initBackButton(){
+        getActivity().findViewById(R.id.backButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().onBackPressed();
+            }
+        });
+    }
+
+    private void initNotifications() {
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        RecyclerView notificationsRV = getActivity().findViewById(R.id.notifications);
+        notificationsRV.setLayoutManager(layoutManager);
+        createNotifications(notificationsRV);
+    }
 
     private void createNotifications(final RecyclerView notificationsRV) {
 
-        disableClicks();
+        Utils.enableDisableClicks(getActivity(), (ViewGroup)getView(), false);
         final ArrayList<Notification> newlist = new ArrayList<>();
         FirebaseUser mUser = mAuth.getCurrentUser();
         final CollectionReference requestCollectionRef = db.collection("Users").document(mUser.getEmail()).collection("Notifications");
@@ -70,36 +86,28 @@ public class NotificationsFragment extends Fragment {
 
                     notifications.addAll(newlist);
                     Collections.sort(notifications, new Notification.SortByDate());
-                    NotificationListAdapter adapter = new NotificationListAdapter(getActivity(), notifications,getActivity());
+                    final NotificationListAdapter adapter = new NotificationListAdapter(getActivity(), notifications,getActivity());
                     notificationsRV.setAdapter(adapter);
-                    enableClicks();
+
+                    //Swipe to delete
+                    new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+
+                        @Override
+                        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                            return false;
+                        }
+
+                        @Override
+                        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                            adapter.deleteNotification(viewHolder.getAdapterPosition());
+                        }
+                    }).attachToRecyclerView(notificationsRV);
+
+                    Utils.enableDisableClicks(getActivity(), (ViewGroup)getView(), true);
                 }
             }
         });
 
-    }
-
-
-    private void initNotifications() {
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        RecyclerView notificationsRV = getActivity().findViewById(R.id.notifications);
-        notificationsRV.setLayoutManager(layoutManager);
-        createNotifications(notificationsRV);
-    }
-
-    private void disableClicks() {
-        // getActivity().findViewById(R.id.search).setEnabled(false);
-//        getActivity().findViewById(R.id.notifications).setEnabled(false);
-        ((MainActivity)getActivity()).setBottomNavigationEnabled(false);
-
-
-    }
-
-    private void enableClicks() {
-        //    getActivity().findViewById(R.id.search).setEnabled(true);
-//        getActivity().findViewById(R.id.notifications).setEnabled(true);
-        ((MainActivity)getActivity()).setBottomNavigationEnabled(true);
     }
 
 }

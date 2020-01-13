@@ -9,7 +9,6 @@ import java.util.Comparator;
 
 public class Notification {
 
-
     //private String id;
     private String type;
     private String from;

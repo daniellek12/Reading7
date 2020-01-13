@@ -72,9 +72,9 @@
 
 
     <!--Notifications-->
-    <string name="follow_notificiation_public">נוסף לך עוקב חדש</string>
+    <string name="follow_notificiation_public">התחיל לעקוב אחרייך</string>
     <string name="follow_notificiation_private">רוצה לעקוב אחרייך</string>
-    <string name="like_notificiation">קיבלת לייק על הביקורת שלך</string>
+    <string name="like_notificiation">אהבה את הביקורת שלך</string>
 
 
     <!--Edit Avatar-->
@@ -130,5 +130,7 @@
     <string name="try_again">משהו השתבש, נסה שוב</string>
     <string name="enter_password">הכנס את סיסמתך הנוכחית</string>
     <string name="request_string">ממתין</string>
+    <string name="notifications">התראות</string>
+    <string name="accept">קבל</string>
 
 </resources>

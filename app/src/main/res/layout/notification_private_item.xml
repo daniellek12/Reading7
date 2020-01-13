@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/clickNotificationBtn"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="3dp"
     android:background="@color/white"
-    android:layoutDirection="rtl">
+    android:layoutDirection="rtl"
+    android:padding="10dp">
 
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -13,122 +15,70 @@
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginRight="10dp"
         android:elevation="3dp"
         android:src="@drawable/avatar_layout"
-        app:civ_circle_background_color="@color/white"/>
-
-    <TextView
-        android:id="@+id/userName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:layout_toLeftOf="@id/profileImage"
-        android:text="אליאנה תדהר"
-        android:textColor="@color/black"
-        android:textSize="14sp"
-        android:textStyle="bold" />
-
-    <ImageView
-        android:id="@+id/timeIcon"
-        android:layout_width="11dp"
-        android:layout_height="11dp"
-        android:layout_below="@id/userName"
-        android:layout_marginTop="5dp"
-        android:layout_toLeftOf="@id/profileImage"
-        android:tint="@color/darkGrey"
-        app:srcCompat="@drawable/time" />
-
-    <TextView
-        android:id="@+id/notificationTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/userName"
-        android:layout_marginTop="2dp"
-        android:layout_marginRight="3dp"
-        android:layout_toLeftOf="@id/timeIcon"
-        android:text="לפני 3 ימים"
-        android:textSize="12sp" />
-
-    <View
-        android:id="@+id/divider1"
-        android:layout_width="match_parent"
-        android:layout_height=".5dp"
-        android:layout_below="@id/profileImage"
-        android:layout_marginTop="15dp"
-        android:background="?android:attr/listDivider" />
+        app:civ_circle_background_color="@color/white" />
 
     <RelativeLayout
-        android:id="@+id/coverLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/divider1">
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/profileImage">
 
+        <TextView
+            android:id="@+id/userName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="אליאנה תדהר"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/timeIcon"
+            android:layout_width="11dp"
+            android:layout_height="11dp"
+            android:layout_below="@id/userName"
+            android:layout_marginTop="5dp"
+            android:tint="@color/lightGrey"
+            app:srcCompat="@drawable/time" />
+
+        <TextView
+            android:id="@+id/notificationTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/userName"
+            android:layout_marginTop="2dp"
+            android:layout_marginRight="3dp"
+            android:layout_toLeftOf="@id/timeIcon"
+            android:text="לפני 3 ימים"
+            android:textColor="@color/lightGrey"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="3dp"
+            android:layout_marginBottom="15dp"
+            android:layout_toLeftOf="@id/userName"
+            android:text="״ההתראה״"
+            android:textColor="@color/black"
+            android:textSize="12sp" />
 
     </RelativeLayout>
 
-    <View
-        android:id="@id/divider"
-        android:layout_width="match_parent"
-        android:layout_height=".5dp"
-        android:layout_below="@id/coverLayout"
-        android:background="?android:attr/listDivider" />
-
-    <ImageButton
-        android:id="@+id/deleteBtn"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_below="@id/divider"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="30dp"
-        android:layout_marginBottom="30dp"
-        android:elevation="1dp"
-        android:scaleType="centerInside"
-        android:tint="@color/black"
-        app:srcCompat="@drawable/time" />
-
-    <ImageButton
-        android:id="@+id/clickNotificationBtn"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_below="@id/deleteBtn"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="30dp"
-        android:layout_marginBottom="30dp"
-        android:elevation="1dp"
-        android:scaleType="centerInside"
-        android:tint="@color/black"
-        app:srcCompat="@drawable/arrow_right" />
-
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/clickNotificationBtn"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="2dp"
-        android:layout_marginBottom="15dp"
-        android:text="״ההתראה״"
-        android:textSize="18sp"
-        android:textStyle="bold" />
-
-
-
-    <TextView
-        android:id="@+id/content"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/title"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="0dp"
-        android:layout_marginBottom="15dp"
-        android:text="״ההתראה״"
-        android:textSize="12sp"
-        android:textStyle="bold" />
-
-
-
+    <Button
+        android:id="@+id/accept"
+        android:layout_width="70dp"
+        android:layout_height="30dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:background="@drawable/rounded_corners"
+        android:backgroundTint="@color/green"
+        android:text="@string/accept"
+        android:textColor="@color/white" />
 
 </RelativeLayout>
