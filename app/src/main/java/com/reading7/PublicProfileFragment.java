@@ -181,9 +181,6 @@ public class PublicProfileFragment extends Fragment {
                         userRef = db.collection("Users").document(user.getEmail());
                         userRef.update("followers", FieldValue.arrayUnion(user_me.getEmail()));
 
-                        /* currently commented until notifications will work */
-                        //Notification
-//                        addNotificationFollow(user.getEmail(), user.getIs_notify());
                     } else { //user is private!
                         follow.setText(request_string);
                         follow.setBackgroundTintList(getResources().getColorStateList(R.color.black));
@@ -196,6 +193,8 @@ public class PublicProfileFragment extends Fragment {
                         userRef = db.collection("Users").document(user.getEmail());
                         userRef.update("follow_requests", FieldValue.arrayUnion(user_me.getEmail()));
                     }
+                    addNotificationFollow(user.getEmail(), user.getIs_notify(),user.getIs_private());
+
                 } else { // already following
                     follow.setText(follow_string);
                     follow.setBackgroundTintList(getResources().getColorStateList(R.color.colorAccent));
@@ -232,16 +231,25 @@ public class PublicProfileFragment extends Fragment {
         });
     }
 
-    private void addNotificationFollow(String to_email, boolean is_notify) {
+    private void addNotificationFollow(String to_email, boolean is_notify,boolean is_private) {
         if (is_notify) {
             db = FirebaseFirestore.getInstance();
 
             Map<String, Object> notificationMessegae = new HashMap<>();
 
-            notificationMessegae.put("type", getContext().getResources().getString(R.string.follow_notificiation));
+            if(!is_private) {
+                notificationMessegae.put("type", getContext().getResources().getString(R.string.follow_notificiation_public));
+                notificationMessegae.put("book_title", "follow_notification_public");//not relvant
+
+            }
+            else {
+                notificationMessegae.put("type", getContext().getResources().getString(R.string.follow_notificiation_private));
+                notificationMessegae.put("book_title", "follow_notification_private");//not relvant
+
+            }
+
             notificationMessegae.put("from", mAuth.getCurrentUser().getEmail());
             notificationMessegae.put("user_name", ((MainActivity) getActivity()).getCurrentUser().getFull_name());
-            notificationMessegae.put("book_title", "follow_notification");//not relvant
             notificationMessegae.put("time", Timestamp.now());
             notificationMessegae.put("user_avatar", ((MainActivity) getActivity()).getCurrentUser().getAvatar_details());
 

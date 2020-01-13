@@ -55,7 +55,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.reading7.Utils.RelativeDateDisplay;
 
-public class NotificationListAdapter extends RecyclerView.Adapter<NotificationListAdapter.ViewHolder> {
+public class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 
    List<Notification> notifications;
@@ -75,42 +75,10 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
 
     }
 
-    @NonNull
-    @Override
-    public NotificationListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.notification_item, viewGroup, false);
-        return new NotificationListAdapter.ViewHolder(view);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull final NotificationListAdapter.ViewHolder viewHolder, int i) {
-
-        final Notification notification = notifications.get(i);
-
-        Utils.loadAvatar(mContext, viewHolder.profileImage, notification.getUser_avatar());
-        viewHolder.userName.setText(notification.getUser_name());
-
-        Date date = notification.getTime().toDate();
-        String strDate = RelativeDateDisplay(Timestamp.now().toDate().getTime() - date.getTime());
-        viewHolder.addingTime.setText(strDate);
-
-        viewHolder.title.setText("Notification from "+(notification.getUser_name()));
-        if(notification.getBook_title().equals("follow_notification")) {
-            viewHolder.clickNotificationBtn.setOnClickListener(new OpenProfileOnClick(notification.getFrom()));
-            viewHolder.content.setText((notification.getType()));
-
-        }
-        else {
-            viewHolder.clickNotificationBtn.setOnClickListener(new OpenBookOnClick(notification.getBook_title()));
-            viewHolder.content.setText((notification.getType())+" על הספר "+notification.getBook_title());
-
-        }
-        viewHolder.profileImage.setOnClickListener(new OpenProfileOnClick(notification.getFrom()));
-        viewHolder.userName.setOnClickListener(new OpenProfileOnClick(notification.getFrom()));
-        viewHolder.deleteBtn.setOnClickListener(new DeleteNotificationOnClick(notification,i));
 
 
-    }
+
+
 
     @Override
     public int getItemCount() {
@@ -118,27 +86,6 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
     }
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-
-        TextView userName;
-        TextView addingTime;
-        TextView title;
-        TextView content;
-        CircleImageView profileImage;
-        ImageButton deleteBtn;
-        ImageButton clickNotificationBtn;
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            profileImage = itemView.findViewById(R.id.profileImage);
-            userName = itemView.findViewById(R.id.userName);
-            addingTime = itemView.findViewById(R.id.notificationTime);
-            content = itemView.findViewById(R.id.content);
-            title = itemView.findViewById(R.id.title);
-            deleteBtn = itemView.findViewById(R.id.deleteBtn);
-            clickNotificationBtn = itemView.findViewById(R.id.clickNotificationBtn);
-        }
-    }
 
 
     private class OpenProfileOnClick implements View.OnClickListener {
@@ -221,6 +168,161 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
                         Toast.makeText(mContext, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
+
+        }
+    }
+
+
+    @Override
+    public int getItemViewType(int i) {
+
+       if(notifications.get(i).getType().equals(mContext.getResources().getString(R.string.follow_notificiation_private))) {
+           return 0;
+       }
+       return 1;
+
+    }
+
+
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+
+        switch (viewHolder.getItemViewType()) {
+
+            case 0:
+                bindPrivate(viewHolder, i);
+                break;
+
+            case 1:
+                bindNormal(viewHolder, i);
+                break;
+
+        }
+    }
+    @NonNull
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+
+        View view = null;
+        switch (viewType) {
+
+            case 0:
+                view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.notification_private_item, viewGroup, false);
+                return new PrivateNotificationListAdapter(view);
+
+            case 1:
+                view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.notification_item, viewGroup, false);
+                return new PublicNotificationListAdapter(view);
+
+        }
+
+        return null;
+    }
+/*________________________BINDS_______________________*/
+
+    public void bindPrivate(RecyclerView.ViewHolder viewHolder, int i) {
+
+        NotificationListAdapter.PrivateNotificationListAdapter holder = (NotificationListAdapter.PrivateNotificationListAdapter) viewHolder;
+
+        final Notification notification = notifications.get(i);
+
+        Utils.loadAvatar(mContext, holder.profileImage, notification.getUser_avatar());
+        holder.userName.setText(notification.getUser_name());
+
+        Date date = notification.getTime().toDate();
+        String strDate = RelativeDateDisplay(Timestamp.now().toDate().getTime() - date.getTime());
+        holder.addingTime.setText(strDate);
+
+        holder.title.setText("Notification from "+(notification.getUser_name()));
+        holder.clickNotificationBtn.setOnClickListener(new OpenProfileOnClick(notification.getFrom()));
+        holder.content.setText((notification.getType()));
+
+
+        holder.profileImage.setOnClickListener(new OpenProfileOnClick(notification.getFrom()));
+        holder.userName.setOnClickListener(new OpenProfileOnClick(notification.getFrom()));
+        holder.deleteBtn.setOnClickListener(new DeleteNotificationOnClick(notification,i));
+
+
+    }
+
+    public void bindNormal(RecyclerView.ViewHolder viewHolder, int i) {
+        NotificationListAdapter.PublicNotificationListAdapter holder = (NotificationListAdapter.PublicNotificationListAdapter) viewHolder;
+
+        final Notification notification = notifications.get(i);
+
+        Utils.loadAvatar(mContext, holder.profileImage, notification.getUser_avatar());
+        holder.userName.setText(notification.getUser_name());
+
+        Date date = notification.getTime().toDate();
+        String strDate = RelativeDateDisplay(Timestamp.now().toDate().getTime() - date.getTime());
+        holder.addingTime.setText(strDate);
+
+        holder.title.setText("Notification from "+(notification.getUser_name()));
+        if(notification.getBook_title().equals("follow_notification_public")||notification.getBook_title().equals("follow_notification_private")) {
+            holder.clickNotificationBtn.setOnClickListener(new OpenProfileOnClick(notification.getFrom()));
+            holder.content.setText((notification.getType()));
+
+        }
+        else {
+            holder.clickNotificationBtn.setOnClickListener(new OpenBookOnClick(notification.getBook_title()));
+            holder.content.setText((notification.getType())+" על הספר "+notification.getBook_title());
+
+        }
+        holder.profileImage.setOnClickListener(new OpenProfileOnClick(notification.getFrom()));
+        holder.userName.setOnClickListener(new OpenProfileOnClick(notification.getFrom()));
+        holder.deleteBtn.setOnClickListener(new DeleteNotificationOnClick(notification,i));
+
+
+    }
+
+  /*_____________________________________________________________________________________*/
+
+
+    /*-------------------------------------- View Holders ----------------------------------------*/
+
+
+    public class PrivateNotificationListAdapter extends RecyclerView.ViewHolder {
+
+        TextView userName;
+        TextView addingTime;
+        TextView title;
+        TextView content;
+        CircleImageView profileImage;
+        ImageButton deleteBtn;
+        ImageButton clickNotificationBtn;
+
+        public PrivateNotificationListAdapter(@NonNull View itemView) {
+            super(itemView);
+            profileImage = itemView.findViewById(R.id.profileImage);
+            userName = itemView.findViewById(R.id.userName);
+            addingTime = itemView.findViewById(R.id.notificationTime);
+            content = itemView.findViewById(R.id.content);
+            title = itemView.findViewById(R.id.title);
+            deleteBtn = itemView.findViewById(R.id.deleteBtn);
+            clickNotificationBtn = itemView.findViewById(R.id.clickNotificationBtn);
+        }
+
+    }
+
+    public class PublicNotificationListAdapter extends RecyclerView.ViewHolder {
+
+        TextView userName;
+        TextView addingTime;
+        TextView title;
+        TextView content;
+        CircleImageView profileImage;
+        ImageButton deleteBtn;
+        ImageButton clickNotificationBtn;
+
+        public PublicNotificationListAdapter(@NonNull View itemView) {
+            super(itemView);
+            profileImage = itemView.findViewById(R.id.profileImage);
+            userName = itemView.findViewById(R.id.userName);
+            addingTime = itemView.findViewById(R.id.notificationTime);
+            content = itemView.findViewById(R.id.content);
+            title = itemView.findViewById(R.id.title);
+            deleteBtn = itemView.findViewById(R.id.deleteBtn);
+            clickNotificationBtn = itemView.findViewById(R.id.clickNotificationBtn);
 
         }
     }

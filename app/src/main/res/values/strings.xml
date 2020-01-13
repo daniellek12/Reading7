@@ -72,7 +72,8 @@
 
 
     <!--Notifications-->
-    <string name="follow_notificiation">נוסף לך עוקב חדש</string>
+    <string name="follow_notificiation_public">נוסף לך עוקב חדש</string>
+    <string name="follow_notificiation_private">רוצה לעקוב אחרייך</string>
     <string name="like_notificiation">קיבלת לייק על הביקורת שלך</string>
 
 
