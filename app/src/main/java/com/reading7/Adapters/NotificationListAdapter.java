@@ -4,10 +4,12 @@ package com.reading7.Adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.icu.text.RelativeDateTimeFormatter;
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -93,11 +95,19 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
         viewHolder.addingTime.setText(strDate);
 
         viewHolder.title.setText("Notification from "+(notification.getUser_name()));
-        viewHolder.content.setText((notification.getType()));
-        viewHolder.clickNotificationBtn.setOnClickListener(new OpenBookOnClick(notification.getBook_title()));
+        if(notification.getBook_title().equals("follow_notification")) {
+            viewHolder.clickNotificationBtn.setOnClickListener(new OpenProfileOnClick(notification.getFrom()));
+            viewHolder.content.setText((notification.getType()));
+
+        }
+        else {
+            viewHolder.clickNotificationBtn.setOnClickListener(new OpenBookOnClick(notification.getBook_title()));
+            viewHolder.content.setText((notification.getType())+" על הספר "+notification.getBook_title());
+
+        }
         viewHolder.profileImage.setOnClickListener(new OpenProfileOnClick(notification.getFrom()));
         viewHolder.userName.setOnClickListener(new OpenProfileOnClick(notification.getFrom()));
-        viewHolder.deleteBtn.setOnClickListener(new DeleteNotificationOnClick(notification));
+        viewHolder.deleteBtn.setOnClickListener(new DeleteNotificationOnClick(notification,i));
 
 
     }
@@ -115,8 +125,8 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
         TextView title;
         TextView content;
         CircleImageView profileImage;
-        ImageView deleteBtn;
-        ImageView clickNotificationBtn;
+        ImageButton deleteBtn;
+        ImageButton clickNotificationBtn;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -125,9 +135,8 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
             addingTime = itemView.findViewById(R.id.notificationTime);
             content = itemView.findViewById(R.id.content);
             title = itemView.findViewById(R.id.title);
-            deleteBtn=itemView.findViewById(R.id.deleteBtn);
+            deleteBtn = itemView.findViewById(R.id.deleteBtn);
             clickNotificationBtn = itemView.findViewById(R.id.clickNotificationBtn);
-
         }
     }
 
@@ -145,7 +154,7 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
             if(user_email.equals(mAuth.getCurrentUser().getEmail()))
                 ((MainActivity) mContext).loadFragment(new ProfileFragment());
             else
-                ((MainActivity) mContext).addFragment(new PublicProfileFragment(user_email));
+                ((MainActivity) mContext).loadFragment(new PublicProfileFragment(user_email));
         }
     }
 
@@ -186,9 +195,11 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
     private class DeleteNotificationOnClick implements View.OnClickListener {
 
         Notification notification;
+        int i;
 
-        public DeleteNotificationOnClick(Notification notification) {
+        public DeleteNotificationOnClick(Notification notification, int i) {
             this.notification = notification;
+            this.i = i;
         }
 
         @Override
@@ -202,6 +213,9 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             document.getReference().delete();
+                            notifications.remove(document.toObject(Notification.class));
+                            notifyItemRemoved(i);
+
                         }
                     } else
                         Toast.makeText(mContext, task.getException().getMessage(), Toast.LENGTH_SHORT).show();

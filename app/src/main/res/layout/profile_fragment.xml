@@ -30,7 +30,7 @@
             android:tint="@color/white" />
 
         <ImageButton
-            android:id="@+id/notifications"
+            android:id="@+id/notificationsBtn"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_gravity="left"
