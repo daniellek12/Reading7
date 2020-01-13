@@ -19,6 +19,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -88,7 +89,7 @@ public class ProfileFragment extends Fragment {
 
         FirebaseUser mUser = mAuth.getCurrentUser();
         DocumentReference userRef = db.collection("Users").document(mUser.getEmail());
-        Utils.enableDisableClicks(getActivity(), (ViewGroup)getView(), false);
+        Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), false);
 
         userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -222,13 +223,13 @@ public class ProfileFragment extends Fragment {
                         getActivity().findViewById(R.id.emptyMyBooks).setVisibility(View.INVISIBLE);
                     }
                 }
-                Utils.enableDisableClicks(getActivity(), (ViewGroup)getView(), true);
+                Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), true);
             }
         });
     }
 
 
-    private void initOptionsMenu(){
+    private void initOptionsMenu() {
 
         final RelativeLayout optionsLayout = getActivity().findViewById(R.id.optionsMenuLayout);
         final ImageButton optionsButton = getActivity().findViewById(R.id.options);
@@ -253,7 +254,7 @@ public class ProfileFragment extends Fragment {
         editProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainActivity)getActivity()).loadFragment(new EditProfileFragment());
+                ((MainActivity) getActivity()).loadFragment(new EditProfileFragment());
                 optionsLayout.setVisibility(View.GONE);
             }
         });
@@ -262,21 +263,57 @@ public class ProfileFragment extends Fragment {
         privacyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainActivity)getActivity()).loadFragment(new PrivacySettingsFragment());
+                ((MainActivity) getActivity()).loadFragment(new PrivacySettingsFragment());
                 optionsLayout.setVisibility(View.GONE);
             }
         });
 
         ImageButton notificationBtn = getActivity().findViewById(R.id.notificationsBtn);
-        notificationBtn.setOnClickListener(new View.OnClickListener(){
+        notificationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainActivity)getActivity()).loadFragment(new NotificationsFragment());
+                ((MainActivity) getActivity()).loadFragment(new NotificationsFragment());
                 optionsLayout.setVisibility(View.GONE);
             }
 
         });
+
+        /*TODO view all requests and approve/decline them individually.
+         *  Currently approve all requests.*/
+        ImageButton request_btn = getActivity().findViewById(R.id.requests_btn);
+        request_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseUser mUser = mAuth.getCurrentUser();
+                final DocumentReference userRef = db.collection("Users").document(mUser.getEmail());//me
+                Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), false);
+
+                userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                ArrayList<String> requests = (ArrayList<String>) document.getData().get("follow_requests");
+
+                                for (String request : requests) {
+                                    userRef.update("follow_requests", FieldValue.arrayRemove(request));
+                                    userRef.update("followers", FieldValue.arrayUnion(request));
+                                }
+                                Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), true);
+
+                            } else
+                                Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+
+                        } else
+                            Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+        });
     }
+
 
     private void initLogOutBtn() {
 
@@ -285,7 +322,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                Utils.enableDisableClicks(getActivity(), (ViewGroup)getView(), false);
+                Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), false);
                 getActivity().findViewById(R.id.progressBar2).setVisibility(View.VISIBLE);
                 removeTokenId();
 
@@ -301,10 +338,10 @@ public class ProfileFragment extends Fragment {
     }
 
 
-    private void removeTokenId(){
+    private void removeTokenId() {
 
-        Map<String,Object> removeToken = new HashMap<>();
-        removeToken.put("token_id","");
+        Map<String, Object> removeToken = new HashMap<>();
+        removeToken.put("token_id", "");
         db.collection("Users").document(mAuth.getCurrentUser().getEmail()).update(removeToken).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -325,7 +362,6 @@ public class ProfileFragment extends Fragment {
     public String toString() {
         return FirebaseAuth.getInstance().getCurrentUser().getEmail();
     }
-
 
 
 }
