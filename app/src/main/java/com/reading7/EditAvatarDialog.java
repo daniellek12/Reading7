@@ -2,13 +2,11 @@ package com.reading7;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -25,7 +23,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class EditAvatarDialog extends AppCompatDialogFragment {
 
     private ArrayList<Integer> avatar_details;
-//    private EditAvatarDialogListener listener;
 
     private CircleImageView avatar;
     private LayerDrawable layer;
@@ -322,22 +319,5 @@ public class EditAvatarDialog extends AppCompatDialogFragment {
 
         getTargetFragment().onActivityResult(getTargetRequestCode(), REQUEST_CODE, intent);
     }
-
-
-
-//    @Override
-//    public void onAttach(@NonNull Context context) {
-//        super.onAttach(context);
-//
-//        try {
-//            listener = (EditAvatarDialogListener) context;
-//        } catch (ClassCastException e) {
-//            throw new ClassCastException();
-//        }
-//    }
-
-//    public interface EditAvatarDialogListener {
-//        void getAvatarDetails(ArrayList<Integer> details);
-//    }
 
 }

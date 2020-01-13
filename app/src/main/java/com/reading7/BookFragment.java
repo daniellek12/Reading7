@@ -526,6 +526,7 @@ public class BookFragment extends Fragment {
                             flag_reviewed=true;
                             lstReviews.remove(r);
                             lstReviews.add(0,r);
+                            break;
                         }
                     }
                     adapter.notifyDataSetChanged();
