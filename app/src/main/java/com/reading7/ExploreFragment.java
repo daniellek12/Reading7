@@ -69,7 +69,7 @@ public class ExploreFragment extends Fragment {
                 ((MainActivity) getActivity()).addFragment(new BookFragment(book));
             }
         });
-        mGenre = "";
+        mGenre = "בשבילך";
         first = 0;
         showProgressBar();
         initAppBar();
@@ -250,22 +250,23 @@ public class ExploreFragment extends Fragment {
         showProgressBar();
 
         //changed genre
-        if (!mGenre.equals(genre))
+        if (!mGenre.equals(genre)){
             first = 0;
+            if(genre.equals("בשבילך")){
+                first_load_books();
+                return;
+            }
+
+        }
+        else
+            return;
 
             //pressed the same genre
-        else {
-            first_load_books();
-            mGenre = "";
-            return;
-        }
+
 
         mGenre = genre;
 
-        if(genre.equals("בשבילך")){
-            first_load_books();
-            return;
-        }
+
 
         final List<Book> newlist = new ArrayList<>();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -313,7 +314,7 @@ public class ExploreFragment extends Fragment {
 
         if (((firstVisibleItemPosition + visibleItemCount == totalItemCount) && !isLastItemReached)) {
             Query nextQuery;
-            if (mGenre == "")
+            if (mGenre.equals( "בשבילך"))
                 nextQuery = requestCollectionRef.startAfter(lastVisible).limit(limit);
             else
                 nextQuery = requestCollectionRef.whereArrayContains("actual_genres", mGenre).startAfter(lastVisible).limit(limit);
