@@ -186,16 +186,13 @@ public class PublicProfileFragment extends Fragment {
                         follow.setBackgroundTintList(getResources().getColorStateList(R.color.black));
 
                         DocumentReference userRef;
-                        //FIXME should we add who I requested to follow for each user?
-//                        userRef = db.collection("Users").document(user_me.getEmail());
-//                        userRef.update("following", FieldValue.arrayUnion(user.getEmail()));
 
                         userRef = db.collection("Users").document(user.getEmail());
                         userRef.update("follow_requests", FieldValue.arrayUnion(user_me.getEmail()));
                     }
                     addNotificationFollow(user.getEmail(), user.getIs_notify(),user.getIs_private());
 
-                } else { // already following
+                } else { // already following / requested
                     follow.setText(follow_string);
                     follow.setBackgroundTintList(getResources().getColorStateList(R.color.colorAccent));
 
@@ -207,6 +204,10 @@ public class PublicProfileFragment extends Fragment {
 
                     userRef = db.collection("Users").document(user.getEmail());
                     userRef.update("follow_requests", FieldValue.arrayRemove(user_me.getEmail()));
+
+                    //TODO add deletion of notification if user is private
+
+
                 }
                 //update screen correctly!
                 DocumentReference userRef = db.collection("Users").document(user.getEmail());
@@ -220,6 +221,7 @@ public class PublicProfileFragment extends Fragment {
 
                                 ArrayList<String> followers = (ArrayList<String>) document.getData().get("followers");
                                 ((TextView) getActivity().findViewById(R.id.publicProfile_followers)).setText(Integer.toString(followers.size()));
+                                check_private();
 
                             } else
                                 Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();

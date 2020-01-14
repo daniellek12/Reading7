@@ -277,41 +277,6 @@ public class ProfileFragment extends Fragment {
             }
 
         });
-
-        /*TODO view all requests and approve/decline them individually.
-         *  Currently approve all requests.*/
-        ImageButton request_btn = getActivity().findViewById(R.id.requests_btn);
-        request_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FirebaseUser mUser = mAuth.getCurrentUser();
-                final DocumentReference userRef = db.collection("Users").document(mUser.getEmail());//me
-                Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), false);
-
-                userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
-                            if (document.exists()) {
-                                ArrayList<String> requests = (ArrayList<String>) document.getData().get("follow_requests");
-
-                                for (String request : requests) {
-                                    userRef.update("follow_requests", FieldValue.arrayRemove(request));
-                                    userRef.update("followers", FieldValue.arrayUnion(request));
-                                }
-                                Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), true);
-
-                            } else
-                                Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-
-                        } else
-                            Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-
-        });
     }
 
 

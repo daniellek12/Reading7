@@ -46,6 +46,7 @@ public class User {
         this.birth_date = birth_date;
         this.followers = new ArrayList<>();
         this.following = new ArrayList<>();
+        this.follow_requests = new ArrayList<>();
         this.last_searches = new ArrayList<>();
         this.favourite_books = new ArrayList<>();
         this.favourite_genres = new ArrayList<>();

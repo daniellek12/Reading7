@@ -18,6 +18,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -202,7 +204,22 @@ public class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.V
         holder.clickNotificationBtn.setOnClickListener(new OpenProfileOnClick(notification.getFrom()));
         holder.content.setText((notification.getType()));
 
-        //TODO: holder.acceptBtn.setOnClickListener
+        holder.acceptBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String followed_mail = mAuth.getCurrentUser().getEmail();
+                String follower_mail = notification.getFrom();
+                DocumentReference userRef;
+                userRef = db.collection("Users").document(followed_mail);
+                userRef.update("follow_requests", FieldValue.arrayRemove(follower_mail));
+
+                userRef = db.collection("Users").document(followed_mail);
+                userRef.update("followers", FieldValue.arrayUnion(follower_mail));
+
+                userRef = db.collection("Users").document(follower_mail);
+                userRef.update("following", FieldValue.arrayUnion(followed_mail));
+            }
+        });
     }
 
     public void bindNormal(RecyclerView.ViewHolder viewHolder, int i) {
@@ -246,14 +263,14 @@ public class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.V
         Button acceptBtn;
         RelativeLayout clickNotificationBtn;
 
-        public PrivateNotificationListAdapter(@NonNull View itemView) {
+        public PrivateNotificationListAdapter(@NonNull final View itemView) {
             super(itemView);
             profileImage = itemView.findViewById(R.id.profileImage);
             userName = itemView.findViewById(R.id.userName);
             addingTime = itemView.findViewById(R.id.notificationTime);
             content = itemView.findViewById(R.id.content);
-            acceptBtn = itemView.findViewById(R.id.accept);
             clickNotificationBtn = itemView.findViewById(R.id.clickNotificationBtn);
+            acceptBtn = itemView.findViewById(R.id.accept);
         }
 
     }
