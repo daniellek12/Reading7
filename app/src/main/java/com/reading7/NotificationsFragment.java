@@ -68,7 +68,7 @@ public class NotificationsFragment extends Fragment {
     }
 
     private void createNotifications(final RecyclerView notificationsRV) {
-
+        notifications.clear();
         Utils.enableDisableClicks(getActivity(), (ViewGroup)getView(), false);
         final ArrayList<Notification> newlist = new ArrayList<>();
         FirebaseUser mUser = mAuth.getCurrentUser();
