@@ -236,6 +236,7 @@ public class PublicProfileFragment extends Fragment {
                             if (document.exists()) {
 
                                 ArrayList<String> followers = (ArrayList<String>) document.getData().get("followers");
+                                user.setFollowers(followers);
                                 ((TextView) getActivity().findViewById(R.id.publicProfile_followers)).setText(Integer.toString(followers.size()));
                                 check_private();
 
