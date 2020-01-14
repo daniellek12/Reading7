@@ -127,7 +127,7 @@ public class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.V
                         notifications.remove(document.toObject(Notification.class));
                         notifyItemRemoved(position);
 
-                        if (notification.getType()=="follow_notification_private"){//decline to request
+                        if (notification.getType().equals(mContext.getResources().getString(R.string.follow_notificiation_private))) {//decline to request
                             DocumentReference userRef = db.collection("Users").document(mAuth.getCurrentUser().getEmail());
                             userRef.update("follow_requests", FieldValue.arrayRemove(notification.getFrom()));
                         }
@@ -187,10 +187,9 @@ public class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
 
-
-/**
- *************************************** BINDERS ********************************************
- */
+    /**
+     * ************************************** BINDERS ********************************************
+     */
 
 
     public void bindPrivate(RecyclerView.ViewHolder viewHolder, int i) {
@@ -258,9 +257,9 @@ public class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
 
-/**
- *********************************** View Holders *******************************************
- */
+    /**
+     * ********************************** View Holders *******************************************
+     */
 
 
     public class PrivateNotificationListAdapter extends RecyclerView.ViewHolder {
