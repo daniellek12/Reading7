@@ -115,7 +115,7 @@ public class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     public void deleteNotification(final int position) {
 
-        Notification notification = notifications.get(position);
+        final Notification notification = notifications.get(position);
         CollectionReference requestsRef = db.collection("Users").document(mAuth.getCurrentUser().getEmail()).collection("Notifications");
         Query requestQuery = requestsRef.whereEqualTo("time", notification.getTime()).whereEqualTo("from", notification.getFrom()).whereEqualTo("type", notification.getType());
         requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -126,6 +126,11 @@ public class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.V
                         document.getReference().delete();
                         notifications.remove(document.toObject(Notification.class));
                         notifyItemRemoved(position);
+
+                        if (notification.getType()=="follow_notification_private"){//decline to request
+                            DocumentReference userRef = db.collection("Users").document(mAuth.getCurrentUser().getEmail());
+                            userRef.update("follow_requests", FieldValue.arrayRemove(notification.getFrom()));
+                        }
 
                     }
                 } else
@@ -190,7 +195,7 @@ public class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     public void bindPrivate(RecyclerView.ViewHolder viewHolder, int i) {
 
-        NotificationListAdapter.PrivateNotificationListAdapter holder = (NotificationListAdapter.PrivateNotificationListAdapter) viewHolder;
+        final NotificationListAdapter.PrivateNotificationListAdapter holder = (NotificationListAdapter.PrivateNotificationListAdapter) viewHolder;
 
         final Notification notification = notifications.get(i);
 
@@ -218,6 +223,10 @@ public class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.V
 
                 userRef = db.collection("Users").document(follower_mail);
                 userRef.update("following", FieldValue.arrayUnion(followed_mail));
+
+                //update UI
+                holder.content.setText(notification.getUser_name() + " כעת עוקב אחריך");
+                holder.acceptBtn.setVisibility(View.GONE);
             }
         });
     }
