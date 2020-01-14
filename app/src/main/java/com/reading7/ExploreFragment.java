@@ -247,19 +247,21 @@ public class ExploreFragment extends Fragment {
 
     public void first_load_genre_books(final String genre) {
 
-        showProgressBar();
 
         //changed genre
-        if (!mGenre.equals(genre)){
+        if (!mGenre.equals(genre)) {
+            showProgressBar();
             first = 0;
-            if(genre.equals("בשבילך")){
+            if (genre.equals("בשבילך")) {
                 first_load_books();
                 return;
             }
 
-        }
-        else
+        } else
+        {
+            hideProgressBar();
             return;
+        }
 
             //pressed the same genre
 
@@ -350,13 +352,13 @@ public class ExploreFragment extends Fragment {
 
 
     public void showProgressBar() {
-        disableClicks();
+        Utils.enableDisableClicks(getActivity(),(ViewGroup)getView(),false);
 //        getActivity().findViewById(R.id.explore_progress_background).setVisibility(View.VISIBLE);
         getActivity().findViewById(R.id.explore_progress_bar).setVisibility(View.VISIBLE);
     }
 
     private void hideProgressBar() {
-        enableClicks();
+        Utils.enableDisableClicks(getActivity(),(ViewGroup)getView(),true);
 //        getActivity().findViewById(R.id.explore_progress_background).setVisibility(View.GONE);
         //getActivity().findViewById(R.id.explore_progress_bar).setVisibility(View.GONE);
     }

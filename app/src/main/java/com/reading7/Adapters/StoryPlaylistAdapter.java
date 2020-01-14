@@ -135,11 +135,16 @@ public class StoryPlaylistAdapter extends RecyclerView.Adapter<StoryPlaylistAdap
 
     private void updatePressedGenre(ViewHolder viewHolder, String genre) {
 
-        if (pressedGenre.equals(genre))
+        if (pressedGenre.equals(genre)) {
             viewHolder.cover.setBackgroundTintList(ColorStateList.valueOf(mContext.getResources().getColor(R.color.colorPrimary)));
+            viewHolder.cover.setClickable(false);
+        }
 
-        else
+        else {
             viewHolder.cover.setBackgroundTintList(ColorStateList.valueOf(mContext.getResources().getColor(R.color.grey)));
+            viewHolder.cover.setClickable(true);
+        }
+
 
     }
 
