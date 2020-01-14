@@ -203,10 +203,22 @@
                 android:layout_height="match_parent"
                 android:layout_below="@id/divider1"
                 android:gravity="center"
-                android:text="PRIVATE!!" />
+                android:text="@string/public_private_profile" />
+
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/private_image"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_below="@id/divider1"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="30dp"
+                android:src="@drawable/private_profile_lock"
+                app:civ_border_color="@color/white" />
 
             <RelativeLayout
                 android:id="@+id/classified_data"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@id/divider1">
