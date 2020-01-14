@@ -24,6 +24,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.reading7.Adapters.ProfileShelfAdapter;
+import com.reading7.Objects.Notification;
 import com.reading7.Objects.Review;
 import com.reading7.Objects.User;
 import com.reading7.Objects.WishList;
@@ -205,7 +206,22 @@ public class PublicProfileFragment extends Fragment {
                     userRef = db.collection("Users").document(user.getEmail());
                     userRef.update("follow_requests", FieldValue.arrayRemove(user_me.getEmail()));
 
-                    //TODO add deletion of notification if user is private
+                    //if user is private and i stopped following him/wait for him to approve my request- add deletion of notifications
+                    //may need to add enable disable..
+                    CollectionReference requestsRef = db.collection("Users").document(user.getEmail()).collection("Notifications");
+                    Query requestQuery = requestsRef.whereEqualTo("from", user_me.getEmail());
+                    requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    if(!document.toObject(Notification.class).getType().equals(getString(R.string.like_notificiation)))
+                                        document.getReference().delete();
+                                }
+                            }
+                        }
+                    });
+
 
 
                 }

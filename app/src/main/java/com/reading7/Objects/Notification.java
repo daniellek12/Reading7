@@ -93,7 +93,14 @@ public class Notification {
         boolean same = false;
 
         if (object != null && object instanceof Notification) {
-            same = (this.book_title.equals(((Notification) object).book_title)) && (this.type.equals(((Notification) object).type)) && (this.user_name.equals(((Notification) object).user_name));
+
+            if(type.equals("אהב את הביקורת שלך")&&((Notification) object).type.equals("אהב את הביקורת שלך"))
+                same = (this.book_title.equals(((Notification) object).book_title))  && (this.user_name.equals(((Notification) object).user_name));
+            else
+                same = (this.user_name.equals(((Notification) object).user_name));
+
+
+
         }
 
         return same;
