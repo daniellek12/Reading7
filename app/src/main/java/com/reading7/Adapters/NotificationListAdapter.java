@@ -14,11 +14,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -28,6 +30,7 @@ import com.reading7.BookFragment;
 import com.reading7.MainActivity;
 import com.reading7.Objects.Book;
 import com.reading7.Objects.Notification;
+import com.reading7.Objects.User;
 import com.reading7.ProfileFragment;
 import com.reading7.PublicProfileFragment;
 import com.reading7.R;
@@ -269,6 +272,22 @@ public class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.V
                 holder.acceptBtn.setVisibility(View.GONE);
 
                 UpdatePrivateNotification(j);
+
+                //add notification for approving
+                Query followeRef = db.collection("Users").whereEqualTo("email",follower_mail);
+                followeRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (DocumentSnapshot doc : task.getResult()) {
+                               User u =(doc.toObject(User.class));
+                               addNotificationRequestApproved(u.getEmail(),u.getIs_notify());
+                                break;
+                            }
+                        }
+                    }
+                });;
+
             }
         });
     }
@@ -286,7 +305,7 @@ public class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.V
         String strDate = RelativeDateDisplay(Timestamp.now().toDate().getTime() - date.getTime());
         holder.addingTime.setText(strDate);
 
-        if (notification.getBook_title().equals("follow_notification_public") || notification.getBook_title().equals("follow_notification_accepted")) {
+        if (notification.getBook_title().equals("request_approved_notification")||notification.getBook_title().equals("follow_notification_public") || notification.getBook_title().equals("follow_notification_accepted")) {
             holder.clickNotificationBtn.setOnClickListener(new OpenProfileOnClick(notification.getFrom()));
             holder.content.setText((notification.getType()));
 
@@ -344,4 +363,29 @@ public class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
     }
 
+
+/*______________________________________________________________________*/
+
+    private void addNotificationRequestApproved(String to_email, boolean is_notify) {
+        if (is_notify) {
+            db = FirebaseFirestore.getInstance();
+
+            Map<String, Object> notificationMessegae = new HashMap<>();
+
+
+            notificationMessegae.put("type", mContext.getResources().getString(R.string.request_approved_notificiation));
+            notificationMessegae.put("book_title", "request_approved_notification");//not relvant
+            notificationMessegae.put("from", mAuth.getCurrentUser().getEmail());
+            notificationMessegae.put("user_name", ((MainActivity) mContext).getCurrentUser().getFull_name());
+            notificationMessegae.put("time", Timestamp.now());
+            notificationMessegae.put("user_avatar", ((MainActivity) mContext).getCurrentUser().getAvatar_details());
+
+
+            db.collection("Users/" + to_email + "/Notifications").add(notificationMessegae).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                @Override
+                public void onSuccess(DocumentReference documentReference) {
+                }
+            });
+        }
+    }
 }

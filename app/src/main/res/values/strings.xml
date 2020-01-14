@@ -76,6 +76,8 @@
     <string name="follow_notificiation_public">התחיל לעקוב אחרייך</string>
     <string name="follow_notificiation_private">רוצה לעקוב אחרייך</string>
     <string name="like_notificiation">אהב את הביקורת שלך</string>
+    <string name="request_approved_notificiation">הסכים שתעקוב אחריו</string>
+
 
 
     <!--Edit Avatar-->

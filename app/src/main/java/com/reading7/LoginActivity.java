@@ -48,6 +48,7 @@ public class LoginActivity extends AppCompatActivity {
 
         setUpLoginBtn();
         setUpSignupBtn();
+
         /*try {
             Utils.convertTxtToBook(this);
         } catch (IOException e) {
@@ -223,7 +224,6 @@ public class LoginActivity extends AppCompatActivity {
 
         Map<String,Object> tokenMap = new HashMap<>();
         tokenMap.put("token_id", token_id);
-        tokenMap.put("is_notify", true);//TODO REMOVE THIS LATER -Only after we will have page to turn off notifications_ASK ADVA_
         db.collection("Users").document(user_email).update(tokenMap).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {

@@ -45,7 +45,8 @@ public class MainActivity extends AppCompatActivity
             String type = intent.getStringExtra("type");
 
             if(type.equals( getResources().getString(R.string.follow_notificiation_private))||
-                    type.equals( getResources().getString(R.string.follow_notificiation_public))) {
+                    type.equals( getResources().getString(R.string.follow_notificiation_public))||
+                    type.equals( getResources().getString(R.string.request_approved_notificiation))) {
                 addFragment(new PublicProfileFragment(intent.getStringExtra("from_email")));
                 return;
             }
