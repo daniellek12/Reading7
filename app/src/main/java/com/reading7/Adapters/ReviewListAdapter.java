@@ -59,19 +59,20 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
     private ArrayList<String> LikedReviews;
 
 
-    public ReviewListAdapter(Context context, List<Review> reviews, Fragment fragment) {
+    public ReviewListAdapter(Context context, List<Review> reviews, Fragment fragment,User real_user,ArrayList<String> likedReviews) {
         mAuth = FirebaseAuth.getInstance();
         mFirestore = FirebaseFirestore.getInstance();
         this.reviews = reviews;
         this.mContext = context;
         this.db = FirebaseFirestore.getInstance();
         this.fragment = fragment;
+        this.real_user=real_user;
+        this.LikedReviews=likedReviews;
 
 
         this.mUser = mAuth.getCurrentUser();
         this.userRef = mFirestore.collection("Users").document(mUser.getEmail());
-
-        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+       /* userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
@@ -82,7 +83,7 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
                     }
                 }
             }
-        });
+        });*/
     }
 
     @NonNull

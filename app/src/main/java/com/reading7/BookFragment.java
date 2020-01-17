@@ -72,6 +72,7 @@ public class BookFragment extends Fragment {
     private String mReviewTitle;
     private String mReviewContent;
      boolean flag_reviewed;
+    RecyclerView postsRV;
 
     public BookFragment(Book book) {
         this.mBook = book;
@@ -156,7 +157,8 @@ public class BookFragment extends Fragment {
         lstReviews.clear();
         final List<Review> newlist = new ArrayList<Review>();
         CollectionReference collection = db.collection("Reviews");
-        ((MainActivity) getActivity()).setBottomNavigationEnabled(false);
+        //((MainActivity) getActivity()).setBottomNavigationEnabled(false);
+        Utils.enableDisableClicks(getActivity(),(ViewGroup)getView(),false);
         Query query = collection.whereEqualTo("book_id", mBook.getId());
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -180,10 +182,10 @@ public class BookFragment extends Fragment {
 
     private void initReviews() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        RecyclerView postsRV = getActivity().findViewById(R.id.reviews);
+       postsRV = getActivity().findViewById(R.id.reviews);
         postsRV.setLayoutManager(layoutManager);
-        adapter = new ReviewListAdapter(getActivity(), lstReviews,this);
-        postsRV.setAdapter(adapter);
+       // adapter = new ReviewListAdapter(getActivity(), lstReviews,this);
+        //postsRV.setAdapter(adapter);
 
         getBookReviews();
     }
@@ -530,15 +532,36 @@ public class BookFragment extends Fragment {
                             break;
                         }
                     }
-                    adapter.notifyDataSetChanged();
+                    //adapter.notifyDataSetChanged();
 
                     TextView countRatersText = getActivity().findViewById(R.id.reviwersNum);
                     if (countRaters == 1)
                         countRatersText.setText(getResources().getString(R.string.one_reviewer));
                     else
                         countRatersText.setText(countRaters + " " + getResources().getString(R.string.reviewers));
+                    final Fragment frag= this;
+                    DocumentReference userRef= db.collection("Users").document(mAuth.getCurrentUser().getEmail());
+                    userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            final DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                User real_user = document.toObject(User.class);
+                                adapter = new ReviewListAdapter(getActivity(), lstReviews,frag,real_user,(real_user.getLiked_reviews()));
+                                postsRV.setAdapter(adapter);
+                                //((MainActivity) getActivity()).setBottomNavigationEnabled(true);
+                                Utils.enableDisableClicks(getActivity(),(ViewGroup)getView(),true);
 
-                    ((MainActivity) getActivity()).setBottomNavigationEnabled(true);
+
+                            }
+                        }
+                    }
+              });
+
+
+
+
 
     }
 
