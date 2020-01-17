@@ -100,6 +100,7 @@ public class BookFragment extends Fragment {
         initAlreadyReadButton();
         initBackButton();
         initScrollView();
+        initShelfButton();
     }
 
     public Book getBook() {
@@ -541,4 +542,20 @@ public class BookFragment extends Fragment {
 
     }
 
+    private void initShelfButton(){
+        Button shelfButton = getActivity().findViewById(R.id.button_custom_shelf);
+        shelfButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AddToShelfDialog dialog = new AddToShelfDialog();
+
+                Bundle args = new Bundle();
+                args.putString("book_title", mBook.getTitle());
+
+                dialog.setArguments(args);
+                dialog.setTargetFragment(BookFragment.this, 202);
+                dialog.show(getActivity().getSupportFragmentManager(), "example dialog");
+            }
+        });
+    }
 }
