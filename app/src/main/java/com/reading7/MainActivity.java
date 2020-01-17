@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity
             if(type.equals( getResources().getString(R.string.follow_notificiation_private))||
                     type.equals( getResources().getString(R.string.follow_notificiation_public))||
                     type.equals( getResources().getString(R.string.request_approved_notificiation))) {
-                addFragment(new PublicProfileFragment(intent.getStringExtra("from_email")));
+                loadFragment(new PublicProfileFragment(intent.getStringExtra("from_email")));
                 return;
             }
 
@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity
                             Book b = null;
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 b = document.toObject(Book.class);
-                               addFragment(new BookFragment(b));
+                               loadFragment(new BookFragment(b));
                                 return;
                             }
 
