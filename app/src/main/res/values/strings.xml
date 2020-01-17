@@ -137,7 +137,7 @@
 
     <string name="empty_shelf">עדיין לא הוספת ספרים למדף זה.</string>
     <string name="add_custom_list">הוסף רשימה חדשה</string>
-    <string name="add_to_shelf">הוסף למדף</string>
+    <string name="add_to_shelf">הוספה למדף</string>
     <string name="choose_shelf_txt">לאיזה מדף להוסיף את הספר?</string>
 
 </resources>
