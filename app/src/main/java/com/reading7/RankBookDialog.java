@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -65,7 +66,7 @@ public class RankBookDialog extends AppCompatDialogFragment {
 
         mReview = null;
         CollectionReference requestCollectionRef = db.collection("Reviews");
-        Query requestQuery = requestCollectionRef.whereEqualTo("reviewer_email", mAuth.getCurrentUser().getEmail()).whereEqualTo("book_id", book_id);
+        Query requestQuery = requestCollectionRef.whereEqualTo("reviewer_email", mAuth.getCurrentUser().getEmail()).whereEqualTo("book_title", book_title);
         requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -116,6 +117,8 @@ public class RankBookDialog extends AppCompatDialogFragment {
                                                                                  public void onComplete(@NonNull Task<Void> task) {
                                                                                      if (task.isSuccessful()) {
                                                                                          UpdateBook(newAge, newAvg, book_id, numOfRaters + 1);
+                                                                                         DeleteFromWishList(book_title);
+                                                                                         dismiss();
                                                                                      }
                                                                                  }
                                                                              }
@@ -148,6 +151,8 @@ public class RankBookDialog extends AppCompatDialogFragment {
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
                                             UpdateBook(newAge, newAvg, book_id, numOfRaters);
+                                            DeleteFromWishList(book_title);
+                                            dismiss();
                                         }
                                     }
                                 });
@@ -157,7 +162,7 @@ public class RankBookDialog extends AppCompatDialogFragment {
                     }
                 });
 
-                dismiss();
+                //dismiss();
             }
         });
 
@@ -221,5 +226,21 @@ public class RankBookDialog extends AppCompatDialogFragment {
         void applyAvg(float newAvg);
     }*/
 
+  public void DeleteFromWishList(String book_title){
+      CollectionReference requestsRef = db.collection("Wishlist");
+      Query requestQuery = requestsRef.whereEqualTo("user_email", mAuth.getCurrentUser().getEmail())
+              .whereEqualTo("book_title", book_title);
+      requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+          @Override
+          public void onComplete(@NonNull Task<QuerySnapshot> task) {
+              if (task.isSuccessful()) {
+                  for (QueryDocumentSnapshot document : task.getResult()) {
+                      document.getReference().delete();
+                  }
+              }
+          }
+      });
+
+  }
 
 }
