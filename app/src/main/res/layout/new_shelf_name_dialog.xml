@@ -33,7 +33,7 @@
         android:layout_below="@id/bookmark"
         android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
-        android:text="@string/choose_shelf_txt"/>
+        android:text="איך לקרוא למדף החדש שלך?"/>
 
     <EditText
         android:id="@+id/shelf_name"
@@ -67,7 +67,7 @@
         android:backgroundTint="@color/colorPrimaryDark"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:text="@string/add_to_shelf"
+        android:text="יצירת מדף"
         android:textColor="@color/white" />
 
     <Button

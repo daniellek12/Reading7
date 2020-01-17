@@ -1,10 +1,14 @@
 package com.reading7;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -14,6 +18,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -315,19 +320,58 @@ public class ProfileFragment extends Fragment {
     }
 
     private void initAddShelfBtn(){
-        getActivity().findViewById(R.id.add_custom_list_btn).setOnClickListener(new View.OnClickListener() {
+        final Context context = getContext();
+        Button add_shelf_btn = getActivity().findViewById(R.id.add_custom_list_btn);
+        add_shelf_btn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                User currentUser = ((MainActivity) getActivity()).getCurrentUser();
-                Shelf shelf = new Shelf("", "myshelf");
-                DocumentReference newShelf = db.collection("Users")
-                        .document(currentUser.getEmail()).collection("Shelves").document();
-                shelf.setId(newShelf.getId());
-                newShelf.set(shelf);
-                shelfNames.add("myshelf");
-                adapterCustomShelves.notifyDataSetChanged();
+            public void onClick(View v) {
+                final Dialog dialog = new Dialog(v.getContext());
+                dialog.setContentView(R.layout.new_shelf_name_dialog);
+                final EditText shelfNameEditText = dialog.findViewById(R.id.shelf_name);
+                Button okBtn = dialog.findViewById(R.id.ok);
+                Button cancelBtn = dialog.findViewById(R.id.cancel);
+                dialog.show();
+
+                okBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String text = shelfNameEditText.getText().toString();
+                        if(text.isEmpty()){
+                            String error = "אופס! צריך לבחור שם למדף...";
+                            Toast.makeText(context, error, Toast.LENGTH_LONG).show();
+                            return;
+                        }
+                        if(shelfNames.contains(text)){
+                            String error = "כבר יש לך מדף עם השם הזה!";
+                            Toast.makeText(context, error, Toast.LENGTH_LONG).show();
+                            return;
+                        }
+                        addNewShelf(text);
+                        dialog.dismiss();
+                    }
+                });
+
+                cancelBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        shelfNameEditText.setText("");
+                        dialog.dismiss();
+                    }
+                });
             }
         });
+
+    }
+
+    private void addNewShelf(String shelfName){
+        User currentUser = ((MainActivity) getActivity()).getCurrentUser();
+        Shelf shelf = new Shelf("", shelfName);
+        DocumentReference newShelf = db.collection("Users").document(currentUser.getEmail())
+                .collection("Shelves").document(Timestamp.now().toString());
+        shelf.setId(newShelf.getId());
+        newShelf.set(shelf);
+        shelfNames.add(shelfName);
+        adapterCustomShelves.notifyDataSetChanged();
     }
 
     private void initLogOutBtn() {

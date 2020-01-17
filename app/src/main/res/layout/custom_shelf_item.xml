@@ -71,7 +71,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:gravity="center"
-            android:text="@string/empty_list"
+            android:text="@string/empty_shelf"
             android:textColor="@color/lightGrey"
             android:textSize="14sp" />
     </RelativeLayout>
