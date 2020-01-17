@@ -1,10 +1,14 @@
 package com.reading7;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -14,6 +18,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -24,8 +29,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.reading7.Adapters.CustomShelvesAdapter;
 import com.reading7.Adapters.ProfileShelfAdapter;
 import com.reading7.Objects.Review;
+import com.reading7.Objects.Shelf;
+import com.reading7.Objects.User;
 import com.reading7.Objects.WishList;
 
 import java.util.ArrayList;
@@ -50,6 +58,8 @@ public class ProfileFragment extends Fragment {
     final private ArrayList<String> usersWishlistBookNames = new ArrayList<String>();
     private ProfileShelfAdapter adapterReviews;
     private ProfileShelfAdapter adapterWishList;
+    final private ArrayList<String> shelfNames = new ArrayList<String>();
+    private CustomShelvesAdapter adapterCustomShelves;
 
     @Nullable
     @Override
@@ -120,6 +130,7 @@ public class ProfileFragment extends Fragment {
                         initLogOutBtn();
                         initWishlist();
                         initMyBookslist();
+                        initCustomShelves();
 
 
                     } else
@@ -131,6 +142,33 @@ public class ProfileFragment extends Fragment {
         });
     }
 
+
+    private void initCustomShelves(){
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        final RecyclerView customShelvesRV = getActivity().findViewById(R.id.customShelvesRV);
+        customShelvesRV.setLayoutManager(layoutManager);
+        adapterCustomShelves = new CustomShelvesAdapter(shelfNames, getActivity(), mAuth.getCurrentUser().getEmail());
+        customShelvesRV.setAdapter(adapterCustomShelves);
+
+        getUserShelves();
+
+    }
+
+    private void getUserShelves(){
+        db.collection("Users").document(mAuth.getCurrentUser().getEmail())
+                .collection("Shelves").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    shelfNames.clear();
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                        shelfNames.add(doc.toObject(Shelf.class).getShelf_name());
+                    }
+                    adapterCustomShelves.notifyDataSetChanged();
+                }
+            }
+        });
+    }
 
     private void initWishlist() {
 
@@ -277,8 +315,64 @@ public class ProfileFragment extends Fragment {
             }
 
         });
+
+        initAddShelfBtn();
     }
 
+    private void initAddShelfBtn(){
+        final Context context = getContext();
+        Button add_shelf_btn = getActivity().findViewById(R.id.add_custom_list_btn);
+        add_shelf_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Dialog dialog = new Dialog(v.getContext());
+                dialog.setContentView(R.layout.new_shelf_name_dialog);
+                final EditText shelfNameEditText = dialog.findViewById(R.id.shelf_name);
+                Button okBtn = dialog.findViewById(R.id.ok);
+                Button cancelBtn = dialog.findViewById(R.id.cancel);
+                dialog.show();
+
+                okBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String text = shelfNameEditText.getText().toString();
+                        if(text.isEmpty()){
+                            String error = "אופס! צריך לבחור שם למדף...";
+                            Toast.makeText(context, error, Toast.LENGTH_LONG).show();
+                            return;
+                        }
+                        if(shelfNames.contains(text)){
+                            String error = "כבר יש לך מדף עם השם הזה!";
+                            Toast.makeText(context, error, Toast.LENGTH_LONG).show();
+                            return;
+                        }
+                        addNewShelf(text);
+                        dialog.dismiss();
+                    }
+                });
+
+                cancelBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        shelfNameEditText.setText("");
+                        dialog.dismiss();
+                    }
+                });
+            }
+        });
+
+    }
+
+    private void addNewShelf(String shelfName){
+        User currentUser = ((MainActivity) getActivity()).getCurrentUser();
+        Shelf shelf = new Shelf("", shelfName);
+        DocumentReference newShelf = db.collection("Users").document(currentUser.getEmail())
+                .collection("Shelves").document(Timestamp.now().toString());
+        shelf.setId(newShelf.getId());
+        newShelf.set(shelf);
+        shelfNames.add(shelfName);
+        adapterCustomShelves.notifyDataSetChanged();
+    }
 
     private void initLogOutBtn() {
 

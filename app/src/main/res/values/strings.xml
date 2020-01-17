@@ -79,7 +79,6 @@
     <string name="request_approved_notificiation">הסכים שתעקוב אחריו</string>
 
 
-
     <!--Edit Avatar-->
     <string name="skin_color">צבע עור</string>
     <string name="hair_color">צבע שיער</string>
@@ -135,5 +134,10 @@
     <string name="request_string">ממתין</string>
     <string name="notifications">התראות</string>
     <string name="accept">קבל</string>
+
+    <string name="empty_shelf">עדיין לא הוספת ספרים למדף זה.</string>
+    <string name="add_custom_list">הוסף רשימה חדשה</string>
+    <string name="add_to_shelf">הוספה למדף</string>
+    <string name="choose_shelf_txt">לאיזה מדף להוסיף את הספר?</string>
 
 </resources>

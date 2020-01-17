@@ -142,7 +142,7 @@ public class ExpandedShelfAdapter extends RecyclerView.Adapter<ExpandedShelfAdap
     public void deleteItems() {
         if (!toDelete.isEmpty()) {
 
-            switch (this.type) {
+            switch (this.type) { // TODO: add a case for custom shelf (and implement a function)
 
                 case WISHLIST:
                     deleteWishlists();
