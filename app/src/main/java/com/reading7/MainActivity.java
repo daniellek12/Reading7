@@ -186,6 +186,15 @@ public class MainActivity extends AppCompatActivity
     public void setCurrentUser( User user) {
         this.mUser = user;
     }
+    @Override
+    public void onBackPressed()
+    {
+        int count = getSupportFragmentManager().getBackStackEntryCount();
 
+        if (count == 1)
+            finish();
+        else
+         super.onBackPressed();
+    }
 
 }
