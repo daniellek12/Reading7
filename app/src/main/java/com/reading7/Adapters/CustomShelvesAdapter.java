@@ -38,12 +38,14 @@ public class CustomShelvesAdapter extends RecyclerView.Adapter<CustomShelvesAdap
     private FirebaseAuth mAuth;
     private ArrayList<String> shelfNames;
     private Context mContext;
+    String user_email;
 
-    public CustomShelvesAdapter(ArrayList<String> shelfNames, Context context){
+    public CustomShelvesAdapter(ArrayList<String> shelfNames, Context context, String user_email){
         this.mAuth = FirebaseAuth.getInstance();
         this.db = FirebaseFirestore.getInstance();
         this.shelfNames = shelfNames;
         this.mContext = context;
+        this.user_email = user_email;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -80,12 +82,12 @@ public class CustomShelvesAdapter extends RecyclerView.Adapter<CustomShelvesAdap
         viewHolder.shelf_title.setText(shelfName);
 
         final ShelfFragment customShelf = new ShelfFragment(viewHolder.shelfBookNames, shelfName,
-                mAuth.getCurrentUser().getEmail(), ShelfFragment.ShelfType.CUSTOM);
+                user_email, ShelfFragment.ShelfType.CUSTOM);
         final ProfileShelfAdapter shelfAdapter = new ProfileShelfAdapter(mContext, viewHolder.shelfBookNames, customShelf);
         viewHolder.shelfBooksRV.setAdapter(shelfAdapter);
 
         CollectionReference collection = db.collection("Users")
-                .document(mAuth.getCurrentUser().getEmail()).collection("Shelves");
+                .document(user_email).collection("Shelves");
         Query query = collection.whereEqualTo("shelf_name", shelfName);
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -112,7 +114,7 @@ public class CustomShelvesAdapter extends RecyclerView.Adapter<CustomShelvesAdap
         viewHolder.shelf_title_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainActivity) mContext).addFragment(new ShelfFragment(viewHolder.shelfBookNames, shelfName, mAuth.getCurrentUser().getEmail(), ShelfFragment.ShelfType.WISHLIST));
+                ((MainActivity) mContext).addFragment(new ShelfFragment(viewHolder.shelfBookNames, shelfName, user_email, ShelfFragment.ShelfType.WISHLIST));
             }
         });
     }

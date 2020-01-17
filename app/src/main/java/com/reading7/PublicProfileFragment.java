@@ -23,9 +23,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.reading7.Adapters.CustomShelvesAdapter;
 import com.reading7.Adapters.ProfileShelfAdapter;
 import com.reading7.Objects.Notification;
 import com.reading7.Objects.Review;
+import com.reading7.Objects.Shelf;
 import com.reading7.Objects.User;
 import com.reading7.Objects.WishList;
 
@@ -53,6 +55,9 @@ public class PublicProfileFragment extends Fragment {
     private User user;
     private ProfileShelfAdapter adapterReviews;
     private ProfileShelfAdapter adapterWishList;
+    final private ArrayList<String> shelfNames = new ArrayList<String>();
+    private CustomShelvesAdapter adapterCustomShelves;
+
 
     public PublicProfileFragment(String user_email) {
         this.user_email = user_email;
@@ -123,11 +128,39 @@ public class PublicProfileFragment extends Fragment {
                         initFollowButton();
                         initWishlist();
                         initMyBookslist();
+                        initCustomShelves();
 
                     } else
                         Toast.makeText(getActivity(), "Account does not exist", Toast.LENGTH_SHORT).show();
                 } else
                     Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void initCustomShelves(){
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        final RecyclerView customShelvesRV = getActivity().findViewById(R.id.customShelvesRV);
+        customShelvesRV.setLayoutManager(layoutManager);
+        adapterCustomShelves = new CustomShelvesAdapter(shelfNames, getActivity(), user_email);
+        customShelvesRV.setAdapter(adapterCustomShelves);
+
+        getUserShelves();
+
+    }
+
+    private void getUserShelves(){
+        db.collection("Users").document(user_email)
+                .collection("Shelves").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    shelfNames.clear();
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                        shelfNames.add(doc.toObject(Shelf.class).getShelf_name());
+                    }
+                    adapterCustomShelves.notifyDataSetChanged();
+                }
             }
         });
     }

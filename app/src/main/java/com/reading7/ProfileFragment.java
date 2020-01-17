@@ -147,7 +147,7 @@ public class ProfileFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         final RecyclerView customShelvesRV = getActivity().findViewById(R.id.customShelvesRV);
         customShelvesRV.setLayoutManager(layoutManager);
-        adapterCustomShelves = new CustomShelvesAdapter(shelfNames, getActivity());
+        adapterCustomShelves = new CustomShelvesAdapter(shelfNames, getActivity(), mAuth.getCurrentUser().getEmail());
         customShelvesRV.setAdapter(adapterCustomShelves);
 
         getUserShelves();
