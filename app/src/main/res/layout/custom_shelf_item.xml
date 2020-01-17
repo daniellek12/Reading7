@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
     android:layoutDirection="rtl">
 
     <View
@@ -14,12 +14,13 @@
         android:background="?android:attr/listDivider" />
 
     <RelativeLayout
-        android:id="@+id/listTitle"
+        android:id="@+id/shelfTitle_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/divider1">
 
         <TextView
+            android:id="@+id/shelf_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="20dp"
@@ -39,7 +40,7 @@
         android:id="@+id/customListRV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/listTitle"
+        android:layout_below="@+id/shelfTitle_layout"
         android:layout_marginTop="20dp"
         android:clipToPadding="false"
         android:layoutDirection="rtl"
@@ -53,7 +54,7 @@
         android:id="@+id/emptyList"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:layout_below="@+id/listTitle"
+        android:layout_below="@+id/shelfTitle_layout"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"

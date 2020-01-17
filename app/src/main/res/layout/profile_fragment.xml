@@ -384,7 +384,8 @@
                 android:id="@+id/customShelvesRV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/myBooksRV" />
+                android:layout_below="@+id/myBooksRV"
+                android:nestedScrollingEnabled="false"/>
 
             <Button
                 android:id="@+id/add_custom_list_btn"
