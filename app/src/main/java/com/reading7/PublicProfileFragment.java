@@ -1,5 +1,6 @@
 package com.reading7;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,8 +23,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.reading7.Adapters.ReadShelfAdapter;
-import com.reading7.Adapters.WishListAdapter;
+import com.reading7.Adapters.ProfileShelfAdapter;
+import com.reading7.Objects.Notification;
 import com.reading7.Objects.Review;
 import com.reading7.Objects.User;
 import com.reading7.Objects.WishList;
@@ -50,8 +51,8 @@ public class PublicProfileFragment extends Fragment {
     private ArrayList<String> usersWishListBookNames = new ArrayList<>();
     private String user_email;
     private User user;
-    private ReadShelfAdapter adapterReviews;
-    private WishListAdapter adapterWishList;
+    private ProfileShelfAdapter adapterReviews;
+    private ProfileShelfAdapter adapterWishList;
 
     public PublicProfileFragment(String user_email) {
         this.user_email = user_email;
@@ -72,14 +73,13 @@ public class PublicProfileFragment extends Fragment {
         getUserInformation();
     }
 
-
     private void getUserInformation() {
 
         getActivity().findViewById(R.id.private_alert).setVisibility(View.GONE);
         getActivity().findViewById(R.id.classified_data).setVisibility(View.GONE);
 
         DocumentReference userRef = db.collection("Users").document(this.user_email);
-        disableClicks();
+        Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), false);
         userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -103,6 +103,8 @@ public class PublicProfileFragment extends Fragment {
                         ArrayList<String> following = (ArrayList<String>) document.getData().get("following");
                         ((TextView) getActivity().findViewById(R.id.publicProfile_following)).setText(Integer.toString(following.size()));
 
+                        ArrayList<String> follow_requests = (ArrayList<String>) document.getData().get("follow_requests");
+
                         ArrayList<String> favouriteBooks = (ArrayList<String>) document.getData().get("favourite_books");
 
                         ArrayList<String> lastSearches = (ArrayList<String>) document.getData().get("last_searches");
@@ -114,7 +116,7 @@ public class PublicProfileFragment extends Fragment {
                         Boolean is_private = (Boolean) document.getData().get("is_private");
 
 
-                        user = new User(userName, user_email, birthDate, followers, following, lastSearches,
+                        user = new User(userName, user_email, birthDate, followers, following, follow_requests, lastSearches,
                                 favouriteBooks, favouriteGenres, likedReviews, avatar_details, is_private);
 
                         check_private();
@@ -140,11 +142,13 @@ public class PublicProfileFragment extends Fragment {
         }
     }
 
+
     private void initFollowButton() {
 
         Button follow = getActivity().findViewById(R.id.follow);
         final String follow_string = getResources().getString(R.string.follow_button);
         final String unfollow_string = getResources().getString(R.string.unfollow_button);
+        final String request_string = getResources().getString(R.string.request_string);
 
         final FirebaseUser user_me = mAuth.getCurrentUser();
 
@@ -152,6 +156,9 @@ public class PublicProfileFragment extends Fragment {
             follow.setText(unfollow_string);
             follow.setBackgroundTintList(getResources().getColorStateList(R.color.colorPrimary));
 
+        } else if (user.getFollow_requests().contains(user_me.getEmail())) {
+            follow.setText(request_string);
+            follow.setBackgroundTintList(getResources().getColorStateList(R.color.black));
         } else {
             follow.setText(follow_string);
             follow.setBackgroundTintList(getResources().getColorStateList(R.color.colorAccent));
@@ -161,26 +168,32 @@ public class PublicProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Button follow = getActivity().findViewById(R.id.follow);
-                if (follow.getText().equals(follow_string)) {
-
+                if (follow.getText().equals(follow_string)) { // follow the user
                     if (user_me.getEmail().equals(user.getEmail()))
                         throw new AssertionError("YOU CANT FOLLOW YOURSELF!!!!");
+                    if (!user.getIs_private()) {
 
-                    follow.setText(unfollow_string);
-                    follow.setBackgroundTintList(getResources().getColorStateList(R.color.colorPrimary));
+                        follow.setText(unfollow_string);
+                        follow.setBackgroundTintList(getResources().getColorStateList(R.color.colorPrimary));
 
-                    DocumentReference userRef = db.collection("Users").document(user_me.getEmail());
-                    userRef.update("following", FieldValue.arrayUnion(user.getEmail()));
+                        DocumentReference userRef = db.collection("Users").document(user_me.getEmail());
+                        userRef.update("following", FieldValue.arrayUnion(user.getEmail()));
 
-                    userRef = db.collection("Users").document(user.getEmail());
-                    userRef.update("followers", FieldValue.arrayUnion(user_me.getEmail()));
+                        userRef = db.collection("Users").document(user.getEmail());
+                        userRef.update("followers", FieldValue.arrayUnion(user_me.getEmail()));
 
-                    //Notification
-                    addNotificationFollow(user.getEmail(),user.getIs_notify());
+                    } else { //user is private!
+                        follow.setText(request_string);
+                        follow.setBackgroundTintList(getResources().getColorStateList(R.color.black));
 
+                        DocumentReference userRef;
 
-                } else {
+                        userRef = db.collection("Users").document(user.getEmail());
+                        userRef.update("follow_requests", FieldValue.arrayUnion(user_me.getEmail()));
+                    }
+                    addNotificationFollow(user.getEmail(), user.getIs_notify(),user.getIs_private());
 
+                } else { // already following / requested
                     follow.setText(follow_string);
                     follow.setBackgroundTintList(getResources().getColorStateList(R.color.colorAccent));
 
@@ -189,6 +202,28 @@ public class PublicProfileFragment extends Fragment {
 
                     userRef = db.collection("Users").document(user.getEmail());
                     userRef.update("followers", FieldValue.arrayRemove(user_me.getEmail()));
+
+                    userRef = db.collection("Users").document(user.getEmail());
+                    userRef.update("follow_requests", FieldValue.arrayRemove(user_me.getEmail()));
+
+                    //if user is private and i stopped following him/wait for him to approve my request- add deletion of notifications
+                    //may need to add enable disable..
+                    CollectionReference requestsRef = db.collection("Users").document(user.getEmail()).collection("Notifications");
+                    Query requestQuery = requestsRef.whereEqualTo("from", user_me.getEmail());
+                    requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    if(!document.toObject(Notification.class).getType().equals(getString(R.string.like_notificiation)))
+                                        document.getReference().delete();
+                                }
+                            }
+                        }
+                    });
+
+
+
                 }
                 //update screen correctly!
                 DocumentReference userRef = db.collection("Users").document(user.getEmail());
@@ -201,7 +236,9 @@ public class PublicProfileFragment extends Fragment {
                             if (document.exists()) {
 
                                 ArrayList<String> followers = (ArrayList<String>) document.getData().get("followers");
+                                user.setFollowers(followers);
                                 ((TextView) getActivity().findViewById(R.id.publicProfile_followers)).setText(Integer.toString(followers.size()));
+                                check_private();
 
                             } else
                                 Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
@@ -213,12 +250,47 @@ public class PublicProfileFragment extends Fragment {
         });
     }
 
+    private void addNotificationFollow(String to_email, boolean is_notify,boolean is_private) {
+        if (is_notify) {
+            db = FirebaseFirestore.getInstance();
+
+            Map<String, Object> notificationMessegae = new HashMap<>();
+
+            if(!is_private) {
+                notificationMessegae.put("type", getContext().getResources().getString(R.string.follow_notificiation_public));
+                notificationMessegae.put("book_title", "follow_notification_public");//not relvant
+
+            }
+            else {
+                notificationMessegae.put("type", getContext().getResources().getString(R.string.follow_notificiation_private));
+                notificationMessegae.put("book_title", "follow_notification_private");//not relvant
+
+            }
+
+            notificationMessegae.put("from", mAuth.getCurrentUser().getEmail());
+            notificationMessegae.put("user_name", ((MainActivity) getActivity()).getCurrentUser().getFull_name());
+            notificationMessegae.put("time", Timestamp.now());
+            notificationMessegae.put("user_avatar", ((MainActivity) getActivity()).getCurrentUser().getAvatar_details());
+
+
+            db.collection("Users/" + to_email + "/Notifications").add(notificationMessegae).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                @Override
+                public void onSuccess(DocumentReference documentReference) {
+                }
+            });
+        }
+    }
+
+
     private void initWishlist() {
+
+        String title = getString(R.string.public_my_wishlist) + " " + user.getFull_name();
+        final ShelfFragment wishlistShelf = new ShelfFragment(usersWishListBookNames, title, user.getEmail(), ShelfFragment.ShelfType.WISHLIST);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         final RecyclerView wishlistRV = getActivity().findViewById(R.id.wishlistRV);
         wishlistRV.setLayoutManager(layoutManager);
-        adapterWishList = new WishListAdapter(usersWishListBookNames, getActivity());
+        adapterWishList = new ProfileShelfAdapter(getActivity(), usersWishListBookNames, wishlistShelf);
         wishlistRV.setAdapter(adapterWishList);
 
         getUserWishList();
@@ -226,40 +298,9 @@ public class PublicProfileFragment extends Fragment {
         getActivity().findViewById(R.id.wishlistTitle).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String title = getString(R.string.public_my_wishlist) + " " + user.getFull_name();
-                ((MainActivity) getActivity()).addFragment(new ShelfFragment(usersWishListBookNames, title, user.getEmail(), ShelfFragment.ShelfType.WISHLIST));
+                ((MainActivity) getActivity()).addFragment(wishlistShelf);
             }
         });
-
-    }
-
-    private void initMyBookslist() {
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-        RecyclerView myBooksRV = getActivity().findViewById(R.id.myBooksRV);
-        myBooksRV.setLayoutManager(layoutManager);
-        adapterReviews = new ReadShelfAdapter(usersReviewBookNames, getActivity());
-        myBooksRV.setAdapter(adapterReviews);
-
-        getUserReviews();
-
-        getActivity().findViewById(R.id.mybooksTitle).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String title = getString(R.string.public_my_books) + " " + user.getFull_name();
-                ((MainActivity) getActivity()).addFragment(new ShelfFragment(usersReviewBookNames, title, user.getEmail(), ShelfFragment.ShelfType.MYBOOKS));
-            }
-        });
-
-
-    }
-
-    private void disableClicks() {
-
-    }
-
-    private void enableClicks() {
-
     }
 
     private void getUserWishList() {
@@ -288,6 +329,28 @@ public class PublicProfileFragment extends Fragment {
         });
     }
 
+    private void initMyBookslist() {
+
+        String title = getString(R.string.public_my_books) + " " + user.getFull_name();
+        final ShelfFragment myBooksShelf = new ShelfFragment(usersReviewBookNames, title, user.getEmail(), ShelfFragment.ShelfType.MYBOOKS);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        RecyclerView myBooksRV = getActivity().findViewById(R.id.myBooksRV);
+        myBooksRV.setLayoutManager(layoutManager);
+        adapterReviews = new ProfileShelfAdapter(getActivity(), usersReviewBookNames, myBooksShelf);
+        myBooksRV.setAdapter(adapterReviews);
+
+        getUserReviews();
+
+        getActivity().findViewById(R.id.mybooksTitle).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((MainActivity) getActivity()).addFragment(myBooksShelf);
+            }
+        });
+
+
+    }
+
     private void getUserReviews() {
 
         CollectionReference collection = db.collection("Reviews");
@@ -314,31 +377,8 @@ public class PublicProfileFragment extends Fragment {
                         getActivity().findViewById(R.id.publicProfile_emptyMyBooks).setVisibility(View.INVISIBLE);
                     }
                 }
-                enableClicks();
+                Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), true);
             }
         });
     }
-
-    private void addNotificationFollow(String to_email,boolean is_notify) {
-        if (is_notify) {
-            db = FirebaseFirestore.getInstance();
-
-            Map<String, Object> notificationMessegae = new HashMap<>();
-
-            notificationMessegae.put("type", getContext().getResources().getString(R.string.follow_notificiation));
-            notificationMessegae.put("from", mAuth.getCurrentUser().getEmail());
-            notificationMessegae.put("user_name", ((MainActivity)getActivity()).getCurrentUser().getFull_name());
-            notificationMessegae.put("book_title", "follow_notification");//not relvant
-            notificationMessegae.put("time", Timestamp.now());
-            notificationMessegae.put("user_avatar", ((MainActivity)getActivity()).getCurrentUser().getAvatar_details());
-
-
-            db.collection("Users/" + to_email + "/Notifications").add(notificationMessegae).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                @Override
-                public void onSuccess(DocumentReference documentReference) {
-                }
-            });
-        }
-    }
-
 }

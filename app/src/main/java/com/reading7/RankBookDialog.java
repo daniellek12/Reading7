@@ -77,7 +77,7 @@ public class RankBookDialog extends AppCompatDialogFragment {
                         rateStar.setRating(mReview.getRank());
                         titleText.setText(mReview.getReview_title());
                         contentText.setText(mReview.getReview_content());
-                        ((Button)view.findViewById(R.id.ok)).setText("שמור שינויים");
+                        ((Button) view.findViewById(R.id.ok)).setText("שמור שינויים");
                     }
 
                 }
@@ -89,8 +89,8 @@ public class RankBookDialog extends AppCompatDialogFragment {
             @Override
             public void onClick(View view) {
                 final int rank = (int) rateStar.getRating();
-                final String review_title = titleText.getText().toString();
-                final String review_content = contentText.getText().toString();
+                final String review_title = titleText.getText().toString().trim();
+                final String review_content = contentText.getText().toString().trim();
 
                 CollectionReference requestCollectionRef = db.collection("Users");
                 Query requestQuery = requestCollectionRef.whereEqualTo("email", mAuth.getCurrentUser().getEmail());
@@ -107,7 +107,7 @@ public class RankBookDialog extends AppCompatDialogFragment {
                             userAge = Utils.calculateAge(user.getBirth_date());
                             if (mReview == null) {
 
-                                mReview = new Review("", book_id, mAuth.getCurrentUser().getEmail(), Utils.calculateAge(user.getBirth_date()), rank, review_title, review_content, Timestamp.now(), user.getFull_name(), book_title, book_author, user.getAvatar_details(),user.getIs_notify());
+                                mReview = new Review("", book_id, mAuth.getCurrentUser().getEmail(), Utils.calculateAge(user.getBirth_date()), rank, review_title, review_content, Timestamp.now(), user.getFull_name(), book_title, book_author, user.getAvatar_details(), user.getIs_notify());
                                 mReview.setReview_id(newReview.getId());
                                 final float newAvg = ((numOfRaters * currAvg) + rank) / (numOfRaters + 1);
                                 final float newAge = ((numOfRaters * currAge) + userAge) / (numOfRaters + 1);
@@ -115,7 +115,7 @@ public class RankBookDialog extends AppCompatDialogFragment {
                                                                                  @Override
                                                                                  public void onComplete(@NonNull Task<Void> task) {
                                                                                      if (task.isSuccessful()) {
-                                                                                         UpdateBook(newAge, newAvg, book_id,numOfRaters+1);
+                                                                                         UpdateBook(newAge, newAvg, book_id, numOfRaters + 1);
                                                                                      }
                                                                                  }
                                                                              }
@@ -147,7 +147,7 @@ public class RankBookDialog extends AppCompatDialogFragment {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
-                                            UpdateBook(newAge, newAvg, book_id,numOfRaters);
+                                            UpdateBook(newAge, newAvg, book_id, numOfRaters);
                                         }
                                     }
                                 });
@@ -173,7 +173,7 @@ public class RankBookDialog extends AppCompatDialogFragment {
     }
 
 
-    public void UpdateBook(final float newAge, final float newAvg, String book_id,int numOfRaters) {
+    public void UpdateBook(final float newAge, final float newAvg, String book_id, int numOfRaters) {
 
         DocumentReference ref = db.collection("Books").document(book_id);
         final Map<String, Object> updates = new HashMap<String, Object>();

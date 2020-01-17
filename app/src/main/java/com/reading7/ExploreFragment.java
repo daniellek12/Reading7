@@ -69,7 +69,7 @@ public class ExploreFragment extends Fragment {
                 ((MainActivity) getActivity()).addFragment(new BookFragment(book));
             }
         });
-        mGenre = "";
+        mGenre = "בשבילך";
         first = 0;
         showProgressBar();
         initAppBar();
@@ -247,25 +247,28 @@ public class ExploreFragment extends Fragment {
 
     public void first_load_genre_books(final String genre) {
 
-        showProgressBar();
 
         //changed genre
-        if (!mGenre.equals(genre))
+        if (!mGenre.equals(genre)) {
+            showProgressBar();
             first = 0;
+            if (genre.equals("בשבילך")) {
+                first_load_books();
+                return;
+            }
 
-            //pressed the same genre
-        else {
-            first_load_books();
-            mGenre = "";
+        } else
+        {
+            hideProgressBar();
             return;
         }
+
+            //pressed the same genre
+
 
         mGenre = genre;
 
-        if(genre.equals("בשבילך")){
-            first_load_books();
-            return;
-        }
+
 
         final List<Book> newlist = new ArrayList<>();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -313,7 +316,7 @@ public class ExploreFragment extends Fragment {
 
         if (((firstVisibleItemPosition + visibleItemCount == totalItemCount) && !isLastItemReached)) {
             Query nextQuery;
-            if (mGenre == "")
+            if (mGenre.equals( "בשבילך"))
                 nextQuery = requestCollectionRef.startAfter(lastVisible).limit(limit);
             else
                 nextQuery = requestCollectionRef.whereArrayContains("actual_genres", mGenre).startAfter(lastVisible).limit(limit);
@@ -349,13 +352,13 @@ public class ExploreFragment extends Fragment {
 
 
     public void showProgressBar() {
-        disableClicks();
+        Utils.enableDisableClicks(getActivity(),(ViewGroup)getView(),false);
 //        getActivity().findViewById(R.id.explore_progress_background).setVisibility(View.VISIBLE);
         getActivity().findViewById(R.id.explore_progress_bar).setVisibility(View.VISIBLE);
     }
 
     private void hideProgressBar() {
-        enableClicks();
+        Utils.enableDisableClicks(getActivity(),(ViewGroup)getView(),true);
 //        getActivity().findViewById(R.id.explore_progress_background).setVisibility(View.GONE);
         //getActivity().findViewById(R.id.explore_progress_bar).setVisibility(View.GONE);
     }

@@ -4,7 +4,7 @@
     android:id="@+id/clickNotificationBtn"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="1dp"
+    android:layout_marginTop="3dp"
     android:background="@color/white"
     android:layoutDirection="rtl"
     android:padding="10dp">
@@ -69,32 +69,16 @@
 
     </RelativeLayout>
 
-    <!--    <ImageButton-->
-    <!--        android:id="@+id/deleteBtn"-->
-    <!--        android:layout_width="40dp"-->
-    <!--        android:layout_height="40dp"-->
-    <!--        android:layout_below="@id/divider"-->
-    <!--        android:layout_alignParentRight="true"-->
-    <!--        android:layout_marginTop="10dp"-->
-    <!--        android:layout_marginRight="30dp"-->
-    <!--        android:layout_marginBottom="30dp"-->
-    <!--        android:elevation="1dp"-->
-    <!--        android:scaleType="centerInside"-->
-    <!--        android:tint="@color/black"-->
-    <!--        app:srcCompat="@drawable/cancel" />-->
-
-    <!--    <ImageButton-->
-    <!--        android:id="@+id/clickNotificationBtn"-->
-    <!--        android:layout_width="40dp"-->
-    <!--        android:layout_height="40dp"-->
-    <!--        android:layout_below="@id/deleteBtn"-->
-    <!--        android:layout_alignParentRight="true"-->
-    <!--        android:layout_marginRight="30dp"-->
-    <!--        android:layout_marginBottom="30dp"-->
-    <!--        android:elevation="1dp"-->
-    <!--        android:scaleType="centerInside"-->
-    <!--        android:tint="@color/black"-->
-    <!--        app:srcCompat="@drawable/arrow_right" />-->
-
+    <Button
+        android:id="@+id/accept"
+        android:layout_width="70dp"
+        android:layout_height="30dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:background="@drawable/rounded_corners"
+        android:backgroundTint="@color/green"
+        android:text="@string/accept"
+        android:textColor="@color/white" />
 
 </RelativeLayout>

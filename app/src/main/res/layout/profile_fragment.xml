@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/yellow_books_background"
-    tools:context=".ProfileFragment"
-    android:layoutDirection="rtl">
+    android:layoutDirection="rtl"
+    tools:context=".ProfileFragment">
 
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
@@ -29,8 +28,19 @@
             android:src="@drawable/menu"
             android:tint="@color/white" />
 
+<!--        <ImageButton-->
+<!--            android:id="@+id/requests_btn"-->
+<!--            android:layout_width="25dp"-->
+<!--            android:layout_height="25dp"-->
+<!--            android:layout_gravity="left"-->
+<!--            android:layout_marginLeft="20dp"-->
+<!--            android:layout_marginTop="20dp"-->
+<!--            android:background="@color/transparent"-->
+<!--            android:src="@drawable/badge"-->
+<!--            android:tint="@color/white" />-->
+
         <ImageButton
-            android:id="@+id/notifications"
+            android:id="@+id/notificationsBtn"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_gravity="left"
@@ -40,16 +50,17 @@
             android:src="@drawable/notification_white"
             android:tint="@color/white" />
 
+
     </androidx.appcompat.widget.Toolbar>
 
-<!--    <Switch-->
-<!--        android:id="@+id/private_switch"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_alignParentLeft="true"-->
-<!--        android:layout_marginLeft="20dp"-->
-<!--        android:layout_marginTop="20dp"-->
-<!--        android:visibility="gone" />-->
+    <!--    <Switch-->
+    <!--        android:id="@+id/private_switch"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_alignParentLeft="true"-->
+    <!--        android:layout_marginLeft="20dp"-->
+    <!--        android:layout_marginTop="20dp"-->
+    <!--        android:visibility="gone" />-->
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"

@@ -9,7 +9,6 @@ import java.util.Comparator;
 
 public class Notification {
 
-
     //private String id;
     private String type;
     private String from;
@@ -86,5 +85,24 @@ public class Notification {
         {
             return -a.time.compareTo(b.time);
         }
+    }
+
+    @Override
+    public boolean equals(Object object)
+    {
+        boolean same = false;
+
+        if (object != null && object instanceof Notification) {
+
+            if(type.equals("אהב את הביקורת שלך")&&((Notification) object).type.equals("אהב את הביקורת שלך"))
+                same = (this.book_title.equals(((Notification) object).book_title))  && (this.user_name.equals(((Notification) object).user_name));
+            else
+                same = (this.user_name.equals(((Notification) object).user_name));
+
+
+
+        }
+
+        return same;
     }
 }

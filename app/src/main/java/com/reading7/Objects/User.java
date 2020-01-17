@@ -13,6 +13,7 @@ public class User {
     private ArrayList<Integer> avatar_details;      // skin color, eyes color, hair color, hair type, shirt color
     private ArrayList<String> followers;            // Emails list of the followers
     private ArrayList<String> following;            // Emails list of the following
+    private ArrayList<String> follow_requests;      // Emails list of the followers requested to follow user
     private ArrayList<String> last_searches;
     private ArrayList<String> favourite_books;      // top books to view on profile
     private ArrayList<String> favourite_genres;
@@ -27,65 +28,60 @@ public class User {
         this.birth_date = "";
         this.followers = new ArrayList<>();
         this.following = new ArrayList<>();
+        this.follow_requests = new ArrayList<>();
         this.last_searches = new ArrayList<>();
         this.favourite_books = new ArrayList<>();
         this.favourite_genres = new ArrayList<>();
         this.liked_reviews = new ArrayList<>();
         this.avatar_details = new ArrayList<>();
         this.is_private = false; // default is public (as in Instagram)
-        this.token_id="";
-        this.is_notify= true;
+        this.token_id = "";
+        this.is_notify = true;
     }
 
+    //Don't use this constructor, should only be used in SignUpStep1
     public User(String full_name, String email, String birth_date, ArrayList<Integer> avatar_details) {
         this.full_name = full_name;
         this.email = email;
         this.birth_date = birth_date;
         this.followers = new ArrayList<>();
         this.following = new ArrayList<>();
+        this.follow_requests = new ArrayList<>();
         this.last_searches = new ArrayList<>();
         this.favourite_books = new ArrayList<>();
         this.favourite_genres = new ArrayList<>();
         this.liked_reviews = new ArrayList<>();
         this.avatar_details = avatar_details;
-        this.token_id="";
-        this.is_notify= true;
+        this.is_private = false;
+        this.token_id = "";
+        this.is_notify = true;
 
     }
 
 
-    public User(String full_name, String email, String birth_date, ArrayList<String> followers, ArrayList<String> following, ArrayList<String> last_searches, ArrayList<String> favourite_books, ArrayList<String> favourite_genres, ArrayList<String> liked_reviews, Boolean is_private) {
+    public User(String full_name, String email, String birth_date, ArrayList<String> followers, ArrayList<String> following, ArrayList<String> follow_requests, ArrayList<String> last_searches, ArrayList<String> favourite_books, ArrayList<String> favourite_genres, ArrayList<String> liked_reviews, ArrayList<Integer> avatar_details, Boolean is_private) {
         this.full_name = full_name;
         this.email = email;
         this.birth_date = birth_date;
         this.followers = followers;
         this.following = following;
-        this.last_searches = last_searches;
-        this.favourite_books = favourite_books;
-        this.favourite_genres = favourite_genres;
-        this.liked_reviews = liked_reviews;
-        this.is_private = is_private;
-        this.token_id="";
-        this.is_notify= true;
-
-    }
-
-    //TODO: REMOVE WHEN THE AVATAR WILL WORK
-
-    public User(String full_name, String email, String birth_date, ArrayList<String> followers, ArrayList<String> following, ArrayList<String> last_searches, ArrayList<String> favourite_books, ArrayList<String> favourite_genres, ArrayList<String> liked_reviews, ArrayList<Integer> avatar_details, Boolean is_private) {
-        this.full_name = full_name;
-        this.email = email;
-        this.birth_date = birth_date;
-        this.followers = followers;
-        this.following = following;
+        this.follow_requests = follow_requests;
         this.last_searches = last_searches;
         this.favourite_books = favourite_books;
         this.favourite_genres = favourite_genres;
         this.liked_reviews = liked_reviews;
         this.avatar_details = avatar_details;
         this.is_private = is_private;
-        this.token_id="";
-        this.is_notify=true;
+        this.token_id = "";
+        this.is_notify = true;
+    }
+
+    public ArrayList<String> getFollow_requests() {
+        return follow_requests;
+    }
+
+    public void setFollow_requests(ArrayList<String> follow_requests) {
+        this.follow_requests = follow_requests;
     }
 
     public String getToken_id() {

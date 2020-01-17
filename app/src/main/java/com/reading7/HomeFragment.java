@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,8 +24,6 @@ import com.reading7.Objects.WishList;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -45,7 +42,6 @@ public class HomeFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         return inflater.inflate(R.layout.home_fragment, null);
-
     }
 
 
@@ -112,12 +108,10 @@ public class HomeFragment extends Fragment {
                             FeedAdapter adapter = new FeedAdapter(getActivity(), posts,((MainActivity)getActivity()).getUser());
                             postsRV.setAdapter(adapter);
                             enableClicks();
-
                         }
 
                     }
                 }
-                getActivity().findViewById(R.id.home_progress_bar).setVisibility(View.GONE);
             }
         });
     }
@@ -131,21 +125,20 @@ public class HomeFragment extends Fragment {
         createPosts(postsRV);
     }
 
+
     private void disableClicks() {
        // getActivity().findViewById(R.id.search).setEnabled(false);
 //        getActivity().findViewById(R.id.notifications).setEnabled(false);
         ((MainActivity)getActivity()).setBottomNavigationEnabled(false);
-
-
     }
+
 
     private void enableClicks() {
     //    getActivity().findViewById(R.id.search).setEnabled(true);
 //        getActivity().findViewById(R.id.notifications).setEnabled(true);
         ((MainActivity)getActivity()).setBottomNavigationEnabled(true);
+        getActivity().findViewById(R.id.home_progress_bar).setVisibility(View.GONE);
     }
-
-
 
 }
 

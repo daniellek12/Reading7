@@ -519,11 +519,14 @@ public class BookFragment extends Fragment {
                         lstReviews.add(0,mReview);
 
                     }*/
-                    for(Review r:lstReviews){
+                    final List<Review> newlist = new ArrayList<Review>();
+                    newlist.addAll(lstReviews);
+                    for(Review r:newlist){
                         if(r.getReviewer_email().equals(mAuth.getCurrentUser().getEmail())) {
                             flag_reviewed=true;
                             lstReviews.remove(r);
                             lstReviews.add(0,r);
+                            break;
                         }
                     }
                     adapter.notifyDataSetChanged();
