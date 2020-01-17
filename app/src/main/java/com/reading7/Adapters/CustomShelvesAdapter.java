@@ -50,7 +50,6 @@ public class CustomShelvesAdapter extends RecyclerView.Adapter<CustomShelvesAdap
         TextView shelf_title;
         RelativeLayout shelf_title_layout;
         RecyclerView shelfBooksRV;
-        CustomShelfAdapter shelfAdapter;
         ArrayList<String> shelfBookNames = new ArrayList<String>();
         RelativeLayout empty_shelf_layout;
 
@@ -64,8 +63,6 @@ public class CustomShelvesAdapter extends RecyclerView.Adapter<CustomShelvesAdap
             LinearLayoutManager layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
             shelfBooksRV = itemView.findViewById(R.id.customListRV);
             shelfBooksRV.setLayoutManager(layoutManager);
-            shelfAdapter = new CustomShelfAdapter(shelfBookNames, mContext);
-            shelfBooksRV.setAdapter(shelfAdapter);
         }
     }
 
@@ -82,6 +79,11 @@ public class CustomShelvesAdapter extends RecyclerView.Adapter<CustomShelvesAdap
         final String shelfName = shelfNames.get(i);
         viewHolder.shelf_title.setText(shelfName);
 
+        final ShelfFragment customShelf = new ShelfFragment(viewHolder.shelfBookNames, shelfName,
+                mAuth.getCurrentUser().getEmail(), ShelfFragment.ShelfType.CUSTOM);
+        final ProfileShelfAdapter shelfAdapter = new ProfileShelfAdapter(mContext, viewHolder.shelfBookNames, customShelf);
+        viewHolder.shelfBooksRV.setAdapter(shelfAdapter);
+
         CollectionReference collection = db.collection("Users")
                 .document(mAuth.getCurrentUser().getEmail()).collection("Shelves");
         Query query = collection.whereEqualTo("shelf_name", shelfName);
@@ -94,7 +96,7 @@ public class CustomShelvesAdapter extends RecyclerView.Adapter<CustomShelvesAdap
                         ArrayList<String> shelf_books = (ArrayList<String>)(doc.getData().get("book_names"));
                         viewHolder.shelfBookNames.addAll(shelf_books);
                     }
-                    viewHolder.shelfAdapter.notifyDataSetChanged();
+                    shelfAdapter.notifyDataSetChanged();
 
                     if (viewHolder.shelfBookNames.isEmpty()) {
                         viewHolder.shelfBooksRV.setVisibility(View.INVISIBLE);
