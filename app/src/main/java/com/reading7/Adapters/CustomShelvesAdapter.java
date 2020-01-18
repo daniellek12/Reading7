@@ -39,13 +39,17 @@ public class CustomShelvesAdapter extends RecyclerView.Adapter<CustomShelvesAdap
     private ArrayList<String> shelfNames;
     private Context mContext;
     String user_email;
+    private Activity mActivity;
+    private ViewGroup viewGroup;
 
-    public CustomShelvesAdapter(ArrayList<String> shelfNames, Context context, String user_email){
+    public CustomShelvesAdapter(ArrayList<String> shelfNames, Context context, String user_email,ViewGroup viewGroup,Activity activity){
         this.mAuth = FirebaseAuth.getInstance();
         this.db = FirebaseFirestore.getInstance();
         this.shelfNames = shelfNames;
         this.mContext = context;
         this.user_email = user_email;
+        this.viewGroup = viewGroup;
+        this.mActivity=activity;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -83,7 +87,7 @@ public class CustomShelvesAdapter extends RecyclerView.Adapter<CustomShelvesAdap
 
         final ShelfFragment customShelf = new ShelfFragment(viewHolder.shelfBookNames, shelfName,
                 user_email, ShelfFragment.ShelfType.CUSTOM);
-        final ProfileShelfAdapter shelfAdapter = new ProfileShelfAdapter(mContext, viewHolder.shelfBookNames, customShelf);
+        final ProfileShelfAdapter shelfAdapter = new ProfileShelfAdapter(mContext, viewHolder.shelfBookNames, customShelf,viewGroup,mActivity);
         viewHolder.shelfBooksRV.setAdapter(shelfAdapter);
 
         CollectionReference collection = db.collection("Users")

@@ -32,14 +32,19 @@ public class ProfileShelfAdapter extends RecyclerView.Adapter<ProfileShelfAdapte
     private Context mContext;
     private ArrayList<String> bookNames;
     private ShelfFragment shelfFragment;
+    private ViewGroup viewGroup;
+    private Activity mActivity;
 
     private static final int DISPLAY_LIMIT = 5;
 
 
-    public ProfileShelfAdapter(Context context, ArrayList<String> bookNames, ShelfFragment shelfFragment) {
+    public ProfileShelfAdapter(Context context, ArrayList<String> bookNames, ShelfFragment shelfFragment,
+                               ViewGroup viewGroup,Activity activity) {
         this.mContext = context;
         this.bookNames = bookNames;
         this.shelfFragment = shelfFragment;
+        this.viewGroup=viewGroup;
+        this.mActivity= activity;
     }
 
 
@@ -86,6 +91,7 @@ public class ProfileShelfAdapter extends RecyclerView.Adapter<ProfileShelfAdapte
             viewHolder.cover.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    Utils.enableDisableClicks(mActivity,viewGroup,false);
                     Query bookRef = FirebaseFirestore.getInstance().collection("Books").whereEqualTo("title", bookName);
                     bookRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
@@ -94,6 +100,8 @@ public class ProfileShelfAdapter extends RecyclerView.Adapter<ProfileShelfAdapte
                                 for (final DocumentSnapshot doc : task.getResult()) {
                                     Book b = doc.toObject(Book.class);
                                     ((MainActivity) mContext).loadFragment(new BookFragment(b));
+                                    Utils.enableDisableClicks(mActivity,viewGroup,true);
+
                                 }
                             }
                         }

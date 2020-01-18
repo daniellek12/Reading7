@@ -142,7 +142,7 @@ public class PublicProfileFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         final RecyclerView customShelvesRV = getActivity().findViewById(R.id.customShelvesRV);
         customShelvesRV.setLayoutManager(layoutManager);
-        adapterCustomShelves = new CustomShelvesAdapter(shelfNames, getActivity(), user_email);
+        adapterCustomShelves = new CustomShelvesAdapter(shelfNames, getActivity(), user_email,(ViewGroup)getView(),getActivity());
         customShelvesRV.setAdapter(adapterCustomShelves);
 
         getUserShelves();
@@ -323,7 +323,7 @@ public class PublicProfileFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         final RecyclerView wishlistRV = getActivity().findViewById(R.id.wishlistRV);
         wishlistRV.setLayoutManager(layoutManager);
-        adapterWishList = new ProfileShelfAdapter(getActivity(), usersWishListBookNames, wishlistShelf);
+        adapterWishList = new ProfileShelfAdapter(getActivity(), usersWishListBookNames, wishlistShelf,(ViewGroup) getView(),getActivity());
         wishlistRV.setAdapter(adapterWishList);
 
         getUserWishList();
@@ -369,7 +369,7 @@ public class PublicProfileFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         RecyclerView myBooksRV = getActivity().findViewById(R.id.myBooksRV);
         myBooksRV.setLayoutManager(layoutManager);
-        adapterReviews = new ProfileShelfAdapter(getActivity(), usersReviewBookNames, myBooksShelf);
+        adapterReviews = new ProfileShelfAdapter(getActivity(), usersReviewBookNames, myBooksShelf,(ViewGroup) getView(),getActivity());
         myBooksRV.setAdapter(adapterReviews);
 
         getUserReviews();
