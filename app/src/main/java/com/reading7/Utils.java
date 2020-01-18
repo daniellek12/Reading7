@@ -42,6 +42,7 @@ import java.util.Collections;
 
 public class Utils {
 
+    public static boolean clicksEnabled = true;
 //    public static void updateBooks() {
 //        final FirebaseFirestore db = FirebaseFirestore.getInstance();
 //
@@ -376,11 +377,13 @@ public class Utils {
 
     /**
      * Enables/Disables all child views in a view group.
+     * Sets clicksEnabled field (needed for back button)
      *
      * @param viewGroup the view group
      * @param enabled true to enable, false to disable
      */
     public static void enableDisableClicks(Activity activity, ViewGroup viewGroup, boolean enabled) {
+        clicksEnabled = enabled;
         int childCount = viewGroup.getChildCount();
         for (int i = 0; i < childCount; i++) {
             View view = viewGroup.getChildAt(i);

@@ -189,10 +189,15 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onBackPressed()
     {
+        if (!Utils.clicksEnabled) {
+            return;
+        }
         int count = getSupportFragmentManager().getBackStackEntryCount();
 
         if (count == 1)
             finish();
+        else if (getFragmentManager().getBackStackEntryCount() > 1)
+            getFragmentManager().popBackStack();
         else
          super.onBackPressed();
     }
