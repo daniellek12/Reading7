@@ -68,12 +68,12 @@ public class NotificationsFragment extends Fragment {
     }
 
     private void createNotifications(final RecyclerView notificationsRV) {
-
+        notifications.clear();
         Utils.enableDisableClicks(getActivity(), (ViewGroup)getView(), false);
         final ArrayList<Notification> newlist = new ArrayList<>();
-        FirebaseUser mUser = mAuth.getCurrentUser();
+        final FirebaseUser mUser = mAuth.getCurrentUser();
         final CollectionReference requestCollectionRef = db.collection("Users").document(mUser.getEmail()).collection("Notifications");
-        Query requestQuery = requestCollectionRef.limit(30); //TODO change to chunks with limit
+        Query requestQuery = requestCollectionRef.orderBy("time",com.google.firebase.firestore.Query.Direction.DESCENDING).limit(30); //TODO change to chunks with limit
         requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -100,6 +100,7 @@ public class NotificationsFragment extends Fragment {
                         @Override
                         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                             adapter.deleteNotification(viewHolder.getAdapterPosition());
+
                         }
                     }).attachToRecyclerView(notificationsRV);
 
@@ -109,6 +110,8 @@ public class NotificationsFragment extends Fragment {
         });
 
     }
+
+
 
 }
 

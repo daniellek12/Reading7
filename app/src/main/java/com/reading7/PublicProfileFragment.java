@@ -22,8 +22,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.reading7.Adapters.CustomShelvesAdapter;
 import com.reading7.Adapters.ProfileShelfAdapter;
+import com.reading7.Objects.Notification;
 import com.reading7.Objects.Review;
+import com.reading7.Objects.Shelf;
 import com.reading7.Objects.User;
 import com.reading7.Objects.WishList;
 
@@ -51,6 +54,9 @@ public class PublicProfileFragment extends Fragment {
     private User user;
     private ProfileShelfAdapter adapterReviews;
     private ProfileShelfAdapter adapterWishList;
+    final private ArrayList<String> shelfNames = new ArrayList<String>();
+    private CustomShelvesAdapter adapterCustomShelves;
+
 
     public PublicProfileFragment(String user_email) {
         this.user_email = user_email;
@@ -121,11 +127,39 @@ public class PublicProfileFragment extends Fragment {
                         initFollowButton();
                         initWishlist();
                         initMyBookslist();
+                        initCustomShelves();
 
                     } else
                         Toast.makeText(getActivity(), "Account does not exist", Toast.LENGTH_SHORT).show();
                 } else
                     Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void initCustomShelves(){
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        final RecyclerView customShelvesRV = getActivity().findViewById(R.id.customShelvesRV);
+        customShelvesRV.setLayoutManager(layoutManager);
+        adapterCustomShelves = new CustomShelvesAdapter(shelfNames, getActivity(), user_email,(ViewGroup)getView(),getActivity());
+        customShelvesRV.setAdapter(adapterCustomShelves);
+
+        getUserShelves();
+
+    }
+
+    private void getUserShelves(){
+        db.collection("Users").document(user_email)
+                .collection("Shelves").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    shelfNames.clear();
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                        shelfNames.add(doc.toObject(Shelf.class).getShelf_name());
+                    }
+                    adapterCustomShelves.notifyDataSetChanged();
+                }
             }
         });
     }
@@ -204,7 +238,22 @@ public class PublicProfileFragment extends Fragment {
                     userRef = db.collection("Users").document(user.getEmail());
                     userRef.update("follow_requests", FieldValue.arrayRemove(user_me.getEmail()));
 
-                    //TODO add deletion of notification if user is private
+                    //if user is private and i stopped following him/wait for him to approve my request- add deletion of notifications
+                    //may need to add enable disable..
+                    CollectionReference requestsRef = db.collection("Users").document(user.getEmail()).collection("Notifications");
+                    Query requestQuery = requestsRef.whereEqualTo("from", user_me.getEmail());
+                    requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    if(!document.toObject(Notification.class).getType().equals(getString(R.string.like_notificiation)))
+                                        document.getReference().delete();
+                                }
+                            }
+                        }
+                    });
+
 
 
                 }
@@ -219,6 +268,7 @@ public class PublicProfileFragment extends Fragment {
                             if (document.exists()) {
 
                                 ArrayList<String> followers = (ArrayList<String>) document.getData().get("followers");
+                                user.setFollowers(followers);
                                 ((TextView) getActivity().findViewById(R.id.publicProfile_followers)).setText(Integer.toString(followers.size()));
                                 check_private();
 
@@ -271,7 +321,7 @@ public class PublicProfileFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         final RecyclerView wishlistRV = getActivity().findViewById(R.id.wishlistRV);
         wishlistRV.setLayoutManager(layoutManager);
-        adapterWishList = new ProfileShelfAdapter(getActivity(), usersWishListBookNames, wishlistShelf);
+        adapterWishList = new ProfileShelfAdapter(getActivity(), usersWishListBookNames, wishlistShelf,(ViewGroup) getView(),getActivity());
         wishlistRV.setAdapter(adapterWishList);
 
         getUserWishList();
@@ -317,7 +367,7 @@ public class PublicProfileFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         RecyclerView myBooksRV = getActivity().findViewById(R.id.myBooksRV);
         myBooksRV.setLayoutManager(layoutManager);
-        adapterReviews = new ProfileShelfAdapter(getActivity(), usersReviewBookNames, myBooksShelf);
+        adapterReviews = new ProfileShelfAdapter(getActivity(), usersReviewBookNames, myBooksShelf,(ViewGroup) getView(),getActivity());
         myBooksRV.setAdapter(adapterReviews);
 
         getUserReviews();

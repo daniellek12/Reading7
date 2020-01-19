@@ -380,6 +380,25 @@
             <!--            android:layout_below="@id/logout"-->
             <!--            android:id="@+id/dont_click"/>-->
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/customShelvesRV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/myBooksRV"
+                android:nestedScrollingEnabled="false"/>
+
+            <Button
+                android:id="@+id/add_custom_list_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/customShelvesRV"
+                android:background="@drawable/rounded_button"
+                android:layout_centerHorizontal="true"
+                android:text="@string/add_custom_list"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp" />
 
         </RelativeLayout>
 

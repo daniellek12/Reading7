@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/yellow_books_background"
-    tools:context=".PublicProfileFragment"
-    android:layoutDirection="rtl">
+    android:layoutDirection="rtl"
+    tools:context=".PublicProfileFragment">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -197,31 +196,39 @@
                 android:layout_marginBottom="15dp"
                 android:background="?android:attr/listDivider" />
 
-            <TextView
+
+            <RelativeLayout
                 android:id="@+id/private_alert"
+                android:layout_below="@id/divider1"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/divider1"
-                android:gravity="center"
-                android:text="@string/public_private_profile" />
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/private_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/public_private_profile" />
 
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/private_image"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_below="@id/divider1"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="30dp"
-                android:src="@drawable/private_profile_lock"
-                app:civ_border_color="@color/white" />
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/private_image"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="30dp"
+                    android:src="@drawable/private_profile_lock"
+                    app:civ_border_color="@color/white" />
+
+            </RelativeLayout>
+
 
             <RelativeLayout
                 android:id="@+id/classified_data"
-                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@id/divider1">
+                android:layout_below="@id/divider1"
+                android:visibility="gone">
 
                 <RelativeLayout
                     android:id="@+id/wishlistTitle"
@@ -347,6 +354,13 @@
                         android:textSize="14sp" />
 
                 </RelativeLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/customShelvesRV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/myBooksRV"
+                    android:nestedScrollingEnabled="false"/>
             </RelativeLayout>
 
 
@@ -358,6 +372,8 @@
                 android:layout_alignParentBottom="true"
                 android:layout_marginBottom="25dp"
                 android:visibility="gone" />
+
+
 
         </RelativeLayout>
 

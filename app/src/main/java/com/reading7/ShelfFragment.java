@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 public class ShelfFragment extends Fragment {
 
-    public enum ShelfType{WISHLIST, MYBOOKS};
+    public enum ShelfType{WISHLIST, MYBOOKS, CUSTOM}
 
     private ShelfType type;
     private ExpandedShelfAdapter adapter;

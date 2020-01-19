@@ -257,6 +257,26 @@
                 android:textSize="12sp" />
 
             <Button
+                android:id="@+id/button_custom_shelf"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:layout_below="@id/button_read"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="100dp"
+                android:background="@drawable/rounded_button"
+                android:backgroundTint="@color/darkGrey"
+                android:drawableRight="@drawable/bookmark"
+                android:drawableTint="@color/white"
+                android:drawablePadding="5dp"
+                android:paddingLeft="15dp"
+                android:paddingTop="5dp"
+                android:paddingRight="15dp"
+                android:paddingBottom="5dp"
+                android:text="@string/add_to_shelf"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
+            <Button
                 android:id="@+id/button_already_read"
                 android:layout_width="wrap_content"
                 android:layout_height="35dp"
@@ -282,7 +302,7 @@
                 android:id="@+id/divider1"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_below="@id/button_read"
+                android:layout_below="@id/button_custom_shelf"
                 android:layout_marginTop="25dp"
                 android:background="?android:attr/listDivider" />
 

@@ -45,8 +45,9 @@ public class MainActivity extends AppCompatActivity
             String type = intent.getStringExtra("type");
 
             if(type.equals( getResources().getString(R.string.follow_notificiation_private))||
-                    type.equals( getResources().getString(R.string.follow_notificiation_public))) {
-                addFragment(new PublicProfileFragment(intent.getStringExtra("from_email")));
+                    type.equals( getResources().getString(R.string.follow_notificiation_public))||
+                    type.equals( getResources().getString(R.string.request_approved_notificiation))) {
+                loadFragment(new PublicProfileFragment(intent.getStringExtra("from_email")));
                 return;
             }
 
@@ -64,7 +65,7 @@ public class MainActivity extends AppCompatActivity
                             Book b = null;
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 b = document.toObject(Book.class);
-                               addFragment(new BookFragment(b));
+                               loadFragment(new BookFragment(b));
                                 return;
                             }
 
@@ -185,6 +186,20 @@ public class MainActivity extends AppCompatActivity
     public void setCurrentUser( User user) {
         this.mUser = user;
     }
+    @Override
+    public void onBackPressed()
+    {
+        if (!Utils.clicksEnabled) {
+            return;
+        }
+        int count = getSupportFragmentManager().getBackStackEntryCount();
 
+        if (count == 1)
+            finish();
+        else if (getFragmentManager().getBackStackEntryCount() > 1)
+            getFragmentManager().popBackStack();
+        else
+         super.onBackPressed();
+    }
 
 }
