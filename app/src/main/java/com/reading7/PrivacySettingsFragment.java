@@ -42,6 +42,7 @@ public class PrivacySettingsFragment extends Fragment {
         initBackButton();
     }
 
+
     private void initBackButton() {
         getView().findViewById(R.id.backButton).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,6 +51,7 @@ public class PrivacySettingsFragment extends Fragment {
             }
         });
     }
+
 
     private void initPrivateBtn() {
         final Switch sw = getActivity().findViewById(R.id.private_profile_switch);
@@ -74,13 +76,13 @@ public class PrivacySettingsFragment extends Fragment {
         sw.bringToFront();
         sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Utils.enableDisableClicks(getActivity(),(ViewGroup)getView(),false);
+                Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), false);
                 if (isChecked) {
                     db.collection("Users").document(mAuth.getCurrentUser().getEmail()).update("is_private", true);
-                    Utils.enableDisableClicks(getActivity(),(ViewGroup)getView(),true);
+                    Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), true);
                 } else {
                     db.collection("Users").document(mAuth.getCurrentUser().getEmail()).update("is_private", false);
-                    Utils.enableDisableClicks(getActivity(),(ViewGroup)getView(),true);
+                    Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), true);
                 }
             }
         });
@@ -110,15 +112,16 @@ public class PrivacySettingsFragment extends Fragment {
         sw.bringToFront();
         sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Utils.enableDisableClicks(getActivity(),(ViewGroup)getView(),false);
+                Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), false);
                 if (isChecked) {
                     db.collection("Users").document(mAuth.getCurrentUser().getEmail()).update("is_notify", true);
-                    Utils.enableDisableClicks(getActivity(),(ViewGroup)getView(),true);
+                    Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), true);
                 } else {
                     db.collection("Users").document(mAuth.getCurrentUser().getEmail()).update("is_notify", false);
-                    Utils.enableDisableClicks(getActivity(),(ViewGroup)getView(),true);
+                    Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), true);
                 }
             }
         });
     }
+
 }

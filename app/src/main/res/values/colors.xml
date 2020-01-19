@@ -6,9 +6,9 @@
     <color name="colorAccentLight">#FE694B</color>
     <color name="textPrimary">#C29314</color>
     <color name="white">#FFFFFE</color>
+    <color name="grey">#F7FAFB</color>
     <color name="lightGrey">#BFBFBF</color>
     <color name="darkGrey">#7A7A7A</color>
-    <color name="grey">#F7FAFB</color>
 
     <color name="transparent">#00ff0000</color>
     <color name="transparentPrimaryDark">#DAFFC21C</color>

@@ -1,6 +1,5 @@
 package com.reading7;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -190,7 +189,7 @@ public class PublicProfileFragment extends Fragment {
                         userRef = db.collection("Users").document(user.getEmail());
                         userRef.update("follow_requests", FieldValue.arrayUnion(user_me.getEmail()));
                     }
-                    addNotificationFollow(user.getEmail(), user.getIs_notify(),user.getIs_private());
+                    addNotificationFollow(user.getEmail(), user.getIs_notify(), user.getIs_private());
 
                 } else { // already following / requested
                     follow.setText(follow_string);
@@ -233,18 +232,17 @@ public class PublicProfileFragment extends Fragment {
         });
     }
 
-    private void addNotificationFollow(String to_email, boolean is_notify,boolean is_private) {
+    private void addNotificationFollow(String to_email, boolean is_notify, boolean is_private) {
         if (is_notify) {
             db = FirebaseFirestore.getInstance();
 
             Map<String, Object> notificationMessegae = new HashMap<>();
 
-            if(!is_private) {
+            if (!is_private) {
                 notificationMessegae.put("type", getContext().getResources().getString(R.string.follow_notificiation_public));
                 notificationMessegae.put("book_title", "follow_notification_public");//not relvant
 
-            }
-            else {
+            } else {
                 notificationMessegae.put("type", getContext().getResources().getString(R.string.follow_notificiation_private));
                 notificationMessegae.put("book_title", "follow_notification_private");//not relvant
 
@@ -364,4 +362,5 @@ public class PublicProfileFragment extends Fragment {
             }
         });
     }
+
 }

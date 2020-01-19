@@ -36,11 +36,10 @@
     <string name="age">תאריך לידה</string>
     <string name="user_name">שם משתמש</string>
     <string name="welcome">ברוכים הבאים</string>
-    <string name="illegal_name">אנא בחר שם משתמש שמורכב מאותיות בעברית</string>
+    <string name="illegal_name">יש לבחור שם משתמש שמורכב מאותיות בעברית</string>
     <string name="illegal_email">כתובת האימייל לא חוקית</string>
-    <string name="illegal_password">אנא בחר סיסמה שמכילה 6 תווים לפחות</string>
-    <string name="illegal_age">אנא הכנס תאריך לידה חוקי</string>
-    <string name="illegal_school">אנא בחר בית ספר מהרשימה</string>
+    <string name="illegal_password">יש לבחור סיסמה שמכילה 6 תווים לפחות</string>
+    <string name="illegal_age">תאריך הלידה שהוכנס אינו חוקי</string>
     <string name="email_exists">כתובת האימייל כבר קיימת במערכת</string>
     <string name="cont">המשך</string>
     <string name="choose_last_book">מהו הספר האחרון שקראת?</string>
@@ -70,13 +69,30 @@
     <string name="public_my_wishlist">רשימת המשאלות של</string>
     <string name="public_my_books">ספרים שקרא</string>
     <string name="public_private_profile">פרופיל זה הינו פרופיל פרטי</string>
+    <string name="request_string">ממתין</string>
 
+    <!--Edit Profile-->
+    <string name="save">שמירה</string>
+    <string name="change_password">שינוי סיסמה</string>
+    <string name="old_password">סיסמה נוכחית</string>
+    <string name="new_password">סיסמה חדשה</string>
+    <string name="wrong_password">סיסמה שגויה</string>
+    <string name="password_change_success">הסיסמה שונתה בהצלחה</string>
+    <string name="try_again">משהו השתבש, נסה שוב</string>
+    <string name="enter_password">הכנס את סיסמתך הנוכחית</string>
+
+    <!--Privacy Settings-->
+    <string name="private_profile_title">פרופיל פרטי</string>
+    <string name="private_profile_explanation">כאשר הפרופיל שלך מוגדר כפרטי, רק העוקבים שלך יוכלו לצפות בו.</string>
+    <string name="notifications_title">התראות</string>
+    <string name="notification_explanation">קבלת התראות על עוקבים חדשים, לייקים ותגובות לביקורות שלך.</string>
 
     <!--Notifications-->
     <string name="follow_notificiation_public">התחיל לעקוב אחרייך</string>
     <string name="follow_notificiation_private">רוצה לעקוב אחרייך</string>
     <string name="like_notificiation">אהבה את הביקורת שלך</string>
-
+    <string name="notifications">התראות</string>
+    <string name="accept">קבל</string>
 
     <!--Edit Avatar-->
     <string name="skin_color">צבע עור</string>
@@ -118,20 +134,6 @@
     <string name="cancel">ביטול</string>
     <string name="book_details">פרטי הספר</string>
     <string name="pages">עמודים</string>
-    <string name="save">שמירה</string>
-    <string name="private_profile_title">פרופיל פרטי</string>
-    <string name="private_profile_explanation">כאשר הפרופיל שלך מוגדר כפרטי, רק העוקבים שלך יוכלו לצפות בו.</string>
-    <string name="notifications_title">התראות</string>
-    <string name="notification_explanation">קבלת התראות על עוקבים חדשים, לייקים ותגובות לביקורות שלך.</string>
-    <string name="change_password">שינוי סיסמה</string>
-    <string name="old_password">סיסמה נוכחית</string>
-    <string name="new_password">סיסמה חדשה</string>
-    <string name="wrong_password">סיסמה שגויה</string>
-    <string name="password_change_success">הסיסמה שונתה בהצלחה</string>
-    <string name="try_again">משהו השתבש, נסה שוב</string>
-    <string name="enter_password">הכנס את סיסמתך הנוכחית</string>
-    <string name="request_string">ממתין</string>
-    <string name="notifications">התראות</string>
-    <string name="accept">קבל</string>
+
 
 </resources>

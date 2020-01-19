@@ -235,4 +235,5 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
             });
         }
     }
+
 }

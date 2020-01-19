@@ -69,32 +69,4 @@
 
     </RelativeLayout>
 
-    <!--    <ImageButton-->
-    <!--        android:id="@+id/deleteBtn"-->
-    <!--        android:layout_width="40dp"-->
-    <!--        android:layout_height="40dp"-->
-    <!--        android:layout_below="@id/divider"-->
-    <!--        android:layout_alignParentRight="true"-->
-    <!--        android:layout_marginTop="10dp"-->
-    <!--        android:layout_marginRight="30dp"-->
-    <!--        android:layout_marginBottom="30dp"-->
-    <!--        android:elevation="1dp"-->
-    <!--        android:scaleType="centerInside"-->
-    <!--        android:tint="@color/black"-->
-    <!--        app:srcCompat="@drawable/cancel" />-->
-
-    <!--    <ImageButton-->
-    <!--        android:id="@+id/clickNotificationBtn"-->
-    <!--        android:layout_width="40dp"-->
-    <!--        android:layout_height="40dp"-->
-    <!--        android:layout_below="@id/deleteBtn"-->
-    <!--        android:layout_alignParentRight="true"-->
-    <!--        android:layout_marginRight="30dp"-->
-    <!--        android:layout_marginBottom="30dp"-->
-    <!--        android:elevation="1dp"-->
-    <!--        android:scaleType="centerInside"-->
-    <!--        android:tint="@color/black"-->
-    <!--        app:srcCompat="@drawable/arrow_right" />-->
-
-
 </RelativeLayout>

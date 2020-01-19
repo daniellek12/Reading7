@@ -2,9 +2,6 @@ package com.reading7.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,73 +51,6 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     User mUser;
-
-
-
-
-    /*-------------------------------------- View Holders ----------------------------------------*/
-
-
-    public class ReviewPostHolder extends RecyclerView.ViewHolder {
-
-        TextView postTime;
-        TextView userName;
-        CircleImageView profileImage;
-        RatingBar ratingBar;
-        TextView rating;
-        ImageView cover;
-        ImageView coverBackground;
-        TextView bookName;
-        TextView authorName;
-        Button likeButton;
-        TextView likesNum;
-        TextView review_content;
-        TextView review_title;
-
-        public ReviewPostHolder(@NonNull View itemView) {
-            super(itemView);
-
-            postTime = itemView.findViewById(R.id.postTime);
-            userName = itemView.findViewById(R.id.userName);
-            profileImage = itemView.findViewById(R.id.profileImage);
-            ratingBar = itemView.findViewById(R.id.ratingBar);
-            rating = itemView.findViewById(R.id.rating);
-            cover = itemView.findViewById(R.id.coverImage);
-            coverBackground = itemView.findViewById(R.id.coverBackground);
-            bookName = itemView.findViewById(R.id.bookTitle);
-            authorName = itemView.findViewById(R.id.authorName);
-            likeButton = itemView.findViewById(R.id.likeButton);
-            likesNum = itemView.findViewById(R.id.likesNum);
-            review_content = itemView.findViewById(R.id.review);
-            review_title = itemView.findViewById(R.id.title);
-        }
-    }
-
-    public class WishListPostHolder extends RecyclerView.ViewHolder {
-
-        ImageView cover;
-        ImageView coverBackground;
-        TextView userName;
-        TextView postTime;
-        TextView bookName;
-        CircleImageView profileImage;
-
-
-        public WishListPostHolder(@NonNull View itemView) {
-            super(itemView);
-
-            cover = itemView.findViewById(R.id.coverImage);
-            coverBackground = itemView.findViewById(R.id.coverBackground);
-            userName =itemView.findViewById(R.id.userName);
-            bookName =itemView.findViewById(R.id.bookName);
-            postTime =itemView.findViewById(R.id.postTime);
-            profileImage = itemView.findViewById(R.id.profileImage);
-        }
-    }
-
-    //TODO: NewBookPostHolder
-
-    /*--------------------------------------------------------------------------------------------*/
 
 
     public FeedAdapter(Context context, ArrayList<Post> posts,User mUser) {
@@ -204,8 +134,9 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
     }
 
 
-    /*-------------------------------------- View Binders ----------------------------------------*/
-
+/**
+     *************************************** BINDERS ********************************************
+     */
 
     private void bindReview(RecyclerView.ViewHolder viewHolder, int i) {
 
@@ -342,8 +273,73 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
         holder.bookName.setOnClickListener(bookListener);
     }
 
-    /*--------------------------------------------------------------------------------------------*/
 
+/**
+     *********************************** View Holders *******************************************
+     */
+
+    public class ReviewPostHolder extends RecyclerView.ViewHolder {
+
+        TextView postTime;
+        TextView userName;
+        CircleImageView profileImage;
+        RatingBar ratingBar;
+        TextView rating;
+        ImageView cover;
+        ImageView coverBackground;
+        TextView bookName;
+        TextView authorName;
+        Button likeButton;
+        TextView likesNum;
+        TextView review_content;
+        TextView review_title;
+
+        public ReviewPostHolder(@NonNull View itemView) {
+            super(itemView);
+
+            postTime = itemView.findViewById(R.id.postTime);
+            userName = itemView.findViewById(R.id.userName);
+            profileImage = itemView.findViewById(R.id.profileImage);
+            ratingBar = itemView.findViewById(R.id.ratingBar);
+            rating = itemView.findViewById(R.id.rating);
+            cover = itemView.findViewById(R.id.coverImage);
+            coverBackground = itemView.findViewById(R.id.coverBackground);
+            bookName = itemView.findViewById(R.id.bookTitle);
+            authorName = itemView.findViewById(R.id.authorName);
+            likeButton = itemView.findViewById(R.id.likeButton);
+            likesNum = itemView.findViewById(R.id.likesNum);
+            review_content = itemView.findViewById(R.id.review);
+            review_title = itemView.findViewById(R.id.title);
+        }
+    }
+
+    public class WishListPostHolder extends RecyclerView.ViewHolder {
+
+        ImageView cover;
+        ImageView coverBackground;
+        TextView userName;
+        TextView postTime;
+        TextView bookName;
+        CircleImageView profileImage;
+
+
+        public WishListPostHolder(@NonNull View itemView) {
+            super(itemView);
+
+            cover = itemView.findViewById(R.id.coverImage);
+            coverBackground = itemView.findViewById(R.id.coverBackground);
+            userName =itemView.findViewById(R.id.userName);
+            bookName =itemView.findViewById(R.id.bookName);
+            postTime =itemView.findViewById(R.id.postTime);
+            profileImage = itemView.findViewById(R.id.profileImage);
+        }
+    }
+
+    //TODO: NewBookPostHolder
+
+/**
+     ********************************* OnClick Listeners ****************************************
+     */
 
     private class OpenBookOnClick implements View.OnClickListener {
 
@@ -384,6 +380,11 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
         }
     }
 
+
+/**
+     *********************************** Other Functions ****************************************
+     */
+
     private void addNotificationLike(String to_email,String book_title,boolean is_notify){
         if(is_notify&& (!(to_email.equals(mAuth.getCurrentUser().getEmail())))) {
             db = FirebaseFirestore.getInstance();
@@ -405,5 +406,4 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
             });
         }
     }
-
 }
