@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -20,11 +21,16 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.reading7.BookFragment;
 import com.reading7.MainActivity;
+import com.reading7.Objects.Book;
 import com.reading7.Objects.User;
 import com.reading7.ProfileFragment;
 import com.reading7.PublicProfileFragment;
@@ -59,15 +65,15 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
     private ArrayList<String> LikedReviews;
 
 
-    public ReviewListAdapter(Context context, List<Review> reviews, Fragment fragment,User real_user,ArrayList<String> likedReviews) {
+    public ReviewListAdapter(Context context, List<Review> reviews, Fragment fragment, User real_user, ArrayList<String> likedReviews) {
         mAuth = FirebaseAuth.getInstance();
         mFirestore = FirebaseFirestore.getInstance();
         this.reviews = reviews;
         this.mContext = context;
         this.db = FirebaseFirestore.getInstance();
         this.fragment = fragment;
-        this.real_user=real_user;
-        this.LikedReviews=likedReviews;
+        this.real_user = real_user;
+        this.LikedReviews = likedReviews;
 
 
         this.mUser = mAuth.getCurrentUser();
@@ -95,10 +101,14 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull final ReviewListAdapter.ViewHolder viewHolder, int i) {
-
         final Review review = reviews.get(i);
         if (i == 0 && ((BookFragment) fragment).isFlag_reviewed()) {
             viewHolder.relativeLayout.setBackgroundColor(mContext.getResources().getColor(R.color.grey));
+            viewHolder.deleteBtn.setVisibility(View.VISIBLE);
+
+            viewHolder.deleteBtn.setOnClickListener(new DeleteReviewOnClick(review.getReviewer_email(), review.getBook_title()));
+
+
         }
 
         Utils.loadAvatar(mContext, viewHolder.profileImage, review.getReviewer_avatar());
@@ -110,14 +120,14 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
 
         viewHolder.ratingBar.setRating(review.getRank());
 
-        if(review.getReview_title().equals(""))
+        if (review.getReview_title().equals(""))
             viewHolder.reviewTitle.setVisibility(View.GONE);
         else {
             viewHolder.reviewTitle.setVisibility(View.VISIBLE);
             viewHolder.reviewTitle.setText(review.getReview_title());
         }
 
-        if(review.getReview_content().equals(""))
+        if (review.getReview_content().equals(""))
             viewHolder.reviewContent.setVisibility(View.GONE);
         else {
             viewHolder.reviewContent.setVisibility(View.VISIBLE);
@@ -182,6 +192,7 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
         CircleImageView profileImage;
         TextView likeNum;
         Button likeBtn;
+        ImageButton deleteBtn;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -194,6 +205,7 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
             reviewContent = itemView.findViewById(R.id.review);
             likeNum = itemView.findViewById(R.id.likeNum);
             likeBtn = itemView.findViewById(R.id.likeBtn);
+            deleteBtn = itemView.findViewById(R.id.deleteBtn);
         }
     }
 
@@ -215,26 +227,90 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
         }
     }
 
+    private class DeleteReviewOnClick implements View.OnClickListener {
 
-    private void addNotificationLike(String to_email, String book_title, boolean is_notify) {
-        if (is_notify && (!(to_email.equals(mAuth.getCurrentUser().getEmail())))) {
-            db = FirebaseFirestore.getInstance();
+        private String user_email;
+        private String book_title;
 
-            Map<String, Object> notificationMessegae = new HashMap<>();
+        public DeleteReviewOnClick(String user_email, String book_title) {
+            this.user_email = user_email;
+            this.book_title = book_title;
+        }
 
-            notificationMessegae.put("type", mContext.getResources().getString(R.string.like_notificiation));
-            notificationMessegae.put("from", mAuth.getCurrentUser().getEmail());
-            notificationMessegae.put("user_name", real_user.getFull_name());
-            notificationMessegae.put("book_title", book_title);
-            notificationMessegae.put("time", Timestamp.now());
-            notificationMessegae.put("user_avatar", real_user.getAvatar_details());
-
-
-            db.collection("Users/" + to_email + "/Notifications").add(notificationMessegae).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        @Override
+        public void onClick(View v) {
+            ((BookFragment) fragment).setFlag_reviewed(false);
+            reviews.remove(0);
+            notifyItemRemoved(0);
+            CollectionReference requestsRef = db.collection("Reviews");
+            Query requestQuery = requestsRef.whereEqualTo("reviewer_email", user_email)
+                    .whereEqualTo("book_title", book_title);
+            requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
-                public void onSuccess(DocumentReference documentReference) {
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            final Review review = document.toObject(Review.class);
+                            document.getReference().delete();
+                            final DocumentReference bookRef = FirebaseFirestore.getInstance().collection("Books").document(review.getBook_id());
+
+                            bookRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        final DocumentSnapshot doc = task.getResult();
+                                        if (doc.exists()) {
+                                            Book book = (doc.toObject(Book.class));
+                                            final float newAvg, newAvgAge;
+                                            if (book.getRaters_count() == 1) {
+                                                newAvg = 0;
+                                                newAvgAge = 0;
+                                            } else {
+                                                newAvg = ((book.getAvg_rating() * book.getRaters_count()) - review.getRank()) / (book.getRaters_count() - 1);
+                                                newAvgAge = ((book.getAvg_age() * book.getRaters_count()) - review.getReviewer_age()) / (book.getRaters_count() - 1);
+                                            }
+                                            final Map<String, Object> updates = new HashMap<String, Object>();
+                                            final int countRaters = book.getRaters_count() - 1;
+                                            updates.put("avg_rating", newAvg);
+                                            updates.put("avg_age", newAvgAge);
+                                            updates.put("raters_count", book.getRaters_count() - 1);
+                                            bookRef.update(updates);
+                                            ((BookFragment) fragment).updateUIAfterDeleteReview(newAvg, newAvgAge, countRaters);
+                                        }
+                                    }
+                                }
+                            });
+
+
+                        }
+                    }
                 }
             });
         }
     }
-}
+
+
+                    private void addNotificationLike (String to_email, String book_title,boolean is_notify){
+                        if (is_notify && (!(to_email.equals(mAuth.getCurrentUser().getEmail())))) {
+                            db = FirebaseFirestore.getInstance();
+
+                            Map<String, Object> notificationMessegae = new HashMap<>();
+
+                            notificationMessegae.put("type", mContext.getResources().getString(R.string.like_notificiation));
+                            notificationMessegae.put("from", mAuth.getCurrentUser().getEmail());
+                            notificationMessegae.put("user_name", real_user.getFull_name());
+                            notificationMessegae.put("book_title", book_title);
+                            notificationMessegae.put("time", Timestamp.now());
+                            notificationMessegae.put("user_avatar", real_user.getAvatar_details());
+
+
+                            db.collection("Users/" + to_email + "/Notifications").add(notificationMessegae).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                @Override
+                                public void onSuccess(DocumentReference documentReference) {
+                                }
+                            });
+                        }
+
+                    }
+                }

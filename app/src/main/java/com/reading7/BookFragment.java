@@ -581,4 +581,26 @@ public class BookFragment extends Fragment {
             }
         });
     }
+
+    public void setFlag_reviewed(boolean flag_reviewed) {
+        this.flag_reviewed = flag_reviewed;
+    }
+
+    public void updateUIAfterDeleteReview(float rank_avg,float age_avg,int count_raters){
+        rankRatingBar.setRating(rank_avg);
+        ratingNum.setText(Float.toString(rank_avg));
+        avgAgeText.setText(AgeString(age_avg));
+        mAvgAge=age_avg;
+        this.countRaters=count_raters;
+        TextView countRatersText = getActivity().findViewById(R.id.reviwersNum);
+        if (count_raters == 1)
+            countRatersText.setText(getResources().getString(R.string.one_reviewer));
+        else
+            countRatersText.setText(count_raters + " " + getResources().getString(R.string.reviewers));
+        Button rankBtn = mActivity.findViewById(R.id.button_read);
+        rankBtn.setVisibility(View.VISIBLE);
+        getActivity().findViewById(R.id.button_wishlist).setVisibility(View.VISIBLE);
+        getActivity().findViewById(R.id.button_already_read).setVisibility(View.GONE);
+    }
+
 }

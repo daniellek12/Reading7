@@ -135,4 +135,11 @@
 
     </RelativeLayout>
 
+    <ImageButton
+        android:id="@+id/deleteBtn"
+        android:layout_width="28dp"
+        android:layout_height="12dp"
+        android:visibility="gone"
+        app:srcCompat="@android:drawable/ic_delete" />
+
 </RelativeLayout>
