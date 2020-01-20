@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         else loadFragment(new ExploreFragment());
+
     }
 
     public User getUser(){

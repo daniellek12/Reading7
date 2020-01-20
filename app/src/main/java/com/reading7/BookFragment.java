@@ -1,7 +1,5 @@
 package com.reading7;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.PorterDuff;
@@ -52,27 +50,25 @@ import static android.text.Layout.JUSTIFICATION_MODE_INTER_WORD;
 
 public class BookFragment extends Fragment {
 
-    Activity mActivity;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private Book mBook;
+
     private List<Review> lstReviews;
-    private ReviewListAdapter adapter;
-    private Review mReview;
+    private RecyclerView reviewsRV;
 
     private int countRaters;
     private RatingBar rankRatingBar;
     private TextView ratingNum;
-    private TextView avgAgeText;
     private float mAvgAge;
 
     private boolean isWishlist = false;
-    private boolean isRanked = false;
+    private boolean isReviewed = false;
+
+    private Review mReview;
     private int mRank;
     private String mReviewTitle;
     private String mReviewContent;
-     boolean flag_reviewed;
-    RecyclerView postsRV;
 
     public BookFragment(Book book) {
         this.mBook = book;
@@ -80,11 +76,10 @@ public class BookFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        flag_reviewed =false;
+        db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
         countRaters = 0;
-        db = FirebaseFirestore.getInstance();
-        mReview=null;
+        mReview = null;
         return inflater.inflate(R.layout.book_fragment, container, false);
     }
 
@@ -104,10 +99,6 @@ public class BookFragment extends Fragment {
         initShelfButton();
     }
 
-    public Book getBook() {
-        return mBook;
-    }
-
     private void getBookInformation() {
 
         setBookGenres();
@@ -118,9 +109,7 @@ public class BookFragment extends Fragment {
         ratingNum = getActivity().findViewById(R.id.ratingNum);
         ratingNum.setText(Float.toString(mBook.getAvg_rating()));
 
-       avgAgeText = (TextView) getActivity().findViewById(R.id.ageAvg);
-        avgAgeText.setText(AgeString(mBook.getAvg_age()));
-        mAvgAge=mBook.getAvg_age();
+        mAvgAge = mBook.getAvg_age();
 
         TextView textViewAuthor = getActivity().findViewById(R.id.author);
         textViewAuthor.setText(mBook.getAuthor() + ", ");
@@ -132,7 +121,7 @@ public class BookFragment extends Fragment {
         textViewTitle.setText(mBook.getTitle());
 
         ImageView coverImage = getActivity().findViewById(R.id.bookCoverImage);
-        Utils.showImage(mBook.getTitle(), coverImage, mActivity);
+        Utils.showImage(mBook.getTitle(), coverImage, getActivity());
 
         TextView textViewSummary = getActivity().findViewById(R.id.summary);
         textViewSummary.setText(mBook.getDescription());
@@ -152,14 +141,43 @@ public class BookFragment extends Fragment {
         initScrollView();
     }
 
+    private void setBookGenres() {
+
+        String geners = "";
+        boolean first = true;
+        for (String genre : mBook.getGenres()) {
+            if (!first)
+                geners += " | " + genre;
+            else {
+                geners += genre;
+                first = false;
+            }
+        }
+
+        TextView genres = getActivity().findViewById(R.id.genres);
+        genres.setText(geners);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            genres.setJustificationMode(JUSTIFICATION_MODE_INTER_WORD);
+        }
+    }
+
+
+    private void initReviews() {
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        reviewsRV = getActivity().findViewById(R.id.reviews);
+        reviewsRV.setLayoutManager(layoutManager);
+        getBookReviews();
+    }
+
     private void getBookReviews() {
+
+        Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), false);
         countRaters = 0;
         lstReviews.clear();
+
         final List<Review> newlist = new ArrayList<Review>();
-        CollectionReference collection = db.collection("Reviews");
-        //((MainActivity) getActivity()).setBottomNavigationEnabled(false);
-        Utils.enableDisableClicks(getActivity(),(ViewGroup)getView(),false);
-        Query query = collection.whereEqualTo("book_id", mBook.getId());
+        Query query = db.collection("Reviews").whereEqualTo("book_id", mBook.getId());
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -174,46 +192,66 @@ public class BookFragment extends Fragment {
                     lstReviews.addAll(newlist);
                     Collections.sort(lstReviews, Collections.reverseOrder());
                     findMyReview();
-
                 }
             }
         });
     }
 
-    private void initReviews() {
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-       postsRV = getActivity().findViewById(R.id.reviews);
-        postsRV.setLayoutManager(layoutManager);
-       // adapter = new ReviewListAdapter(getActivity(), lstReviews,this);
-        //postsRV.setAdapter(adapter);
+    private void findMyReview() {
 
-        getBookReviews();
+        final List<Review> tempList = new ArrayList<Review>();
+        tempList.addAll(lstReviews);
+        for (Review review : tempList) {
+            if (review.getReviewer_email().equals(mAuth.getCurrentUser().getEmail())) {
+                isReviewed = true;
+                mRank = review.getRank();
+                mReviewTitle = review.getReview_title();
+                mReviewContent = review.getReview_content();
+                lstReviews.remove(review);
+                lstReviews.add(0, review);
+                break;
+            }
+        }
+
+        TextView countRatersText = getActivity().findViewById(R.id.reviwersNum);
+        if (countRaters == 1)
+            countRatersText.setText(getResources().getString(R.string.one_reviewer));
+        else
+            countRatersText.setText(countRaters + " " + getResources().getString(R.string.reviewers));
+
+        final Fragment frag = this;
+        DocumentReference userRef = db.collection("Users").document(mAuth.getCurrentUser().getEmail());
+        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    final DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        User real_user = document.toObject(User.class);
+                        ReviewListAdapter adapter = new ReviewListAdapter(getActivity(), lstReviews, frag, real_user, (real_user.getLiked_reviews()));
+                        reviewsRV.setAdapter(adapter);
+                        Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), true);
+                    }
+                }
+            }
+        });
+
+
     }
 
-    public boolean isFlag_reviewed() {
-        return flag_reviewed;
+
+    public boolean isReviewed() {
+        return isReviewed;
     }
+
+    public void setReviewed(boolean reviewed) {
+        this.isReviewed = reviewed;
+    }
+
 
     private void initOpenSummary() {
 
-//        final ImageButton openSummaryBtn = mActivity.findViewById(R.id.summary_button);
-//        openSummaryBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                TextView mSummary = mActivity.findViewById(R.id.summary);
-//                if (mSummary.getEllipsize() == TextUtils.TruncateAt.END) {
-//                    mSummary.setMaxLines(Integer.MAX_VALUE);
-//                    mSummary.setEllipsize(null);
-//                    openSummaryBtn.setImageResource(R.drawable.arrow_drop_up);
-//                } else if (mSummary.getEllipsize() == null) {
-//                    mSummary.setMaxLines(2);
-//                    mSummary.setEllipsize(TextUtils.TruncateAt.END);
-//                    openSummaryBtn.setImageResource(R.drawable.arrow_drop_down);
-//                }
-//            }
-//        });
-
-        final TextView mSummary = mActivity.findViewById(R.id.summary);
+        final TextView mSummary = getActivity().findViewById(R.id.summary);
         mSummary.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -229,8 +267,7 @@ public class BookFragment extends Fragment {
     }
 
     private void initBackButton() {
-        ImageButton backButton = getActivity().findViewById(R.id.bookBackButton);
-        backButton.setOnClickListener(new View.OnClickListener() {
+        getActivity().findViewById(R.id.bookBackButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getActivity().onBackPressed();
@@ -255,7 +292,7 @@ public class BookFragment extends Fragment {
         });
 
         // Set the wishlist button functionality
-        mActivity.findViewById(R.id.button_wishlist).setOnClickListener(new View.OnClickListener() {
+        getActivity().findViewById(R.id.button_wishlist).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -292,7 +329,7 @@ public class BookFragment extends Fragment {
 
     private void updateWishlistButton() {
 
-        final Button wishListBtn = mActivity.findViewById(R.id.button_wishlist);
+        final Button wishListBtn = getActivity().findViewById(R.id.button_wishlist);
         Drawable heart = (wishListBtn.getCompoundDrawables())[2];
 
         if (isWishlist) {
@@ -313,27 +350,10 @@ public class BookFragment extends Fragment {
 
     private void initRankButton() {
 
-        // Is the book already ranked?
-        CollectionReference requestCollectionRef = db.collection("Reviews");
-        Query requestQuery = requestCollectionRef.whereEqualTo("reviewer_email", mAuth.getCurrentUser().getEmail()).whereEqualTo("book_id", mBook.getId());
-        requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful() && !(task.getResult().isEmpty())) {
-                    isRanked = true;
-                    for (DocumentSnapshot doc : task.getResult()) {
-                        Review review = doc.toObject(Review.class);
-                        mRank = review.getRank();
-                        mReviewTitle = review.getReview_title();
-                        mReviewContent = review.getReview_content();
-                    }
-                    updateRankButton();
-                }
-            }
-        });
+       updateRankButton();
 
         // Set the rank button functionality
-        Button rankBtn = mActivity.findViewById(R.id.button_read);
+        Button rankBtn = getActivity().findViewById(R.id.button_read);
         rankBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -356,18 +376,13 @@ public class BookFragment extends Fragment {
 
     private void updateRankButton() {
 
-        final Button rankBtn = mActivity.findViewById(R.id.button_read);
+        final Button rankBtn = getActivity().findViewById(R.id.button_read);
         Drawable bubble = (rankBtn.getCompoundDrawables())[2];
 
-        if (isRanked) {
+        if (isReviewed) {
             rankBtn.setVisibility(View.INVISIBLE);
             getActivity().findViewById(R.id.button_wishlist).setVisibility(View.GONE);
             getActivity().findViewById(R.id.button_already_read).setVisibility(View.VISIBLE);
-        } else {
-//            rankBtn.setText(getString(R.string.add_review));
-//            rankBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimaryDark)));
-//            rankBtn.setTextColor(getResources().getColor(R.color.white));
-//            bubble.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
         }
 
         rankBtn.setCompoundDrawables(null, null, bubble, null);
@@ -399,31 +414,10 @@ public class BookFragment extends Fragment {
     }
 
 
-
-    private String AgeString(float avgAge) {
+    private String ageString(float avgAge) {
         int ageInt = (int) avgAge;
         String ageString = "" + ageInt + "-" + (ageInt + 1) + "";
         return ageString;
-    }
-
-    private void setBookGenres() {
-
-        String geners = "";
-        boolean first = true;
-        for (String genre : mBook.getGenres()) {
-            if (!first)
-                geners += " | " + genre;
-            else {
-                geners += genre;
-                first = false;
-            }
-        }
-
-        TextView genres = getActivity().findViewById(R.id.genres);
-        genres.setText(geners);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            genres.setJustificationMode(JUSTIFICATION_MODE_INTER_WORD);
-        }
     }
 
 
@@ -438,19 +432,12 @@ public class BookFragment extends Fragment {
 
             rankRatingBar.setRating(avg);
             ratingNum.setText(Float.toString(avg));
-            avgAgeText.setText(AgeString(mAvgAge));
             lstReviews.clear();
             getBookReviews();//overhead
 
-            isRanked = true;
+            isReviewed = true;
             updateRankButton();
         }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        mActivity = (Activity) context;
     }
 
 
@@ -502,71 +489,9 @@ public class BookFragment extends Fragment {
         }
     }
 
-    private void findMyReview() {
 
-        //should i for the array to find my review or should i do firebase query
-/*
-        mReview = null;
-        CollectionReference requestCollectionRef = db.collection("Reviews");
-        Query requestQuery = requestCollectionRef.whereEqualTo("reviewer_email", mAuth.getCurrentUser().getEmail()).whereEqualTo("book_title", mBook.getTitle());
-        requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        mReview = document.toObject(Review.class);
-                    }
-                    if (mReview != null) {
-                        flag_reviewed=true;
-                        lstReviews.remove(mReview);
-                        lstReviews.add(0,mReview);
-
-                    }*/
-                    final List<Review> newlist = new ArrayList<Review>();
-                    newlist.addAll(lstReviews);
-                    for(Review r:newlist){
-                        if(r.getReviewer_email().equals(mAuth.getCurrentUser().getEmail())) {
-                            flag_reviewed=true;
-                            lstReviews.remove(r);
-                            lstReviews.add(0,r);
-                            break;
-                        }
-                    }
-                    //adapter.notifyDataSetChanged();
-
-                    TextView countRatersText = getActivity().findViewById(R.id.reviwersNum);
-                    if (countRaters == 1)
-                        countRatersText.setText(getResources().getString(R.string.one_reviewer));
-                    else
-                        countRatersText.setText(countRaters + " " + getResources().getString(R.string.reviewers));
-                    final Fragment frag= this;
-                    DocumentReference userRef= db.collection("Users").document(mAuth.getCurrentUser().getEmail());
-                    userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            final DocumentSnapshot document = task.getResult();
-                            if (document.exists()) {
-                                User real_user = document.toObject(User.class);
-                                adapter = new ReviewListAdapter(getActivity(), lstReviews,frag,real_user,(real_user.getLiked_reviews()));
-                                postsRV.setAdapter(adapter);
-                                //((MainActivity) getActivity()).setBottomNavigationEnabled(true);
-                                Utils.enableDisableClicks(getActivity(),(ViewGroup)getView(),true);
-
-
-                            }
-                        }
-                    }
-              });
-
-
-
-
-
-    }
-
-    private void initShelfButton(){
-        Button shelfButton = getActivity().findViewById(R.id.button_custom_shelf);
+    private void initShelfButton() {
+        ImageButton shelfButton = getActivity().findViewById(R.id.button_custom_shelf);
         shelfButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -582,22 +507,17 @@ public class BookFragment extends Fragment {
         });
     }
 
-    public void setFlag_reviewed(boolean flag_reviewed) {
-        this.flag_reviewed = flag_reviewed;
-    }
-
-    public void updateUIAfterDeleteReview(float rank_avg,float age_avg,int count_raters){
+    public void updateUIAfterDeleteReview(float rank_avg, float age_avg, int count_raters) {
         rankRatingBar.setRating(rank_avg);
         ratingNum.setText(Float.toString(rank_avg));
-        avgAgeText.setText(AgeString(age_avg));
-        mAvgAge=age_avg;
-        this.countRaters=count_raters;
+        mAvgAge = age_avg;
+        this.countRaters = count_raters;
         TextView countRatersText = getActivity().findViewById(R.id.reviwersNum);
         if (count_raters == 1)
             countRatersText.setText(getResources().getString(R.string.one_reviewer));
         else
             countRatersText.setText(count_raters + " " + getResources().getString(R.string.reviewers));
-        Button rankBtn = mActivity.findViewById(R.id.button_read);
+        Button rankBtn = getActivity().findViewById(R.id.button_read);
         rankBtn.setVisibility(View.VISIBLE);
         getActivity().findViewById(R.id.button_wishlist).setVisibility(View.VISIBLE);
         getActivity().findViewById(R.id.button_already_read).setVisibility(View.GONE);

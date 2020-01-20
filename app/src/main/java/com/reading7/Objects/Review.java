@@ -3,6 +3,7 @@ package com.reading7.Objects;
 import com.google.firebase.Timestamp;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Review implements Comparable {
 
@@ -18,8 +19,9 @@ public class Review implements Comparable {
     private String review_content;      // NEED to decide whether we want to limit the length
     private Timestamp review_time;      // time the review was published // note - constructor gets miliseconds(System.currentTimeMillis())
     private int likes_count;
-    private int reviewer_age;           //important age and not birth year
+    private int reviewer_age;           // age and not birth year
     private boolean is_notify;
+    private HashMap<String, Comment> comments;
 
     // instead array of comments, we will save collection of comments with the review_id
 
@@ -30,9 +32,22 @@ public class Review implements Comparable {
     // This fields will be all the data on the user we want to present
 
 
-    public Review() {}
+    public Review() {
+    }
 
-    public Review(String review_id, String book_id, String reviewer_email, int reviewer_age,int rank, String review_title, String review_content, Timestamp review_time, String reviewer_name, String book_title, String book_author, ArrayList<Integer> reviewer_avatar,boolean is_notify) {
+    public Review(String review_id,
+                  String book_id,
+                  String reviewer_email,
+                  int reviewer_age,
+                  int rank,
+                  String review_title,
+                  String review_content,
+                  Timestamp review_time,
+                  String reviewer_name,
+                  String book_title,
+                  String book_author,
+                  ArrayList<Integer> reviewer_avatar,
+                  boolean is_notify) {
         this.review_id = review_id;
         this.book_id = book_id;
         this.book_title = book_title;
@@ -46,10 +61,9 @@ public class Review implements Comparable {
         this.review_time = review_time;
         this.likes_count = 0;
         this.reviewer_age = reviewer_age;
-        this.is_notify=is_notify;
-
+        this.is_notify = is_notify;
+        this.comments = new HashMap<String, Comment>();
     }
-
 
 
     public String getBook_title() {
@@ -150,6 +164,7 @@ public class Review implements Comparable {
         this.reviewer_avatar = reviewer_avatar;
     }
 
+
     public int getReviewer_age() {
         return reviewer_age;
     }
@@ -157,6 +172,7 @@ public class Review implements Comparable {
     public void setReviewer_age(int reviewer_age) {
         this.reviewer_age = reviewer_age;
     }
+
 
     public String getBook_author() {
         return book_author;
@@ -166,10 +182,6 @@ public class Review implements Comparable {
         this.book_author = book_author;
     }
 
-    @Override
-    public int compareTo(Object o) {
-        return (review_time.compareTo(((Review) o).review_time));
-    }
 
     public boolean getIs_notify() {
         return is_notify;
@@ -178,4 +190,26 @@ public class Review implements Comparable {
     public void setIs_notify(boolean is_notify) {
         this.is_notify = is_notify;
     }
+
+
+    public void addComment(Comment comment) {
+        if (comments.containsKey(comment.getCommenter_email()))
+            comments.remove(comment.getCommenter_email());
+        comments.put(comment.getCommenter_email(), comment);
+    }
+
+    public void removeComment(String commenter_email) {
+        if (comments.containsKey(commenter_email)) comments.remove(commenter_email);
+    }
+
+    public HashMap<String, Comment> getComments() {
+        return this.comments;
+    }
+
+
+    @Override
+    public int compareTo(Object o) {
+        return (review_time.compareTo(((Review) o).review_time));
+    }
+
 }

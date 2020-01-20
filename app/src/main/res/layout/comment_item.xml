@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/review_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="5dp"
+    android:background="@color/white"
+    android:layoutDirection="rtl"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profileImage"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_alignParentTop="false"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="5dp"
+        android:elevation="3dp"
+        android:src="@drawable/avatar_layout"
+        app:civ_circle_background_color="@color/white" />
+
+    <TextView
+        android:id="@+id/userName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_toLeftOf="@id/profileImage"
+        android:text="אליאנה תדהר"
+        android:textColor="@color/black"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/timeIcon"
+        android:layout_width="11dp"
+        android:layout_height="11dp"
+        android:layout_below="@id/userName"
+        android:layout_marginTop="5dp"
+        android:layout_toLeftOf="@id/profileImage"
+        android:tint="@color/darkGrey"
+        app:srcCompat="@drawable/time" />
+
+    <TextView
+        android:id="@+id/postTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/userName"
+        android:layout_marginTop="2dp"
+        android:layout_marginRight="3dp"
+        android:layout_toLeftOf="@id/timeIcon"
+        android:text="לפני 3 ימים"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/profileImage"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="65dp"
+        android:text="ספר מדהים!!!! חובה קריאה , אהבתי ממש אני לא רוצה לעשות לכם ספוילרים אבל הסוף מפתיע בטירוף רוצו לקרוא "
+        android:textColor="@color/black"
+        android:textIsSelectable="false" />
+
+
+</RelativeLayout>

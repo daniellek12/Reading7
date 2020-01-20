@@ -307,7 +307,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  
             bookName = itemView.findViewById(R.id.bookTitle);
             authorName = itemView.findViewById(R.id.authorName);
             likeButton = itemView.findViewById(R.id.likeButton);
-            likesNum = itemView.findViewById(R.id.likesNum);
+            likesNum = itemView.findViewById(R.id.likeNum);
             review_content = itemView.findViewById(R.id.review);
             review_title = itemView.findViewById(R.id.title);
         }
