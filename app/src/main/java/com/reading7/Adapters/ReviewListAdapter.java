@@ -313,4 +313,27 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
                         }
 
                     }
+
+
+    private void addNotificationComment(String to_email,String book_title,boolean is_notify){
+        if(is_notify&& (!(to_email.equals(mAuth.getCurrentUser().getEmail())))) {
+            db = FirebaseFirestore.getInstance();
+
+            Map<String, Object> notificationMessegae = new HashMap<>();
+
+            notificationMessegae.put("type", mContext.getResources().getString(R.string.comment_notificiation));
+            notificationMessegae.put("from", mAuth.getCurrentUser().getEmail());
+            notificationMessegae.put("user_name",real_user.getFull_name());
+            notificationMessegae.put("book_title", book_title);
+            notificationMessegae.put("time", Timestamp.now());
+            notificationMessegae.put("user_avatar", real_user.getAvatar_details());
+
+
+            db.collection("Users/" + to_email + "/Notifications").add(notificationMessegae).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                @Override
+                public void onSuccess(DocumentReference documentReference) {
+                }
+            });
+        }
+    }
                 }

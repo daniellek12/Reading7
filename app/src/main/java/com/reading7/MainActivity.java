@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity
                 return;
             }
 
-            if(type.equals(getResources().getString(R.string.like_notificiation))){
+            if((type.equals(getResources().getString(R.string.like_notificiation)))||(type.equals(getResources().getString(R.string.comment_notificiation)))){
 
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                 String book_title = intent.getStringExtra("book_title");
