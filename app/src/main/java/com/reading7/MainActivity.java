@@ -14,6 +14,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.reading7.Objects.Book;
+import com.reading7.Objects.Review;
 import com.reading7.Objects.User;
 
 import androidx.annotation.NonNull;
@@ -38,7 +39,7 @@ public class MainActivity extends AppCompatActivity
         initCurrentUser();
 
 
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
 
         if(intent.getStringExtra("type") != null) {
 
@@ -52,30 +53,59 @@ public class MainActivity extends AppCompatActivity
             }
 
             if((type.equals(getResources().getString(R.string.like_notificiation)))||(type.equals(getResources().getString(R.string.comment_notificiation)))){
-
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                String book_title = intent.getStringExtra("book_title");
-                CollectionReference requestCollectionRef = db.collection("Books");
-                Query requestQuery = requestCollectionRef.whereEqualTo("title",book_title);
+                final Intent intent1=intent;
+                CollectionReference requestCollectionRef = FirebaseFirestore.getInstance().collection("Users");
+                Query requestQuery = requestCollectionRef.whereEqualTo("email", FirebaseAuth.getInstance().getCurrentUser().getEmail());
                 requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-
-                            Book b = null;
+                        if(task.isSuccessful()){
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                b = document.toObject(Book.class);
-                               loadFragment(new BookFragment(b));
-                                return;
-                            }
+                                mUser = document.toObject(User.class);
+                                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                String book_title = intent1.getStringExtra("book_title");
+                                CollectionReference requestCollectionRef = db.collection("Reviews");
+                                Query requestQuery = requestCollectionRef.whereEqualTo("book_title",book_title).whereEqualTo("reviewer_email",mUser.getEmail());
+                                requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
 
+                                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                                final Review review = document.toObject(Review.class);
+
+                                                CollectionReference requestCollectionRef = FirebaseFirestore.getInstance().collection("Users");
+                                                Query requestQuery = requestCollectionRef.whereEqualTo("email", FirebaseAuth.getInstance().getCurrentUser().getEmail());
+                                                requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                        if (task.isSuccessful()) {
+                                                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                                                mUser = document.toObject(User.class);
+                                                                loadFragment(new ReviewCommentsFragment(review, mUser));
+                                                                return;
+                                                            }
+                                                        }
+                                                    }
+                                                });
+
+                                            }
+
+                                        }
+                                    }
+                                });
+                            }
                         }
                     }
                 });
-            }
+
+
+                }
+
         }
 
         else loadFragment(new ExploreFragment());
+
     }
 
     public User getUser(){

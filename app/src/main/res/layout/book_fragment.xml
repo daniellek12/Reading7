@@ -8,17 +8,6 @@
     android:layoutDirection="rtl"
     tools:context=".BookFragment">
 
-    <TextView
-        android:id="@+id/ageAvg"
-        style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/book_details"
-        android:textColor="@color/white"
-        android:textSize="20sp" />
-
-
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolBar"
@@ -100,299 +89,319 @@
         android:elevation="20dp">
 
         <RelativeLayout
-            android:id="@+id/scrollLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="360dp"
-            android:background="@drawable/edittext_background"
-            android:elevation="50dp">>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="330dp"
+            android:background="@color/transparent">
 
-            <TextView
-                android:id="@+id/book_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginRight="20dp"
-                android:text="הארי פוטר ואבן החכמים"
-                android:textColor="@color/black"
-                android:textSize="22sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/author"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/book_name"
-                android:layout_marginRight="20dp"
-                android:layoutDirection="rtl"
-                android:text="סוזן קולינס,"
-                android:textColor="@color/black"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/publisher"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/book_name"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="3dp"
-                android:layout_toLeftOf="@id/author"
-                android:layoutDirection="rtl"
-                android:text="הוצאת כנרת זמורה-דביר"
-                android:textColor="@color/black"
-                android:textDirection="rtl"
-                android:textSize="12sp" />
-
-
-            <TextView
-                android:id="@+id/genres"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/author"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="20dp"
-                android:gravity="right"
-                android:text=" מד״ב ופנטזיה|ילדים ונוער|הרפקאות"
-                android:textColor="@color/lightGrey"
-                android:textSize="12sp" />
-
-            <RatingBar
-                android:id="@+id/bookRatingBar"
-                style="@style/Widget.AppCompat.RatingBar.Small"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/genres"
-                android:layout_marginTop="22dp"
-                android:layout_marginRight="35dp"
-                android:numStars="5"
-                android:progressBackgroundTint="@color/colorPrimaryDark"
-                android:progressTint="@color/colorPrimaryDark"
-                android:rating="3.5"
-                android:scaleX="1.4"
-                android:scaleY="1.4"
-                android:secondaryProgressTint="@color/colorPrimaryDark"
-                android:stepSize=".5" />
-
-            <TextView
-                android:id="@+id/ratingNum"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/genres"
-                android:layout_marginTop="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_toLeftOf="@id/bookRatingBar"
-                android:maxLength="4"
-                android:text="4.55"
-                android:textColor="@color/black"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-
-            <TextView
-                android:id="@+id/summary_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/bookRatingBar"
-                android:layout_marginTop="20dp"
-                android:layout_marginRight="20dp"
-                android:text="@string/summary"
-                android:textColor="@color/black"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/summary"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/summary_title"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:clickable="true"
-                android:ellipsize="end"
-                android:layoutDirection="rtl"
-                android:maxLines="3"
-                android:paddingBottom="20dp"
-                android:text="פאנם היא מדינה בעולם פוסט־אפוקליפטי, השוכנת במקום שבו עמדה פעם יבשת צפון אמריקה. בפאנם שנים עשר מחוזות, עליהם מופעל שלטון אכזרי וקשה מידי מנהיגיהם היפים השוכנים שם"
-                android:textSize="12sp" />
-
-            <Button
-                android:id="@+id/button_wishlist"
-                android:layout_width="wrap_content"
-                android:layout_height="35dp"
-                android:layout_below="@id/summary"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/rounded_button"
-                android:drawableRight="@drawable/heart"
-                android:drawablePadding="5dp"
-                android:paddingLeft="15dp"
-                android:paddingTop="5dp"
-                android:paddingRight="15dp"
-                android:paddingBottom="5dp"
-                android:text="@string/add_to_wishlist"
-                android:textColor="@color/white"
-                android:textSize="12sp" />
-
-            <Button
-                android:id="@+id/button_read"
-                android:layout_width="wrap_content"
-                android:layout_height="35dp"
-                android:layout_below="@id/summary"
-                android:layout_alignParentRight="true"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="20dp"
-                android:background="@drawable/rounded_button"
-                android:backgroundTint="@color/colorPrimaryDark"
-                android:drawableRight="@drawable/chat_bubble"
-                android:drawablePadding="5dp"
-                android:paddingLeft="15dp"
-                android:paddingTop="5dp"
-                android:paddingRight="15dp"
-                android:paddingBottom="5dp"
-                android:text="@string/add_review"
-                android:textColor="@color/white"
-                android:textSize="12sp" />
-
-            <Button
-                android:id="@+id/button_custom_shelf"
-                android:layout_width="wrap_content"
-                android:layout_height="35dp"
-                android:layout_below="@id/button_read"
-                android:layout_marginTop="15dp"
-                android:layout_marginRight="100dp"
-                android:background="@drawable/rounded_button"
-                android:backgroundTint="@color/darkGrey"
-                android:drawableRight="@drawable/bookmark"
-                android:drawableTint="@color/white"
-                android:drawablePadding="5dp"
-                android:paddingLeft="15dp"
-                android:paddingTop="5dp"
-                android:paddingRight="15dp"
-                android:paddingBottom="5dp"
-                android:text="@string/add_to_shelf"
-                android:textColor="@color/white"
-                android:textSize="12sp" />
-
-            <Button
-                android:id="@+id/button_already_read"
-                android:layout_width="wrap_content"
-                android:layout_height="35dp"
-                android:layout_below="@id/summary"
-                android:layout_alignParentRight="true"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="20dp"
-                android:background="@drawable/rounded_button"
-                android:backgroundTint="@color/grey"
-                android:drawableStart="@drawable/check"
-                android:drawablePadding="8dp"
-                android:paddingLeft="15dp"
-                android:paddingTop="5dp"
-                android:paddingRight="15dp"
-                android:paddingBottom="5dp"
-                android:text="@string/you_read_it"
-                android:textColor="@color/black"
-                android:textSize="12sp"
-                android:visibility="gone" />
-
-            <View
-                android:id="@+id/divider1"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@id/button_custom_shelf"
-                android:layout_marginTop="25dp"
-                android:background="?android:attr/listDivider" />
 
             <RelativeLayout
-                android:id="@+id/reviews_title"
+                android:id="@+id/scrollLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/divider1"
-                android:background="@color/white"
-                android:paddingLeft="20dp"
-                android:paddingTop="15dp"
-                android:paddingRight="20dp"
-                android:paddingBottom="15dp">
-
-                <View
-                    android:id="@+id/divider3"
-                    android:layout_width="3dp"
-                    android:layout_height="22dp"
-                    android:layout_centerVertical="true"
-                    android:background="@color/colorPrimaryDark" />
+                android:layout_height="match_parent"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/edittext_background">
 
                 <TextView
+                    android:id="@+id/book_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="10dp"
-                    android:paddingBottom="2dp"
-                    android:text="@string/reviews"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="20dp"
+                    android:text="הארי פוטר ואבן החכמים"
                     android:textColor="@color/black"
-                    android:textSize="18sp"
+                    android:textSize="22sp"
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/reviwersNum"
+                    android:id="@+id/author"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:text="23 מדרגים"
+                    android:layout_below="@id/book_name"
+                    android:layout_marginRight="20dp"
+                    android:layoutDirection="rtl"
+                    android:text="סוזן קולינס,"
+                    android:textColor="@color/black"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/publisher"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/book_name"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="3dp"
+                    android:layout_toLeftOf="@id/author"
+                    android:layoutDirection="rtl"
+                    android:text="הוצאת כנרת זמורה-דביר"
+                    android:textColor="@color/black"
+                    android:textDirection="rtl"
+                    android:textSize="12sp" />
+
+
+                <TextView
+                    android:id="@+id/genres"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/author"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="20dp"
+                    android:gravity="right"
+                    android:text=" מד״ב ופנטזיה|ילדים ונוער|הרפקאות"
                     android:textColor="@color/lightGrey"
-                    android:textSize="14sp" />
+                    android:textSize="12sp" />
+
+                <RatingBar
+                    android:id="@+id/bookRatingBar"
+                    style="@style/Widget.AppCompat.RatingBar.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/genres"
+                    android:layout_marginTop="22dp"
+                    android:layout_marginRight="35dp"
+                    android:numStars="5"
+                    android:progressBackgroundTint="@color/colorPrimaryDark"
+                    android:progressTint="@color/colorPrimaryDark"
+                    android:rating="3.5"
+                    android:scaleX="1.4"
+                    android:scaleY="1.4"
+                    android:secondaryProgressTint="@color/colorPrimaryDark"
+                    android:stepSize=".5" />
+
+                <TextView
+                    android:id="@+id/ratingNum"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/genres"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_toLeftOf="@id/bookRatingBar"
+                    android:maxLength="4"
+                    android:text="4.55"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+
+                <TextView
+                    android:id="@+id/summary_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/bookRatingBar"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="20dp"
+                    android:text="@string/summary"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/summary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/summary_title"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:clickable="true"
+                    android:ellipsize="end"
+                    android:layoutDirection="rtl"
+                    android:maxLines="3"
+                    android:paddingBottom="20dp"
+                    android:text="פאנם היא מדינה בעולם פוסט־אפוקליפטי, השוכנת במקום שבו עמדה פעם יבשת צפון אמריקה. בפאנם שנים עשר מחוזות, עליהם מופעל שלטון אכזרי וקשה מידי מנהיגיהם היפים השוכנים שם"
+                    android:textSize="12sp" />
+
+                <Button
+                    android:id="@+id/button_wishlist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp"
+                    android:layout_below="@id/summary"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/rounded_button"
+                    android:drawableRight="@drawable/heart"
+                    android:drawablePadding="5dp"
+                    android:paddingLeft="15dp"
+                    android:paddingTop="5dp"
+                    android:paddingRight="15dp"
+                    android:paddingBottom="5dp"
+                    android:text="@string/add_to_wishlist"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+
+                <Button
+                    android:id="@+id/button_read"
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp"
+                    android:layout_below="@id/summary"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@drawable/rounded_button"
+                    android:backgroundTint="@color/colorPrimaryDark"
+                    android:drawableRight="@drawable/chat_bubble"
+                    android:drawablePadding="5dp"
+                    android:paddingLeft="15dp"
+                    android:paddingTop="5dp"
+                    android:paddingRight="15dp"
+                    android:paddingBottom="5dp"
+                    android:text="@string/add_review"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+
+                <Button
+                    android:id="@+id/button_already_read"
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp"
+                    android:layout_below="@id/summary"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@drawable/rounded_button"
+                    android:backgroundTint="@color/grey"
+                    android:drawableStart="@drawable/check"
+                    android:drawablePadding="8dp"
+                    android:paddingLeft="15dp"
+                    android:paddingTop="5dp"
+                    android:paddingRight="15dp"
+                    android:paddingBottom="5dp"
+                    android:text="@string/you_read_it"
+                    android:textColor="@color/black"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
+
+                <View
+                    android:id="@+id/divider1"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@id/button_read"
+                    android:layout_marginTop="25dp"
+                    android:background="?android:attr/listDivider" />
+
+                <RelativeLayout
+                    android:id="@+id/reviews_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/divider1"
+                    android:background="@color/white"
+                    android:paddingLeft="20dp"
+                    android:paddingTop="15dp"
+                    android:paddingRight="20dp"
+                    android:paddingBottom="15dp">
+
+                    <View
+                        android:id="@+id/divider3"
+                        android:layout_width="3dp"
+                        android:layout_height="22dp"
+                        android:layout_centerVertical="true"
+                        android:background="@color/colorPrimaryDark" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="10dp"
+                        android:paddingBottom="2dp"
+                        android:text="@string/reviews"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/reviwersNum"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:text="23 מדרגים"
+                        android:textColor="@color/lightGrey"
+                        android:textSize="14sp" />
+
+                </RelativeLayout>
+
+
+                <View
+                    android:id="@+id/divider2"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@id/reviews_title"
+                    android:background="?android:attr/listDivider"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true" />
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/reviews"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/divider2"
+                    android:background="@color/grey"
+                    android:clipToPadding="false" />
+
+                <LinearLayout
+                    android:id="@+id/numPagesLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/publisher"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="20dp"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/numPages"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="458"
+                        android:textColor="@color/lightGrey"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/numPagesTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/pages"
+                        android:textColor="@color/lightGrey"
+                        android:textSize="12sp" />
+                </LinearLayout>
 
             </RelativeLayout>
 
-
-            <View
-                android:id="@+id/divider2"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@id/reviews_title"
-                android:background="?android:attr/listDivider"
-                android:focusable="true"
-                android:focusableInTouchMode="true" />
-
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/reviews"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/divider2"
-                android:background="@color/grey"
-                android:clipToPadding="false" />
-
-            <LinearLayout
-                android:id="@+id/numPagesLayout"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="285dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="20dp"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
+                android:layout_centerHorizontal="true">
 
-                <TextView
-                    android:id="@+id/numPages"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="458"
-                    android:textColor="@color/lightGrey"
-                    android:textSize="12sp" />
+                <ImageButton
+                    android:layout_width="52dp"
+                    android:layout_height="52dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/rounded_button"
+                    android:backgroundTint="@color/white"
+                    android:src="@drawable/bookmark_plus"
+                    android:tint="@color/white" />
 
-                <TextView
-                    android:id="@+id/numPagesTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/pages"
-                    android:textColor="@color/lightGrey"
-                    android:textSize="12sp" />
-            </LinearLayout>
+                <ImageButton
+                    android:id="@+id/button_custom_shelf"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="1dp"
+                    android:layout_marginTop="1dp"
+                    android:background="@drawable/rounded_button"
+                    android:backgroundTint="@color/colorPrimaryDark"
+                    android:elevation="2dp"
+                    android:src="@drawable/bookmark_plus"
+                    android:tint="@color/white" />
+
+            </RelativeLayout>
 
         </RelativeLayout>
+
     </androidx.core.widget.NestedScrollView>
 </RelativeLayout>

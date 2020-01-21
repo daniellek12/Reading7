@@ -1,42 +1,34 @@
 package com.reading7.Objects;
 
-import java.sql.Timestamp;
+import java.util.ArrayList;
 
 public class Comment implements Comparable {
 
-    private String comment_id; // random value
-    private String review_id;//the id of the relevant review
-    private String commenter_email;//key of user
-    private String comment_content;
-    private Timestamp comment_time; // time the comment published
-    //private int likes_count; // NEED consult with team because im afraid it will load a lot of time each time user likes something
-
-    //the following fields seems to be pointless because we can bring the information from
-    //the user db with query on the commenter_email, but the query will take time and we are
-    //going to load this info on the commenter a lot of times, so the query will be called
-    //too much times, from our experience, the best solution is to save the fields for Comment too.
-    //This fields will be all the data on the user we want to present
+    // id of comment defined by (review_id, commenter_email)
+    private String review_id;
+    private String commenter_email;
     private String commenter_name;
+    private ArrayList<Integer> commenter_avatar;
+    private com.google.firebase.Timestamp comment_time;
+    private String comment_content;
+    private boolean is_notify; // check if needed?
 
-    public Comment(String comment_id, String review_id, String commenter_email, String comment_content, Timestamp comment_time, String commenter_name) {
-        this.comment_id = comment_id;
+    public Comment() {}
+
+    public Comment(String review_id,
+                   String commenter_email,
+                   String comment_content,
+                   com.google.firebase.Timestamp comment_time,
+                   String commenter_name,
+                   ArrayList<Integer> commenter_avatar,
+                   boolean is_notify) {
         this.review_id = review_id;
         this.commenter_email = commenter_email;
         this.comment_content = comment_content;
-        this.comment_time = comment_time;
-        //this.likes_count = likes_count;
         this.commenter_name = commenter_name;
-
-    }
-
-
-
-    public String getComment_id() {
-        return comment_id;
-    }
-
-    public void setComment_id(String comment_id) {
-        this.comment_id = comment_id;
+        this.comment_time = comment_time;
+        this.commenter_avatar = commenter_avatar;
+        this.is_notify = is_notify;
     }
 
     public String getReview_id() {
@@ -52,7 +44,7 @@ public class Comment implements Comparable {
     }
 
     public void setCommenter_email(String commenter_email) {
-        this.commenter_email = commenter_email;
+        this.commenter_email=  commenter_email;
     }
 
     public String getComment_content() {
@@ -63,14 +55,13 @@ public class Comment implements Comparable {
         this.comment_content = comment_content;
     }
 
-    public Timestamp getComment_time() {
+    public com.google.firebase.Timestamp getComment_time() {
         return comment_time;
     }
 
-    public void setComment_time(Timestamp comment_time) {
+    public void setComment_time(com.google.firebase.Timestamp  comment_time) {
         this.comment_time = comment_time;
     }
-
 
     public String getCommenter_name() {
         return commenter_name;
@@ -80,11 +71,25 @@ public class Comment implements Comparable {
         this.commenter_name = commenter_name;
     }
 
+    public ArrayList<Integer> getCommenter_avatar() {
+        return commenter_avatar;
+    }
 
+    public void setCommenter_avatar(ArrayList<Integer> reviewer_avatar) {
+        this.commenter_avatar = reviewer_avatar;
+    }
 
+    public boolean getIs_notify() {
+        return is_notify;
+    }
+
+    public void setIs_notify(boolean is_notify) {
+        this.is_notify = is_notify;
+    }
 
     @Override
     public int compareTo(Object o) {
         return (comment_time.compareTo(((Comment)o).comment_time));
     }
+
 }

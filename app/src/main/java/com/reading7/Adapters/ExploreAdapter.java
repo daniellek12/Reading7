@@ -65,7 +65,7 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
 
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int i) {
 
         //set height of rows with 2 items
         if (i % 11 == 0 || i % 11 == 1)
@@ -77,13 +77,11 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
 
         viewHolder.ratingBar.setRating(books.get(i).getAvg_rating());
         Utils.showImage(books.get(i).getTitle(), viewHolder.cover, mActivity);
-        //viewHolder.cover.setImageResource(mContext.getResources().getIdentifier("cover"+(i+1), "mipmap", mContext.getPackageName()));
 
-        final int j = i;
         viewHolder.cover.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainActivity) mContext).addFragment(new BookFragment(books.get(j)));
+                ((MainActivity) mContext).addFragment(new BookFragment(books.get(i)));
             }
         });
     }

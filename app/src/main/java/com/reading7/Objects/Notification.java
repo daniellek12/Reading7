@@ -1,8 +1,6 @@
 package com.reading7.Objects;
 
-
 import com.google.firebase.Timestamp;
-import com.reading7.R;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -79,17 +77,14 @@ public class Notification {
         this.user_avatar = user_avatar;
     }
 
-    public static class SortByDate implements Comparator<Notification>
-    {
-        public int compare(Notification a, Notification b)
-        {
+    public static class SortByDate implements Comparator<Notification> {
+        public int compare(Notification a, Notification b) {
             return -a.time.compareTo(b.time);
         }
     }
 
     @Override
-    public boolean equals(Object object)
-    {
+    public boolean equals(Object object) {
         boolean same = false;
 
         if (object != null && object instanceof Notification) {

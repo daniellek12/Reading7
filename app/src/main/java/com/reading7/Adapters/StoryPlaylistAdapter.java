@@ -2,7 +2,6 @@ package com.reading7.Adapters;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,6 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class StoryPlaylistAdapter extends RecyclerView.Adapter<StoryPlaylistAdapter.ViewHolder> {
 
@@ -89,63 +87,15 @@ public class StoryPlaylistAdapter extends RecyclerView.Adapter<StoryPlaylistAdap
     }
 
 
-//    public Drawable getDrawableForGenre(String genre) {
-//
-//        Drawable drawable = null;
-//
-//        switch (genre) {
-//            case "בשבילך":
-//                drawable = mContext.getResources().getDrawable(R.drawable.star_filled);
-//                break;
-//            case "אהבה":
-//                drawable = mContext.getResources().getDrawable(R.drawable.genre_romance_filled);
-//                break;
-//            case "הרפתקאות":
-//                drawable = mContext.getResources().getDrawable(R.drawable.genre_adventures_filled);
-//                break;
-//            case "דרמה":
-//                drawable = mContext.getResources().getDrawable(R.drawable.genre_drama_filled);
-//                break;
-//            case "מדע בדיוני":
-//                drawable = mContext.getResources().getDrawable(R.drawable.genre_fantasy_filled);
-//                break;
-//            case "קומדיה":
-//                drawable = mContext.getResources().getDrawable(R.drawable.genre_comedy_filled);
-//                break;
-//            case "היסטוריה":
-//                drawable = mContext.getResources().getDrawable(R.drawable.genre_history_filled);
-//                break;
-//            case "מדע":
-//                drawable = mContext.getResources().getDrawable(R.drawable.genre_science_filled);
-//                break;
-//            case "מתח":
-//                drawable = mContext.getResources().getDrawable(R.drawable.genre_thriller_filled);
-//                break;
-//            case "אימה":
-//                drawable = mContext.getResources().getDrawable(R.drawable.genre_horror_filled);
-//                break;
-//            default:
-//                drawable = mContext.getResources().getDrawable(R.drawable.genre_adventures_filled);
-//                break;
-//        }
-//
-//        return drawable;
-//    }
-
-
     private void updatePressedGenre(ViewHolder viewHolder, String genre) {
 
         if (pressedGenre.equals(genre)) {
             viewHolder.cover.setBackgroundTintList(ColorStateList.valueOf(mContext.getResources().getColor(R.color.colorPrimary)));
             viewHolder.cover.setClickable(false);
-        }
-
-        else {
+        } else {
             viewHolder.cover.setBackgroundTintList(ColorStateList.valueOf(mContext.getResources().getColor(R.color.grey)));
             viewHolder.cover.setClickable(true);
         }
-
-
     }
 
 }

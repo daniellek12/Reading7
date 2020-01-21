@@ -109,6 +109,7 @@ public class EditProfileFragment extends Fragment {
                 updateWishlists(name, user.getAvatar_details());
                 updateUser(name, birthday);
 
+                setLoadingMode(false);
                 getActivity().onBackPressed();
             }
         });
@@ -248,10 +249,8 @@ public class EditProfileFragment extends Fragment {
 
 
     private void dissapearErrorMasseges() {
-        getActivity().findViewById(R.id.illegal_mail).setVisibility(View.INVISIBLE);
         getActivity().findViewById(R.id.illegal_name).setVisibility(View.INVISIBLE);
         getActivity().findViewById(R.id.illegal_birth_date).setVisibility(View.INVISIBLE);
-        getActivity().findViewById(R.id.email_exists).setVisibility(View.INVISIBLE);
     }
 
     private void setLoadingMode(Boolean isLoading) {

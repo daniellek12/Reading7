@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context=".ReviewCommentsFragment">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolBar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/white"
+        android:elevation="1dp"
+        android:layoutDirection="rtl">
+
+        <ImageButton
+            android:id="@+id/backButton"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="right"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@color/transparent"
+            android:scaleType="fitXY"
+            android:src="@drawable/arrow_right"
+            android:tint="@color/darkGrey" />
+
+        <TextView
+            android:id="@+id/reviewTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="הביקורת של"
+            android:textSize="18sp" />
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:layoutDirection="rtl"
+        android:paddingTop="10dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profileImage"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignParentTop="false"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="15dp"
+            android:elevation="3dp"
+            android:src="@drawable/avatar_layout"
+            app:civ_circle_background_color="@color/white" />
+
+        <TextView
+            android:id="@+id/userName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_toLeftOf="@id/profileImage"
+            android:text="אליאנה תדהר"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/timeIcon"
+            android:layout_width="11dp"
+            android:layout_height="11dp"
+            android:layout_below="@id/userName"
+            android:layout_marginTop="5dp"
+            android:layout_toLeftOf="@id/profileImage"
+            android:tint="@color/darkGrey"
+            app:srcCompat="@drawable/time" />
+
+        <TextView
+            android:id="@+id/postTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/userName"
+            android:layout_marginTop="2dp"
+            android:layout_marginRight="3dp"
+            android:layout_toLeftOf="@id/timeIcon"
+            android:text="לפני 3 ימים"
+            android:textSize="12sp" />
+
+        <RatingBar
+            android:id="@+id/ratingBar"
+            style="@style/Widget.AppCompat.RatingBar.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="15dp"
+            android:progressBackgroundTint="@color/colorPrimaryDark"
+            android:progressTint="@color/colorPrimaryDark"
+            android:secondaryProgressTint="@color/colorPrimaryDark"
+            android:stepSize=".5" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/profileImage"
+            android:layout_marginRight="20dp"
+            android:text="ספר מהמם ממש"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/review"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="20dp"
+            android:text="ספר מדהים!!!! חובה קריאה , אהבתי ממש אני לא רוצה לעשות לכם ספוילרים אבל הסוף מפתיע בטירוף רוצו לקרוא "
+            android:textColor="@color/black"
+            android:textIsSelectable="false" />
+
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_below="@id/activityCountersLayout"
+            android:layout_marginTop="7dp"
+            android:background="@color/lightGrey" />
+
+        <ImageButton
+            android:id="@+id/deleteBtn"
+            android:layout_width="28dp"
+            android:layout_height="12dp"
+            android:visibility="gone"
+            app:srcCompat="@android:drawable/ic_delete" />
+
+        <RelativeLayout
+            android:id="@+id/activityCountersLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/review"
+            android:layout_marginTop="20dp">
+
+            <ImageView
+                android:id="@+id/likesNumIcon"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="20dp"
+                app:srcCompat="@drawable/circle_like_filled" />
+
+            <TextView
+                android:id="@+id/likeNum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="3dp"
+                android:layout_toLeftOf="@id/likesNumIcon"
+                android:text="20"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/commentsNumText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:text="@string/comments"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/commentsNum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="3dp"
+                android:layout_toRightOf="@id/commentsNumText"
+                android:text="20"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/likeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/divider"
+            android:layoutDirection="rtl"
+            android:orientation="horizontal"
+            android:paddingLeft="60dp"
+            android:paddingTop="10dp"
+            android:paddingRight="60dp"
+            android:paddingBottom="10dp">
+
+            <LinearLayout
+                android:id="@+id/likeBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical"
+                android:layoutDirection="rtl"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/likeIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/like" />
+
+                <TextView
+                    android:id="@+id/likeText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:layout_marginRight="5dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/like"
+                    android:textColor="@color/darkGrey"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/button_add_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical"
+                android:layoutDirection="rtl"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imageView5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/comment_bubble" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:layout_marginRight="5dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/add_comment"
+                    android:textColor="@color/darkGrey"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/commentsRV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/grey"
+        android:paddingBottom="5dp" />
+
+</LinearLayout>

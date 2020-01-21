@@ -19,9 +19,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -30,6 +28,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.reading7.Objects.Book;
+import com.reading7.Objects.Comment;
+import com.reading7.Objects.Review;
 import com.reading7.Objects.User;
 
 import java.io.BufferedReader;
@@ -42,7 +42,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Map;
 
 public class Utils {
 
@@ -824,6 +823,7 @@ public class Utils {
         return true;
     }
 
+
     public static void addToEachBookTheFieldGenres() {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -844,8 +844,7 @@ public class Utils {
         });
     }
 
-
-    public static void addFieldToUser() {
+    public static void addFieldToUsers() {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         final CollectionReference requestCollectionRef = db.collection("Users");
@@ -857,6 +856,24 @@ public class Utils {
                         User user = document.toObject(User.class);
                         final DocumentReference bookRef = FirebaseFirestore.getInstance().collection("Users").document(user.getEmail());
                         bookRef.update("follow_requests", new ArrayList<String>());
+                    }
+                }
+            }
+        });
+    }
+
+    public static void addFieldToReviews() {
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final CollectionReference requestCollectionRef = db.collection("Reviews");
+        requestCollectionRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (DocumentSnapshot document : task.getResult()) {
+                        Review review = document.toObject(Review.class);
+                        final DocumentReference reviewRef = FirebaseFirestore.getInstance().collection("Reviews").document(review.getReview_id());
+                        reviewRef.update("is_notify", true);
                     }
                 }
             }
@@ -885,9 +902,6 @@ public class Utils {
             }
         });
     }
-
-
-
 
 }
 
