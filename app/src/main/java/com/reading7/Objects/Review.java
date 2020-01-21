@@ -202,6 +202,10 @@ public class Review implements Comparable {
         if (comments.containsKey(commenter_email)) comments.remove(commenter_email);
     }
 
+    public void setComments(HashMap<String, Comment> comments) {
+        this.comments = comments;
+    }
+
     public HashMap<String, Comment> getComments() {
         return this.comments;
     }

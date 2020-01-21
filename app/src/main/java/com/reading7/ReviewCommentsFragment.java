@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,24 +17,21 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.reading7.Adapters.CommentsAdapter;
-import com.reading7.Adapters.ReviewListAdapter;
+import com.reading7.Adapters.FeedAdapter;
+import com.reading7.Dialogs.AddCommentDialog;
 import com.reading7.Objects.Comment;
 import com.reading7.Objects.Review;
 import com.reading7.Objects.User;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -212,10 +210,42 @@ public class ReviewCommentsFragment extends Fragment {
                 Bundle args = new Bundle();
                 args.putString("review_id", mReview.getReview_id());
                 dialog.setArguments(args);
-                dialog.setTargetFragment(ReviewCommentsFragment.this, 202);
+                dialog.setTargetFragment(ReviewCommentsFragment.this, 303);
                 dialog.show(getActivity().getSupportFragmentManager(), "example dialog");
             }
         });
     }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        switch (requestCode){
+
+            case 303:
+                updateReviewAndComments();
+                break;
+
+        }
+    }
+
+
+    private void updateReviewAndComments() {
+        Query query = db.collection("Reviews").whereEqualTo("review_id", mReview.getReview_id());
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    Review review = null;
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                        review = doc.toObject(Review.class);
+                    }
+
+                    mReview.setComments(review.getComments());
+                    initComments();
+                }
+            }
+        });
+    }
+
+
 
 }

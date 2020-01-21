@@ -1,9 +1,7 @@
 package com.reading7;
 
 import android.app.DatePickerDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,10 +12,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
+import com.reading7.Dialogs.EditAvatarDialog;
 import com.reading7.Objects.User;
 
 import java.text.SimpleDateFormat;
@@ -92,7 +90,7 @@ public class SignUpStep1 extends Fragment {
         if (email.equals("") || !(email.matches("[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}")))
             return null;
 
-        return email;
+        return email.toLowerCase();
     }
 
     public String getPassword() {

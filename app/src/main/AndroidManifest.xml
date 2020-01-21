@@ -13,8 +13,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".ReviewCommentsFragment"></activity>
-        <activity android:name=".AddCommentDialog" />
-        <activity android:name=".ChangePasswordDialog" />
+        <activity android:name=".Dialogs.AddCommentDialog" />
+        <activity android:name=".Dialogs.ChangePasswordDialog" />
         <activity android:name=".PrivacySettingsFragment" />
         <activity android:name=".EditProfileFragment" />
         <activity

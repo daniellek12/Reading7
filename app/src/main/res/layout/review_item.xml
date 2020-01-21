@@ -89,15 +89,12 @@
         android:textColor="@color/black"
         android:textIsSelectable="false" />
 
-
-    <View
-        android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_below="@id/activityCountersLayout"
-        android:layout_marginTop="7dp"
-        android:background="@color/lightGrey" />
-
+    <ImageButton
+        android:id="@+id/deleteBtn"
+        android:layout_width="28dp"
+        android:layout_height="12dp"
+        android:visibility="gone"
+        app:srcCompat="@android:drawable/ic_delete" />
 
     <RelativeLayout
         android:id="@+id/likeLayout"
@@ -173,12 +170,13 @@
 
     </RelativeLayout>
 
-    <ImageButton
-        android:id="@+id/deleteBtn"
-        android:layout_width="28dp"
-        android:layout_height="12dp"
-        android:visibility="gone"
-        app:srcCompat="@android:drawable/ic_delete" />
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@id/activityCountersLayout"
+        android:layout_marginTop="7dp"
+        android:background="@color/lightGrey" />
 
     <RelativeLayout
         android:id="@+id/activityCountersLayout"

@@ -29,7 +29,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.reading7.AddCommentDialog;
+import com.reading7.Dialogs.AddCommentDialog;
 import com.reading7.BookFragment;
 import com.reading7.MainActivity;
 import com.reading7.Objects.Book;
@@ -296,7 +296,7 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
 
     }
 
-    private void initAddCommentButton(ViewHolder viewHolder, int i) {
+    private void initAddCommentButton(ViewHolder viewHolder, final int i) {
 
         final Review review = reviews.get(i);
 
@@ -307,7 +307,7 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
                 Bundle args = new Bundle();
                 args.putString("review_id", review.getReview_id());
                 dialog.setArguments(args);
-                dialog.setTargetFragment(fragment, 202);
+                dialog.setTargetFragment(fragment, 303);
                 dialog.show(fragment.getActivity().getSupportFragmentManager(), "example dialog");
             }
         });
@@ -353,14 +353,41 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
                     viewHolder.likeNum.setText("" + (likesNum + 1));
 
                     addNotificationLike(review.getReviewer_email(), book_title, review.getIs_notify());
-                    }
+                }
             }
         });
+
     }
 
+    public void notifyReviewCommentsChanged(String review_id) {
 
+        for (int i = 0; i < getItemCount(); i++) {
 
+            final int finalI = i;
+            final Review review = reviews.get(i);
 
+            if (review.getReview_id().equals(review_id)) {
+
+                Query query = db.collection("Reviews").whereEqualTo("review_id", review_id);
+                query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            Review mReview = null;
+                            for (QueryDocumentSnapshot doc : task.getResult()) {
+                                mReview = doc.toObject(Review.class);
+                            }
+
+                            review.setComments(mReview.getComments());
+                            notifyItemChanged(finalI);
+                        }
+                    }
+                });
+
+                break;
+            }
+        }
+    }
 
 
 }

@@ -1,4 +1,4 @@
-package com.reading7;
+package com.reading7.Dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -26,6 +26,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.reading7.Objects.Review;
 import com.reading7.Objects.User;
+import com.reading7.R;
+import com.reading7.Utils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,7 +40,6 @@ public class RankBookDialog extends AppCompatDialogFragment {
     private View view;
     RatingBar avg;
     int userAge;
-    //private RankBookDialogListener listener;
 
 
     @NonNull

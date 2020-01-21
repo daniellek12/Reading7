@@ -1,8 +1,9 @@
-package com.reading7;
+package com.reading7.Dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -26,6 +27,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.reading7.Objects.Comment;
 import com.reading7.Objects.Review;
 import com.reading7.Objects.User;
+import com.reading7.R;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +38,7 @@ public class AddCommentDialog extends AppCompatDialogFragment {
     private FirebaseAuth mAuth;
     private Comment mComment;
     private View view;
-    private Review mReview;
+    private Review mReview = null;
     private Context mContext;
 
     @NonNull
@@ -47,14 +49,20 @@ public class AddCommentDialog extends AppCompatDialogFragment {
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
 
-        final String review_id = getArguments().getString("review_id");
-        final String commenter_email = mAuth.getCurrentUser().getEmail();
-
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         view = getActivity().getLayoutInflater().inflate(R.layout.add_comment_dialog, null);
-        final EditText contentText = view.findViewById(R.id.commentContent);
+        final String review_id = getArguments().getString("review_id");
 
-        mReview = null;
+        isCommentAlreadyExist(view, review_id, mAuth.getCurrentUser().getEmail());
+        initSaveButton(view, review_id);
+        initCancelButton(view);
+
+        builder.setView(view);
+        return builder.create();
+    }
+
+
+    private void isCommentAlreadyExist(final View dialogView, String review_id, final String commenter_email) {
 
         CollectionReference requestCollectionRef = db.collection("Reviews");
         Query requestQuery = requestCollectionRef.whereEqualTo("review_id", review_id);
@@ -68,21 +76,23 @@ public class AddCommentDialog extends AppCompatDialogFragment {
                     if (mReview != null) {
                         mComment = mReview.getComments().get(commenter_email);
                         if (mComment != null) {
-                            contentText.setText(mComment.getComment_content());
-                            ((Button) view.findViewById(R.id.ok)).setText("שמור שינויים");
+                            ((EditText) dialogView.findViewById(R.id.commentContent)).setText(mComment.getComment_content());
+                            ((Button) dialogView.findViewById(R.id.ok)).setText("שמור שינויים");
                         }
                     }
                 }
             }
         });
+    }
 
-        view.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
+
+    private void initSaveButton(final View dialogView, final String review_id) {
+        dialogView.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final String comment_content = contentText.getText().toString().trim();
+                final String comment_content = ((EditText) dialogView.findViewById(R.id.commentContent)).getText().toString().trim();
 
-                CollectionReference requestCollectionRef = db.collection("Users");
-                Query requestQuery = requestCollectionRef.whereEqualTo("email", commenter_email);
+                Query requestQuery = db.collection("Users").whereEqualTo("email", mAuth.getCurrentUser().getEmail());
                 requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -91,16 +101,14 @@ public class AddCommentDialog extends AppCompatDialogFragment {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 user = document.toObject(User.class);
                             }
-                            // Creating new comment
-                            mComment = new Comment(review_id, commenter_email, comment_content , Timestamp.now(), user.getFull_name(), user.getAvatar_details(), user.getIs_notify());
 
-                            // Update comment in DB
-                            DocumentReference ref = db.collection("Reviews").document(review_id);
-                            final Map<String, Object> updates = new HashMap<String, Object>();
+                            mComment = new Comment(review_id, user.getEmail(), comment_content, Timestamp.now(),
+                                    user.getFull_name(), user.getAvatar_details(), user.getIs_notify());
                             mReview.addComment(mComment);
-                            updates.put("comments", mReview.getComments());
-                            ref.update(updates);
-                            addNotificationComment(user,mReview.getReviewer_email(),mReview.getBook_title(),mReview.getIs_notify());
+                            db.collection("Reviews").document(review_id).update("comments", mReview.getComments());
+                            addNotificationComment(user, mReview.getReviewer_email(), mReview.getBook_title(), mReview.getIs_notify());
+                            sendResult(303, review_id);
+
                         }
                     }
                 });
@@ -109,16 +117,11 @@ public class AddCommentDialog extends AppCompatDialogFragment {
             }
         });
 
-        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismiss();
-            }
-        });
 
-        builder.setView(view);
-        return builder.create();
+
+
     }
+
 
     private void addNotificationComment(User user,String to_email,String book_title,boolean is_notify){
         if(is_notify&& (!(to_email.equals(mAuth.getCurrentUser().getEmail())))) {
@@ -140,5 +143,21 @@ public class AddCommentDialog extends AppCompatDialogFragment {
                 }
             });
         }
+    }
+
+    private void initCancelButton(View dialogView) {
+        dialogView.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+            }
+        });
+    }
+
+
+    private void sendResult(int REQUEST_CODE, String review_id) {
+        Intent intent = new Intent();
+        intent.putExtra("review_id", review_id);
+        getTargetFragment().onActivityResult(getTargetRequestCode(), REQUEST_CODE, intent);
     }
 }

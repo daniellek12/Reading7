@@ -24,6 +24,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.reading7.Dialogs.ChangePasswordDialog;
+import com.reading7.Dialogs.EditAvatarDialog;
 import com.reading7.Objects.Review;
 import com.reading7.Objects.User;
 import com.reading7.Objects.WishList;

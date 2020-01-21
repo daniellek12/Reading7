@@ -1,5 +1,6 @@
 package com.reading7;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.reading7.Adapters.FeedAdapter;
+import com.reading7.Adapters.ReviewListAdapter;
 import com.reading7.Objects.Post;
 import com.reading7.Objects.Review;
 import com.reading7.Objects.WishList;
@@ -54,9 +56,6 @@ public class HomeFragment extends Fragment {
     }
 
 
-    // TODO: create posts according to real information in page.
-    //  -   order of posts - SET TO BE ORDERED BY TIMESTAMP
-    //  -   take posts from different collections
     private void createPosts(final RecyclerView postsRV) {
         disableClicks();
         // first: get my followers, and filter reviews and wishlists according to the ids we get
@@ -95,7 +94,7 @@ public class HomeFragment extends Fragment {
                                                 }
                                             }
                                             Collections.sort(posts, new Post.SortByDate());
-                                            FeedAdapter adapter = new FeedAdapter(getActivity(), posts, ((MainActivity)getActivity()).getUser());
+                                            FeedAdapter adapter = new FeedAdapter(getActivity(), HomeFragment.this, posts, ((MainActivity)getActivity()).getUser());
                                             postsRV.setAdapter(adapter);
                                             enableClicks();
                                         }
@@ -105,7 +104,7 @@ public class HomeFragment extends Fragment {
                             });
                             // create posts according to reviews)
                         } else {
-                            FeedAdapter adapter = new FeedAdapter(getActivity(), posts,((MainActivity)getActivity()).getUser());
+                            FeedAdapter adapter = new FeedAdapter(getActivity(), HomeFragment.this, posts,((MainActivity)getActivity()).getUser());
                             postsRV.setAdapter(adapter);
                             enableClicks();
                         }
@@ -124,6 +123,21 @@ public class HomeFragment extends Fragment {
         postsRV.setLayoutManager(layoutManager);
         createPosts(postsRV);
     }
+
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        switch (requestCode){
+
+            case 303:
+                String review_id = data.getStringExtra("review_id");
+                RecyclerView postsRV = getView().findViewById(R.id.posts);
+                ((FeedAdapter) postsRV.getAdapter()).notifyReviewCommentsChanged(review_id);
+                break;
+
+        }
+    }
+
 
 
     private void disableClicks() {

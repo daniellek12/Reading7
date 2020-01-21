@@ -1,4 +1,4 @@
-package com.reading7;
+package com.reading7.Dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -12,6 +12,9 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
+
+import com.reading7.R;
+import com.reading7.Utils;
 
 import java.util.ArrayList;
 
