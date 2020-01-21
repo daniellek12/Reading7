@@ -37,7 +37,10 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.reading7.Adapters.ReviewListAdapter;
+import com.reading7.Dialogs.AddToShelfDialog;
+import com.reading7.Dialogs.RankBookDialog;
 import com.reading7.Objects.Book;
+import com.reading7.Objects.Comment;
 import com.reading7.Objects.Review;
 import com.reading7.Objects.User;
 import com.reading7.Objects.WishList;
@@ -350,7 +353,7 @@ public class BookFragment extends Fragment {
 
     private void initRankButton() {
 
-       updateRankButton();
+        updateRankButton();
 
         // Set the rank button functionality
         Button rankBtn = getActivity().findViewById(R.id.button_read);
@@ -422,21 +425,27 @@ public class BookFragment extends Fragment {
 
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // Make sure fragment codes match up
-        if (requestCode == 202) {
-            float avg = data.getFloatExtra(
-                    "avg", 0);
-            mAvgAge = data.getFloatExtra(
-                    "avgAge", 0);
 
+        switch (requestCode){
 
-            rankRatingBar.setRating(avg);
-            ratingNum.setText(Float.toString(avg));
-            lstReviews.clear();
-            getBookReviews();//overhead
+            case 202:
+                float avg = data.getFloatExtra("avg", 0);
+                mAvgAge = data.getFloatExtra("avgAge", 0);
 
-            isReviewed = true;
-            updateRankButton();
+                rankRatingBar.setRating(avg);
+                ratingNum.setText(Float.toString(avg));
+                lstReviews.clear();
+                getBookReviews(); //overhead
+
+                isReviewed = true;
+                updateRankButton();
+                break;
+
+            case 303:
+                String review_id = data.getStringExtra("review_id");
+                ((ReviewListAdapter) reviewsRV.getAdapter()).notifyReviewCommentsChanged(review_id);
+                break;
+
         }
     }
 
@@ -522,5 +531,7 @@ public class BookFragment extends Fragment {
         getActivity().findViewById(R.id.button_wishlist).setVisibility(View.VISIBLE);
         getActivity().findViewById(R.id.button_already_read).setVisibility(View.GONE);
     }
+
+
 
 }

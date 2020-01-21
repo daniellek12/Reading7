@@ -7,30 +7,29 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.reading7.AddCommentDialog;
+import com.reading7.Dialogs.AddCommentDialog;
 import com.reading7.BookFragment;
 import com.reading7.MainActivity;
 import com.reading7.Objects.Book;
 import com.reading7.Objects.Post;
+import com.reading7.Objects.PostType;
 import com.reading7.Objects.Review;
 import com.reading7.PublicProfileFragment;
 import com.reading7.R;
@@ -403,7 +402,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 Bundle args = new Bundle();
                 args.putString("review_id", post.getReview_id());
                 dialog.setArguments(args);
-                dialog.setTargetFragment(fragment, 202);
+                dialog.setTargetFragment(fragment, 303);
                 dialog.show(fragment.getActivity().getSupportFragmentManager(), "example dialog");
             }
         });
@@ -448,4 +447,36 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         });
 
     }
+
+    public void notifyReviewCommentsChanged(String review_id) {
+
+        for (int i = 0; i < getItemCount(); i++) {
+
+            final int finalI = i;
+            final Post post = posts.get(i);
+
+            if (post.getType().equals(PostType.Review) && post.getReview_id().equals(review_id)) {
+
+                final Review review = post.toReview();
+                Query query = db.collection("Reviews").whereEqualTo("review_id", review_id);
+                query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            Review mReview = null;
+                            for (QueryDocumentSnapshot doc : task.getResult()) {
+                                mReview = doc.toObject(Review.class);
+                            }
+
+                            review.setComments(mReview.getComments());
+                            notifyItemChanged(finalI);
+                        }
+                    }
+                });
+
+                break;
+            }
+        }
+    }
+
 }

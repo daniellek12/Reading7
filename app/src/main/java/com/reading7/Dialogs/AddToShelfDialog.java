@@ -1,4 +1,4 @@
-package com.reading7;
+package com.reading7.Dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -22,6 +22,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.reading7.Objects.Shelf;
+import com.reading7.R;
 
 import java.util.ArrayList;
 

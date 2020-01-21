@@ -21,41 +21,13 @@ public class Post implements Comparable {
      */
 
     public Post(Review review) {
-
-        this.mReview = review;
         this.type = PostType.Review;
-//        this.post_time = review.getReview_time();
-//        this.review_id = review.getReview_id();
-//
-//        this.book_id = review.getBook_id();
-//        this.book_title = review.getBook_title();
-//        this.book_author = review.getBook_author();
-//
-//        this.reviewer_email = review.getReviewer_email();
-//        this.user_name = review.getReviewer_name();
-//        this.user_avatar = review.getReviewer_avatar();
-//
-//        this.rank = review.getRank();
-//        this.review_content = review.getReview_content();
-//        this.review_title = review.getReview_title();
-//        this.is_notify= review.getIs_notify();
-//        this.likes_count = review.getLikes_count();
-//        this.comments = review.getComments();
+        this.mReview = review;
     }
 
     public Post(WishList wishList) {
-
-        this.mWishlist = wishList;
         this.type = PostType.WishList;
-//        this.post_time = wishList.getAdding_time();
-//        this.wishList_Id = wishList.getId();
-//
-//        this.book_id = wishList.getBook_id();
-//        this.book_title = wishList.getBook_title();
-//
-//        this.user_email = wishList.getUser_email();
-//        this.user_name = wishList.getUser_name();
-//        this.user_avatar = wishList.getUser_avatar();
+        this.mWishlist = wishList;
     }
 
 
