@@ -315,7 +315,7 @@ public class BookFragment extends Fragment {
                     updateWishlistButton();
 
                 } else {
-                    WishList wlist = new WishList("", currentUser.getEmail(), currentUser.getFull_name(), mBook.getId(), mBook.getTitle(), Timestamp.now(), currentUser.getAvatar_details());
+                    WishList wlist = new WishList("", currentUser.getEmail(), currentUser.getFull_name(), mBook.getId(), mBook.getTitle(), mBook.getAuthor(), Timestamp.now(), currentUser.getAvatar_details());
                     DocumentReference newWish = db.collection("Wishlist").document();
                     wlist.setId(newWish.getId());
                     newWish.set(wlist);

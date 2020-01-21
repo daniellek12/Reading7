@@ -95,7 +95,7 @@ public class HomeFragment extends Fragment {
                                                 }
                                             }
                                             Collections.sort(posts, new Post.SortByDate());
-                                            FeedAdapter adapter = new FeedAdapter(getActivity(), posts, ((MainActivity)getActivity()).getUser());
+                                            FeedAdapter adapter = new FeedAdapter(getActivity(), HomeFragment.this, posts, ((MainActivity)getActivity()).getUser());
                                             postsRV.setAdapter(adapter);
                                             enableClicks();
                                         }
@@ -105,7 +105,7 @@ public class HomeFragment extends Fragment {
                             });
                             // create posts according to reviews)
                         } else {
-                            FeedAdapter adapter = new FeedAdapter(getActivity(), posts,((MainActivity)getActivity()).getUser());
+                            FeedAdapter adapter = new FeedAdapter(getActivity(), HomeFragment.this, posts,((MainActivity)getActivity()).getUser());
                             postsRV.setAdapter(adapter);
                             enableClicks();
                         }
