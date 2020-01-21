@@ -9,7 +9,9 @@ import android.view.ViewGroup;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -17,9 +19,13 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.reading7.Adapters.ExploreAdapter;
 import com.reading7.Adapters.StoryPlaylistAdapter;
 import com.reading7.Objects.Book;
+import com.reading7.Objects.Comment;
+import com.reading7.Objects.Recommendation;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -223,24 +229,61 @@ public class ExploreFragment extends Fragment {
 
         //mGenre=genre;
         final List<Book> newlist = new ArrayList<>();
+        final List<String> lstBooksIds = new ArrayList<>();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        final CollectionReference requestCollectionRef = db.collection("Books");
-        Query requestQuery = requestCollectionRef.limit(limit);
+        final CollectionReference requestCollectionRef = db.collection("Recommendations");
+        Query requestQuery = requestCollectionRef.whereEqualTo("user_id", FirebaseAuth.getInstance().getCurrentUser().getEmail());
         requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
                 if (task.isSuccessful()) {
                     for (DocumentSnapshot document : task.getResult()) {
+                        Recommendation recommendation = document.toObject(Recommendation.class);
+                        if(!lstBooksIds.contains(recommendation.getBook_id()))
+                            lstBooksIds.add(recommendation.getBook_id());
 
-                        Book book = document.toObject(Book.class);
-                        //if(Utils.isBookFromGenre(book,mGenre))
-                        newlist.add(book);
                     }
-                    bookList.addAll(newlist);
-                    myAdapter.notifyDataSetChanged();//no problem cause this is the first update
-                    lastVisible = task.getResult().getDocuments().get(task.getResult().size() - 1);
-                    hideProgressBar();
                 }
+
+                final CollectionReference bookRef = FirebaseFirestore.getInstance().collection("Books");
+                Query booksQuery = bookRef.whereIn("id", lstBooksIds.subList(0,9));
+                booksQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (DocumentSnapshot document : task.getResult()) {
+                                Book b = document.toObject(Book.class);
+                                if(!newlist.contains(b))
+                                    newlist.add(b);
+
+                            }
+                        }
+                        Query booksQuery1 = bookRef.limit(limit);
+                        booksQuery1.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (DocumentSnapshot document : task.getResult()) {
+                                        Book b1 = document.toObject(Book.class);
+                                        if(!newlist.contains(b1))
+                                            newlist.add(b1);
+
+                                    }
+                                }
+
+
+                                bookList.addAll(newlist);
+                                newlist.clear();
+
+
+                                myAdapter.notifyDataSetChanged();//no problem cause this is the first update
+                                lastVisible = task.getResult().getDocuments().get(task.getResult().size() - 1);
+                                hideProgressBar();
+                            }
+                        });
+                    }
+                });
             }
         });
     }
@@ -326,7 +369,8 @@ public class ExploreFragment extends Fragment {
                     if (t.isSuccessful()) {
                         for (DocumentSnapshot d : t.getResult()) {
                             Book book = d.toObject(Book.class);
-                            newlist.add(book);
+                            if(!bookList.contains(book))
+                                newlist.add(book);
 
                         }
                         bookList.addAll(newlist);
