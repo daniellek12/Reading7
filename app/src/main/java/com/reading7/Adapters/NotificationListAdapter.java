@@ -30,10 +30,12 @@ import com.reading7.BookFragment;
 import com.reading7.MainActivity;
 import com.reading7.Objects.Book;
 import com.reading7.Objects.Notification;
+import com.reading7.Objects.Review;
 import com.reading7.Objects.User;
 import com.reading7.ProfileFragment;
 import com.reading7.PublicProfileFragment;
 import com.reading7.R;
+import com.reading7.ReviewCommentsFragment;
 import com.reading7.Utils;
 
 import java.util.Collections;
@@ -98,21 +100,25 @@ public class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.V
         public void onClick(View v) {
 
             FirebaseFirestore db = FirebaseFirestore.getInstance();
-            CollectionReference requestCollectionRef = db.collection("Books");
-            Query requestQuery = requestCollectionRef.whereEqualTo("title", book_title);
+            CollectionReference requestCollectionRef = db.collection("Reviews");
+            Query requestQuery = requestCollectionRef.whereEqualTo("reviewer_email",mAuth.getCurrentUser().getEmail()).whereEqualTo("book_title", book_title);
             requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     if (task.isSuccessful()) {
 
-                        Book b = null;
+                        Review review  = null;
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            b = document.toObject(Book.class);
-                            ((MainActivity) mActivity).addFragment(new BookFragment(b));
+                            review = document.toObject(Review.class);
+                            ((MainActivity) mActivity).loadFragment(new ReviewCommentsFragment(review,((MainActivity) mActivity).getCurrentUser()));
                             return;
                         }
+                        Toast.makeText(mContext, "מחקת את הביקורת שלך על ספר זה", Toast.LENGTH_SHORT).show();
+
+
 
                     }
+
                 }
             });
         }

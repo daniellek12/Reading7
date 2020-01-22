@@ -124,13 +124,13 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
         viewHolder.userName.setOnClickListener(new OpenProfileOnClick(review.getReviewer_email()));
         viewHolder.commentsNum.setText(String.valueOf(review.getComments().size()));
 
-        initAddCommentButton(viewHolder, i);
+        initAddCommentButton(viewHolder,i);
         initLikeMechanics(viewHolder, i);
 
         viewHolder.countersLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainActivity) mContext).addFragment(new ReviewCommentsFragment(review, real_user));
+                ((MainActivity)mContext).addFragment(new ReviewCommentsFragment(review, real_user));
             }
         });
     }

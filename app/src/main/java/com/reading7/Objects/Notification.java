@@ -89,13 +89,16 @@ public class Notification {
 
         if (object != null && object instanceof Notification) {
 
+            if(type.equals("הגיב על הביקורת שלך")&&(((Notification) object).getType()).equals("הגיב על הביקורת שלך"))
+                same = (this.book_title.equals(((Notification) object).book_title))  && (this.user_name.equals(((Notification) object).user_name));
             if(type.equals("אהב את הביקורת שלך")&&(((Notification) object).getType()).equals("אהב את הביקורת שלך"))
                 same = (this.book_title.equals(((Notification) object).book_title))  && (this.user_name.equals(((Notification) object).user_name));
             else {
                 if((type.equals("הסכים שתעקוב אחריו")&&(((Notification) object).getType()).equals("הסכים שתעקוב אחריו")))
                     same = (this.user_name.equals(((Notification) object).user_name));
                 else if((!type.equals("הסכים שתעקוב אחריו")&&!(((Notification) object).getType()).equals("הסכים שתעקוב אחריו"))
-                &&(!type.equals("אהב את הביקורת שלך")&&!(((Notification) object).getType()).equals("אהב את הביקורת שלך"))){
+                &&(!type.equals("אהב את הביקורת שלך")&&!(((Notification) object).getType()).equals("אהב את הביקורת שלך"))&&
+                (!type.equals("הגיב על הביקורת שלך")&&!(((Notification) object).getType()).equals("הגיב על הביקורת שלך"))){
                     same = (this.user_name.equals(((Notification) object).user_name));
                 }
 

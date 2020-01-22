@@ -32,6 +32,7 @@ import com.reading7.Objects.Review;
 import com.reading7.Objects.User;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -111,6 +112,8 @@ public class ReviewCommentsFragment extends Fragment {
         for (Comment comment : commentsMap.values()) {
             commentsList.add(comment);
         }
+        Collections.sort(commentsList, Collections.reverseOrder());
+
 
         CommentsAdapter adapter = new CommentsAdapter(getActivity(), commentsList);
         commentsRV.setAdapter(adapter);
