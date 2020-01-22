@@ -320,14 +320,13 @@ public class ExploreFragment extends Fragment {
                 nextQuery = requestCollectionRef.startAfter(lastVisible).limit(limit);
             else
                 nextQuery = requestCollectionRef.whereArrayContains("actual_genres", mGenre).startAfter(lastVisible).limit(limit);
-            nextQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                nextQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> t) {
                     if (t.isSuccessful()) {
                         for (DocumentSnapshot d : t.getResult()) {
                             Book book = d.toObject(Book.class);
                             newlist.add(book);
-
                         }
                         bookList.addAll(newlist);
                         for (int i = totalItemCount; i < totalItemCount + t.getResult().size(); i++) {
