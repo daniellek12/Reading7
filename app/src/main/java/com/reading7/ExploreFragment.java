@@ -156,7 +156,7 @@ public class ExploreFragment extends Fragment {
     }
 
     private void initExplore() {
-        isLastItemReached=false;
+        isLastItemReached = false;
 
         final GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 6);
 
@@ -226,7 +226,7 @@ public class ExploreFragment extends Fragment {
 
 
     private void first_load_books() {
-        mGenre="בשבילך";
+        mGenre = "בשבילך";
         showProgressBar();
 
         //mGenre=genre;
@@ -244,14 +244,14 @@ public class ExploreFragment extends Fragment {
                 if (task.isSuccessful()) {
                     for (DocumentSnapshot document : task.getResult()) {
                         Recommendation recommendation = document.toObject(Recommendation.class);
-                        if(!lstBooksIds.contains(recommendation.getBook_id()))
+                        if (!lstBooksIds.contains(recommendation.getBook_id()))
                             newlstBooksIds.add(recommendation.getBook_id());
 
                     }
                 }
 
-                int count=0;
-                for(String b: newlstBooksIds) {
+                int count = 0;
+                for (String b : newlstBooksIds) {
                     if (count < 10) {
                         lstBooksIds.add(b);
                         count++;
@@ -266,7 +266,7 @@ public class ExploreFragment extends Fragment {
                         if (task.isSuccessful()) {
                             for (DocumentSnapshot document : task.getResult()) {
                                 Book b = document.toObject(Book.class);
-                                if(!newlist.contains(b))
+                                if (!newlist.contains(b))
                                     newlist.add(b);
 
                             }
@@ -278,7 +278,7 @@ public class ExploreFragment extends Fragment {
                                 if (task.isSuccessful()) {
                                     for (DocumentSnapshot document : task.getResult()) {
                                         Book b1 = document.toObject(Book.class);
-                                        if(!newlist.contains(b1))
+                                        if (!newlist.contains(b1))
                                             newlist.add(b1);
 
                                     }
@@ -313,17 +313,15 @@ public class ExploreFragment extends Fragment {
                 return;
             }
 
-        } else
-        {
+        } else {
             hideProgressBar();
             return;
         }
 
-            //pressed the same genre
+        //pressed the same genre
 
 
         mGenre = genre;
-
 
 
         final List<Book> newlist = new ArrayList<>();
@@ -372,7 +370,7 @@ public class ExploreFragment extends Fragment {
         if (((firstVisibleItemPosition + visibleItemCount == totalItemCount) && !isLastItemReached)) {
             showProgressBar();
             Query nextQuery;
-            if (mGenre.equals( "בשבילך"))
+            if (mGenre.equals("בשבילך"))
                 nextQuery = requestCollectionRef.startAfter(lastVisible).limit(limit);
             else
                 nextQuery = requestCollectionRef.whereArrayContains("actual_genres", mGenre).startAfter(lastVisible).limit(limit);
@@ -387,7 +385,7 @@ public class ExploreFragment extends Fragment {
                         }
                         for (DocumentSnapshot d : t.getResult()) {
                             Book book = d.toObject(Book.class);
-                            if(!bookList.contains(book))
+                            if (!bookList.contains(book))
                                 newlist.add(book);
 
                         }
@@ -411,22 +409,22 @@ public class ExploreFragment extends Fragment {
         }
 
 
-       // hideProgressBar();
+        // hideProgressBar();
 
 
     }
 
 
     public void showProgressBar() {
-        Utils.enableDisableClicks(getActivity(),(ViewGroup)getView(),false);
+        Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), false);
 //        getActivity().findViewById(R.id.explore_progress_background).setVisibility(View.VISIBLE);
         getActivity().findViewById(R.id.explore_progress_bar).setVisibility(View.VISIBLE);
     }
 
     private void hideProgressBar() {
-        Utils.enableDisableClicks(getActivity(),(ViewGroup)getView(),true);
+        Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), true);
 //        getActivity().findViewById(R.id.explore_progress_background).setVisibility(View.GONE);
-    getActivity().findViewById(R.id.explore_progress_bar).setVisibility(View.GONE);
+        getActivity().findViewById(R.id.explore_progress_bar).setVisibility(View.GONE);
     }
 
     private void disableClicks() {
