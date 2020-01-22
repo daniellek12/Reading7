@@ -10,8 +10,10 @@ public class Recommendation {
         this.book_id = book_id;
         this.similarity_rating = rating;
     }
+    public Recommendation(){}
 
-    public String getBook_id() {
+
+        public String getBook_id() {
         return book_id;
     }
 

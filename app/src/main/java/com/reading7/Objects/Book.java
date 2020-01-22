@@ -129,4 +129,14 @@ public class Book {
     public String toString() {
         return title;
     }
+
+    @Override
+    public boolean equals(Object object) {
+        boolean same = false;
+
+        if (object != null && object instanceof Book) {
+            same = this.id.equals(((Book) object).id) && this.title.equals(((Book) object).title);
+        }
+        return same;
+    }
 }
