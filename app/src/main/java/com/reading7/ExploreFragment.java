@@ -156,6 +156,7 @@ public class ExploreFragment extends Fragment {
     }
 
     private void initExplore() {
+        isLastItemReached=false;
 
         final GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 6);
 
@@ -230,7 +231,9 @@ public class ExploreFragment extends Fragment {
 
         //mGenre=genre;
         final List<Book> newlist = new ArrayList<>();
+        final List<String> newlstBooksIds = new ArrayList<>();
         final List<String> lstBooksIds = new ArrayList<>();
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         final CollectionReference requestCollectionRef = db.collection("Recommendations");
         Query requestQuery = requestCollectionRef.whereEqualTo("user_id", FirebaseAuth.getInstance().getCurrentUser().getEmail());
@@ -242,13 +245,21 @@ public class ExploreFragment extends Fragment {
                     for (DocumentSnapshot document : task.getResult()) {
                         Recommendation recommendation = document.toObject(Recommendation.class);
                         if(!lstBooksIds.contains(recommendation.getBook_id()))
-                            lstBooksIds.add(recommendation.getBook_id());
+                            newlstBooksIds.add(recommendation.getBook_id());
 
                     }
                 }
 
+                int count=0;
+                for(String b: newlstBooksIds) {
+                    if (count < 10) {
+                        lstBooksIds.add(b);
+                        count++;
+                    }
+                }
+
                 final CollectionReference bookRef = FirebaseFirestore.getInstance().collection("Books");
-                Query booksQuery = bookRef.whereIn("id", lstBooksIds.subList(0,9));
+                Query booksQuery = bookRef.whereIn("id", lstBooksIds);
                 booksQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -345,7 +356,6 @@ public class ExploreFragment extends Fragment {
     }
 
     private void load_books() {
-        showProgressBar();
 
         final List<Book> newlist = new ArrayList<>();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -360,6 +370,7 @@ public class ExploreFragment extends Fragment {
         final int totalItemCount = gridLayoutManager.getItemCount();
 
         if (((firstVisibleItemPosition + visibleItemCount == totalItemCount) && !isLastItemReached)) {
+            showProgressBar();
             Query nextQuery;
             if (mGenre.equals( "בשבילך"))
                 nextQuery = requestCollectionRef.startAfter(lastVisible).limit(limit);
@@ -369,6 +380,11 @@ public class ExploreFragment extends Fragment {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> t) {
                     if (t.isSuccessful()) {
+                        if (t.getResult().size() == 0) {
+                            hideProgressBar();
+
+                            return;
+                        }
                         for (DocumentSnapshot d : t.getResult()) {
                             Book book = d.toObject(Book.class);
                             if(!bookList.contains(book))
@@ -379,8 +395,7 @@ public class ExploreFragment extends Fragment {
                         for (int i = totalItemCount; i < totalItemCount + t.getResult().size(); i++) {
                             myAdapter.notifyItemInserted(i);//notify updated book ONLY
                         }
-                        if (t.getResult().size() == 0)
-                            return;
+
                         lastVisible = t.getResult().getDocuments().get(t.getResult().size() - 1);
                         loading = true;
 
@@ -394,6 +409,11 @@ public class ExploreFragment extends Fragment {
                 }
             });
         }
+
+
+       // hideProgressBar();
+
+
     }
 
 
@@ -406,7 +426,7 @@ public class ExploreFragment extends Fragment {
     private void hideProgressBar() {
         Utils.enableDisableClicks(getActivity(),(ViewGroup)getView(),true);
 //        getActivity().findViewById(R.id.explore_progress_background).setVisibility(View.GONE);
-        //getActivity().findViewById(R.id.explore_progress_bar).setVisibility(View.GONE);
+    getActivity().findViewById(R.id.explore_progress_bar).setVisibility(View.GONE);
     }
 
     private void disableClicks() {
