@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="5dp"
     android:background="@color/white"
+    android:clipToPadding="false"
     android:layoutDirection="rtl"
     android:paddingTop="10dp">
 
@@ -91,10 +92,14 @@
 
     <ImageButton
         android:id="@+id/deleteBtn"
-        android:layout_width="28dp"
-        android:layout_height="12dp"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_marginTop="-5dp"
+        android:layout_marginRight="5dp"
+        android:background="@color/transparent"
+        android:scaleType="centerCrop"
         android:visibility="gone"
-        app:srcCompat="@android:drawable/ic_delete" />
+        app:srcCompat="@drawable/close" />
 
     <RelativeLayout
         android:id="@+id/likeLayout"

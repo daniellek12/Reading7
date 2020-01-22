@@ -212,6 +212,7 @@ public class BookFragment extends Fragment {
                 mReviewContent = review.getReview_content();
                 lstReviews.remove(review);
                 lstReviews.add(0, review);
+                updateRankButton();
                 break;
             }
         }

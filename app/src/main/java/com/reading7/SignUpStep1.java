@@ -128,6 +128,15 @@ public class SignUpStep1 extends Fragment {
                 dialog.show(getActivity().getSupportFragmentManager(), "edit avater");
             }
         });
+
+        getView().findViewById(R.id.editIcon).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EditAvatarDialog dialog = new EditAvatarDialog(avatar_details);
+                dialog.setTargetFragment(SignUpStep1.this, 100);
+                dialog.show(getActivity().getSupportFragmentManager(), "edit avater");
+            }
+        });
     }
 
     private void setupDatePicker() {
@@ -176,11 +185,5 @@ public class SignUpStep1 extends Fragment {
             Utils.loadAvatar(getContext(),(CircleImageView) getView().findViewById(R.id.profile_image), avatar_details);
         }
     }
-
-//    @Override
-//    public void getAvatarDetails(ArrayList<Integer> details) {
-//        this.avatar_details = details;
-//        Utils.loadAvatar(getContext(), (CircleImageView) getView().findViewById(R.id.profile_image), avatar_details);
-//    }
 
 }

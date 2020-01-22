@@ -8,6 +8,22 @@
     tools:context=".SignUpStep1"
     android:layoutDirection="rtl">
 
+    <ImageButton
+        android:id="@+id/editIcon"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_below="@id/profile_image"
+        android:layout_marginTop="-20dp"
+        android:layout_marginRight="-30dp"
+        android:layout_toLeftOf="@id/profile_image"
+        android:background="@drawable/rounded_button"
+        android:backgroundTint="@color/white"
+        android:elevation="10dp"
+        android:padding="5dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/edit"
+        android:tint="@color/colorPrimaryDark" />
+
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profile_image"
         android:layout_width="100dp"
