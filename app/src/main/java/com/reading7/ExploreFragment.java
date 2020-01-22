@@ -81,6 +81,7 @@ public class ExploreFragment extends Fragment {
         initAppBar();
         initPlaylists();
         initExplore();
+        first_load_books();
     }
 
 
@@ -218,13 +219,13 @@ public class ExploreFragment extends Fragment {
 //            }
 //        });
         // this will load the first block of books for initialization of the explore
-        first_load_books();
 //        hideProgressBar();
 
     }
 
 
     private void first_load_books() {
+        mGenre="בשבילך";
         showProgressBar();
 
         //mGenre=genre;
@@ -289,13 +290,14 @@ public class ExploreFragment extends Fragment {
     }
 
     public void first_load_genre_books(final String genre) {
-
+        initExplore();
 
         //changed genre
         if (!mGenre.equals(genre)) {
             showProgressBar();
             first = 0;
             if (genre.equals("בשבילך")) {
+                initExplore();
                 first_load_books();
                 return;
             }
