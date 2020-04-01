@@ -259,6 +259,7 @@ public class ExploreFragment extends Fragment {
                 }
 
                 final CollectionReference bookRef = FirebaseFirestore.getInstance().collection("Books");
+                lstBooksIds.add("dummy");//
                 Query booksQuery = bookRef.whereIn("id", lstBooksIds);
                 booksQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -271,7 +272,7 @@ public class ExploreFragment extends Fragment {
 
                             }
                         }
-                        Query booksQuery1 = bookRef.limit(limit);
+                        Query booksQuery1 = bookRef.limit(limit-newlist.size());
                         booksQuery1.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
