@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -25,7 +27,6 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.reading7.Adapters.CommentsAdapter;
-import com.reading7.Adapters.FeedAdapter;
 import com.reading7.Dialogs.AddCommentDialog;
 import com.reading7.Objects.Comment;
 import com.reading7.Objects.Review;
@@ -33,6 +34,7 @@ import com.reading7.Objects.User;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,12 +63,40 @@ public class ReviewCommentsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
-        ((TextView) getView().findViewById(R.id.reviewTitle)).setText(getString(R.string.review_fragment_title) + " " + mReview.getReviewer_name());
-        initBackButton();
+       // ((TextView) getView().findViewById(R.id.reviewTitle)).setText(getString(R.string.review_fragment_title) + " " + mReview.getReviewer_name());
+       // initBackButton();
         initReviewDetails();
         initComments();
         initLikeMechanics();
         initAddCommentButton();
+
+        Animation slide_up = AnimationUtils.loadAnimation(getContext(), R.anim.slide_up);
+        getView().findViewById(R.id.layout).startAnimation(slide_up);
+//        getView().findViewById(R.id.layout).setOnTouchListener(new View.OnTouchListener() {
+//            float initialX, initialY;
+//            @Override
+//            public boolean onTouch(View view, MotionEvent motionEvent) {
+//                int action = MotionEventCompat.getActionMasked(motionEvent);
+//                switch (action) {
+//                    case MotionEvent.ACTION_DOWN:
+//                        initialX = motionEvent.getX();
+//                        initialY = motionEvent.getY();
+//                        return false;
+//
+//                    case MotionEvent.ACTION_UP:
+//                        float finalX = motionEvent.getX();
+//                        float finalY = motionEvent.getY();
+//
+//                        if (initialY < finalY) {
+//                            Animation slide_down = AnimationUtils.loadAnimation(getContext(), R.anim.slide_down);
+//                            getView().findViewById(R.id.layout).startAnimation(slide_down);
+//                        }
+//                        return true;
+//                    }
+//                return false;
+//            }
+//        });
+
     }
 
 
@@ -112,8 +142,7 @@ public class ReviewCommentsFragment extends Fragment {
         for (Comment comment : commentsMap.values()) {
             commentsList.add(comment);
         }
-        Collections.sort(commentsList, Collections.reverseOrder());
-
+        Collections.sort(commentsList);
 
         CommentsAdapter adapter = new CommentsAdapter(getActivity(), commentsList);
         commentsRV.setAdapter(adapter);
@@ -248,7 +277,5 @@ public class ReviewCommentsFragment extends Fragment {
             }
         });
     }
-
-
 
 }

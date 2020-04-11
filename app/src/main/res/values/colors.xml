@@ -12,6 +12,7 @@
 
     <color name="transparent">#00ff0000</color>
     <color name="transparentPrimaryDark">#DAFFC21C</color>
+    <color name="transparentGrey">#99BFBFBF</color>
     <color name="black">#000000</color>
     <color name="green">#21B160</color>
 

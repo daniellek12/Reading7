@@ -32,11 +32,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class HomeFragment extends Fragment {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private ArrayList<Post> posts = new ArrayList<Post>();
+    private SwipeRefreshLayout swipeRefresh;
 
     @Nullable
     @Override
@@ -51,7 +53,7 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ((BottomNavigationView)getActivity().findViewById(R.id.navigation)).setSelectedItemId(R.id.navigation_home);
-
+        initRefreshLayout();
         initPosts();
     }
 
@@ -97,6 +99,7 @@ public class HomeFragment extends Fragment {
                                             FeedAdapter adapter = new FeedAdapter(getActivity(), HomeFragment.this, posts, ((MainActivity)getActivity()).getUser());
                                             postsRV.setAdapter(adapter);
                                             enableClicks();
+                                            swipeRefresh.setRefreshing(false);
                                         }
 
                                     });
@@ -107,6 +110,7 @@ public class HomeFragment extends Fragment {
                             FeedAdapter adapter = new FeedAdapter(getActivity(), HomeFragment.this, posts,((MainActivity)getActivity()).getUser());
                             postsRV.setAdapter(adapter);
                             enableClicks();
+                            swipeRefresh.setRefreshing(false);
                         }
 
                     }
@@ -138,6 +142,23 @@ public class HomeFragment extends Fragment {
         }
     }
 
+
+    private void initRefreshLayout() {
+
+        swipeRefresh =  getView().findViewById(R.id.swipeRefresh);
+
+        swipeRefresh.setColorSchemeColors(getActivity().getResources().getColor(R.color.colorPrimaryDark),
+                                          getActivity().getResources().getColor(R.color.colorPrimaryDark),
+                                          getActivity().getResources().getColor(R.color.colorPrimaryDark));
+
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                posts.clear();
+                initPosts();
+            }
+        });
+    }
 
 
     private void disableClicks() {
