@@ -472,7 +472,7 @@ public class Utils {
                 return "לפני חודש";
             if (diffMonths == 2)
                 return "לפני חודשיים";
-            return "לפני " + diffMonths + "חודשים";
+            return "לפני " + diffMonths + " חודשים";
         } else {
             if (diffYears == 1)
                 return "לפני שנה";

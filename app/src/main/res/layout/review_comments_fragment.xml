@@ -41,7 +41,12 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/rounded_corners"
+        android:elevation="5dp"
         android:layoutDirection="rtl"
         android:paddingTop="10dp">
 
@@ -259,14 +264,23 @@
 
         </RelativeLayout>
 
+        <View
+            android:id="@+id/divider19"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_below="@id/likeLayout"
+            android:background="@color/lightGrey" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/commentsRV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/divider19"
+            android:background="@drawable/rounded_corners"
+            android:paddingBottom="5dp" />
+
 
     </RelativeLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/commentsRV"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/grey"
-        android:paddingBottom="5dp" />
 
 </LinearLayout>
