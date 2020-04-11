@@ -26,6 +26,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -38,6 +39,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.reading7.Adapters.ReviewListAdapter;
 import com.reading7.Dialogs.AddToShelfDialog;
+import com.reading7.Dialogs.InviteUserDialog;
 import com.reading7.Dialogs.RankBookDialog;
 import com.reading7.Objects.Book;
 import com.reading7.Objects.Comment;
@@ -47,7 +49,9 @@ import com.reading7.Objects.WishList;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static android.text.Layout.JUSTIFICATION_MODE_INTER_WORD;
 
@@ -67,6 +71,18 @@ public class BookFragment extends Fragment {
 
     private boolean isWishlist = false;
     private boolean isReviewed = false;
+    private boolean isReviewedWithContent = false;
+
+
+    public boolean isReviewedWithContent() {
+        return isReviewedWithContent;
+    }
+
+    public void setReviewedWithContent(boolean reviewedWithContent) {
+        isReviewedWithContent = reviewedWithContent;
+    }
+
+
 
     private Review mReview;
     private int mRank;
@@ -100,6 +116,7 @@ public class BookFragment extends Fragment {
         initBackButton();
         initScrollView();
         initShelfButton();
+        initInviteButton();
     }
 
     private void getBookInformation() {
@@ -205,7 +222,7 @@ public class BookFragment extends Fragment {
         final List<Review> tempList = new ArrayList<Review>();
         tempList.addAll(lstReviews);
         for (Review review : tempList) {
-            if (review.getReviewer_email().equals(mAuth.getCurrentUser().getEmail())) {
+            if (review.getReviewer_email().equals(mAuth.getCurrentUser().getEmail())){
                 isReviewed = true;
                 mRank = review.getRank();
                 mReviewTitle = review.getReview_title();
@@ -213,6 +230,8 @@ public class BookFragment extends Fragment {
                 lstReviews.remove(review);
                 lstReviews.add(0, review);
                 updateRankButton();
+                if( (!review.getReview_title().isEmpty())|| (!review.getReview_content().isEmpty()))
+                    isReviewedWithContent=true;
                 break;
             }
         }
@@ -511,7 +530,24 @@ public class BookFragment extends Fragment {
                 args.putString("book_title", mBook.getTitle());
 
                 dialog.setArguments(args);
-                dialog.setTargetFragment(BookFragment.this, 202);
+                dialog.setTargetFragment(BookFragment.this, 404);
+                dialog.show(getActivity().getSupportFragmentManager(), "example dialog");
+            }
+        });
+    }
+
+    private void initInviteButton() {
+        ImageButton inviteButton = getActivity().findViewById(R.id.button_invite_user);
+        inviteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                InviteUserDialog dialog = new InviteUserDialog();
+
+                Bundle args = new Bundle();
+                args.putString("book_title", mBook.getTitle());
+
+                dialog.setArguments(args);
+                dialog.setTargetFragment(BookFragment.this, 505);
                 dialog.show(getActivity().getSupportFragmentManager(), "example dialog");
             }
         });
@@ -532,6 +568,9 @@ public class BookFragment extends Fragment {
         getActivity().findViewById(R.id.button_wishlist).setVisibility(View.VISIBLE);
         getActivity().findViewById(R.id.button_already_read).setVisibility(View.GONE);
     }
+
+
+
 
 
 

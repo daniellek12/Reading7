@@ -399,6 +399,20 @@
                     android:src="@drawable/bookmark_plus"
                     android:tint="@color/white" />
 
+                <ImageButton
+                    android:id="@+id/button_invite_user"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="60dp"
+                    android:layout_marginTop="1dp"
+                    android:background="@drawable/rounded_button"
+                    android:backgroundTint="@color/colorPrimaryDark"
+                    android:elevation="2dp"
+                    android:src="@drawable/search"
+                    android:tint="@color/white" />
+
             </RelativeLayout>
 
         </RelativeLayout>

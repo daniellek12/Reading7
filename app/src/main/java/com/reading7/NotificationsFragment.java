@@ -85,7 +85,7 @@ public class NotificationsFragment extends Fragment {
                     }
 
                     notifications.addAll(newlist);
-                    Collections.sort(notifications, new Notification.SortByDate());
+                    //Collections.sort(notifications, new Notification.SortByDate()); already add order by time
                     final NotificationListAdapter adapter = new NotificationListAdapter(getActivity(), notifications,getActivity());
                     notificationsRV.setAdapter(adapter);
 

@@ -88,11 +88,11 @@ public class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
 
-    private class OpenBookOnClick implements View.OnClickListener {
+    private class OpenReviewOnBookOnClick implements View.OnClickListener {
 
         private String book_title;
 
-        public OpenBookOnClick(String book_title) {
+        public OpenReviewOnBookOnClick(String book_title) {
             this.book_title = book_title;
         }
 
@@ -124,12 +124,48 @@ public class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
     }
 
+    private class OpenBookOnClick implements View.OnClickListener {
+
+        private String book_title;
+
+        public OpenBookOnClick(String book_title) {
+            this.book_title = book_title;
+        }
+
+        @Override
+        public void onClick(View v) {
+
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            CollectionReference requestCollectionRef = db.collection("Books");
+            Query requestQuery = requestCollectionRef.whereEqualTo("title", book_title);
+            requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+
+                        Book b  = null;
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            b = document.toObject(Book.class);
+                            ((MainActivity) mActivity).loadFragment(new BookFragment(b));
+                            return;
+                        }
+                        Toast.makeText(mContext, "הספר לא קיים יותר במאגר", Toast.LENGTH_SHORT).show();
+
+
+
+                    }
+
+                }
+            });
+        }
+    }
+
 
     public void deleteNotification(final int position) {
 
         final Notification notification = notifications.get(position);
         CollectionReference requestsRef = db.collection("Users").document(mAuth.getCurrentUser().getEmail()).collection("Notifications");
-        Query requestQuery = requestsRef.whereEqualTo("time", notification.getTime()).whereEqualTo("from", notification.getFrom()).whereEqualTo("type", notification.getType());
+        Query requestQuery = requestsRef.whereEqualTo("book_title", notification.getBook_title()).whereEqualTo("from", notification.getFrom()).whereEqualTo("type", notification.getType());
         requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -315,8 +351,14 @@ public class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.V
             holder.clickNotificationBtn.setOnClickListener(new OpenProfileOnClick(notification.getFrom()));
             holder.content.setText((notification.getType()));
 
-        } else {
+        }
+        if (notification.getType().equals(mContext.getResources().getString(R.string.invite_notificiation))) {
             holder.clickNotificationBtn.setOnClickListener(new OpenBookOnClick(notification.getBook_title()));
+            holder.content.setText((notification.getType()) + " על הספר " + notification.getBook_title());
+        }
+
+        else {
+            holder.clickNotificationBtn.setOnClickListener(new OpenReviewOnBookOnClick(notification.getBook_title()));
             holder.content.setText((notification.getType()) + " על הספר " + notification.getBook_title());
 
         }

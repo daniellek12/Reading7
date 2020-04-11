@@ -91,6 +91,8 @@ public class Notification {
 
             if(type.equals("הגיב על הביקורת שלך")&&(((Notification) object).getType()).equals("הגיב על הביקורת שלך"))
                 same = (this.book_title.equals(((Notification) object).book_title))  && (this.user_name.equals(((Notification) object).user_name));
+            if(type.equals("הזמין אותך לקרוא ספר- לחץ כאן כדי לגלות איזה")&&(((Notification) object).getType()).equals("הזמין אותך לקרוא ספר- לחץ כאן כדי לגלות איזה"))
+                same = (this.book_title.equals(((Notification) object).book_title))  && (this.user_name.equals(((Notification) object).user_name));
             if(type.equals("אהב את הביקורת שלך")&&(((Notification) object).getType()).equals("אהב את הביקורת שלך"))
                 same = (this.book_title.equals(((Notification) object).book_title))  && (this.user_name.equals(((Notification) object).user_name));
             else {

@@ -1,14 +1,17 @@
 package com.reading7;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -37,7 +40,7 @@ public class MainActivity extends AppCompatActivity
         navigation.setOnNavigationItemSelectedListener(this);
 
         initCurrentUser();
-
+        final Activity a =this;
 
         final Intent intent = getIntent();
 
@@ -50,6 +53,27 @@ public class MainActivity extends AppCompatActivity
                     type.equals( getResources().getString(R.string.request_approved_notificiation))) {
                 loadFragment(new PublicProfileFragment(intent.getStringExtra("from_email")));
                 return;
+            }
+            if(type.equals(getResources().getString(R.string.invite_notificiation))){
+                //loadFragment(new BookFragment(intent.getStringExtra("from_email")));
+                Utils.enableDisableClicks(this,(ViewGroup) findViewById(android.R.id.content).getRootView()
+                        ,false);
+                Query bookRef = FirebaseFirestore.getInstance().collection("Books").whereEqualTo("title", intent.getStringExtra("book_title"));
+                bookRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (final DocumentSnapshot doc : task.getResult()) {
+                                Book b = doc.toObject(Book.class);
+                                loadFragment(new BookFragment(b));
+                                Utils.enableDisableClicks(a,(ViewGroup) findViewById(android.R.id.content).getRootView()
+                                        ,true);
+
+                            }
+                        }
+                    }
+                });
+
             }
 
             if((type.equals(getResources().getString(R.string.like_notificiation)))||(type.equals(getResources().getString(R.string.comment_notificiation)))){

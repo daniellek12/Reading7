@@ -91,7 +91,7 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
 
         final Review review = reviews.get(i);
 
-        if (i == 0 && ((BookFragment) fragment).isReviewed()) {
+        if (i == 0 && ((BookFragment) fragment).isReviewedWithContent()) {
             viewHolder.relativeLayout.setBackgroundColor(mContext.getResources().getColor(R.color.grey));
             viewHolder.deleteBtn.setVisibility(View.VISIBLE);
             viewHolder.deleteBtn.setOnClickListener(new DeleteReviewOnClick(review.getReviewer_email(), review.getBook_title()));
@@ -206,6 +206,8 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
         @Override
         public void onClick(View v) {
             ((BookFragment) fragment).setReviewed(false);
+            ((BookFragment) fragment).setReviewedWithContent(false);
+
             reviews.remove(0);
             notifyItemRemoved(0);
             CollectionReference requestsRef = db.collection("Reviews");
