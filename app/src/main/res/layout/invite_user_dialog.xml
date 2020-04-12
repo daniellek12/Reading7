@@ -15,22 +15,24 @@
         app:srcCompat="@color/colorPrimaryDark" />
 
     <ImageView
-        android:id="@+id/bookmark"
+        android:id="@+id/share_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
-        app:srcCompat="@drawable/bookmark"
+        app:srcCompat="@drawable/ic_share_icon"
         android:scaleX="2.5"
         android:scaleY="2.5"
         android:tint="@color/darkGrey"
         android:foregroundTint="@color/white"/>
 
+
+
     <TextView
         android:id="@+id/ratingBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/bookmark"
+        android:layout_below="@id/share_button"
         android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
         android:text="@string/choose_friend_email"/>

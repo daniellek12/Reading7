@@ -2,6 +2,7 @@ package com.reading7.Dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -40,6 +41,7 @@ public class InviteUserDialog extends AppCompatDialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         super.onCreateDialog(savedInstanceState);
+        final String book_title = getArguments().getString("book_title");
 
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
@@ -47,6 +49,11 @@ public class InviteUserDialog extends AppCompatDialogFragment {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         view = getActivity().getLayoutInflater().inflate(R.layout.invite_user_dialog, null);
         final EditText emailText = view.findViewById(R.id.user_email);
+        view.findViewById(R.id.share_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ShareInviteOutsideTheApp(book_title);
+            }});
 
         view.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,7 +84,6 @@ public class InviteUserDialog extends AppCompatDialogFragment {
                             return;}
                             else {
 
-                                String book_title = getArguments().getString("book_title");
 
                                 addNotificationInviteToRead(to_email, book_title);
                             }
@@ -130,5 +136,14 @@ public class InviteUserDialog extends AppCompatDialogFragment {
         }
     }
 
+    private void ShareInviteOutsideTheApp(String book_title){
+        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        String shareBody = "כדאי לך לנסות את הספר: "+book_title;
+        String shareSubject = "אני רוצה להמליץ לך על ספר שווה קריאה";
+        sharingIntent.putExtra(Intent.EXTRA_TEXT,shareBody);
+        sharingIntent.putExtra(Intent.EXTRA_SUBJECT,shareSubject);
+        startActivity(Intent.createChooser(sharingIntent,"שתף באמצעות"));
+    }
 
 }
