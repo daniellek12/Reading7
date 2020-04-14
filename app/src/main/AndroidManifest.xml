@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ReviewCommentsFragment"></activity>
+        <activity android:name=".AchievementsFragment"></activity>
+        <activity android:name=".ReviewCommentsFragment" />
         <activity android:name=".Dialogs.AddCommentDialog" />
         <activity android:name=".Dialogs.ChangePasswordDialog" />
         <activity android:name=".PrivacySettingsFragment" />

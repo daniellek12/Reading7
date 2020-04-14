@@ -83,7 +83,6 @@ public class BookFragment extends Fragment {
     }
 
 
-
     private Review mReview;
     private int mRank;
     private String mReviewTitle;
@@ -222,7 +221,7 @@ public class BookFragment extends Fragment {
         final List<Review> tempList = new ArrayList<Review>();
         tempList.addAll(lstReviews);
         for (Review review : tempList) {
-            if (review.getReviewer_email().equals(mAuth.getCurrentUser().getEmail())){
+            if (review.getReviewer_email().equals(mAuth.getCurrentUser().getEmail())) {
                 isReviewed = true;
                 mRank = review.getRank();
                 mReviewTitle = review.getReview_title();
@@ -230,8 +229,8 @@ public class BookFragment extends Fragment {
                 lstReviews.remove(review);
                 lstReviews.add(0, review);
                 updateRankButton();
-                if( (!review.getReview_title().isEmpty())|| (!review.getReview_content().isEmpty()))
-                    isReviewedWithContent=true;
+                if ((!review.getReview_title().isEmpty()) || (!review.getReview_content().isEmpty()))
+                    isReviewedWithContent = true;
                 break;
             }
         }
@@ -446,7 +445,7 @@ public class BookFragment extends Fragment {
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        switch (requestCode){
+        switch (requestCode) {
 
             case 202:
                 float avg = data.getFloatExtra("avg", 0);
@@ -568,10 +567,6 @@ public class BookFragment extends Fragment {
         getActivity().findViewById(R.id.button_wishlist).setVisibility(View.VISIBLE);
         getActivity().findViewById(R.id.button_already_read).setVisibility(View.GONE);
     }
-
-
-
-
 
 
 }

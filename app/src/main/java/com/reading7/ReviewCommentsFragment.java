@@ -63,8 +63,8 @@ public class ReviewCommentsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
-       // ((TextView) getView().findViewById(R.id.reviewTitle)).setText(getString(R.string.review_fragment_title) + " " + mReview.getReviewer_name());
-       // initBackButton();
+        // ((TextView) getView().findViewById(R.id.reviewTitle)).setText(getString(R.string.review_fragment_title) + " " + mReview.getReviewer_name());
+        initBackButton();
         initReviewDetails();
         initComments();
         initLikeMechanics();
@@ -72,30 +72,6 @@ public class ReviewCommentsFragment extends Fragment {
 
         Animation slide_up = AnimationUtils.loadAnimation(getContext(), R.anim.slide_up);
         getView().findViewById(R.id.layout).startAnimation(slide_up);
-//        getView().findViewById(R.id.layout).setOnTouchListener(new View.OnTouchListener() {
-//            float initialX, initialY;
-//            @Override
-//            public boolean onTouch(View view, MotionEvent motionEvent) {
-//                int action = MotionEventCompat.getActionMasked(motionEvent);
-//                switch (action) {
-//                    case MotionEvent.ACTION_DOWN:
-//                        initialX = motionEvent.getX();
-//                        initialY = motionEvent.getY();
-//                        return false;
-//
-//                    case MotionEvent.ACTION_UP:
-//                        float finalX = motionEvent.getX();
-//                        float finalY = motionEvent.getY();
-//
-//                        if (initialY < finalY) {
-//                            Animation slide_down = AnimationUtils.loadAnimation(getContext(), R.anim.slide_down);
-//                            getView().findViewById(R.id.layout).startAnimation(slide_down);
-//                        }
-//                        return true;
-//                    }
-//                return false;
-//            }
-//        });
 
     }
 
@@ -152,6 +128,7 @@ public class ReviewCommentsFragment extends Fragment {
         getView().findViewById(R.id.backButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                sendResult(303, mReview.getReview_id());
                 getActivity().onBackPressed();
             }
         });
@@ -169,7 +146,7 @@ public class ReviewCommentsFragment extends Fragment {
         else
             setLikeButton(false);
 
-        ((TextView)getView().findViewById(R.id.likeNum)).setText(Integer.toString(mReview.getLikes_count()));
+        ((TextView) getView().findViewById(R.id.likeNum)).setText(Integer.toString(mReview.getLikes_count()));
         getView().findViewById(R.id.likeBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -183,7 +160,7 @@ public class ReviewCommentsFragment extends Fragment {
                     db.collection("Reviews").document(mReview.getReview_id()).update("likes_count", curr_num - 1);
 
                     setLikeButton(false);
-                    ((TextView)getView().findViewById(R.id.likeNum)).setText("" + (curr_num - 1));
+                    ((TextView) getView().findViewById(R.id.likeNum)).setText("" + (curr_num - 1));
 
                 } else {
                     likedReviews.add(id);
@@ -192,7 +169,7 @@ public class ReviewCommentsFragment extends Fragment {
                     db.collection("Reviews").document(mReview.getReview_id()).update("likes_count", curr_num + 1);
 
                     setLikeButton(true);
-                    ((TextView)getView().findViewById(R.id.likeNum)).setText("" + (curr_num + 1));
+                    ((TextView) getView().findViewById(R.id.likeNum)).setText("" + (curr_num + 1));
 
                     addNotificationLike(mReview.getReviewer_email(), book_title, mReview.getIs_notify());
                 }
@@ -250,7 +227,7 @@ public class ReviewCommentsFragment extends Fragment {
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        switch (requestCode){
+        switch (requestCode) {
 
             case 303:
                 updateReviewAndComments();
@@ -273,9 +250,24 @@ public class ReviewCommentsFragment extends Fragment {
 
                     mReview.setComments(review.getComments());
                     initComments();
+                    ((TextView) getView().findViewById(R.id.likeNum)).setText(String.valueOf(mReview.getLikes_count()));
+                    ((TextView) getView().findViewById(R.id.commentsNum)).setText(String.valueOf(mReview.getComments().size()));
                 }
             }
         });
+    }
+
+
+    public void sendResult(int REQUEST_CODE, String review_id) {
+        Intent intent = new Intent();
+        intent.putExtra("review_id", review_id);
+
+        if (getTargetFragment() != null)
+            getTargetFragment().onActivityResult(getTargetRequestCode(), REQUEST_CODE, intent);
+    }
+
+    public String getReviewId() {
+        return mReview.getReview_id();
     }
 
 }

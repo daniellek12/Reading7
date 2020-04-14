@@ -203,7 +203,9 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         holder.countersLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainActivity)mContext).addFragment(new ReviewCommentsFragment(post.toReview(), mUser));
+                ReviewCommentsFragment mReviewCommentsFragment = new ReviewCommentsFragment(post.toReview(), mUser);
+                mReviewCommentsFragment.setTargetFragment(fragment, 303);
+                ((MainActivity) mContext).addFragment(mReviewCommentsFragment);
             }
         });
     }
