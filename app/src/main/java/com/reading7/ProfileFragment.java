@@ -30,6 +30,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.reading7.Adapters.CustomShelvesAdapter;
 import com.reading7.Adapters.ProfileShelfAdapter;
+import com.reading7.Objects.Avatar;
 import com.reading7.Objects.Review;
 import com.reading7.Objects.Shelf;
 import com.reading7.Objects.User;
@@ -107,23 +108,22 @@ public class ProfileFragment extends Fragment {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
 
+                        User user = document.toObject(User.class);
+
                         TextView userName = getActivity().findViewById(R.id.userName);
-                        userName.setText(document.getData().get("full_name").toString());
+                        userName.setText(user.getFull_name());
 
                         TextView userAge = getActivity().findViewById(R.id.age);
-                        userAge.setText("גיל: " + calculateAge(document.getData().get("birth_date").toString()));
+                        userAge.setText("גיל: " + calculateAge(user.getBirth_date()));
 
                         CircleImageView profileImage = getActivity().findViewById(R.id.profileImage);
-                        ArrayList<Integer> avatar_details = (ArrayList<Integer>) document.getData().get("avatar_details");
-                        Utils.loadAvatar(getContext(), profileImage, avatar_details);
+                        user.getAvatar().loadIntoImage(getContext(), profileImage);
 
                         TextView followers = getActivity().findViewById(R.id.followers);
-                        ArrayList<String> arr = (ArrayList<String>) document.getData().get("followers");
-                        followers.setText(Integer.toString(arr.size()));
+                        followers.setText(Integer.toString(user.getFollowers().size()));
 
                         TextView following = getActivity().findViewById(R.id.following);
-                        arr = (ArrayList<String>) document.getData().get("following");
-                        following.setText(Integer.toString(arr.size()));
+                        following.setText(Integer.toString(user.getFollowing().size()));
 
                         //initPrivateBtn();
                         initLogOutBtn();

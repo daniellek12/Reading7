@@ -16,6 +16,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 
 import com.reading7.Dialogs.EditAvatarDialog;
+import com.reading7.Objects.Avatar;
 import com.reading7.Objects.User;
 
 import java.text.SimpleDateFormat;
@@ -26,7 +27,7 @@ import java.util.Locale;
 
 public class SignUpStep1 extends Fragment {
 
-    private ArrayList<Integer> avatar_details = new ArrayList<Integer>();
+    private Avatar avatar = new Avatar(1,1,1,1,1);
 
     @Nullable
     @Override
@@ -70,7 +71,7 @@ public class SignUpStep1 extends Fragment {
             return null;
         }
 
-        return new User(name, email, birth_date, avatar_details);
+        return new User(name, email, birth_date, avatar);
     }
 
     private String getName() {
@@ -112,10 +113,7 @@ public class SignUpStep1 extends Fragment {
 
     private void initAvatarDetails(){
 
-        for(int i=0; i<5; i++)
-            avatar_details.add(1);
-
-        Utils.loadAvatar(getContext(), (CircleImageView) getView().findViewById(R.id.profile_image), avatar_details);
+        avatar.loadIntoImage(getContext(),(CircleImageView)getView().findViewById(R.id.profile_image));
     }
 
     private void setupAvatarDialog() {
@@ -123,7 +121,7 @@ public class SignUpStep1 extends Fragment {
         getView().findViewById(R.id.profile_image).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EditAvatarDialog dialog = new EditAvatarDialog(avatar_details);
+                EditAvatarDialog dialog = new EditAvatarDialog(avatar);
                 dialog.setTargetFragment(SignUpStep1.this, 100);
                 dialog.show(getActivity().getSupportFragmentManager(), "edit avater");
             }
@@ -132,7 +130,7 @@ public class SignUpStep1 extends Fragment {
         getView().findViewById(R.id.editIcon).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EditAvatarDialog dialog = new EditAvatarDialog(avatar_details);
+                EditAvatarDialog dialog = new EditAvatarDialog(avatar);
                 dialog.setTargetFragment(SignUpStep1.this, 100);
                 dialog.show(getActivity().getSupportFragmentManager(), "edit avater");
             }
@@ -179,10 +177,9 @@ public class SignUpStep1 extends Fragment {
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // Make sure fragment codes match up
         if (requestCode == 100) {
-            this.avatar_details = data.getIntegerArrayListExtra("avatar_details");
-            Utils.loadAvatar(getContext(),(CircleImageView) getView().findViewById(R.id.profile_image), avatar_details);
+            this.avatar = (Avatar)data.getSerializableExtra("Avatar");
+            avatar.loadIntoImage(getContext(),(CircleImageView) getView().findViewById(R.id.profile_image));
         }
     }
 

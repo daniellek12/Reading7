@@ -96,7 +96,7 @@ public class ReviewCommentsFragment extends Fragment {
         ((RatingBar) getView().findViewById(R.id.ratingBar)).setRating(mReview.getRank());
 
         CircleImageView profileImage = getView().findViewById(R.id.profileImage);
-        Utils.loadAvatar(getContext(), profileImage, mReview.getReviewer_avatar());
+        mReview.getReviewer_avatar().loadIntoImage(getContext(), profileImage);
 
         String reviewTime = Utils.RelativeDateDisplay(Timestamp.now().toDate().getTime() -
                 mReview.getReview_time().toDate().getTime());
@@ -203,7 +203,7 @@ public class ReviewCommentsFragment extends Fragment {
             notificationMessegae.put("user_name", mUser.getFull_name());
             notificationMessegae.put("book_title", book_title);
             notificationMessegae.put("time", Timestamp.now());
-            notificationMessegae.put("user_avatar", mUser.getAvatar_details());
+            notificationMessegae.put("user_avatar", mUser.getAvatar());
 
             db.collection("Users/" + to_email + "/Notifications").add(notificationMessegae);
         }

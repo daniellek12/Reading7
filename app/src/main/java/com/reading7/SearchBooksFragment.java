@@ -111,7 +111,8 @@ public class SearchBooksFragment extends Fragment implements androidx.appcompat.
                 }
                 books.addAll(newlist);
 //                Toast.makeText(getContext(), "list size: ".concat(Integer.toString(books.size())), Toast.LENGTH_SHORT).show();
-                adapter.notifyDataSetChanged();
+                if(adapter != null)
+                    adapter.notifyDataSetChanged();
             }
         });
         return true;

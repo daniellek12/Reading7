@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item>
+    <item android:id="@+id/background">
         <shape
             android:shape="oval"
             android:tint="@color/white">
@@ -22,6 +22,10 @@
 
     <item android:id="@+id/hair"
         android:drawable="@drawable/hair1"
+        android:gravity="bottom" />
+
+    <item android:id="@+id/glasses"
+        android:drawable="@color/transparent"
         android:gravity="bottom" />
 
 </layer-list>

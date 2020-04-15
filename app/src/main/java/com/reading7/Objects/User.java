@@ -1,16 +1,13 @@
 package com.reading7.Objects;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
 
 public class User {
 
     private String full_name;                       // user's name
     private String email;                           // user's email
     private String birth_date;                      // user's birth date
-    private ArrayList<Integer> avatar_details;      // skin color, eyes color, hair color, hair type, shirt color
+   // private ArrayList<Integer> avatar_details;      // skin color, eyes color, hair color, hair type, shirt color
     private ArrayList<String> followers;            // Emails list of the followers
     private ArrayList<String> following;            // Emails list of the following
     private ArrayList<String> follow_requests;      // Emails list of the followers requested to follow user
@@ -21,6 +18,7 @@ public class User {
     private String token_id;
     private Boolean is_private;                     //true if profile listed as private
     private Boolean is_notify;
+    private Avatar avatar;
 
     public User() {
         this.full_name = "";
@@ -33,14 +31,14 @@ public class User {
         this.favourite_books = new ArrayList<>();
         this.favourite_genres = new ArrayList<>();
         this.liked_reviews = new ArrayList<>();
-        this.avatar_details = new ArrayList<>();
+        this.avatar = new Avatar(1,1,1,1,1);
         this.is_private = false; // default is public (as in Instagram)
         this.token_id = "";
         this.is_notify = true;
     }
 
     //Don't use this constructor, should only be used in SignUpStep1
-    public User(String full_name, String email, String birth_date, ArrayList<Integer> avatar_details) {
+    public User(String full_name, String email, String birth_date, Avatar avatar) {
         this.full_name = full_name;
         this.email = email;
         this.birth_date = birth_date;
@@ -51,7 +49,7 @@ public class User {
         this.favourite_books = new ArrayList<>();
         this.favourite_genres = new ArrayList<>();
         this.liked_reviews = new ArrayList<>();
-        this.avatar_details = avatar_details;
+        this.avatar = avatar;
         this.is_private = false;
         this.token_id = "";
         this.is_notify = true;
@@ -59,7 +57,7 @@ public class User {
     }
 
 
-    public User(String full_name, String email, String birth_date, ArrayList<String> followers, ArrayList<String> following, ArrayList<String> follow_requests, ArrayList<String> last_searches, ArrayList<String> favourite_books, ArrayList<String> favourite_genres, ArrayList<String> liked_reviews, ArrayList<Integer> avatar_details, Boolean is_private) {
+    public User(String full_name, String email, String birth_date, ArrayList<String> followers, ArrayList<String> following, ArrayList<String> follow_requests, ArrayList<String> last_searches, ArrayList<String> favourite_books, ArrayList<String> favourite_genres, ArrayList<String> liked_reviews, Avatar avatar, Boolean is_private) {
         this.full_name = full_name;
         this.email = email;
         this.birth_date = birth_date;
@@ -70,7 +68,7 @@ public class User {
         this.favourite_books = favourite_books;
         this.favourite_genres = favourite_genres;
         this.liked_reviews = liked_reviews;
-        this.avatar_details = avatar_details;
+        this.avatar = avatar;
         this.is_private = is_private;
         this.token_id = "";
         this.is_notify = true;
@@ -180,12 +178,12 @@ public class User {
         this.liked_reviews.add(id);
     }
 
-    public ArrayList<Integer> getAvatar_details() {
-        return avatar_details;
+    public Avatar getAvatar() {
+        return avatar;
     }
 
-    public void setAvatar_details(ArrayList<Integer> avatar_details) {
-        this.avatar_details = avatar_details;
+    public void setAvatar(Avatar avatar) {
+        this.avatar = avatar;
     }
 
     public Boolean getIs_notify() {

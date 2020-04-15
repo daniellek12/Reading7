@@ -13,14 +13,13 @@ public class Notification {
     private String user_name;
     private String book_title;
     private Timestamp time;
-    private ArrayList<Integer> user_avatar;
-
+    private Avatar user_avatar;
 
     public Notification() {
 
     }
 
-    public Notification(String type, String from, String user_name, String book_title, Timestamp time, ArrayList<Integer> user_avatar) {
+    public Notification(String type, String from, String user_name, String book_title, Timestamp time, Avatar user_avatar) {
         this.type = type;
         this.from = from;
         this.user_name = user_name;
@@ -69,11 +68,11 @@ public class Notification {
         this.time = time;
     }
 
-    public ArrayList<Integer> getUser_avatar() {
+    public Avatar getUser_avatar() {
         return user_avatar;
     }
 
-    public void setUser_avatar(ArrayList<Integer> user_avatar) {
+    public void setUser_avatar(Avatar user_avatar) {
         this.user_avatar = user_avatar;
     }
 
@@ -89,23 +88,22 @@ public class Notification {
 
         if (object != null && object instanceof Notification) {
 
-            if(type.equals("הגיב על הביקורת שלך")&&(((Notification) object).getType()).equals("הגיב על הביקורת שלך"))
-                same = (this.book_title.equals(((Notification) object).book_title))  && (this.user_name.equals(((Notification) object).user_name));
-            if(type.equals("הזמין אותך לקרוא ספר- לחץ כאן כדי לגלות איזה")&&(((Notification) object).getType()).equals("הזמין אותך לקרוא ספר- לחץ כאן כדי לגלות איזה"))
-                same = (this.book_title.equals(((Notification) object).book_title))  && (this.user_name.equals(((Notification) object).user_name));
-            if(type.equals("אהב את הביקורת שלך")&&(((Notification) object).getType()).equals("אהב את הביקורת שלך"))
-                same = (this.book_title.equals(((Notification) object).book_title))  && (this.user_name.equals(((Notification) object).user_name));
+            if (type.equals("הגיב על הביקורת שלך") && (((Notification) object).getType()).equals("הגיב על הביקורת שלך"))
+                same = (this.book_title.equals(((Notification) object).book_title)) && (this.user_name.equals(((Notification) object).user_name));
+            if (type.equals("הזמין אותך לקרוא ספר- לחץ כאן כדי לגלות איזה") && (((Notification) object).getType()).equals("הזמין אותך לקרוא ספר- לחץ כאן כדי לגלות איזה"))
+                same = (this.book_title.equals(((Notification) object).book_title)) && (this.user_name.equals(((Notification) object).user_name));
+            if (type.equals("אהב את הביקורת שלך") && (((Notification) object).getType()).equals("אהב את הביקורת שלך"))
+                same = (this.book_title.equals(((Notification) object).book_title)) && (this.user_name.equals(((Notification) object).user_name));
             else {
-                if((type.equals("הסכים שתעקוב אחריו")&&(((Notification) object).getType()).equals("הסכים שתעקוב אחריו")))
+                if ((type.equals("הסכים שתעקוב אחריו") && (((Notification) object).getType()).equals("הסכים שתעקוב אחריו")))
                     same = (this.user_name.equals(((Notification) object).user_name));
-                else if((!type.equals("הסכים שתעקוב אחריו")&&!(((Notification) object).getType()).equals("הסכים שתעקוב אחריו"))
-                &&(!type.equals("אהב את הביקורת שלך")&&!(((Notification) object).getType()).equals("אהב את הביקורת שלך"))&&
-                (!type.equals("הגיב על הביקורת שלך")&&!(((Notification) object).getType()).equals("הגיב על הביקורת שלך"))){
+                else if ((!type.equals("הסכים שתעקוב אחריו") && !(((Notification) object).getType()).equals("הסכים שתעקוב אחריו"))
+                        && (!type.equals("אהב את הביקורת שלך") && !(((Notification) object).getType()).equals("אהב את הביקורת שלך")) &&
+                        (!type.equals("הגיב על הביקורת שלך") && !(((Notification) object).getType()).equals("הגיב על הביקורת שלך"))) {
                     same = (this.user_name.equals(((Notification) object).user_name));
                 }
 
             }
-
 
 
         }

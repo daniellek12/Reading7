@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.reading7.MainActivity;
+import com.reading7.Objects.Avatar;
 import com.reading7.PublicProfileFragment;
 import com.reading7.R;
 import com.reading7.Objects.User;
@@ -85,7 +86,7 @@ public class SearchFriendsAdapter extends BaseAdapter implements Filterable {
             @Override
             protected void publishResults(CharSequence constraint,
                                           FilterResults results) {
-                users = (ArrayList<User>)results.values;
+                users = (ArrayList<User>) results.values;
                 notifyDataSetChanged();
             }
         };
@@ -113,18 +114,18 @@ public class SearchFriendsAdapter extends BaseAdapter implements Filterable {
         holder.name.setText(users.get(position).getFull_name());
         holder.toDelete.setVisibility(View.GONE);
         holder.image.setImageDrawable(mContext.getResources().getDrawable(R.drawable.avatar_layout));
-        ArrayList<Integer> ad = users.get(position).getAvatar_details();
+        Avatar avatar = users.get(position).getAvatar();
 //        Log.d("SFA", ad.toString());
-        if (ad.size() <= 0){
+        if (avatar == null) {
             Log.d("SFA", users.get(position).getFull_name());
-        }else {
-            Utils.loadAvatar(mContext, holder.image, ad);
+        } else {
+            avatar.loadIntoImage(mContext, holder.image);
         }
 
         holder.container.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainActivity)mContext).addFragment(new PublicProfileFragment(users.get(position).getEmail()));
+                ((MainActivity) mContext).addFragment(new PublicProfileFragment(users.get(position).getEmail()));
                 Utils.closeKeyboard(mContext);
             }
         });

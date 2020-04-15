@@ -6,13 +6,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
+import android.graphics.drawable.VectorDrawable;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
 
+import com.reading7.Objects.Avatar;
 import com.reading7.R;
 import com.reading7.Utils;
 
@@ -21,13 +24,17 @@ import java.util.ArrayList;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat;
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import static com.reading7.Utils.getColor;
+import static com.reading7.Utils.getDrawable;
 
 public class EditAvatarDialog extends AppCompatDialogFragment {
 
-    private ArrayList<Integer> avatar_details;
+    private Avatar avatar;
 
-    private CircleImageView avatar;
+    private CircleImageView imageView;
     private LayerDrawable layer;
 
     private Button bodyBtn;
@@ -43,8 +50,8 @@ public class EditAvatarDialog extends AppCompatDialogFragment {
     private RadioGroup hairColorButtons;
 
 
-    public EditAvatarDialog(ArrayList<Integer> avatar_details) {
-        this.avatar_details = avatar_details;
+    public EditAvatarDialog(Avatar avatar) {
+        this.avatar = avatar;
     }
 
     @NonNull
@@ -61,11 +68,9 @@ public class EditAvatarDialog extends AppCompatDialogFragment {
             }
         });
 
-        avatar = view.findViewById(R.id.image);
-        layer = (LayerDrawable) avatar.getDrawable();
-
-        Utils.loadAvatar(getContext(), avatar, avatar_details);
-        changeHairButtonsColor(view, Utils.getColor(getContext(), "hair" + avatar_details.get(3)));
+        imageView = view.findViewById(R.id.image);
+        avatar.loadIntoImage(getContext(),imageView);
+        layer = (LayerDrawable) imageView.getDrawable();
 
         initTabs(view);
         initSkinButtons(view);
@@ -151,26 +156,26 @@ public class EditAvatarDialog extends AppCompatDialogFragment {
                 switch (checked) {
                     case R.id.skin1:
                         layer.setDrawableByLayerId(R.id.skin, getResources().getDrawable(R.drawable.skin1));
-                        avatar_details.set(0, 1);
+                        avatar.setSkinColor(1);
                         break;
                     case R.id.skin2:
                         layer.setDrawableByLayerId(R.id.skin, getResources().getDrawable(R.drawable.skin2));
-                        avatar_details.set(0, 2);
+                        avatar.setSkinColor(2);
                         break;
                     case R.id.skin3:
                         layer.setDrawableByLayerId(R.id.skin, getResources().getDrawable(R.drawable.skin3));
-                        avatar_details.set(0, 3);
+                        avatar.setSkinColor(3);
                         break;
                     case R.id.skin4:
                         layer.setDrawableByLayerId(R.id.skin, getResources().getDrawable(R.drawable.skin4));
-                        avatar_details.set(0, 4);
+                        avatar.setSkinColor(4);
                         break;
                     case R.id.skin5:
                         layer.setDrawableByLayerId(R.id.skin, getResources().getDrawable(R.drawable.skin5));
-                        avatar_details.set(0, 5);
+                        avatar.setSkinColor(5);
                         break;
                 }
-                avatar.setImageDrawable(layer);
+                imageView.setImageDrawable(layer);
             }
         });
     }
@@ -186,26 +191,26 @@ public class EditAvatarDialog extends AppCompatDialogFragment {
                 switch (checked) {
                     case R.id.eyes1:
                         eyes.setTint(getResources().getColor(R.color.eyes1));
-                        avatar_details.set(1, 1);
+                        avatar.setEyeColor(1);
                         break;
                     case R.id.eyes2:
                         eyes.setTint(getResources().getColor(R.color.eyes2));
-                        avatar_details.set(1, 2);
+                        avatar.setEyeColor(2);
                         break;
                     case R.id.eyes3:
                         eyes.setTint(getResources().getColor(R.color.eyes3));
-                        avatar_details.set(1, 3);
+                        avatar.setEyeColor(3);
                         break;
                     case R.id.eyes4:
                         eyes.setTint(getResources().getColor(R.color.eyes4));
-                        avatar_details.set(1, 4);
+                        avatar.setEyeColor(4);
                         break;
                     case R.id.eyes5:
                         eyes.setTint(getResources().getColor(R.color.eyes5));
-                        avatar_details.set(1, 5);
+                        avatar.setEyeColor(5);
                         break;
                 }
-                avatar.setImageDrawable(layer);
+                imageView.setImageDrawable(layer);
             }
         });
     }
@@ -230,42 +235,29 @@ public class EditAvatarDialog extends AppCompatDialogFragment {
                 switch (checked) {
                     case R.id.hairColor1:
                         hair.setTint(getResources().getColor(R.color.hair1));
-                        changeHairButtonsColor(view, getResources().getColor(R.color.hair1));
-                        avatar_details.set(3, 1);
+                        avatar.setHairColor(1);
                         break;
                     case R.id.hairColor2:
                         hair.setTint(getResources().getColor(R.color.hair2));
-                        changeHairButtonsColor(view, getResources().getColor(R.color.hair2));
-                        avatar_details.set(3, 2);
+                        avatar.setHairColor(2);
                         break;
                     case R.id.hairColor3:
                         hair.setTint(getResources().getColor(R.color.hair3));
-                        changeHairButtonsColor(view, getResources().getColor(R.color.hair3));
-                        avatar_details.set(3, 3);
+                        avatar.setHairColor(3);
                         break;
                     case R.id.hairColor4:
                         hair.setTint(getResources().getColor(R.color.hair4));
-                        changeHairButtonsColor(view, getResources().getColor(R.color.hair4));
-                        avatar_details.set(3, 4);
+                        avatar.setHairColor(4);
                         break;
                     case R.id.hairColor5:
                         hair.setTint(getResources().getColor(R.color.hair5));
-                        changeHairButtonsColor(view, getResources().getColor(R.color.hair5));
-                        avatar_details.set(3, 5);
+                        avatar.setHairColor(5);
                         break;
                 }
-                avatar.setImageDrawable(layer);
+
+                imageView.setImageDrawable(layer);
             }
         });
-    }
-
-
-    private void changeHairButtonsColor(View view, int color) {
-        for (int i = 1; i < 13; i++) {
-            String tag = "hair" + i;
-            ImageButton hairButton = view.findViewWithTag(tag);
-            hairButton.setColorFilter(color);
-        }
     }
 
 
@@ -273,7 +265,7 @@ public class EditAvatarDialog extends AppCompatDialogFragment {
         for (int i = 1; i < 13; i++) {
             String tag = "hair" + i;
             ImageButton hairButton = view.findViewWithTag(tag);
-            hairButton.setOnClickListener(new HairTypeOnClickListener(hairButton.getDrawable(), i));
+            hairButton.setOnClickListener(new HairTypeOnClickListener(getDrawable(getContext(),tag), i));
         }
     }
 
@@ -290,9 +282,11 @@ public class EditAvatarDialog extends AppCompatDialogFragment {
 
         @Override
         public void onClick(View v) {
-            avatar_details.set(2, hair_index);
+            String hairColor = "hair" + avatar.getHairColor();
+            drawable.setTint(getColor(getContext(),hairColor));
+            avatar.setHairType(hair_index);
             layer.setDrawableByLayerId(R.id.hair, drawable);
-            avatar.setImageDrawable(layer);
+            imageView.setImageDrawable(layer);
         }
     }
 
@@ -307,10 +301,10 @@ public class EditAvatarDialog extends AppCompatDialogFragment {
 
         @Override
         public void onClick(View v) {
-            avatar_details.set(4, color_index);
+            avatar.setShirtColor(color_index);
             Drawable shirt = layer.findDrawableByLayerId(R.id.shirt);
-            shirt.setTint(Utils.getColor(getContext(),"shirt"+color_index));
-            avatar.setImageDrawable(layer);
+            shirt.setTint(getColor(getContext(), "shirt" + color_index));
+            imageView.setImageDrawable(layer);
         }
     }
 
@@ -318,8 +312,7 @@ public class EditAvatarDialog extends AppCompatDialogFragment {
     private void sendResult(int REQUEST_CODE) {
 
         Intent intent = new Intent();
-        intent.putExtra("avatar_details", avatar_details);
-
+        intent.putExtra("Avatar", avatar);
         getTargetFragment().onActivityResult(getTargetRequestCode(), REQUEST_CODE, intent);
     }
 

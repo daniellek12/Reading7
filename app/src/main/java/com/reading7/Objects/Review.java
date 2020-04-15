@@ -13,7 +13,7 @@ public class Review implements Comparable {
     private String book_author;
     private String reviewer_email;      // key for user
     private String reviewer_name;
-    private ArrayList<Integer> reviewer_avatar;
+    private Avatar reviewer_avatar;
     private int rank;                   // 1-5(number of stars)
     private String review_title;
     private String review_content;      // NEED to decide whether we want to limit the length
@@ -46,7 +46,7 @@ public class Review implements Comparable {
                   String reviewer_name,
                   String book_title,
                   String book_author,
-                  ArrayList<Integer> reviewer_avatar,
+                  Avatar reviewer_avatar,
                   boolean is_notify) {
         this.review_id = review_id;
         this.book_id = book_id;
@@ -156,11 +156,11 @@ public class Review implements Comparable {
     }
 
 
-    public ArrayList<Integer> getReviewer_avatar() {
+    public Avatar getReviewer_avatar() {
         return reviewer_avatar;
     }
 
-    public void setReviewer_avatar(ArrayList<Integer> reviewer_avatar) {
+    public void setReviewer_avatar(Avatar reviewer_avatar) {
         this.reviewer_avatar = reviewer_avatar;
     }
 

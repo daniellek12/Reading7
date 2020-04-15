@@ -50,6 +50,7 @@ public class NotificationsFragment extends Fragment {
         initBackButton();
     }
 
+
     private void initBackButton(){
         getActivity().findViewById(R.id.backButton).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,6 +60,7 @@ public class NotificationsFragment extends Fragment {
         });
     }
 
+
     private void initNotifications() {
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
@@ -66,6 +68,7 @@ public class NotificationsFragment extends Fragment {
         notificationsRV.setLayoutManager(layoutManager);
         createNotifications(notificationsRV);
     }
+
 
     private void createNotifications(final RecyclerView notificationsRV) {
         notifications.clear();
@@ -110,7 +113,6 @@ public class NotificationsFragment extends Fragment {
         });
 
     }
-
 
 }
 

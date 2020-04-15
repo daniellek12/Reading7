@@ -284,7 +284,7 @@ public class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         final Notification notification = notifications.get(i);
 
-        Utils.loadAvatar(mContext, holder.profileImage, notification.getUser_avatar());
+        notification.getUser_avatar().loadIntoImage(mContext, holder.profileImage);
         holder.userName.setText(notification.getUser_name());
 
         Date date = notification.getTime().toDate();
@@ -340,7 +340,7 @@ public class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         final Notification notification = notifications.get(i);
 
-        Utils.loadAvatar(mContext, holder.profileImage, notification.getUser_avatar());
+        notification.getUser_avatar().loadIntoImage(mContext, holder.profileImage);
         holder.userName.setText(notification.getUser_name());
 
         Date date = notification.getTime().toDate();
@@ -426,7 +426,7 @@ public class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.V
             notificationMessegae.put("from", mAuth.getCurrentUser().getEmail());
             notificationMessegae.put("user_name", ((MainActivity) mContext).getCurrentUser().getFull_name());
             notificationMessegae.put("time", Timestamp.now());
-            notificationMessegae.put("user_avatar", ((MainActivity) mContext).getCurrentUser().getAvatar_details());
+            notificationMessegae.put("user_avatar", ((MainActivity) mContext).getCurrentUser().getAvatar());
 
 
             db.collection("Users/" + to_email + "/Notifications").add(notificationMessegae).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {

@@ -97,7 +97,7 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
             viewHolder.deleteBtn.setOnClickListener(new DeleteReviewOnClick(review.getReviewer_email(), review.getBook_title()));
         }
 
-        Utils.loadAvatar(mContext, viewHolder.profileImage, review.getReviewer_avatar());
+        review.getReviewer_avatar().loadIntoImage(mContext, viewHolder.profileImage);
         viewHolder.userName.setText(review.getReviewer_name());
 
         Date date = review.getReview_time().toDate();
@@ -271,7 +271,7 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
             notificationMessegae.put("user_name", real_user.getFull_name());
             notificationMessegae.put("book_title", book_title);
             notificationMessegae.put("time", Timestamp.now());
-            notificationMessegae.put("user_avatar", real_user.getAvatar_details());
+            notificationMessegae.put("user_avatar", real_user.getAvatar());
 
 
             db.collection("Users/" + to_email + "/Notifications").add(notificationMessegae).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {

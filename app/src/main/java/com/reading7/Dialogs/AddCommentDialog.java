@@ -103,7 +103,7 @@ public class AddCommentDialog extends AppCompatDialogFragment {
                             }
 
                             mComment = new Comment(review_id, user.getEmail(), comment_content, Timestamp.now(),
-                                    user.getFull_name(), user.getAvatar_details(), user.getIs_notify());
+                                    user.getFull_name(), user.getAvatar(), user.getIs_notify());
                             mReview.addComment(mComment);
                             db.collection("Reviews").document(review_id).update("comments", mReview.getComments());
                             addNotificationComment(user, mReview.getReviewer_email(), mReview.getBook_title(), mReview.getIs_notify());
@@ -134,7 +134,7 @@ public class AddCommentDialog extends AppCompatDialogFragment {
             notificationMessegae.put("user_name",user.getFull_name());
             notificationMessegae.put("book_title", book_title);
             notificationMessegae.put("time", Timestamp.now());
-            notificationMessegae.put("user_avatar", user.getAvatar_details());
+            notificationMessegae.put("user_avatar", user.getAvatar());
 
 
             db.collection("Users/" + to_email + "/Notifications").add(notificationMessegae).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {

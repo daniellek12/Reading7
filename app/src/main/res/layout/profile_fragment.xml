@@ -415,7 +415,8 @@
             android:id="@+id/optionsDummy"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:alpha="0.3" />
+            android:alpha="0.3"
+            android:background="@color/transparentGrey" />
 
         <LinearLayout
             android:layout_width="200dp"

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 
+import androidx.annotation.RequiresApi;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import com.bumptech.glide.Glide;
@@ -23,10 +25,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.reading7.Objects.Avatar;
 import com.reading7.Objects.Book;
 import com.reading7.Objects.Comment;
 import com.reading7.Objects.Review;
@@ -273,35 +277,35 @@ public class Utils {
      *                       index 4 - shirt color index
      * @param image          should have "avatar_layout" drawable set as it's drawable.
      */
-    public static void loadAvatar(Context context, CircleImageView image, ArrayList<Integer> avatar_details) {
-
-        LayerDrawable layer = (LayerDrawable) image.getDrawable();
-
-        String skin = "skin" + avatar_details.get(0);
-        Drawable skinDrawable = getDrawable(context, skin);
-        layer.setDrawableByLayerId(R.id.skin, skinDrawable);
-
-        String eyes = "eyes" + avatar_details.get(1);
-        Drawable eyesDrawable = layer.findDrawableByLayerId(R.id.eyes);
-        eyesDrawable.setTint(getColor(context, eyes));
-        layer.setDrawableByLayerId(R.id.eyes, eyesDrawable);
-
-        String hairType = "hair" + avatar_details.get(2);
-        Drawable hairTypeDrawable = getDrawable(context, hairType);
-        layer.setDrawableByLayerId(R.id.hair, hairTypeDrawable);
-
-        String hairColor = "hair" + avatar_details.get(3);
-        Drawable hairDrawable = layer.findDrawableByLayerId(R.id.hair);
-        hairDrawable.setTint(getColor(context, hairColor));
-        layer.setDrawableByLayerId(R.id.hair, hairDrawable);
-
-        String shirt = "shirt" + avatar_details.get(4);
-        Drawable shirtDrawable = layer.findDrawableByLayerId(R.id.shirt);
-        shirtDrawable.setTint(getColor(context, shirt));
-        layer.setDrawableByLayerId(R.id.shirt, shirtDrawable);
-
-        image.setImageDrawable(layer);
-    }
+//    public static void loadAvatar(Context context, CircleImageView image, ArrayList<Integer> avatar_details) {
+//
+//        LayerDrawable layer = (LayerDrawable) image.getDrawable();
+//
+//        String skin = "skin" + avatar_details.get(0);
+//        Drawable skinDrawable = getDrawable(context, skin);
+//        layer.setDrawableByLayerId(R.id.skin, skinDrawable);
+//
+//        String eyes = "eyes" + avatar_details.get(1);
+//        Drawable eyesDrawable = layer.findDrawableByLayerId(R.id.eyes);
+//        eyesDrawable.setTint(getColor(context, eyes));
+//        layer.setDrawableByLayerId(R.id.eyes, eyesDrawable);
+//
+//        String hairType = "hair" + avatar_details.get(2);
+//        Drawable hairTypeDrawable = getDrawable(context, hairType);
+//        layer.setDrawableByLayerId(R.id.hair, hairTypeDrawable);
+//
+//        String hairColor = "hair" + avatar_details.get(3);
+//        Drawable hairDrawable = layer.findDrawableByLayerId(R.id.hair);
+//        hairDrawable.setTint(getColor(context, hairColor));
+//        layer.setDrawableByLayerId(R.id.hair, hairDrawable);
+//
+//        String shirt = "shirt" + avatar_details.get(4);
+//        Drawable shirtDrawable = layer.findDrawableByLayerId(R.id.shirt);
+//        shirtDrawable.setTint(getColor(context, shirt));
+//        layer.setDrawableByLayerId(R.id.shirt, shirtDrawable);
+//
+//        image.setImageDrawable(layer);
+//    }
 
 
     /**
@@ -853,9 +857,22 @@ public class Utils {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (DocumentSnapshot document : task.getResult()) {
-                        User user = document.toObject(User.class);
-                        final DocumentReference bookRef = FirebaseFirestore.getInstance().collection("Users").document(user.getEmail());
-                        bookRef.update("follow_requests", new ArrayList<String>());
+                        CollectionReference ref = document.getReference().collection("Notifications");
+                        ref.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if(task.isSuccessful()){
+                                    for(DocumentSnapshot doc: task.getResult()){
+                                        try {
+                                            ArrayList<Long> arr = (ArrayList<Long>) doc.getData().get("user_avatar");
+                                            Avatar avatar = new Avatar(arr.get(0).intValue(), arr.get(1).intValue(), arr.get(4).intValue(), arr.get(2).intValue(), arr.get(3).intValue());
+                                            doc.getReference().update("user_avatar", avatar);
+                                        } catch (Exception e){}
+                                    }
+                                }
+                            }
+                        });
+
                     }
                 }
             }
@@ -898,6 +915,20 @@ public class Utils {
                             bookRef.delete();
                         }
                     }
+                }
+            }
+        });
+    }
+
+
+    public static void addAvatarToGal(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final DocumentReference userRef = db.collection("Users").document("gal@gmail.com");
+        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                   task.getResult().getReference().update("avatar_details", FieldValue.delete());
                 }
             }
         });

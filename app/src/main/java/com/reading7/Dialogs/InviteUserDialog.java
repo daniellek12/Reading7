@@ -117,7 +117,7 @@ public class InviteUserDialog extends AppCompatDialogFragment {
             notificationMessegae.put("user_name", ((MainActivity)getActivity()).getCurrentUser().getFull_name());//need to think about restarting main activity after updating details
             notificationMessegae.put("book_title", book_title);
             notificationMessegae.put("time", Timestamp.now());
-            notificationMessegae.put("user_avatar", ((MainActivity) getContext()).getCurrentUser().getAvatar_details());
+            notificationMessegae.put("user_avatar", ((MainActivity) getContext()).getCurrentUser().getAvatar());
 
 
 

@@ -8,7 +8,7 @@ public class Comment implements Comparable {
     private String review_id;
     private String commenter_email;
     private String commenter_name;
-    private ArrayList<Integer> commenter_avatar;
+    private Avatar commenter_avatar;
     private com.google.firebase.Timestamp comment_time;
     private String comment_content;
     private boolean is_notify; // check if needed?
@@ -20,7 +20,7 @@ public class Comment implements Comparable {
                    String comment_content,
                    com.google.firebase.Timestamp comment_time,
                    String commenter_name,
-                   ArrayList<Integer> commenter_avatar,
+                   Avatar commenter_avatar,
                    boolean is_notify) {
         this.review_id = review_id;
         this.commenter_email = commenter_email;
@@ -71,11 +71,11 @@ public class Comment implements Comparable {
         this.commenter_name = commenter_name;
     }
 
-    public ArrayList<Integer> getCommenter_avatar() {
+    public Avatar getCommenter_avatar() {
         return commenter_avatar;
     }
 
-    public void setCommenter_avatar(ArrayList<Integer> reviewer_avatar) {
+    public void setCommenter_avatar(Avatar reviewer_avatar) {
         this.commenter_avatar = reviewer_avatar;
     }
 

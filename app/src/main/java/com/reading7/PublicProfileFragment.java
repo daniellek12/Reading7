@@ -91,37 +91,22 @@ public class PublicProfileFragment extends Fragment {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
 
-                        String userName = document.getData().get("full_name").toString();
-                        ((TextView) getActivity().findViewById(R.id.publicProfile_userName)).setText(userName);
+                        user = document.toObject(User.class);
 
-                        String birthDate = document.getData().get("birth_date").toString();
-                        ((TextView) getActivity().findViewById(R.id.publicProfile_age)).setText("גיל: " + calculateAge(birthDate));
+                        TextView userName = getActivity().findViewById(R.id.publicProfile_userName);
+                        userName.setText(user.getFull_name());
+
+                        TextView birthDate = getActivity().findViewById(R.id.publicProfile_age);
+                        birthDate.setText("גיל: " + calculateAge(user.getBirth_date()));
 
                         CircleImageView profileImage = getActivity().findViewById(R.id.publicProfile_profileImage);
-                        ArrayList<Integer> avatar_details = (ArrayList<Integer>) document.getData().get("avatar_details");
-                        Utils.loadAvatar(getContext(), profileImage, avatar_details);
+                        user.getAvatar().loadIntoImage(getContext(), profileImage);
 
-                        ArrayList<String> followers = (ArrayList<String>) document.getData().get("followers");
-                        ((TextView) getActivity().findViewById(R.id.publicProfile_followers)).setText(Integer.toString(followers.size()));
+                        TextView followers = getActivity().findViewById(R.id.publicProfile_followers);
+                        followers.setText(Integer.toString(user.getFollowers().size()));
 
-                        ArrayList<String> following = (ArrayList<String>) document.getData().get("following");
-                        ((TextView) getActivity().findViewById(R.id.publicProfile_following)).setText(Integer.toString(following.size()));
-
-                        ArrayList<String> follow_requests = (ArrayList<String>) document.getData().get("follow_requests");
-
-                        ArrayList<String> favouriteBooks = (ArrayList<String>) document.getData().get("favourite_books");
-
-                        ArrayList<String> lastSearches = (ArrayList<String>) document.getData().get("last_searches");
-
-                        ArrayList<String> favouriteGenres = (ArrayList<String>) document.getData().get("favourite_genres");
-
-                        ArrayList<String> likedReviews = (ArrayList<String>) document.getData().get("liked_reviews");
-
-                        Boolean is_private = (Boolean) document.getData().get("is_private");
-
-
-                        user = new User(userName, user_email, birthDate, followers, following, follow_requests, lastSearches,
-                                favouriteBooks, favouriteGenres, likedReviews, avatar_details, is_private);
+                        TextView following = getActivity().findViewById(R.id.publicProfile_following);
+                        following.setText(Integer.toString(user.getFollowing().size()));
 
                         check_private();
                         initFollowButton();
@@ -137,18 +122,18 @@ public class PublicProfileFragment extends Fragment {
         });
     }
 
-    private void initCustomShelves(){
+    private void initCustomShelves() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         final RecyclerView customShelvesRV = getActivity().findViewById(R.id.customShelvesRV);
         customShelvesRV.setLayoutManager(layoutManager);
-        adapterCustomShelves = new CustomShelvesAdapter(shelfNames, getActivity(), user_email,(ViewGroup)getView(),getActivity());
+        adapterCustomShelves = new CustomShelvesAdapter(shelfNames, getActivity(), user_email, (ViewGroup) getView(), getActivity());
         customShelvesRV.setAdapter(adapterCustomShelves);
 
         getUserShelves();
 
     }
 
-    private void getUserShelves(){
+    private void getUserShelves() {
         db.collection("Users").document(user_email)
                 .collection("Shelves").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -247,13 +232,12 @@ public class PublicProfileFragment extends Fragment {
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
                                 for (QueryDocumentSnapshot document : task.getResult()) {
-                                    if(!document.toObject(Notification.class).getType().equals(getString(R.string.like_notificiation)))
+                                    if (!document.toObject(Notification.class).getType().equals(getString(R.string.like_notificiation)))
                                         document.getReference().delete();
                                 }
                             }
                         }
                     });
-
 
 
                 }
@@ -301,7 +285,7 @@ public class PublicProfileFragment extends Fragment {
             notificationMessegae.put("from", mAuth.getCurrentUser().getEmail());
             notificationMessegae.put("user_name", ((MainActivity) getActivity()).getCurrentUser().getFull_name());
             notificationMessegae.put("time", Timestamp.now());
-            notificationMessegae.put("user_avatar", ((MainActivity) getActivity()).getCurrentUser().getAvatar_details());
+            notificationMessegae.put("user_avatar", ((MainActivity) getActivity()).getCurrentUser().getAvatar());
 
 
             db.collection("Users/" + to_email + "/Notifications").add(notificationMessegae).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -321,7 +305,7 @@ public class PublicProfileFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         final RecyclerView wishlistRV = getActivity().findViewById(R.id.wishlistRV);
         wishlistRV.setLayoutManager(layoutManager);
-        adapterWishList = new ProfileShelfAdapter(getActivity(), usersWishListBookNames, wishlistShelf,(ViewGroup) getView(),getActivity());
+        adapterWishList = new ProfileShelfAdapter(getActivity(), usersWishListBookNames, wishlistShelf, (ViewGroup) getView(), getActivity());
         wishlistRV.setAdapter(adapterWishList);
 
         getUserWishList();
@@ -367,7 +351,7 @@ public class PublicProfileFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         RecyclerView myBooksRV = getActivity().findViewById(R.id.myBooksRV);
         myBooksRV.setLayoutManager(layoutManager);
-        adapterReviews = new ProfileShelfAdapter(getActivity(), usersReviewBookNames, myBooksShelf,(ViewGroup) getView(),getActivity());
+        adapterReviews = new ProfileShelfAdapter(getActivity(), usersReviewBookNames, myBooksShelf, (ViewGroup) getView(), getActivity());
         myBooksRV.setAdapter(adapterReviews);
 
         getUserReviews();

@@ -234,7 +234,7 @@ public class Post implements Comparable {
     }
 
 
-    public ArrayList<Integer> getUser_avatar() {
+    public Avatar getUser_avatar() {
         if (type == PostType.Review)
             return mReview.getReviewer_avatar();
 
@@ -244,7 +244,7 @@ public class Post implements Comparable {
         return null;
     }
 
-    public void setUser_avatar(ArrayList<Integer> user_avatar) {
+    public void setUser_avatar(Avatar user_avatar) {
         if (type == PostType.Review)
             mReview.setReviewer_avatar(user_avatar);
 

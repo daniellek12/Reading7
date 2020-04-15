@@ -402,9 +402,8 @@
                     android:layout_height="50dp"
                     android:background="@color/transparent"
                     android:scaleType="centerInside"
-                    android:src="@drawable/hair1"
-                    android:tag="hair1"
-                    android:tint="@color/black" />
+                    android:src="@drawable/hair1_icon"
+                    android:tag="hair1" />
 
                 <ImageButton
                     android:id="@+id/hair2"
@@ -414,9 +413,8 @@
                     android:layout_toLeftOf="@id/hair1"
                     android:background="@color/transparent"
                     android:scaleType="centerInside"
-                    android:src="@drawable/hair2"
-                    android:tag="hair2"
-                    android:tint="@color/black" />
+                    android:src="@drawable/hair2_icon"
+                    android:tag="hair2" />
 
                 <ImageButton
                     android:id="@+id/hair3"
@@ -426,9 +424,8 @@
                     android:layout_toLeftOf="@id/hair2"
                     android:background="@color/transparent"
                     android:scaleType="centerInside"
-                    android:src="@drawable/hair3"
-                    android:tag="hair3"
-                    android:tint="@color/black" />
+                    android:src="@drawable/hair3_icon"
+                    android:tag="hair3" />
 
                 <ImageButton
                     android:id="@+id/hair4"
@@ -438,117 +435,108 @@
                     android:layout_toLeftOf="@id/hair3"
                     android:background="@color/transparent"
                     android:scaleType="centerInside"
-                    android:src="@drawable/hair4"
-                    android:tag="hair4"
-                    android:tint="@color/black" />
+                    android:src="@drawable/hair4_icon"
+                    android:tag="hair4" />
 
                 <ImageButton
                     android:id="@+id/hair5"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_below="@id/hair1"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="8dp"
                     android:background="@color/transparent"
                     android:scaleType="centerInside"
-                    android:src="@drawable/hair5"
-                    android:tag="hair5"
-                    android:tint="@color/black" />
+                    android:src="@drawable/hair5_icon"
+                    android:tag="hair5" />
 
                 <ImageButton
                     android:id="@+id/hair6"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_below="@id/hair1"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="8dp"
                     android:layout_marginRight="20dp"
                     android:layout_toLeftOf="@id/hair5"
                     android:background="@color/transparent"
                     android:scaleType="centerInside"
-                    android:src="@drawable/hair6"
-                    android:tag="hair6"
-                    android:tint="@color/black" />
+                    android:src="@drawable/hair6_icon"
+                    android:tag="hair6" />
 
                 <ImageButton
                     android:id="@+id/hair7"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_below="@id/hair1"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="8dp"
                     android:layout_marginRight="20dp"
                     android:layout_toLeftOf="@id/hair6"
                     android:background="@color/transparent"
                     android:scaleType="centerInside"
-                    android:src="@drawable/hair7"
-                    android:tag="hair7"
-                    android:tint="@color/black" />
+                    android:src="@drawable/hair7_icon"
+                    android:tag="hair7" />
 
                 <ImageButton
                     android:id="@+id/hair8"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_below="@id/hair1"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="8dp"
                     android:layout_marginRight="20dp"
                     android:layout_toLeftOf="@id/hair7"
                     android:background="@color/transparent"
                     android:scaleType="centerInside"
-                    android:src="@drawable/hair8"
-                    android:tag="hair8"
-                    android:tint="@color/black" />
+                    android:src="@drawable/hair8_icon"
+                    android:tag="hair8" />
 
                 <ImageButton
                     android:id="@+id/hair9"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_below="@id/hair5"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="8dp"
                     android:background="@color/transparent"
                     android:scaleType="centerInside"
-                    android:src="@drawable/hair9"
-                    android:tag="hair9"
-                    android:tint="@color/black" />
+                    android:src="@drawable/hair9_icon"
+                    android:tag="hair9" />
 
                 <ImageButton
                     android:id="@+id/hair10"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_below="@id/hair5"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="8dp"
                     android:layout_marginRight="20dp"
                     android:layout_toLeftOf="@id/hair9"
                     android:background="@color/transparent"
                     android:scaleType="centerInside"
-                    android:src="@drawable/hair10"
-                    android:tag="hair10"
-                    android:tint="@color/black" />
+                    android:src="@drawable/hair10_icon"
+                    android:tag="hair10" />
 
                 <ImageButton
                     android:id="@+id/hair11"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_below="@id/hair5"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="8dp"
                     android:layout_marginRight="20dp"
                     android:layout_toLeftOf="@id/hair10"
                     android:background="@color/transparent"
                     android:scaleType="centerInside"
-                    android:src="@drawable/hair11"
-                    android:tag="hair11"
-                    android:tint="@color/black" />
+                    android:src="@drawable/hair11_icon"
+                    android:tag="hair11" />
 
                 <ImageButton
                     android:id="@+id/hair12"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_below="@id/hair5"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="8dp"
                     android:layout_marginRight="20dp"
                     android:layout_toLeftOf="@id/hair11"
                     android:background="@color/transparent"
                     android:scaleType="centerInside"
-                    android:src="@drawable/hair12"
-                    android:tag="hair12"
-                    android:tint="@color/black" />
+                    android:src="@drawable/hair12_icon"
+                    android:tag="hair12" />
 
             </RelativeLayout>
 

@@ -63,7 +63,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
         final Comment comment = comments.get(position);
         holder.comment.setText(comment.getComment_content());
         holder.userName.setText(comment.getCommenter_name());
-        Utils.loadAvatar(mContext, holder.profileImage, comment.getCommenter_avatar());
+        comment.getCommenter_avatar().loadIntoImage(mContext,holder.profileImage);
 
         String time = RelativeDateDisplay(Timestamp.now().toDate().getTime() -
                                             comment.getComment_time().toDate().getTime());

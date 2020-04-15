@@ -14,14 +14,14 @@ public class WishList implements Comparable {
     private String book_author;
     private String user_email;
     private String user_name;
-    private ArrayList<Integer> user_avatar;
+    private Avatar user_avatar;
 
 
     public WishList() {
 
     }
 
-    public WishList(String id, String user_email, String user_name, String book_id, String book_name, String book_author, Timestamp adding_time, ArrayList<Integer> user_avatar) {
+    public WishList(String id, String user_email, String user_name, String book_id, String book_name, String book_author, Timestamp adding_time, Avatar user_avatar) {
         this.id = id;
         this.adding_time = adding_time;
         this.book_id = book_id;
@@ -96,11 +96,11 @@ public class WishList implements Comparable {
     }
 
 
-    public ArrayList<Integer> getUser_avatar() {
+    public Avatar getUser_avatar() {
         return user_avatar;
     }
 
-    public void setUser_avatar(ArrayList<Integer> user_avatar) {
+    public void setUser_avatar(Avatar user_avatar) {
         this.user_avatar = user_avatar;
     }
 

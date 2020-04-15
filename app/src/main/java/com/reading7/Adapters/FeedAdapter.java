@@ -27,6 +27,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.reading7.Dialogs.AddCommentDialog;
 import com.reading7.BookFragment;
 import com.reading7.MainActivity;
+import com.reading7.Objects.Avatar;
 import com.reading7.Objects.Book;
 import com.reading7.Objects.Post;
 import com.reading7.Objects.PostType;
@@ -154,10 +155,10 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         final Post post = posts.get(i);
 
         String strDate = RelativeDateDisplay(Timestamp.now().toDate().getTime() - post.getPost_time().toDate().getTime());
-        holder.postTime.setText(strDate); // FIXME check this
+        holder.postTime.setText(strDate);
 
-        ArrayList<Integer> avatar_details = post.getUser_avatar();
-        Utils.loadAvatar(mContext, holder.profileImage, avatar_details);
+        Avatar avatar = post.getUser_avatar();
+        avatar.loadIntoImage(mContext, holder.profileImage);
 
         holder.ratingBar.setRating(post.getRank());
         holder.rating.setText(String.valueOf(post.getRank()));
@@ -210,7 +211,6 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         });
     }
 
-
     private void bindWishList(RecyclerView.ViewHolder viewHolder, int i) {
 
         WishListPostHolder holder = (WishListPostHolder) viewHolder;
@@ -220,8 +220,8 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         String strDate = RelativeDateDisplay(Timestamp.now().toDate().getTime() - post.getPost_time().toDate().getTime());
         holder.postTime.setText(strDate);
 
-        ArrayList<Integer> avatar_details = post.getUser_avatar();
-        Utils.loadAvatar(mContext, holder.profileImage, avatar_details);
+        Avatar avatar = post.getUser_avatar();
+        avatar.loadIntoImage(mContext, holder.profileImage);
 
         holder.userName.setText(post.getUser_name());
         holder.bookName.setText("\"" + post.getBook_title() + "\"");
@@ -368,7 +368,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             notificationMessegae.put("user_name", mUser.getFull_name());
             notificationMessegae.put("book_title", book_title);
             notificationMessegae.put("time", Timestamp.now());
-            notificationMessegae.put("user_avatar", mUser.getAvatar_details());
+            notificationMessegae.put("user_avatar", mUser.getAvatar());
 
 
             db.collection("Users/" + to_email + "/Notifications").add(notificationMessegae).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {

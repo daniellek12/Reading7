@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity
         final Activity a = this;
 
         final Intent intent = getIntent();
-
         if (intent.getStringExtra("type") != null) {
 
             String type = intent.getStringExtra("type");

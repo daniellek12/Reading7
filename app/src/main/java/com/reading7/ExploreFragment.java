@@ -259,8 +259,9 @@ public class ExploreFragment extends Fragment {
                 }
 
                 final CollectionReference bookRef = FirebaseFirestore.getInstance().collection("Books");
-                lstBooksIds.add("dummy");//
-                Query booksQuery = bookRef.whereIn("id", lstBooksIds);
+                lstBooksIds.add("dummy");
+                int size = Math.min(lstBooksIds.size(),9);
+                Query booksQuery = bookRef.whereIn("id", lstBooksIds.subList(0,size));
                 booksQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -285,10 +286,8 @@ public class ExploreFragment extends Fragment {
                                     }
                                 }
 
-
                                 bookList.addAll(newlist);
                                 newlist.clear();
-
 
                                 myAdapter.notifyDataSetChanged();//no problem cause this is the first update
                                 lastVisible = task.getResult().getDocuments().get(task.getResult().size() - 1);

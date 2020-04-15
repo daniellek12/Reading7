@@ -26,6 +26,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.reading7.Dialogs.ChangePasswordDialog;
 import com.reading7.Dialogs.EditAvatarDialog;
+import com.reading7.Objects.Avatar;
 import com.reading7.Objects.Review;
 import com.reading7.Objects.User;
 import com.reading7.Objects.WishList;
@@ -74,7 +75,7 @@ public class EditProfileFragment extends Fragment {
         userBirthday.setText(user.getBirth_date());
 
         CircleImageView profileImage = getActivity().findViewById(R.id.profile_image);
-        Utils.loadAvatar(getContext(), profileImage, user.getAvatar_details());
+        user.getAvatar().loadIntoImage(getContext(),profileImage);
     }
 
 
@@ -107,8 +108,8 @@ public class EditProfileFragment extends Fragment {
                     return;
                 }
 
-                updateReviews(name,Utils.calculateAge(birthday), user.getAvatar_details());
-                updateWishlists(name, user.getAvatar_details());
+                updateReviews(name, Utils.calculateAge(birthday), user.getAvatar());
+                updateWishlists(name, user.getAvatar());
                 updateUser(name, birthday);
 
                 setLoadingMode(false);
@@ -123,7 +124,7 @@ public class EditProfileFragment extends Fragment {
         getView().findViewById(R.id.profile_image).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EditAvatarDialog dialog = new EditAvatarDialog(user.getAvatar_details());
+                EditAvatarDialog dialog = new EditAvatarDialog(user.getAvatar());
                 dialog.setTargetFragment(EditProfileFragment.this, 100);
                 dialog.show(getActivity().getSupportFragmentManager(), "edit avater");
             }
@@ -190,7 +191,7 @@ public class EditProfileFragment extends Fragment {
     }
 
 
-    private void updateReviews(final String newName, final int newAge, final ArrayList<Integer> newAvatar) {
+    private void updateReviews(final String newName, final int newAge, final Avatar newAvatar) {
 
         CollectionReference reviews = FirebaseFirestore.getInstance().collection("Reviews");
         Query query = reviews.whereEqualTo("reviewer_email", user.getEmail());
@@ -210,7 +211,7 @@ public class EditProfileFragment extends Fragment {
         });
     }
 
-    private void updateWishlists(final String newName, final ArrayList<Integer> newAvatar) {
+    private void updateWishlists(final String newName, final Avatar newAvatar) {
 
         CollectionReference wishlists = FirebaseFirestore.getInstance().collection("Wishlist");
         Query query = wishlists.whereEqualTo("user_email", user.getEmail());
@@ -233,7 +234,7 @@ public class EditProfileFragment extends Fragment {
     private void updateUser(String newName, String newBirthday) {
 
         DocumentReference userRef = FirebaseFirestore.getInstance().collection("Users").document(user.getEmail());
-        userRef.update("full_name", newName, "birth_date", newBirthday, "avatar_details", user.getAvatar_details());
+        userRef.update("full_name", newName, "birth_date", newBirthday, "avatar", user.getAvatar());
 
         user.setBirth_date(newBirthday);
         user.setFull_name(newName);
@@ -244,8 +245,8 @@ public class EditProfileFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Make sure fragment codes match up
         if (requestCode == 100) {
-            user.setAvatar_details(data.getIntegerArrayListExtra("avatar_details"));
-            Utils.loadAvatar(getContext(),(CircleImageView)getView().findViewById(R.id.profile_image), user.getAvatar_details());
+            user.setAvatar((Avatar)data.getSerializableExtra("Avatar"));
+            user.getAvatar().loadIntoImage(getContext(),(CircleImageView)getView().findViewById(R.id.profile_image));
         }
     }
 
