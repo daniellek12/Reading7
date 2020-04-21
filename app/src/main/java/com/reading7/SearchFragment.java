@@ -8,12 +8,17 @@ import android.widget.ImageView;
 
 import com.duolingo.open.rtlviewpager.RtlViewPager;
 import com.google.android.material.tabs.TabLayout;
+import com.reading7.Adapters.SearchBooksAdapter;
 import com.reading7.Adapters.TabsPagerAdapter;
+import com.reading7.Objects.Book;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class SearchFragment extends Fragment implements androidx.appcompat.widget.SearchView.OnQueryTextListener {
@@ -74,7 +79,9 @@ public class SearchFragment extends Fragment implements androidx.appcompat.widge
 
         TabsPagerAdapter tabsPagerAdapter = new TabsPagerAdapter(getChildFragmentManager());
 
-        tabsPagerAdapter.addFragment(new SearchBooksFragment(), "ספרים");
+//        tabsPagerAdapter.addFragment(new SearchBooksFragment(), "ספרים");//TODO remove
+        ArrayList<Book> books = new ArrayList<Book>();
+        tabsPagerAdapter.addFragment(new GenericSearchFragment<Book>(Book.class, new SearchBooksAdapter(getContext(), books), books), "ספרים"); //TODO implement
 //        tabsPagerAdapter.addFragment(new SearchAuthorsFragment(), "סופרים");
         tabsPagerAdapter.addFragment(new SearchFriendsFragment(), "חברים");
 
@@ -139,7 +146,7 @@ public class SearchFragment extends Fragment implements androidx.appcompat.widge
         switch (viewPager.getCurrentItem()) {
 
             case 0:
-                ((SearchBooksFragment)frag).onQueryTextChange(s);
+                ((GenericSearchFragment)frag).onQueryTextChange(s);
                 break;
             case 1:
                 ((SearchAuthorsFragment)frag).onQueryTextChange(s);
@@ -159,7 +166,7 @@ public class SearchFragment extends Fragment implements androidx.appcompat.widge
         switch (viewPager.getCurrentItem()) {
 
             case 0:
-                ((SearchBooksFragment)frag).onQueryTextChange(s);
+                ((GenericSearchFragment)frag).onQueryTextChange(s);
                 break;
                 //FIXME currently only books and members allowed
 //            case 1:
