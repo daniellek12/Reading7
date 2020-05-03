@@ -40,6 +40,7 @@ import java.util.Calendar;
 import java.util.Collections;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 public class Utils {
 
@@ -265,7 +266,7 @@ public class Utils {
      */
     public static int getColor(Context context, String color_name) {
         try {
-            return context.getResources().getColor(context.getResources().getIdentifier(color_name, "color", context.getPackageName()));
+            return ContextCompat.getColor(context, context.getResources().getIdentifier(color_name, "color", context.getPackageName()));
         } catch (Exception e) {
             throw new AssertionError("OOPS, you tried getting a color that doesnt exist");
         }
@@ -277,7 +278,7 @@ public class Utils {
      */
     public static Drawable getDrawable(Context context, String drawable_name) {
         try {
-            return context.getResources().getDrawable(context.getResources().getIdentifier(drawable_name, "drawable", context.getPackageName()));
+            return ContextCompat.getDrawable(context,context.getResources().getIdentifier(drawable_name, "drawable", context.getPackageName()));
         } catch (Exception e) {
             throw new AssertionError("OOPS, you tried getting a drawable that doesnt exist");
         }

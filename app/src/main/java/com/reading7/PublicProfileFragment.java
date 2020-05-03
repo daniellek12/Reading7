@@ -243,7 +243,6 @@ public class PublicProfileFragment extends Fragment {
                 }
                 //update screen correctly!
                 DocumentReference userRef = db.collection("Users").document(user.getEmail());
-
                 userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
