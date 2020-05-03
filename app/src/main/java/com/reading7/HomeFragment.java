@@ -10,18 +10,15 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.reading7.Adapters.FeedAdapter;
-import com.reading7.Adapters.ReviewListAdapter;
 import com.reading7.Objects.Post;
 import com.reading7.Objects.Review;
+import com.reading7.Objects.User;
 import com.reading7.Objects.WishList;
 
 import java.util.ArrayList;
@@ -35,8 +32,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class HomeFragment extends Fragment {
-    private FirebaseAuth mAuth;
+
     private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
     private ArrayList<Post> posts = new ArrayList<Post>();
     private SwipeRefreshLayout swipeRefresh;
 
@@ -52,71 +50,62 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ((BottomNavigationView)getActivity().findViewById(R.id.navigation)).setSelectedItemId(R.id.navigation_home);
+        ((BottomNavigationView) getActivity().findViewById(R.id.navigation)).setSelectedItemId(R.id.navigation_home);
         initRefreshLayout();
         initPosts();
     }
 
 
     private void createPosts(final RecyclerView postsRV) {
-        disableClicks();
-        // first: get my followers, and filter reviews and wishlists according to the ids we get
-        FirebaseUser mUser = mAuth.getCurrentUser();
-        DocumentReference userRef = db.collection("Users").document(mUser.getEmail());
-        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        ArrayList<String> following = (ArrayList<String>) document.getData().get("following");
-                        CollectionReference collection = db.collection("Reviews");
-                        CollectionReference collection_wishlist = db.collection("Wishlist");
 
-                        // FIXED BUG if the users has no following
-                        if (following.size() > 0) {
-                            Query query = collection.whereIn("reviewer_email", following);
-                            final Query query_wishlist = collection_wishlist.whereIn("user_email", following);
+        Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), false);
 
-                            // now we have the reviews we wish to display in feed
-                            query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (QueryDocumentSnapshot doc : task.getResult()) {
-                                            posts.add(new Post(doc.toObject(Review.class)));
-                                        }
-                                    }
-                                    query_wishlist.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<QuerySnapshot> tasky) {
-                                            if (tasky.isSuccessful()) {
-                                                for (QueryDocumentSnapshot doc : tasky.getResult()) {
-                                                    posts.add(new Post(doc.toObject(WishList.class)));
-                                                }
-                                            }
-                                            Collections.sort(posts, new Post.SortByDate());
-                                            FeedAdapter adapter = new FeedAdapter(getActivity(), HomeFragment.this, posts, ((MainActivity)getActivity()).getCurrentUser());
-                                            postsRV.setAdapter(adapter);
-                                            enableClicks();
-                                            swipeRefresh.setRefreshing(false);
-                                        }
+        User user = ((MainActivity) getActivity()).getCurrentUser();
+        ArrayList<String> following = user.getFollowing();
+        CollectionReference collection_reviews = db.collection("Reviews");
+        CollectionReference collection_wishlist = db.collection("Wishlist");
 
-                                    });
+        if (!following.isEmpty()) {
+            Query query = collection_reviews.whereIn("reviewer_email", following);
+            final Query query_wishlist = collection_wishlist.whereIn("user_email", following);
+
+            query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot doc : task.getResult()) {
+                            posts.add(new Post(doc.toObject(Review.class)));
+                        }
+                    }
+                    query_wishlist.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> tasky) {
+                            if (tasky.isSuccessful()) {
+                                for (QueryDocumentSnapshot doc : tasky.getResult()) {
+                                    posts.add(new Post(doc.toObject(WishList.class)));
                                 }
-                            });
-                            // create posts according to reviews)
-                        } else {
-                            FeedAdapter adapter = new FeedAdapter(getActivity(), HomeFragment.this, posts,((MainActivity)getActivity()).getCurrentUser());
+                            }
+
+                            Collections.sort(posts, new Post.SortByDate());
+                            FeedAdapter adapter = new FeedAdapter(getActivity(), HomeFragment.this, posts);
                             postsRV.setAdapter(adapter);
-                            enableClicks();
+                            Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), true);
+                            getView().findViewById(R.id.home_progress_bar).setVisibility(View.GONE);
                             swipeRefresh.setRefreshing(false);
                         }
 
-                    }
+                    });
                 }
-            }
-        });
+            });
+
+        } else {
+
+            FeedAdapter adapter = new FeedAdapter(getActivity(), HomeFragment.this, posts);
+            postsRV.setAdapter(adapter);
+            Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), true);
+            getView().findViewById(R.id.home_progress_bar).setVisibility(View.GONE);
+            swipeRefresh.setRefreshing(false);
+        }
     }
 
 
@@ -131,7 +120,7 @@ public class HomeFragment extends Fragment {
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        switch (requestCode){
+        switch (requestCode) {
 
             case 303:
                 String review_id = data.getStringExtra("review_id");
@@ -145,11 +134,11 @@ public class HomeFragment extends Fragment {
 
     private void initRefreshLayout() {
 
-        swipeRefresh =  getView().findViewById(R.id.swipeRefresh);
+        swipeRefresh = getView().findViewById(R.id.swipeRefresh);
 
         swipeRefresh.setColorSchemeColors(getActivity().getResources().getColor(R.color.colorPrimaryDark),
-                                          getActivity().getResources().getColor(R.color.colorPrimaryDark),
-                                          getActivity().getResources().getColor(R.color.colorPrimaryDark));
+                getActivity().getResources().getColor(R.color.colorPrimaryDark),
+                getActivity().getResources().getColor(R.color.colorPrimaryDark));
 
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -158,21 +147,6 @@ public class HomeFragment extends Fragment {
                 initPosts();
             }
         });
-    }
-
-
-    private void disableClicks() {
-       // getActivity().findViewById(R.id.search).setEnabled(false);
-//        getActivity().findViewById(R.id.notifications).setEnabled(false);
-        ((MainActivity)getActivity()).setBottomNavigationEnabled(false);
-    }
-
-
-    private void enableClicks() {
-    //    getActivity().findViewById(R.id.search).setEnabled(true);
-//        getActivity().findViewById(R.id.notifications).setEnabled(true);
-        ((MainActivity)getActivity()).setBottomNavigationEnabled(true);
-        getActivity().findViewById(R.id.home_progress_bar).setVisibility(View.GONE);
     }
 
 }

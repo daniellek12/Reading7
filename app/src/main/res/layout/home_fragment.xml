@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
     tools:context=".HomeFragment">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -14,15 +13,16 @@
         android:background="@color/white"
         android:layoutDirection="rtl">
 
+
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
             android:layout_alignParentTop="true"
             android:background="@color/white"
-            android:gravity="top"
+            android:gravity="center_vertical"
+            android:layoutDirection="rtl"
             app:layout_scrollFlags="scroll|enterAlways|snap">
-
 
             <TextView
                 android:id="@+id/toolbar_title"
@@ -30,13 +30,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:fontFamily="monospace"
                 android:text="@string/app_name"
                 android:textColor="@color/black"
-                android:textSize="20sp" />
+                android:textSize="24sp" />
+
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="11dp"
+                android:src="@drawable/logo" />
 
 
         </androidx.appcompat.widget.Toolbar>
-
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout

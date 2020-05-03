@@ -1,6 +1,5 @@
 package com.reading7;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -25,8 +24,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-public class MainActivity extends AppCompatActivity
-        implements BottomNavigationView.OnNavigationItemSelectedListener {
+
+public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     private User mUser;
 
@@ -39,94 +38,40 @@ public class MainActivity extends AppCompatActivity
         navigation.setOnNavigationItemSelectedListener(this);
 
         initCurrentUser();
-        final Activity a = this;
 
         final Intent intent = getIntent();
-        if (intent.getStringExtra("type") != null) {
+        if (intent.getStringExtra("type") != null)
+            loadFragmentFromIntent(intent);
 
-            String type = intent.getStringExtra("type");
-
-            if (type.equals(getResources().getString(R.string.follow_notificiation_private)) ||
-                    type.equals(getResources().getString(R.string.follow_notificiation_public)) ||
-                    type.equals(getResources().getString(R.string.request_approved_notificiation))) {
-                loadFragment(new PublicProfileFragment(intent.getStringExtra("from_email")));
-                return;
-            }
-            if (type.equals(getResources().getString(R.string.invite_notificiation))) {
-                //loadFragment(new BookFragment(intent.getStringExtra("from_email")));
-                Utils.enableDisableClicks(this, (ViewGroup) findViewById(android.R.id.content).getRootView()
-                        , false);
-                Query bookRef = FirebaseFirestore.getInstance().collection("Books").whereEqualTo("title", intent.getStringExtra("book_title"));
-                bookRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (final DocumentSnapshot doc : task.getResult()) {
-                                Book b = doc.toObject(Book.class);
-                                loadFragment(new BookFragment(b));
-                                Utils.enableDisableClicks(a, (ViewGroup) findViewById(android.R.id.content).getRootView()
-                                        , true);
-
-                            }
-                        }
-                    }
-                });
-
-            }
-
-            if ((type.equals(getResources().getString(R.string.like_notificiation))) || (type.equals(getResources().getString(R.string.comment_notificiation)))) {
-                final Intent intent1 = intent;
-                CollectionReference requestCollectionRef = FirebaseFirestore.getInstance().collection("Users");
-                Query requestQuery = requestCollectionRef.whereEqualTo("email", FirebaseAuth.getInstance().getCurrentUser().getEmail());
-                requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                mUser = document.toObject(User.class);
-                                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                                String book_title = intent1.getStringExtra("book_title");
-                                CollectionReference requestCollectionRef = db.collection("Reviews");
-                                Query requestQuery = requestCollectionRef.whereEqualTo("book_title", book_title).whereEqualTo("reviewer_email", mUser.getEmail());
-                                requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                        if (task.isSuccessful()) {
-
-                                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                                final Review review = document.toObject(Review.class);
-
-                                                CollectionReference requestCollectionRef = FirebaseFirestore.getInstance().collection("Users");
-                                                Query requestQuery = requestCollectionRef.whereEqualTo("email", FirebaseAuth.getInstance().getCurrentUser().getEmail());
-                                                requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                                    @Override
-                                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                        if (task.isSuccessful()) {
-                                                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                                                mUser = document.toObject(User.class);
-                                                                loadFragment(new ReviewCommentsFragment(review, mUser));
-                                                                return;
-                                                            }
-                                                        }
-                                                    }
-                                                });
-
-                                            }
-
-                                        }
-                                    }
-                                });
-                            }
-                        }
-                    }
-                });
-
-
-            }
-
-        } else loadFragment(new ExploreFragment());
+        else loadFragment(new ExploreFragment());
 
     }
+
+
+    private void initCurrentUser() {
+
+        CollectionReference requestCollectionRef = FirebaseFirestore.getInstance().collection("Users");
+        Query requestQuery = requestCollectionRef.whereEqualTo("email", FirebaseAuth.getInstance().getCurrentUser().getEmail());
+        requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        mUser = document.toObject(User.class);
+                    }
+                }
+            }
+        });
+    }
+
+    public User getCurrentUser() {
+        return mUser;
+    }
+
+    public void setCurrentUser(User user) {
+        this.mUser = user;
+    }
+
 
     /**
      * Replaces the current main fragment.
@@ -162,6 +107,94 @@ public class MainActivity extends AppCompatActivity
 
         return false;
     }
+
+    private void loadFragmentFromIntent(Intent intent) {
+
+        String type = intent.getStringExtra("type");
+
+        if(type == null) {
+            loadFragment(new ExploreFragment());
+            return;
+        }
+
+        if (type.equals(getResources().getString(R.string.follow_notificiation_private))
+                || type.equals(getResources().getString(R.string.follow_notificiation_public))
+                || type.equals(getResources().getString(R.string.request_approved_notificiation))) {
+            loadFragment(new PublicProfileFragment(intent.getStringExtra("from_email")));
+            return;
+        }
+
+        if (type.equals(getResources().getString(R.string.invite_notificiation))) {
+            Utils.enableDisableClicks(this, (ViewGroup) findViewById(android.R.id.content).getRootView(), false);
+            Query bookRef = FirebaseFirestore.getInstance().collection("Books").whereEqualTo("title", intent.getStringExtra("book_title"));
+            bookRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (final DocumentSnapshot doc : task.getResult()) {
+                            Book b = doc.toObject(Book.class);
+                            loadFragment(new BookFragment(b));
+                            Utils.enableDisableClicks(MainActivity.this, (ViewGroup) findViewById(android.R.id.content).getRootView(), true);
+                        }
+                    }
+                }
+            });
+
+        }
+
+        if ((type.equals(getResources().getString(R.string.like_notificiation)))
+                || (type.equals(getResources().getString(R.string.comment_notificiation)))) {
+            final Intent intent1 = intent;
+            CollectionReference requestCollectionRef = FirebaseFirestore.getInstance().collection("Users");
+            Query requestQuery = requestCollectionRef.whereEqualTo("email", FirebaseAuth.getInstance().getCurrentUser().getEmail());
+            requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            mUser = document.toObject(User.class);
+                            FirebaseFirestore db = FirebaseFirestore.getInstance();
+                            String book_title = intent1.getStringExtra("book_title");
+                            CollectionReference requestCollectionRef = db.collection("Reviews");
+                            Query requestQuery = requestCollectionRef.whereEqualTo("book_title", book_title).whereEqualTo("reviewer_email", mUser.getEmail());
+                            requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()) {
+
+                                        for (QueryDocumentSnapshot document : task.getResult()) {
+                                            final Review review = document.toObject(Review.class);
+
+                                            CollectionReference requestCollectionRef = FirebaseFirestore.getInstance().collection("Users");
+                                            Query requestQuery = requestCollectionRef.whereEqualTo("email", FirebaseAuth.getInstance().getCurrentUser().getEmail());
+                                            requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                    if (task.isSuccessful()) {
+                                                        for (QueryDocumentSnapshot document : task.getResult()) {
+                                                            mUser = document.toObject(User.class);
+                                                            loadFragment(new ReviewCommentsFragment(review));
+                                                            return;
+                                                        }
+                                                    }
+                                                }
+                                            });
+
+                                        }
+
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }
+            });
+
+
+        }
+
+    }
+
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -208,30 +241,6 @@ public class MainActivity extends AppCompatActivity
             bottomNavigationView.setAlpha((float) 0.5);
     }
 
-
-    private void initCurrentUser() {
-
-        CollectionReference requestCollectionRef = FirebaseFirestore.getInstance().collection("Users");
-        Query requestQuery = requestCollectionRef.whereEqualTo("email", FirebaseAuth.getInstance().getCurrentUser().getEmail());
-        requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        mUser = document.toObject(User.class);
-                    }
-                }
-            }
-        });
-    }
-
-    public User getCurrentUser() {
-        return mUser;
-    }
-
-    public void setCurrentUser(User user) {
-        this.mUser = user;
-    }
 
     @Override
     public void onBackPressed() {

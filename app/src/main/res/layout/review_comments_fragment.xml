@@ -10,26 +10,6 @@
     android:orientation="vertical"
     tools:context=".ReviewCommentsFragment">
 
-
-    <!--    <androidx.appcompat.widget.Toolbar-->
-    <!--        android:id="@+id/toolBar"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="60dp"-->
-    <!--        android:background="@color/white"-->
-    <!--        android:elevation="1dp"-->
-    <!--        android:layoutDirection="rtl">-->
-
-    <!--        <TextView-->
-    <!--            android:id="@+id/reviewTitle"-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:layout_gravity="center"-->
-    <!--            android:text="הביקורת של"-->
-    <!--            android:textSize="18sp" />-->
-
-    <!--    </androidx.appcompat.widget.Toolbar>-->
-
-
     <RelativeLayout
         android:id="@+id/layout"
         android:layout_width="match_parent"
@@ -84,7 +64,7 @@
                     android:layout_marginRight="20dp"
                     android:layout_marginBottom="15dp"
                     android:elevation="3dp"
-                    android:src="@drawable/avatar_layout"
+                    android:src="@color/transparent"
                     app:civ_circle_background_color="@color/white" />
 
                 <TextView
@@ -93,7 +73,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:layout_toLeftOf="@id/profileImage"
-                    android:text="אליאנה תדהר"
                     android:textColor="@color/black"
                     android:textSize="12sp"
                     android:textStyle="bold" />

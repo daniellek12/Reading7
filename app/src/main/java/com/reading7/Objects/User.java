@@ -7,7 +7,7 @@ public class User {
     private String full_name;                       // user's name
     private String email;                           // user's email
     private String birth_date;                      // user's birth date
-   // private ArrayList<Integer> avatar_details;      // skin color, eyes color, hair color, hair type, shirt color
+    // private ArrayList<Integer> avatar_details;      // skin color, eyes color, hair color, hair type, shirt color
     private ArrayList<String> followers;            // Emails list of the followers
     private ArrayList<String> following;            // Emails list of the following
     private ArrayList<String> follow_requests;      // Emails list of the followers requested to follow user
@@ -19,6 +19,7 @@ public class User {
     private Boolean is_private;                     //true if profile listed as private
     private Boolean is_notify;
     private Avatar avatar;
+    private int points;
 
     public User() {
         this.full_name = "";
@@ -31,10 +32,11 @@ public class User {
         this.favourite_books = new ArrayList<>();
         this.favourite_genres = new ArrayList<>();
         this.liked_reviews = new ArrayList<>();
-        this.avatar = new Avatar(1,1,1,1,1);
+        this.avatar = new Avatar(1, 1, 1, 1, 1);
         this.is_private = false; // default is public (as in Instagram)
         this.token_id = "";
         this.is_notify = true;
+        this.points = 0;
     }
 
     //Don't use this constructor, should only be used in SignUpStep1
@@ -53,11 +55,12 @@ public class User {
         this.is_private = false;
         this.token_id = "";
         this.is_notify = true;
+        this.points = 0;
 
     }
 
 
-    public User(String full_name, String email, String birth_date, ArrayList<String> followers, ArrayList<String> following, ArrayList<String> follow_requests, ArrayList<String> last_searches, ArrayList<String> favourite_books, ArrayList<String> favourite_genres, ArrayList<String> liked_reviews, Avatar avatar, Boolean is_private) {
+    public User(String full_name, String email, String birth_date, ArrayList<String> followers, ArrayList<String> following, ArrayList<String> follow_requests, ArrayList<String> last_searches, ArrayList<String> favourite_books, ArrayList<String> favourite_genres, ArrayList<String> liked_reviews, Avatar avatar, Boolean is_private, int points) {
         this.full_name = full_name;
         this.email = email;
         this.birth_date = birth_date;
@@ -70,6 +73,7 @@ public class User {
         this.liked_reviews = liked_reviews;
         this.avatar = avatar;
         this.is_private = is_private;
+        this.points = points;
         this.token_id = "";
         this.is_notify = true;
     }
@@ -193,4 +197,21 @@ public class User {
     public void setIs_notify(Boolean is_notify) {
         this.is_notify = is_notify;
     }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
+    }
+
+    public void addPoints(int points) {
+        this.points += points;
+    }
+
+    public void reducePoints(int points) {
+        this.points = Math.max(this.points - points, 0);
+    }
+
 }

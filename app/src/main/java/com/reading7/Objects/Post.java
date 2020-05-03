@@ -169,6 +169,16 @@ public class Post implements Comparable {
             mReview.setLikes_count(likes_count);
     }
 
+    public void addLike() {
+        if (type == PostType.Review)
+            mReview.addLike();
+    }
+
+    public void reduceLike() {
+        if (type == PostType.Review)
+            mReview.reduceLike();
+    }
+
 
     public String getBook_title() {
         if (type == PostType.Review)
@@ -212,44 +222,6 @@ public class Post implements Comparable {
     public void setUser_email(String user_email) {
         if (type == PostType.WishList)
             mWishlist.setUser_email(user_email);
-    }
-
-
-    public String getUser_name() {
-        if (type == PostType.Review)
-            return mReview.getReviewer_name();
-
-        if (type == PostType.WishList)
-            return mWishlist.getUser_name();
-
-        return null;
-    }
-
-    public void setUser_name(String user_name) {
-        if (type == PostType.Review)
-            mReview.setReviewer_name(user_name);
-
-        if (type == PostType.WishList)
-            mWishlist.setUser_name(user_name);
-    }
-
-
-    public Avatar getUser_avatar() {
-        if (type == PostType.Review)
-            return mReview.getReviewer_avatar();
-
-        if (type == PostType.WishList)
-            return mWishlist.getUser_avatar();
-
-        return null;
-    }
-
-    public void setUser_avatar(Avatar user_avatar) {
-        if (type == PostType.Review)
-            mReview.setReviewer_avatar(user_avatar);
-
-        if (type == PostType.WishList)
-            mWishlist.setUser_avatar(user_avatar);
     }
 
 

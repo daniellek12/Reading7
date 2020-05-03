@@ -3,38 +3,31 @@ package com.reading7;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
-import android.os.Build;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
-
-import androidx.annotation.NonNull;
-
-import androidx.annotation.RequiresApi;
-import de.hdodenhof.circleimageview.CircleImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.reading7.Objects.Avatar;
 import com.reading7.Objects.Book;
-import com.reading7.Objects.Comment;
 import com.reading7.Objects.Review;
-import com.reading7.Objects.User;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -45,7 +38,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.HashMap;
+
+import androidx.annotation.NonNull;
 
 public class Utils {
 
@@ -267,52 +261,14 @@ public class Utils {
 
 
     /**
-     * Loads the correct avatar into the image.
-     *
-     * @param avatar_details holds the wanted avatar specifications:
-     *                       index 0 - skin index (if the wanted drawable is skin1, then the value is 1)
-     *                       index 1 - eyes color index
-     *                       index 2 - hair color index
-     *                       index 3 - hair type index
-     *                       index 4 - shirt color index
-     * @param image          should have "avatar_layout" drawable set as it's drawable.
-     */
-//    public static void loadAvatar(Context context, CircleImageView image, ArrayList<Integer> avatar_details) {
-//
-//        LayerDrawable layer = (LayerDrawable) image.getDrawable();
-//
-//        String skin = "skin" + avatar_details.get(0);
-//        Drawable skinDrawable = getDrawable(context, skin);
-//        layer.setDrawableByLayerId(R.id.skin, skinDrawable);
-//
-//        String eyes = "eyes" + avatar_details.get(1);
-//        Drawable eyesDrawable = layer.findDrawableByLayerId(R.id.eyes);
-//        eyesDrawable.setTint(getColor(context, eyes));
-//        layer.setDrawableByLayerId(R.id.eyes, eyesDrawable);
-//
-//        String hairType = "hair" + avatar_details.get(2);
-//        Drawable hairTypeDrawable = getDrawable(context, hairType);
-//        layer.setDrawableByLayerId(R.id.hair, hairTypeDrawable);
-//
-//        String hairColor = "hair" + avatar_details.get(3);
-//        Drawable hairDrawable = layer.findDrawableByLayerId(R.id.hair);
-//        hairDrawable.setTint(getColor(context, hairColor));
-//        layer.setDrawableByLayerId(R.id.hair, hairDrawable);
-//
-//        String shirt = "shirt" + avatar_details.get(4);
-//        Drawable shirtDrawable = layer.findDrawableByLayerId(R.id.shirt);
-//        shirtDrawable.setTint(getColor(context, shirt));
-//        layer.setDrawableByLayerId(R.id.shirt, shirtDrawable);
-//
-//        image.setImageDrawable(layer);
-//    }
-
-
-    /**
      * Returns a color from colors.xml based on it's name.
      */
     public static int getColor(Context context, String color_name) {
-        return context.getResources().getColor(context.getResources().getIdentifier(color_name, "color", context.getPackageName()));
+        try {
+            return context.getResources().getColor(context.getResources().getIdentifier(color_name, "color", context.getPackageName()));
+        } catch (Exception e) {
+            throw new AssertionError("OOPS, you tried getting a color that doesnt exist");
+        }
     }
 
 
@@ -320,7 +276,11 @@ public class Utils {
      * Returns a drawable based on it's name.
      */
     public static Drawable getDrawable(Context context, String drawable_name) {
-        return context.getResources().getDrawable(context.getResources().getIdentifier(drawable_name, "drawable", context.getPackageName()));
+        try {
+            return context.getResources().getDrawable(context.getResources().getIdentifier(drawable_name, "drawable", context.getPackageName()));
+        } catch (Exception e) {
+            throw new AssertionError("OOPS, you tried getting a drawable that doesnt exist");
+        }
     }
 
 
@@ -387,7 +347,7 @@ public class Utils {
      * Sets clicksEnabled field (needed for back button)
      *
      * @param viewGroup the view group
-     * @param enabled true to enable, false to disable
+     * @param enabled   true to enable, false to disable
      */
     public static void enableDisableClicks(Activity activity, ViewGroup viewGroup, boolean enabled) {
         clicksEnabled = enabled;
@@ -400,7 +360,7 @@ public class Utils {
             }
         }
 
-        ((MainActivity)activity).setBottomNavigationEnabled(enabled);
+        ((MainActivity) activity).setBottomNavigationEnabled(enabled);
     }
 
 
@@ -727,7 +687,8 @@ public class Utils {
                 break;
 
 
-            case "מדע": generes.add("מדעים");
+            case "מדע":
+                generes.add("מדעים");
                 generes.add("מדע לילדים");
                 generes.add("סדרת סיירת המדע");
                 generes.add("מדע בדיוני");
@@ -856,24 +817,7 @@ public class Utils {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
-                    for (DocumentSnapshot document : task.getResult()) {
-                        CollectionReference ref = document.getReference().collection("Notifications");
-                        ref.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if(task.isSuccessful()){
-                                    for(DocumentSnapshot doc: task.getResult()){
-                                        try {
-                                            ArrayList<Long> arr = (ArrayList<Long>) doc.getData().get("user_avatar");
-                                            Avatar avatar = new Avatar(arr.get(0).intValue(), arr.get(1).intValue(), arr.get(4).intValue(), arr.get(2).intValue(), arr.get(3).intValue());
-                                            doc.getReference().update("user_avatar", avatar);
-                                        } catch (Exception e){}
-                                    }
-                                }
-                            }
-                        });
 
-                    }
                 }
             }
         });
@@ -897,7 +841,7 @@ public class Utils {
         });
     }
 
-    public static void deleteDoubleBooks(){
+    public static void deleteDoubleBooks() {
 
         final ArrayList<Book> list = new ArrayList<>();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -921,17 +865,56 @@ public class Utils {
     }
 
 
-    public static void addAvatarToGal(){
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        final DocumentReference userRef = db.collection("Users").document("gal@gmail.com");
-        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                   task.getResult().getReference().update("avatar_details", FieldValue.delete());
+    /**
+     * ******************************** OnClick Listeners ****************************************
+     */
+
+    public static class OpenProfileOnClick implements View.OnClickListener {
+
+        private Context mContext;
+        private String user_email;
+
+        public OpenProfileOnClick(Context context, String user_email) {
+            this.mContext = context;
+            this.user_email = user_email;
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (user_email.equals(FirebaseAuth.getInstance().getCurrentUser().getEmail()))
+                ((MainActivity) mContext).loadFragment(new ProfileFragment());
+            else
+                ((MainActivity) mContext).addFragment(new PublicProfileFragment(user_email));
+        }
+    }
+
+    public static class OpenBookOnClick implements View.OnClickListener {
+
+        private Context mContext;
+        private String book_title;
+
+        public OpenBookOnClick(Context context, String book_title) {
+            this.mContext = context;
+            this.book_title = book_title;
+        }
+
+        @Override
+        public void onClick(View v) {
+            Query bookRef = FirebaseFirestore.getInstance().collection("Books").whereEqualTo("title", this.book_title);
+            bookRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (DocumentSnapshot doc : task.getResult()) {
+                            ((MainActivity) mContext).addFragment(new BookFragment(doc.toObject(Book.class)));
+                            break;
+                        }
+                    } else
+                        Toast.makeText(mContext, "הספר לא קיים יותר במאגר", Toast.LENGTH_SHORT).show();
+
                 }
-            }
-        });
+            });
+        }
     }
 
 }

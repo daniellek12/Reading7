@@ -9,23 +9,31 @@
     </item>
 
     <item android:id="@+id/skin"
-        android:drawable="@drawable/skin1"
+        android:drawable="@drawable/blank"
         android:gravity="bottom" />
 
     <item android:id="@+id/eyes"
-        android:drawable="@drawable/eyes"
+        android:drawable="@drawable/blank"
         android:gravity="bottom" />
 
     <item android:id="@+id/shirt"
-        android:drawable="@drawable/shirt"
+        android:drawable="@drawable/blank"
         android:gravity="bottom" />
 
     <item android:id="@+id/hair"
-        android:drawable="@drawable/hair1"
+        android:drawable="@drawable/blank"
         android:gravity="bottom" />
 
     <item android:id="@+id/glasses"
-        android:drawable="@color/transparent"
+        android:drawable="@drawable/blank"
         android:gravity="bottom" />
+
+    <item android:id="@+id/mustache"
+        android:drawable="@drawable/blank"
+        android:gravity="bottom"/>
+
+    <item android:id="@+id/hair_accessory"
+        android:drawable="@drawable/blank"
+        android:gravity="bottom"/>
 
 </layer-list>

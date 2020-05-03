@@ -3,7 +3,6 @@ package com.reading7.Objects;
 
 import com.google.firebase.Timestamp;
 
-import java.util.ArrayList;
 
 public class WishList implements Comparable {
 
@@ -69,15 +68,6 @@ public class WishList implements Comparable {
     }
 
 
-    public String getUser_name() {
-        return user_name;
-    }
-
-    public void setUser_name(String user_name) {
-        this.user_name = user_name;
-    }
-
-
     public String getBook_id() {
         return book_id;
     }
@@ -93,15 +83,6 @@ public class WishList implements Comparable {
 
     public void setAdding_time(Timestamp adding_time) {
         this.adding_time = adding_time;
-    }
-
-
-    public Avatar getUser_avatar() {
-        return user_avatar;
-    }
-
-    public void setUser_avatar(Avatar user_avatar) {
-        this.user_avatar = user_avatar;
     }
 
 

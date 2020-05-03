@@ -1,10 +1,5 @@
 package com.reading7;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import de.hdodenhof.circleimageview.CircleImageView;
-
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,40 +10,32 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.reading7.Dialogs.ChangePasswordDialog;
 import com.reading7.Dialogs.EditAvatarDialog;
 import com.reading7.Objects.Avatar;
-import com.reading7.Objects.Review;
 import com.reading7.Objects.User;
-import com.reading7.Objects.WishList;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class EditProfileFragment extends Fragment {
 
-    private FirebaseAuth mAuth;
-    private FirebaseFirestore db;
     private User user;
-
+    private Avatar avatar;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         user = ((MainActivity) getActivity()).getCurrentUser();
-        mAuth = FirebaseAuth.getInstance();
-        db = FirebaseFirestore.getInstance();
+        avatar = new Avatar(user.getAvatar());
         return inflater.inflate(R.layout.edit_profile_fragment, null);
     }
 
@@ -108,8 +95,6 @@ public class EditProfileFragment extends Fragment {
                     return;
                 }
 
-                updateReviews(name, Utils.calculateAge(birthday), user.getAvatar());
-                updateWishlists(name, user.getAvatar());
                 updateUser(name, birthday);
 
                 setLoadingMode(false);
@@ -124,7 +109,7 @@ public class EditProfileFragment extends Fragment {
         getView().findViewById(R.id.profile_image).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EditAvatarDialog dialog = new EditAvatarDialog(user.getAvatar());
+                EditAvatarDialog dialog = new EditAvatarDialog(avatar);
                 dialog.setTargetFragment(EditProfileFragment.this, 100);
                 dialog.show(getActivity().getSupportFragmentManager(), "edit avater");
             }
@@ -191,62 +176,23 @@ public class EditProfileFragment extends Fragment {
     }
 
 
-    private void updateReviews(final String newName, final int newAge, final Avatar newAvatar) {
-
-        CollectionReference reviews = FirebaseFirestore.getInstance().collection("Reviews");
-        Query query = reviews.whereEqualTo("reviewer_email", user.getEmail());
-        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()){
-                    for(DocumentSnapshot doc: task.getResult()){
-                        Review review = doc.toObject(Review.class);
-                        FirebaseFirestore.getInstance()
-                                .collection("Reviews")
-                                .document(review.getReview_id())
-                                .update("reviewer_name", newName, "reviewer_age", newAge, "reviewer_avatar", newAvatar);
-                    }
-                }
-            }
-        });
-    }
-
-    private void updateWishlists(final String newName, final Avatar newAvatar) {
-
-        CollectionReference wishlists = FirebaseFirestore.getInstance().collection("Wishlist");
-        Query query = wishlists.whereEqualTo("user_email", user.getEmail());
-        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()){
-                    for(DocumentSnapshot doc: task.getResult()){
-                        WishList wishlist = doc.toObject(WishList.class);
-                        FirebaseFirestore.getInstance()
-                                .collection("Wishlist")
-                                .document(wishlist.getId())
-                                .update("user_name", newName,"user_avatar", newAvatar);
-                    }
-                }
-            }
-        });
-    }
-
     private void updateUser(String newName, String newBirthday) {
-
-        DocumentReference userRef = FirebaseFirestore.getInstance().collection("Users").document(user.getEmail());
-        userRef.update("full_name", newName, "birth_date", newBirthday, "avatar", user.getAvatar());
 
         user.setBirth_date(newBirthday);
         user.setFull_name(newName);
+        user.setAvatar(avatar);
         ((MainActivity)getActivity()).setCurrentUser(user);
+
+        DocumentReference userRef = FirebaseFirestore.getInstance().collection("Users").document(user.getEmail());
+        userRef.update("full_name", newName, "birth_date", newBirthday, "avatar", user.getAvatar());
     }
 
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Make sure fragment codes match up
         if (requestCode == 100) {
-            user.setAvatar((Avatar)data.getSerializableExtra("Avatar"));
-            user.getAvatar().loadIntoImage(getContext(),(CircleImageView)getView().findViewById(R.id.profile_image));
+            avatar = (Avatar)data.getSerializableExtra("Avatar");
+            avatar.loadIntoImage(getContext(),(CircleImageView)getView().findViewById(R.id.profile_image));
         }
     }
 

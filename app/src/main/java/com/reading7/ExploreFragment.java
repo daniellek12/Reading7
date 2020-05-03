@@ -11,7 +11,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -19,18 +18,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.reading7.Adapters.ExploreAdapter;
 import com.reading7.Adapters.StoryPlaylistAdapter;
 import com.reading7.Objects.Book;
-import com.reading7.Objects.Comment;
 import com.reading7.Objects.Recommendation;
 
-import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -67,14 +58,6 @@ public class ExploreFragment extends Fragment {
         ((BottomNavigationView) getActivity().findViewById(R.id.navigation)).setSelectedItemId(R.id.navigation_explore);
 
 
-        getActivity().findViewById(R.id.notifications).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Book book = new Book("id", "title", new ArrayList<String>(), new ArrayList<String>(), "author", "publisher", 2, "summary", 3, 3);
-                ((MainActivity) getActivity()).addFragment(new BookFragment(book));
-            }
-        });
         mGenre = "בשבילך";
         first = 0;
         showProgressBar();
@@ -92,6 +75,13 @@ public class ExploreFragment extends Fragment {
             public void onClick(View view) {
                 ((MainActivity) getActivity()).loadFragment(new SearchFragment());
                 Utils.openKeyboard(getContext());
+            }
+        });
+
+        getActivity().findViewById(R.id.store).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((MainActivity) getActivity()).addFragment(new StoreFragment());
             }
         });
 

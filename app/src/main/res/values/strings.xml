@@ -144,12 +144,15 @@
     <string name="choose_shelf_txt">לאיזה מדף להוסיף את הספר?</string>
     <string name="add_to_shelf">הוספה למדף</string>
     <string name="empty_shelf">עדיין לא הוספת ספרים למדף זה.</string>
-    <string name="add_custom_list">הוספת רשימה חדשה</string>
+    <string name="add_custom_list">הוספת מדף חדש</string>
 
     <string name="add_comment">הוספת תגובה</string>
     <string name="comments">תגובות</string>
     <string name="like">אהבתי</string>
     <string name="review_fragment_title">הביקורת של</string>
+    <string name="buy_now">קנה עכשיו</string>
+    <string name="mustache_title">שפם</string>
+    <string name="ok">אישור</string>
 
 
 </resources>

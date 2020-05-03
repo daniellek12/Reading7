@@ -18,8 +18,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.reading7.BookFragment;
-import com.reading7.MainActivity;
 import com.reading7.Objects.Book;
 import com.reading7.Objects.Review;
 import com.reading7.R;
@@ -86,23 +84,8 @@ public class ExpandedShelfAdapter extends RecyclerView.Adapter<ExpandedShelfAdap
         holder.checked.setVisibility(View.GONE);
 
         if (!editMode) {
-            holder.cover.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Query bookRef = FirebaseFirestore.getInstance().collection("Books").whereEqualTo("title", bookNames.get(position));
-                    bookRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                for (DocumentSnapshot doc : task.getResult()) {
-                                    ((MainActivity) mContext).addFragment(new BookFragment(doc.toObject(Book.class)));
-                                    break;
-                                }
-                            }
-                        }
-                    });
-                }
-            });
+            holder.cover.setOnClickListener(new Utils.OpenBookOnClick(mContext, bookNames.get(position)));
+
         } else {
 
             holder.cover.setOnClickListener(new View.OnClickListener() {
@@ -213,10 +196,11 @@ public class ExpandedShelfAdapter extends RecyclerView.Adapter<ExpandedShelfAdap
                                         final DocumentSnapshot doc = task.getResult();
                                         if (doc.exists()) {
                                             Book book = (doc.toObject(Book.class));
-                                            double newAvg,newAvgAge;
-                                            if(book.getRaters_count()  ==1)
-                                            {newAvg =0; newAvgAge=0;}
-                                            else {
+                                            double newAvg, newAvgAge;
+                                            if (book.getRaters_count() == 1) {
+                                                newAvg = 0;
+                                                newAvgAge = 0;
+                                            } else {
                                                 newAvg = ((book.getAvg_rating() * book.getRaters_count()) - review.getRank()) / (book.getRaters_count() - 1);
                                                 newAvgAge = ((book.getAvg_age() * book.getRaters_count()) - review.getReviewer_age()) / (book.getRaters_count() - 1);
                                             }
@@ -224,7 +208,7 @@ public class ExpandedShelfAdapter extends RecyclerView.Adapter<ExpandedShelfAdap
 
                                             updates.put("avg_rating", newAvg);
                                             updates.put("avg_age", newAvgAge);
-                                            updates.put("raters_count", book.getRaters_count()-1);
+                                            updates.put("raters_count", book.getRaters_count() - 1);
                                             bookRef.update(updates);
                                         }
                                     }
@@ -238,8 +222,6 @@ public class ExpandedShelfAdapter extends RecyclerView.Adapter<ExpandedShelfAdap
             });
         }
     }
-
-
 
 
 }

@@ -1,10 +1,11 @@
-<vector xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:aapt="http://schemas.android.com/aapt"
-    android:width="113.386dp"
-    android:height="113.386dp"
-    android:viewportWidth="113.386"
-    android:viewportHeight="113.386">
-  <path
-      android:pathData="M42.842,79.761c0,0 15.125,15.375 29.999,-0.125c0,0 16.5,5.375 19.5,12.25l10.332,31.287l-86,-1.999l7.044,-30.163C23.717,91.011 25.217,86.011 42.842,79.761z"
-      android:fillColor="#F38599"/>
-</vector>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <item android:id="@+id/color"
+      android:drawable="@drawable/shirt1"
+      android:gravity="bottom" />
+
+  <item android:id="@+id/type"
+      android:drawable="@drawable/blank"
+      android:gravity="bottom" />
+
+</layer-list>

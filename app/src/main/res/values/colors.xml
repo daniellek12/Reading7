@@ -12,7 +12,7 @@
 
     <color name="transparent">#00ff0000</color>
     <color name="transparentPrimaryDark">#DAFFC21C</color>
-    <color name="transparentGrey">#99BFBFBF</color>
+    <color name="transparentGrey">#77000000</color>
     <color name="black">#000000</color>
     <color name="green">#21B160</color>
 
@@ -43,7 +43,7 @@
     <color name="shirt5">#003065</color>
     <color name="shirt6">#FFADAD</color>
     <color name="shirt7">#FFEFAA</color>
-    <color name="shirt8">#BAF511</color>
+    <color name="shirt8">#D0F0C0</color>
     <color name="shirt9">#BAE1FF</color>
     <color name="shirt10">#E6AFFF</color>
 

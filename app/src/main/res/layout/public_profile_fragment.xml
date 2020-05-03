@@ -206,19 +206,22 @@
                 <TextView
                     android:id="@+id/private_text"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/private_image"
+                    android:layout_marginTop="10dp"
                     android:gravity="center"
-                    android:text="@string/public_private_profile" />
+                    android:text="@string/public_private_profile"
+                    android:textColor="@color/lightGrey" />
 
 
-                <de.hdodenhof.circleimageview.CircleImageView
+                <ImageView
                     android:id="@+id/private_image"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="30dp"
-                    android:src="@drawable/private_profile_lock"
-                    app:civ_border_color="@color/white" />
+                    android:layout_marginTop="20dp"
+                    android:src="@drawable/password"
+                    android:tint="@color/lightGrey" />
 
             </RelativeLayout>
 

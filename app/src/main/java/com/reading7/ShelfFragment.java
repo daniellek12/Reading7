@@ -48,7 +48,7 @@ public class ShelfFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ((TextView)getActivity().findViewById(R.id.toolbar_title)).setText(title);
+        ((TextView)getView().findViewById(R.id.toolbar_title)).setText(title);
 
         RecyclerView shelfRV = getActivity().findViewById(R.id.shelfRV);
         GridLayoutManager layoutManager = new GridLayoutManager(getActivity(),3);

@@ -1,12 +1,5 @@
 package com.reading7;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import de.hdodenhof.circleimageview.CircleImageView;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -22,22 +15,32 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.reading7.Adapters.CommentsAdapter;
+import com.reading7.Adapters.FeedAdapter;
 import com.reading7.Dialogs.AddCommentDialog;
 import com.reading7.Objects.Comment;
+import com.reading7.Objects.Post;
 import com.reading7.Objects.Review;
 import com.reading7.Objects.User;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ReviewCommentsFragment extends Fragment {
 
@@ -47,9 +50,8 @@ public class ReviewCommentsFragment extends Fragment {
     private User mUser;
 
 
-    public ReviewCommentsFragment(Review review, User user) {
+    public ReviewCommentsFragment(Review review) {
         this.mReview = review;
-        this.mUser = user;
     }
 
     @Nullable
@@ -57,13 +59,13 @@ public class ReviewCommentsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
+        mUser = ((MainActivity) getActivity()).getCurrentUser();
         return inflater.inflate(R.layout.review_comments_fragment, null);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
-        // ((TextView) getView().findViewById(R.id.reviewTitle)).setText(getString(R.string.review_fragment_title) + " " + mReview.getReviewer_name());
         initBackButton();
         initReviewDetails();
         initComments();
@@ -77,6 +79,8 @@ public class ReviewCommentsFragment extends Fragment {
 
 
     private void initReviewDetails() {
+
+        initReviewUser(mReview.getReviewer_email());
 
         if (mReview.getReview_title().equals(""))
             getView().findViewById(R.id.title).setVisibility(View.GONE);
@@ -92,11 +96,7 @@ public class ReviewCommentsFragment extends Fragment {
             ((TextView) getView().findViewById(R.id.review)).setText(mReview.getReview_content());
         }
 
-        ((TextView) getView().findViewById(R.id.userName)).setText(mReview.getReviewer_name());
         ((RatingBar) getView().findViewById(R.id.ratingBar)).setRating(mReview.getRank());
-
-        CircleImageView profileImage = getView().findViewById(R.id.profileImage);
-        mReview.getReviewer_avatar().loadIntoImage(getContext(), profileImage);
 
         String reviewTime = Utils.RelativeDateDisplay(Timestamp.now().toDate().getTime() -
                 mReview.getReview_time().toDate().getTime());
@@ -106,6 +106,29 @@ public class ReviewCommentsFragment extends Fragment {
         ((TextView) getView().findViewById(R.id.commentsNum)).setText(String.valueOf(mReview.getComments().size()));
 
     }
+
+
+    private void initReviewUser(final String email) {
+
+        DocumentReference userReference = db.collection("Users").document(email);
+        userReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                User reviewer = task.getResult().toObject(User.class);
+
+                TextView userName = getView().findViewById(R.id.userName);
+                userName.setText(reviewer.getFull_name());
+
+                CircleImageView profileImage = getView().findViewById(R.id.profileImage);
+                reviewer.getAvatar().loadIntoImage(getContext(), profileImage);
+
+                Utils.OpenProfileOnClick profileListener = new Utils.OpenProfileOnClick(getContext(), email);
+                profileImage.setOnClickListener(profileListener);
+                userName.setOnClickListener(profileListener);
+            }
+        });
+    }
+
 
     private void initComments() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
@@ -124,6 +147,7 @@ public class ReviewCommentsFragment extends Fragment {
         commentsRV.setAdapter(adapter);
     }
 
+
     private void initBackButton() {
         getView().findViewById(R.id.backButton).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,45 +162,44 @@ public class ReviewCommentsFragment extends Fragment {
     private void initLikeMechanics() {
 
         final String id = mReview.getReview_id();
-        final String book_title = mReview.getBook_title();
-        final ArrayList<String> likedReviews = mUser.getLiked_reviews();
 
-        if (likedReviews.contains(id))
+        if (mUser.getLiked_reviews().contains(id))
             setLikeButton(true);
         else
             setLikeButton(false);
 
         ((TextView) getView().findViewById(R.id.likeNum)).setText(Integer.toString(mReview.getLikes_count()));
+
         getView().findViewById(R.id.likeBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Boolean liked = likedReviews.contains(id);
-                int curr_num = mReview.getLikes_count();
 
-                if (liked) {
-                    likedReviews.remove(id);
-                    mReview.setLikes_count(curr_num - 1);
-                    db.collection("Users").document(mUser.getEmail()).update("liked_reviews", likedReviews);
-                    db.collection("Reviews").document(mReview.getReview_id()).update("likes_count", curr_num - 1);
+                if (mUser.getLiked_reviews().contains(id)) {
+                    mUser.remove_like(id);
+                    mReview.reduceLike();
+                    db.collection("Users").document(mUser.getEmail()).update("liked_reviews", mUser.getLiked_reviews());
+                    db.collection("Reviews").document(mReview.getReview_id()).update("likes_count", mReview.getLikes_count());
 
                     setLikeButton(false);
-                    ((TextView) getView().findViewById(R.id.likeNum)).setText("" + (curr_num - 1));
+                    ((TextView) getView().findViewById(R.id.likeNum)).setText(String.valueOf(mReview.getLikes_count()));
 
                 } else {
-                    likedReviews.add(id);
-                    mReview.setLikes_count(curr_num + 1);
-                    db.collection("Users").document(mUser.getEmail()).update("liked_reviews", likedReviews);
-                    db.collection("Reviews").document(mReview.getReview_id()).update("likes_count", curr_num + 1);
+                    mUser.add_like(id);
+                    mReview.addLike();
+                    db.collection("Users").document(mUser.getEmail()).update("liked_reviews", mUser.getLiked_reviews());
+                    db.collection("Reviews").document(mReview.getReview_id()).update("likes_count", mReview.getLikes_count());
 
                     setLikeButton(true);
-                    ((TextView) getView().findViewById(R.id.likeNum)).setText("" + (curr_num + 1));
+                    ((TextView) getView().findViewById(R.id.likeNum)).setText(String.valueOf(mReview.getLikes_count()));
 
-                    addNotificationLike(mReview.getReviewer_email(), book_title, mReview.getIs_notify());
+                    addNotificationLike(mReview.getReviewer_email(), mReview.getBook_title(), mReview.getIs_notify());
                 }
+
+                ((MainActivity)getActivity()).setCurrentUser(mUser);
             }
         });
-
     }
+
 
     private void setLikeButton(boolean liked) {
 
@@ -192,6 +215,7 @@ public class ReviewCommentsFragment extends Fragment {
             buttonIcon.setImageDrawable(getResources().getDrawable(R.drawable.like));
         }
     }
+
 
     private void addNotificationLike(String to_email, String book_title, boolean is_notify) {
         if (is_notify && (!(to_email.equals(mAuth.getCurrentUser().getEmail())))) {
@@ -224,6 +248,7 @@ public class ReviewCommentsFragment extends Fragment {
             }
         });
     }
+
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -265,6 +290,7 @@ public class ReviewCommentsFragment extends Fragment {
         if (getTargetFragment() != null)
             getTargetFragment().onActivityResult(getTargetRequestCode(), REQUEST_CODE, intent);
     }
+
 
     public String getReviewId() {
         return mReview.getReview_id();

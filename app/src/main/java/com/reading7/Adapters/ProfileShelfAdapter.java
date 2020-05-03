@@ -88,26 +88,7 @@ public class ProfileShelfAdapter extends RecyclerView.Adapter<ProfileShelfAdapte
             });
         } else {
             viewHolder.limitLayout.setVisibility(View.GONE);
-            viewHolder.cover.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Utils.enableDisableClicks(mActivity,viewGroup,false);
-                    Query bookRef = FirebaseFirestore.getInstance().collection("Books").whereEqualTo("title", bookName);
-                    bookRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                for (final DocumentSnapshot doc : task.getResult()) {
-                                    Book b = doc.toObject(Book.class);
-                                    ((MainActivity) mContext).loadFragment(new BookFragment(b));
-                                    Utils.enableDisableClicks(mActivity,viewGroup,true);
-
-                                }
-                            }
-                        }
-                    });
-                }
-            });
+            viewHolder.cover.setOnClickListener(new Utils.OpenBookOnClick(mContext, bookName));
         }
     }
 

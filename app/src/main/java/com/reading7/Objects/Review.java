@@ -2,7 +2,6 @@ package com.reading7.Objects;
 
 import com.google.firebase.Timestamp;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Review implements Comparable {
@@ -129,15 +128,6 @@ public class Review implements Comparable {
     }
 
 
-    public String getReviewer_name() {
-        return reviewer_name;
-    }
-
-    public void setReviewer_name(String reviewer_name) {
-        this.reviewer_name = reviewer_name;
-    }
-
-
     public String getReview_title() {
         return review_title;
     }
@@ -155,14 +145,9 @@ public class Review implements Comparable {
         this.likes_count = likes_count;
     }
 
+    public void addLike() {this.likes_count ++;}
 
-    public Avatar getReviewer_avatar() {
-        return reviewer_avatar;
-    }
-
-    public void setReviewer_avatar(Avatar reviewer_avatar) {
-        this.reviewer_avatar = reviewer_avatar;
-    }
+    public void reduceLike() {this.likes_count --;}
 
 
     public int getReviewer_age() {

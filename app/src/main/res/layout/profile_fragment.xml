@@ -28,17 +28,6 @@
             android:src="@drawable/menu"
             android:tint="@color/white" />
 
-<!--        <ImageButton-->
-<!--            android:id="@+id/requests_btn"-->
-<!--            android:layout_width="25dp"-->
-<!--            android:layout_height="25dp"-->
-<!--            android:layout_gravity="left"-->
-<!--            android:layout_marginLeft="20dp"-->
-<!--            android:layout_marginTop="20dp"-->
-<!--            android:background="@color/transparent"-->
-<!--            android:src="@drawable/badge"-->
-<!--            android:tint="@color/white" />-->
-
         <ImageButton
             android:id="@+id/notificationsBtn"
             android:layout_width="25dp"
@@ -53,14 +42,6 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <!--    <Switch-->
-    <!--        android:id="@+id/private_switch"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_alignParentLeft="true"-->
-    <!--        android:layout_marginLeft="20dp"-->
-    <!--        android:layout_marginTop="20dp"-->
-    <!--        android:visibility="gone" />-->
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -80,7 +61,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="40dp"
                 android:elevation="5dp"
-                android:src="@drawable/avatar_layout"
+                android:src="@color/transparent"
                 app:civ_border_color="@color/white"
                 app:civ_border_width="2dp"
                 app:civ_circle_background_color="@color/white" />
@@ -385,20 +366,32 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/myBooksRV"
-                android:nestedScrollingEnabled="false"/>
+                android:nestedScrollingEnabled="false" />
+
+            <View
+                android:id="@+id/divider9"
+                android:layout_below="@id/customShelvesRV"
+                android:layout_width="match_parent"
+                android:layout_height="0.2dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="15dp"
+                android:background="?android:attr/listDivider" />
 
             <Button
                 android:id="@+id/add_custom_list_btn"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/customShelvesRV"
-                android:background="@drawable/rounded_button"
+                android:layout_height="30dp"
+                android:layout_below="@id/divider9"
                 android:layout_centerHorizontal="true"
+                android:layout_marginBottom="15dp"
+                android:background="@drawable/dashed_border_background"
+                android:paddingStart="25dp"
+                android:paddingEnd="25dp"
                 android:text="@string/add_custom_list"
-                android:paddingStart="15dp"
-                android:paddingEnd="15dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginBottom="15dp" />
+                android:textColor="@color/lightGrey"
+                android:elevation="5dp"/>
 
         </RelativeLayout>
 
@@ -415,7 +408,6 @@
             android:id="@+id/optionsDummy"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:alpha="0.3"
             android:background="@color/transparentGrey" />
 
         <LinearLayout

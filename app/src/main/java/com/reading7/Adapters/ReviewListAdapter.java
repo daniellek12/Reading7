@@ -12,32 +12,26 @@ import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.reading7.Dialogs.AddCommentDialog;
 import com.reading7.BookFragment;
+import com.reading7.Dialogs.AddCommentDialog;
 import com.reading7.MainActivity;
+import com.reading7.Objects.Avatar;
 import com.reading7.Objects.Book;
-import com.reading7.Objects.User;
-import com.reading7.ProfileFragment;
-import com.reading7.PublicProfileFragment;
-import com.reading7.R;
 import com.reading7.Objects.Review;
+import com.reading7.Objects.User;
+import com.reading7.R;
 import com.reading7.ReviewCommentsFragment;
 import com.reading7.Utils;
 
@@ -47,6 +41,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.reading7.Utils.RelativeDateDisplay;
@@ -54,29 +51,20 @@ import static com.reading7.Utils.RelativeDateDisplay;
 public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.ViewHolder> {
 
     private Context mContext;
-    private List<Review> reviews;
-    private FirebaseAuth mAuth;
     private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
+
+    private List<Review> reviews;
     private Fragment fragment;
 
-    private User real_user;
-    // More Fields to support Like button
-    private final FirebaseUser mUser;
-    private final DocumentReference userRef;
-    private ArrayList<String> LikedReviews;
 
-
-    public ReviewListAdapter(Context context, List<Review> reviews, Fragment fragment, User real_user, ArrayList<String> likedReviews) {
+    public ReviewListAdapter(Context context, List<Review> reviews, Fragment fragment) {
 
         this.mContext = context;
         this.mAuth = FirebaseAuth.getInstance();
         this.db = FirebaseFirestore.getInstance();
         this.reviews = reviews;
         this.fragment = fragment;
-        this.real_user = real_user;
-        this.LikedReviews = likedReviews;
-        this.mUser = mAuth.getCurrentUser();
-        this.userRef = db.collection("Users").document(mUser.getEmail());
     }
 
     @NonNull
@@ -87,6 +75,11 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
     }
 
     @Override
+    public int getItemCount() {
+        return reviews.size();
+    }
+
+    @Override
     public void onBindViewHolder(@NonNull final ReviewListAdapter.ViewHolder viewHolder, int i) {
 
         final Review review = reviews.get(i);
@@ -94,11 +87,10 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
         if (i == 0 && ((BookFragment) fragment).isReviewedWithContent()) {
             viewHolder.relativeLayout.setBackgroundColor(mContext.getResources().getColor(R.color.grey));
             viewHolder.deleteBtn.setVisibility(View.VISIBLE);
-            viewHolder.deleteBtn.setOnClickListener(new DeleteReviewOnClick(review.getReviewer_email(), review.getBook_title()));
+            viewHolder.deleteBtn.setOnClickListener(new DeleteReviewOnClick(review));
         }
 
-        review.getReviewer_avatar().loadIntoImage(mContext, viewHolder.profileImage);
-        viewHolder.userName.setText(review.getReviewer_name());
+        bindReviewUser(viewHolder, review.getReviewer_email());
 
         Date date = review.getReview_time().toDate();
         String strDate = RelativeDateDisplay(Timestamp.now().toDate().getTime() - date.getTime());
@@ -120,8 +112,6 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
             viewHolder.reviewContent.setText((review.getReview_content()));
         }
 
-        viewHolder.profileImage.setOnClickListener(new OpenProfileOnClick(review.getReviewer_email()));
-        viewHolder.userName.setOnClickListener(new OpenProfileOnClick(review.getReviewer_email()));
         viewHolder.commentsNum.setText(String.valueOf(review.getComments().size()));
 
         initAddCommentButton(viewHolder, i);
@@ -130,16 +120,32 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
         viewHolder.countersLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ReviewCommentsFragment mReviewCommentsFragment = new ReviewCommentsFragment(review, real_user);
+                ReviewCommentsFragment mReviewCommentsFragment = new ReviewCommentsFragment(review);
                 mReviewCommentsFragment.setTargetFragment(fragment, 303);
                 ((MainActivity) mContext).addFragment(mReviewCommentsFragment);
             }
         });
     }
 
-    @Override
-    public int getItemCount() {
-        return reviews.size();
+
+    private void bindReviewUser(final ViewHolder holder, final String email) {
+
+        DocumentReference userReference = db.collection("Users").document(email);
+        userReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                User reviewer = task.getResult().toObject(User.class);
+
+                holder.userName.setText(reviewer.getFull_name());
+
+                Avatar avatar = reviewer.getAvatar();
+                avatar.loadIntoImage(mContext, holder.profileImage);
+
+                Utils.OpenProfileOnClick profileListener = new Utils.OpenProfileOnClick(mContext, email);
+                holder.profileImage.setOnClickListener(profileListener);
+                holder.userName.setOnClickListener(profileListener);
+            }
+        });
     }
 
 
@@ -178,31 +184,12 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
     }
 
 
-    private class OpenProfileOnClick implements View.OnClickListener {
-
-        private String user_email;
-
-        public OpenProfileOnClick(String user_email) {
-            this.user_email = user_email;
-        }
-
-        @Override
-        public void onClick(View v) {
-            if (user_email.equals(mAuth.getCurrentUser().getEmail()))
-                ((MainActivity) mContext).loadFragment(new ProfileFragment());
-            else
-                ((MainActivity) mContext).addFragment(new PublicProfileFragment(user_email));
-        }
-    }
-
     private class DeleteReviewOnClick implements View.OnClickListener {
 
-        private String user_email;
-        private String book_title;
+        private Review review;
 
-        public DeleteReviewOnClick(String user_email, String book_title) {
-            this.user_email = user_email;
-            this.book_title = book_title;
+        public DeleteReviewOnClick(Review review) {
+            this.review = review;
         }
 
         @Override
@@ -212,73 +199,45 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
 
             reviews.remove(0);
             notifyItemRemoved(0);
-            CollectionReference requestsRef = db.collection("Reviews");
-            Query requestQuery = requestsRef.whereEqualTo("reviewer_email", user_email)
-                    .whereEqualTo("book_title", book_title);
-            requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            final Review review = document.toObject(Review.class);
-                            document.getReference().delete();
-                            final DocumentReference bookRef = FirebaseFirestore.getInstance().collection("Books").document(review.getBook_id());
 
-                            bookRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            DocumentReference reviewReference = db.collection("Reviews").document(review.getReview_id());
+            reviewReference.delete();
 
-                                @Override
-                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        final DocumentSnapshot doc = task.getResult();
-                                        if (doc.exists()) {
-                                            Book book = (doc.toObject(Book.class));
-                                            final float newAvg, newAvgAge;
-                                            if (book.getRaters_count() == 1) {
-                                                newAvg = 0;
-                                                newAvgAge = 0;
-                                            } else {
-                                                newAvg = ((book.getAvg_rating() * book.getRaters_count()) - review.getRank()) / (book.getRaters_count() - 1);
-                                                newAvgAge = ((book.getAvg_age() * book.getRaters_count()) - review.getReviewer_age()) / (book.getRaters_count() - 1);
-                                            }
-                                            final Map<String, Object> updates = new HashMap<String, Object>();
-                                            final int countRaters = book.getRaters_count() - 1;
-                                            updates.put("avg_rating", newAvg);
-                                            updates.put("avg_age", newAvgAge);
-                                            updates.put("raters_count", book.getRaters_count() - 1);
-                                            bookRef.update(updates);
-                                            ((BookFragment) fragment).updateUIAfterDeleteReview(newAvg, newAvgAge, countRaters);
-                                        }
-                                    }
-                                }
-                            });
+            updateBookParams();
+        }
 
+        private void updateBookParams() {
 
-                        }
-                    }
-                }
-            });
+            Book book = ((BookFragment) fragment).getBook();
+
+            final float newAvg, newAvgAge;
+            if (book.getRaters_count() == 1) {
+                newAvg = 0;
+                newAvgAge = 0;
+            } else {
+                newAvg = ((book.getAvg_rating() * book.getRaters_count()) - review.getRank()) / (book.getRaters_count() - 1);
+                newAvgAge = ((book.getAvg_age() * book.getRaters_count()) - review.getReviewer_age()) / (book.getRaters_count() - 1);
+            }
+            final int countRaters = book.getRaters_count() - 1;
+            db.collection("Books").document(review.getBook_id()).update("avg_rating", newAvg, "avg_age", newAvgAge, "raters_count", countRaters);
+            ((BookFragment) fragment).updateUIAfterDeleteReview(newAvg, newAvgAge, countRaters);
         }
     }
 
+
     private void addNotificationLike(String to_email, String book_title, boolean is_notify) {
         if (is_notify && (!(to_email.equals(mAuth.getCurrentUser().getEmail())))) {
-            db = FirebaseFirestore.getInstance();
 
             Map<String, Object> notificationMessegae = new HashMap<>();
 
             notificationMessegae.put("type", mContext.getResources().getString(R.string.like_notificiation));
             notificationMessegae.put("from", mAuth.getCurrentUser().getEmail());
-            notificationMessegae.put("user_name", real_user.getFull_name());
+            notificationMessegae.put("user_name", ((MainActivity) mContext).getCurrentUser().getFull_name());
+            notificationMessegae.put("user_avatar", ((MainActivity) mContext).getCurrentUser().getAvatar());
             notificationMessegae.put("book_title", book_title);
             notificationMessegae.put("time", Timestamp.now());
-            notificationMessegae.put("user_avatar", real_user.getAvatar());
 
-
-            db.collection("Users/" + to_email + "/Notifications").add(notificationMessegae).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                @Override
-                public void onSuccess(DocumentReference documentReference) {
-                }
-            });
+            db.collection("Users/" + to_email + "/Notifications").add(notificationMessegae);
         }
 
     }
@@ -289,7 +248,6 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
         ImageView buttonIcon = viewHolder.likeBtn.findViewById(R.id.likeIcon);
         TextView buttonText = viewHolder.likeBtn.findViewById(R.id.likeText);
 
-
         if (liked) {
             buttonText.setTextColor(mContext.getResources().getColor(R.color.colorPrimaryDark));
             buttonIcon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.like_colored));
@@ -299,6 +257,7 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
         }
 
     }
+
 
     private void initAddCommentButton(ViewHolder viewHolder, final int i) {
 
@@ -317,14 +276,14 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
         });
     }
 
+
     private void initLikeMechanics(final ViewHolder viewHolder, int i) {
 
         final Review review = reviews.get(i);
-
+        final User user = ((MainActivity) mContext).getCurrentUser();
         final String id = review.getReview_id();
-        final String book_title = review.getBook_title();
 
-        if (LikedReviews.contains(id))
+        if (user.getLiked_reviews().contains(id))
             setLikeButton(viewHolder, true);
         else
             setLikeButton(viewHolder, false);
@@ -333,35 +292,34 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
         viewHolder.likeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Boolean liked = LikedReviews.contains(id);
-                final DocumentReference ReviewRef = FirebaseFirestore.getInstance().collection("Reviews").document(review.getReview_id());
-                int curr_num = review.getLikes_count();
-                if (liked) {
-                    LikedReviews.remove(id);
-                    review.setLikes_count(curr_num - 1);
-                    userRef.update("liked_reviews", LikedReviews);
-                    ReviewRef.update("likes_count", curr_num - 1);
+
+                if (user.getLiked_reviews().contains(id)) {
+                    user.remove_like(id);
+                    review.reduceLike();
+                    db.collection("Users").document(user.getEmail()).update("liked_reviews", user.getLiked_reviews());
+                    db.collection("Reviews").document(review.getReview_id()).update("likes_count", review.getLikes_count());
 
                     setLikeButton(viewHolder, false);
-                    int likesNum = Integer.valueOf(viewHolder.likeNum.getText().toString());
-                    viewHolder.likeNum.setText("" + (likesNum - 1));
+                    viewHolder.likeNum.setText(Integer.toString(review.getLikes_count()));
 
                 } else {
-                    LikedReviews.add(id);
-                    review.setLikes_count(curr_num + 1);
-                    userRef.update("liked_reviews", LikedReviews);
-                    ReviewRef.update("likes_count", curr_num + 1);
+                    user.add_like(id);
+                    review.addLike();
+                    db.collection("Users").document(user.getEmail()).update("liked_reviews", user.getLiked_reviews());
+                    db.collection("Reviews").document(review.getReview_id()).update("likes_count", review.getLikes_count());
 
                     setLikeButton(viewHolder, true);
-                    int likesNum = Integer.valueOf(viewHolder.likeNum.getText().toString());
-                    viewHolder.likeNum.setText("" + (likesNum + 1));
+                    viewHolder.likeNum.setText(Integer.toString(review.getLikes_count()));
 
-                    addNotificationLike(review.getReviewer_email(), book_title, review.getIs_notify());
+                    addNotificationLike(review.getReviewer_email(), review.getBook_title(), review.getIs_notify());
                 }
+
+                ((MainActivity) mContext).setCurrentUser(user);
             }
         });
 
     }
+
 
     public void notifyReviewCommentsChanged(String review_id) {
 
@@ -392,6 +350,5 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
             }
         }
     }
-
 
 }

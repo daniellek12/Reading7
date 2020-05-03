@@ -18,7 +18,7 @@
         android:layout_marginRight="20dp"
         android:layout_marginBottom="5dp"
         android:elevation="3dp"
-        android:src="@drawable/avatar_layout"
+        android:src="@color/transparent"
         app:civ_circle_background_color="@color/white" />
 
     <RelativeLayout

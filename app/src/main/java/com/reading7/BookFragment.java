@@ -6,14 +6,6 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.widget.NestedScrollView;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +18,6 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -42,16 +33,20 @@ import com.reading7.Dialogs.AddToShelfDialog;
 import com.reading7.Dialogs.InviteUserDialog;
 import com.reading7.Dialogs.RankBookDialog;
 import com.reading7.Objects.Book;
-import com.reading7.Objects.Comment;
 import com.reading7.Objects.Review;
 import com.reading7.Objects.User;
 import com.reading7.Objects.WishList;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.widget.NestedScrollView;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import static android.text.Layout.JUSTIFICATION_MODE_INTER_WORD;
 
@@ -91,6 +86,8 @@ public class BookFragment extends Fragment {
     public BookFragment(Book book) {
         this.mBook = book;
     }
+
+    public Book getBook() {return mBook;}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -241,23 +238,9 @@ public class BookFragment extends Fragment {
         else
             countRatersText.setText(countRaters + " " + getResources().getString(R.string.reviewers));
 
-        final Fragment frag = this;
-        DocumentReference userRef = db.collection("Users").document(mAuth.getCurrentUser().getEmail());
-        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    final DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        User real_user = document.toObject(User.class);
-                        ReviewListAdapter adapter = new ReviewListAdapter(getActivity(), lstReviews, frag, real_user, (real_user.getLiked_reviews()));
-                        reviewsRV.setAdapter(adapter);
-                        Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), true);
-                    }
-                }
-            }
-        });
-
+        ReviewListAdapter adapter = new ReviewListAdapter(getActivity(), lstReviews, this);
+        reviewsRV.setAdapter(adapter);
+        Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), true);
 
     }
 

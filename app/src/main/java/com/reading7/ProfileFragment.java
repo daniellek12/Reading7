@@ -30,7 +30,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.reading7.Adapters.CustomShelvesAdapter;
 import com.reading7.Adapters.ProfileShelfAdapter;
-import com.reading7.Objects.Avatar;
 import com.reading7.Objects.Review;
 import com.reading7.Objects.Shelf;
 import com.reading7.Objects.User;
@@ -78,21 +77,6 @@ public class ProfileFragment extends Fragment {
         getUserInformation();
 
         initOptionsMenu();
-//        ImageButton dc = (ImageButton) getActivity().findViewById(R.id.settings);
-//        dc.setVisibility(View.GONE);
-        /*dc.bringToFront();
-        dc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                try {
-//                    Utils.convertTxtToBook(getContext());
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-
-                Toast.makeText(getActivity(), "IF YOU TOUCH THIS BUTTON EVER AGAIN ROTEM WILL KILL YOU.", Toast.LENGTH_SHORT).show();
-            }
-        });*/
     }
 
     private void getUserInformation() {

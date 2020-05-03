@@ -25,16 +25,13 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.reading7.Dialogs.AddCommentDialog;
-import com.reading7.BookFragment;
 import com.reading7.MainActivity;
 import com.reading7.Objects.Avatar;
-import com.reading7.Objects.Book;
 import com.reading7.Objects.Post;
 import com.reading7.Objects.PostType;
 import com.reading7.Objects.Review;
-import com.reading7.PublicProfileFragment;
-import com.reading7.R;
 import com.reading7.Objects.User;
+import com.reading7.R;
 import com.reading7.ReviewCommentsFragment;
 import com.reading7.Utils;
 
@@ -45,7 +42,6 @@ import java.util.Map;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.text.Layout.JUSTIFICATION_MODE_INTER_WORD;
@@ -57,16 +53,14 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context mContext;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
-    private User mUser;
     private Fragment fragment;
 
 
-    public FeedAdapter(Context context, Fragment fragment, ArrayList<Post> posts, User mUser) {
+    public FeedAdapter(Context context, Fragment fragment, ArrayList<Post> posts) {
         this.posts = posts;
         this.mContext = context;
         this.mAuth = FirebaseAuth.getInstance();
         this.db = FirebaseFirestore.getInstance();
-        this.mUser = mUser;
         this.fragment = fragment;
     }
 
@@ -154,15 +148,13 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         final ReviewPostHolder holder = (ReviewPostHolder) viewHolder;
         final Post post = posts.get(i);
 
+        bindReviewUser(holder, post.getReviewer_email());
+
         String strDate = RelativeDateDisplay(Timestamp.now().toDate().getTime() - post.getPost_time().toDate().getTime());
         holder.postTime.setText(strDate);
 
-        Avatar avatar = post.getUser_avatar();
-        avatar.loadIntoImage(mContext, holder.profileImage);
-
         holder.ratingBar.setRating(post.getRank());
         holder.rating.setText(String.valueOf(post.getRank()));
-        holder.userName.setText(post.getUser_name());
         holder.bookName.setText("\"" + post.getBook_title() + "\"");
         holder.authorName.setText(post.getBook_author());
         holder.likesNum.setText(Integer.toString(post.getLikes_count()));
@@ -192,11 +184,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         initLikeMechanics(holder, i);
         initAddCommentButton(holder, i);
 
-        OpenProfileOnClick profileListener = new OpenProfileOnClick(post.getReviewer_email());
-        holder.profileImage.setOnClickListener(profileListener);
-        holder.userName.setOnClickListener(profileListener);
-
-        OpenBookOnClick bookListener = new OpenBookOnClick(post.getBook_title());
+        Utils.OpenBookOnClick bookListener = new Utils.OpenBookOnClick(mContext, post.getBook_title());
         holder.cover.setOnClickListener(bookListener);
         holder.coverBackground.setOnClickListener(bookListener);
         holder.bookName.setOnClickListener(bookListener);
@@ -204,9 +192,28 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         holder.countersLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ReviewCommentsFragment mReviewCommentsFragment = new ReviewCommentsFragment(post.toReview(), mUser);
+                ReviewCommentsFragment mReviewCommentsFragment = new ReviewCommentsFragment(post.toReview());
                 mReviewCommentsFragment.setTargetFragment(fragment, 303);
                 ((MainActivity) mContext).addFragment(mReviewCommentsFragment);
+            }
+        });
+    }
+
+    private void bindReviewUser(final FeedAdapter.ReviewPostHolder holder, final String email) {
+        DocumentReference userReference = db.collection("Users").document(email);
+        userReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                User reviewer = task.getResult().toObject(User.class);
+
+                holder.userName.setText(reviewer.getFull_name());
+
+                Avatar avatar = reviewer.getAvatar();
+                avatar.loadIntoImage(mContext, holder.profileImage);
+
+                Utils.OpenProfileOnClick profileListener = new Utils.OpenProfileOnClick(mContext, email);
+                holder.profileImage.setOnClickListener(profileListener);
+                holder.userName.setOnClickListener(profileListener);
             }
         });
     }
@@ -217,26 +224,39 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         Post post = posts.get(i);
 
+        bindWishlistUser(holder, post.getUser_email());
+
         String strDate = RelativeDateDisplay(Timestamp.now().toDate().getTime() - post.getPost_time().toDate().getTime());
         holder.postTime.setText(strDate);
 
-        Avatar avatar = post.getUser_avatar();
-        avatar.loadIntoImage(mContext, holder.profileImage);
-
-        holder.userName.setText(post.getUser_name());
         holder.bookName.setText("\"" + post.getBook_title() + "\"");
         Utils.showImage(post.getBook_title(), holder.cover, (Activity) mContext);
         Utils.showImage(post.getBook_title(), holder.coverBackground, (Activity) mContext);
 
         // Set Click Listeners //
-        OpenProfileOnClick profileListener = new OpenProfileOnClick(post.getUser_email());
-        holder.profileImage.setOnClickListener(profileListener);
-        holder.userName.setOnClickListener(profileListener);
-
-        OpenBookOnClick bookListener = new OpenBookOnClick(post.getBook_title());
+        Utils.OpenBookOnClick bookListener = new Utils.OpenBookOnClick(mContext, post.getBook_title());
         holder.cover.setOnClickListener(bookListener);
         holder.coverBackground.setOnClickListener(bookListener);
         holder.bookName.setOnClickListener(bookListener);
+    }
+
+    private void bindWishlistUser(final FeedAdapter.WishListPostHolder holder, final String email) {
+        DocumentReference userReference = db.collection("Users").document(email);
+        userReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                User reviewer = task.getResult().toObject(User.class);
+
+                holder.userName.setText(reviewer.getFull_name());
+
+                Avatar avatar = reviewer.getAvatar();
+                avatar.loadIntoImage(mContext, holder.profileImage);
+
+                Utils.OpenProfileOnClick profileListener = new Utils.OpenProfileOnClick(mContext, email);
+                holder.profileImage.setOnClickListener(profileListener);
+                holder.userName.setOnClickListener(profileListener);
+            }
+        });
     }
 
 
@@ -307,51 +327,6 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
-    //TODO: NewBookPostHolder
-
-    /**
-     * ******************************** OnClick Listeners ****************************************
-     */
-
-    private class OpenBookOnClick implements View.OnClickListener {
-
-        private String book_title;
-
-        public OpenBookOnClick(String book_title) {
-            this.book_title = book_title;
-        }
-
-        @Override
-        public void onClick(View v) {
-            Query bookRef = FirebaseFirestore.getInstance().collection("Books").whereEqualTo("title", this.book_title);
-            bookRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
-                        for (DocumentSnapshot doc : task.getResult()) {
-                            ((MainActivity) mContext).addFragment(new BookFragment(doc.toObject(Book.class)));
-                            break;
-                        }
-                    }
-                }
-            });
-        }
-    }
-
-    private class OpenProfileOnClick implements View.OnClickListener {
-
-        private String user_email;
-
-        public OpenProfileOnClick(String user_email) {
-            this.user_email = user_email;
-        }
-
-        @Override
-        public void onClick(View v) {
-            ((MainActivity) mContext).addFragment(new PublicProfileFragment(user_email));
-        }
-    }
-
 
     /**
      * ********************************** Other Functions ****************************************
@@ -365,10 +340,10 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
             notificationMessegae.put("type", mContext.getResources().getString(R.string.like_notificiation));
             notificationMessegae.put("from", mAuth.getCurrentUser().getEmail());
-            notificationMessegae.put("user_name", mUser.getFull_name());
+            notificationMessegae.put("user_name", ((MainActivity) mContext).getCurrentUser().getFull_name());
             notificationMessegae.put("book_title", book_title);
             notificationMessegae.put("time", Timestamp.now());
-            notificationMessegae.put("user_avatar", mUser.getAvatar());
+            notificationMessegae.put("user_avatar", ((MainActivity) mContext).getCurrentUser().getAvatar());
 
 
             db.collection("Users/" + to_email + "/Notifications").add(notificationMessegae).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -413,8 +388,9 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private void initLikeMechanics(final FeedAdapter.ReviewPostHolder holder, int position) {
 
         final Post post = posts.get(position);
+        final User user = ((MainActivity) mContext).getCurrentUser();
 
-        if (mUser.getLiked_reviews().contains(post.getReview_id()))
+        if (user.getLiked_reviews().contains(post.getReview_id()))
             setLikeButton(holder, true);
         else
             setLikeButton(holder, false);
@@ -422,29 +398,29 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         holder.likeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Boolean liked = mUser.getLiked_reviews().contains(post.getReview_id());
-                int curr_num = post.getLikes_count();
-                if (liked) {
-                    mUser.remove_like(post.getReview_id());
-                    post.setLikes_count(curr_num - 1);
+                if (user.getLiked_reviews().contains(post.getReview_id())) {
+                    user.remove_like(post.getReview_id());
+                    post.reduceLike();
 
-                    db.collection("Users").document(mUser.getEmail()).update("liked_reviews", mUser.getLiked_reviews());
-                    db.collection("Reviews").document(post.getReview_id()).update("likes_count", curr_num - 1);
+                    db.collection("Users").document(user.getEmail()).update("liked_reviews", user.getLiked_reviews());
+                    db.collection("Reviews").document(post.getReview_id()).update("likes_count", post.getLikes_count());
 
-                    holder.likesNum.setText(String.valueOf(curr_num - 1));
+                    holder.likesNum.setText(String.valueOf(post.getLikes_count()));
                     setLikeButton(holder, false);
 
                 } else {
-                    mUser.add_like(post.getReview_id());
-                    post.setLikes_count(curr_num + 1);
+                    user.add_like(post.getReview_id());
+                    post.addLike();
 
-                    db.collection("Users").document(mUser.getEmail()).update("liked_reviews", mUser.getLiked_reviews());
-                    db.collection("Reviews").document(post.getReview_id()).update("likes_count", curr_num + 1);
+                    db.collection("Users").document(user.getEmail()).update("liked_reviews", user.getLiked_reviews());
+                    db.collection("Reviews").document(post.getReview_id()).update("likes_count", post.getLikes_count());
 
-                    holder.likesNum.setText(String.valueOf(curr_num + 1));
+                    holder.likesNum.setText(String.valueOf(post.getLikes_count()));
                     setLikeButton(holder, true);
                     addNotificationLike(post.getReviewer_email(), post.getBook_title(), post.getIs_notify());
                 }
+
+                ((MainActivity)mContext).setCurrentUser(user);
             }
         });
 

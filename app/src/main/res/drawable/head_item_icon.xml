@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <item android:id="@+id/head"
+      android:drawable="@drawable/blank_avatar"
+      android:gravity="bottom" />
+
+  <item android:id="@+id/item"
+      android:drawable="@drawable/blank"
+      android:gravity="bottom" />
+
+</layer-list>

@@ -2,53 +2,34 @@ package com.reading7.Dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
-import android.graphics.drawable.VectorDrawable;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.RadioGroup;
-import android.widget.ScrollView;
 
+import com.google.android.material.tabs.TabLayout;
+import com.reading7.Adapters.EditAvatarAdapter;
 import com.reading7.Objects.Avatar;
 import com.reading7.R;
 import com.reading7.Utils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
-import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import de.hdodenhof.circleimageview.CircleImageView;
-
-import static com.reading7.Utils.getColor;
-import static com.reading7.Utils.getDrawable;
 
 public class EditAvatarDialog extends AppCompatDialogFragment {
 
     private Avatar avatar;
-
     private CircleImageView imageView;
-    private LayerDrawable layer;
-
-    private Button bodyBtn;
-    private Button hairBtn;
-    private Button accessoriesBtn;
-
-    private ScrollView bodyLayout;
-    private ScrollView hairLayout;
-    private ScrollView accessoriesLayout;
-
-    private RadioGroup skinButtons;
-    private RadioGroup eyesButtons;
-    private RadioGroup hairColorButtons;
-
+    private List<View> tabViews = new ArrayList<>();
 
     public EditAvatarDialog(Avatar avatar) {
         this.avatar = avatar;
@@ -61,250 +42,306 @@ public class EditAvatarDialog extends AppCompatDialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         View view = getActivity().getLayoutInflater().inflate(R.layout.edit_avatar_dialog, null);
 
-        builder.setView(view).setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                sendResult(100);
-            }
-        });
-
         imageView = view.findViewById(R.id.image);
-        avatar.loadIntoImage(getContext(),imageView);
-        layer = (LayerDrawable) imageView.getDrawable();
+        avatar.loadIntoImage(getContext(), imageView);
 
         initTabs(view);
-        initSkinButtons(view);
-        initEyesButtons(view);
-        initShirtButtons(view);
-        initHairColorButtons(view);
-        initHairTypeButtons(view);
+        initOkButton(view);
+        initCancelButton(view);
 
-        return builder.create();
+        initSkinLayout(view);
+        initEyesLayout(view);
+        initHairColorLayout(view);
+        initHairTypeLayout(view);
+        initShirtLayout(view);
+        initGlassesLayout(view);
+        initMustacheLayout(view);
+        initHairAccessoriesLayout(view);
+
+        Dialog dialog = builder.setView(view).create();
+        dialog.getWindow().setBackgroundDrawable(Utils.getDrawable(getContext(), "blank"));
+        return dialog;
     }
 
 
     private void initTabs(View view) {
 
-        bodyBtn = view.findViewById(R.id.bodyBtn);
-        hairBtn = view.findViewById(R.id.hairBtn);
-        accessoriesBtn = view.findViewById(R.id.accessoriesBtn);
-
-        bodyLayout = view.findViewById(R.id.bodyLayout);
-        hairLayout = view.findViewById(R.id.hairLayout);
-        accessoriesLayout = view.findViewById(R.id.accessoriesLayout);
-
-        bodyBtn.setOnClickListener(new View.OnClickListener() {
+        TabLayout tabs = view.findViewById(R.id.tabs);
+        tabs.getTabAt(0).getIcon().setTint(Utils.getColor(getContext(), "colorPrimaryDark"));
+        tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
-            public void onClick(View view) {
-                changeTab(0);
-            }
-        });
-        hairBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                changeTab(1);
-            }
-        });
-        accessoriesBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                changeTab(2);
-            }
-        });
-    }
-
-
-    private void changeTab(int position) {
-
-        switch (position) {
-            case 0:
-                bodyLayout.setVisibility(View.VISIBLE);
-                hairLayout.setVisibility(View.GONE);
-                accessoriesLayout.setVisibility(View.GONE);
-                bodyBtn.setTextColor(getResources().getColor(R.color.colorAccent));
-                hairBtn.setTextColor(getResources().getColor(R.color.black));
-                accessoriesBtn.setTextColor(getResources().getColor(R.color.black));
-                break;
-
-            case 1:
-                bodyLayout.setVisibility(View.GONE);
-                hairLayout.setVisibility(View.VISIBLE);
-                accessoriesLayout.setVisibility(View.GONE);
-                bodyBtn.setTextColor(getResources().getColor(R.color.black));
-                hairBtn.setTextColor(getResources().getColor(R.color.colorAccent));
-                accessoriesBtn.setTextColor(getResources().getColor(R.color.black));
-                break;
-
-            case 2:
-                bodyLayout.setVisibility(View.GONE);
-                hairLayout.setVisibility(View.GONE);
-                accessoriesLayout.setVisibility(View.VISIBLE);
-                bodyBtn.setTextColor(getResources().getColor(R.color.black));
-                hairBtn.setTextColor(getResources().getColor(R.color.black));
-                accessoriesBtn.setTextColor(getResources().getColor(R.color.colorAccent));
-                break;
-        }
-    }
-
-
-    private void initSkinButtons(View view) {
-        skinButtons = view.findViewById(R.id.skinButtons);
-        skinButtons.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int checked) {
-
-                switch (checked) {
-                    case R.id.skin1:
-                        layer.setDrawableByLayerId(R.id.skin, getResources().getDrawable(R.drawable.skin1));
-                        avatar.setSkinColor(1);
-                        break;
-                    case R.id.skin2:
-                        layer.setDrawableByLayerId(R.id.skin, getResources().getDrawable(R.drawable.skin2));
-                        avatar.setSkinColor(2);
-                        break;
-                    case R.id.skin3:
-                        layer.setDrawableByLayerId(R.id.skin, getResources().getDrawable(R.drawable.skin3));
-                        avatar.setSkinColor(3);
-                        break;
-                    case R.id.skin4:
-                        layer.setDrawableByLayerId(R.id.skin, getResources().getDrawable(R.drawable.skin4));
-                        avatar.setSkinColor(4);
-                        break;
-                    case R.id.skin5:
-                        layer.setDrawableByLayerId(R.id.skin, getResources().getDrawable(R.drawable.skin5));
-                        avatar.setSkinColor(5);
-                        break;
+            public void onTabSelected(TabLayout.Tab tab) {
+                tab.getIcon().setTint(Utils.getColor(getContext(), "colorPrimaryDark"));
+                for (int i = 0; i < tabViews.size(); i++) {
+                    if (tab.getPosition() == i)
+                        tabViews.get(i).setVisibility(View.VISIBLE);
+                    else
+                        tabViews.get(i).setVisibility(View.GONE);
                 }
-                imageView.setImageDrawable(layer);
             }
-        });
-    }
 
-
-    private void initEyesButtons(View view) {
-        eyesButtons = view.findViewById(R.id.eyesButtons);
-        eyesButtons.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int checked) {
+            public void onTabUnselected(TabLayout.Tab tab) {
+                tab.getIcon().setTint(Utils.getColor(getContext(), "lightGrey"));
 
-                Drawable eyes = layer.findDrawableByLayerId(R.id.eyes);
-                switch (checked) {
-                    case R.id.eyes1:
-                        eyes.setTint(getResources().getColor(R.color.eyes1));
-                        avatar.setEyeColor(1);
-                        break;
-                    case R.id.eyes2:
-                        eyes.setTint(getResources().getColor(R.color.eyes2));
-                        avatar.setEyeColor(2);
-                        break;
-                    case R.id.eyes3:
-                        eyes.setTint(getResources().getColor(R.color.eyes3));
-                        avatar.setEyeColor(3);
-                        break;
-                    case R.id.eyes4:
-                        eyes.setTint(getResources().getColor(R.color.eyes4));
-                        avatar.setEyeColor(4);
-                        break;
-                    case R.id.eyes5:
-                        eyes.setTint(getResources().getColor(R.color.eyes5));
-                        avatar.setEyeColor(5);
-                        break;
-                }
-                imageView.setImageDrawable(layer);
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
+
+        // Views should be added in the right order
+        tabViews.add(view.findViewById(R.id.skinLayout));
+        tabViews.add(view.findViewById(R.id.eyesLayout));
+        tabViews.add(view.findViewById(R.id.hairLayout));
+        tabViews.add(view.findViewById(R.id.mustacheLayout));
+        tabViews.add(view.findViewById(R.id.shirtLayout));
+        tabViews.add(view.findViewById(R.id.glassesLayout));
+        tabViews.add(view.findViewById(R.id.hairAccessoriesLayout));
+    }
+
+    private void initOkButton(View view) {
+        view.findViewById(R.id.okButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendResult(100);
+                dismiss();
+            }
+        });
+    }
+
+    private void initCancelButton(View view) {
+        view.findViewById(R.id.cancelButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
             }
         });
     }
 
 
-    private void initShirtButtons(View view) {
-        for (int i = 1; i < 11; i++) {
-            String tag = "shirt" + i;
-            ImageButton shirtButton = view.findViewWithTag(tag);
-            shirtButton.setOnClickListener(new ShirtColorOnClickListener(i));
-        }
+    private void initSkinLayout(View view) {
+
+        ArrayList<Avatar.Item> skinItems = new ArrayList<>();
+        getSkins(skinItems);
+
+        RecyclerView skinRV = view.findViewById(R.id.skinRV);
+        skinRV.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 5);
+        skinRV.setLayoutManager(layoutManager);
+        EditAvatarAdapter adapter = new EditAvatarAdapter(getContext(), skinItems, avatar, imageView);
+        skinRV.setAdapter(adapter);
     }
 
+    private void initEyesLayout(View view) {
 
-    private void initHairColorButtons(final View view) {
-        hairColorButtons = view.findViewById(R.id.hairColorButtons);
+        ArrayList<Avatar.Item> eyesItems = new ArrayList<>();
+        getEyes(eyesItems);
+
+        RecyclerView eyesRV = view.findViewById(R.id.eyesRV);
+        eyesRV.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 5);
+        eyesRV.setLayoutManager(layoutManager);
+        EditAvatarAdapter adapter = new EditAvatarAdapter(getContext(), eyesItems, avatar, imageView);
+        eyesRV.setAdapter(adapter);
+    }
+
+    private void initShirtLayout(View view) {
+
+        ArrayList<Avatar.Item> shirtsItems = new ArrayList<>();
+        getShirts(shirtsItems);
+
+        RecyclerView shirtsRV = view.findViewById(R.id.shirtsRV);
+        shirtsRV.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 5);
+        shirtsRV.setLayoutManager(layoutManager);
+        EditAvatarAdapter adapter = new EditAvatarAdapter(getContext(), shirtsItems, avatar, imageView);
+        shirtsRV.setAdapter(adapter);
+    }
+
+    private void initHairColorLayout(final View view) {
+        RadioGroup hairColorButtons = view.findViewById(R.id.hairColorButtons);
         hairColorButtons.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int checked) {
 
+                LayerDrawable layer = (LayerDrawable)imageView.getDrawable();
                 Drawable hair = layer.findDrawableByLayerId(R.id.hair);
+                Drawable mustache = layer.findDrawableByLayerId(R.id.mustache);
+
                 switch (checked) {
                     case R.id.hairColor1:
                         hair.setTint(getResources().getColor(R.color.hair1));
+                        mustache.setTint(getResources().getColor(R.color.hair1));
                         avatar.setHairColor(1);
                         break;
                     case R.id.hairColor2:
                         hair.setTint(getResources().getColor(R.color.hair2));
+                        mustache.setTint(getResources().getColor(R.color.hair2));
                         avatar.setHairColor(2);
                         break;
                     case R.id.hairColor3:
                         hair.setTint(getResources().getColor(R.color.hair3));
+                        mustache.setTint(getResources().getColor(R.color.hair3));
                         avatar.setHairColor(3);
                         break;
                     case R.id.hairColor4:
                         hair.setTint(getResources().getColor(R.color.hair4));
+                        mustache.setTint(getResources().getColor(R.color.hair4));
                         avatar.setHairColor(4);
                         break;
                     case R.id.hairColor5:
                         hair.setTint(getResources().getColor(R.color.hair5));
+                        mustache.setTint(getResources().getColor(R.color.hair5));
                         avatar.setHairColor(5);
                         break;
                 }
 
                 imageView.setImageDrawable(layer);
+                initHairTypeLayout(view);
+                initMustacheLayout(view);
             }
         });
     }
 
+    private void initHairTypeLayout(View view) {
 
-    private void initHairTypeButtons(View view) {
+        ArrayList<Avatar.Item> hairTypeItems = new ArrayList<>();
+        getHairs(hairTypeItems);
+
+        RecyclerView hairRV = view.findViewById(R.id.hairRV);
+        hairRV.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 4);
+        hairRV.setLayoutManager(layoutManager);
+        EditAvatarAdapter adapter = new EditAvatarAdapter(getContext(), hairTypeItems, avatar, imageView);
+        hairRV.setAdapter(adapter);
+    }
+
+    private void initGlassesLayout(View view) {
+
+        ArrayList<Avatar.Item> glassesItems = new ArrayList<>();
+        getGlasses(glassesItems);
+
+        if (glassesItems.size() < 2) {
+            view.findViewById(R.id.glassesLayout).setVisibility(View.GONE);
+            return;
+        }
+
+        RecyclerView glassesRV = view.findViewById(R.id.glassesRV);
+        glassesRV.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 5);
+        glassesRV.setLayoutManager(layoutManager);
+        EditAvatarAdapter adapter = new EditAvatarAdapter(getContext(), glassesItems, avatar, imageView);
+        glassesRV.setAdapter(adapter);
+    }
+
+    private void initMustacheLayout(View view) {
+
+        ArrayList<Avatar.Item> mustachesItems = new ArrayList<>();
+        getMustaches(mustachesItems);
+
+        if (mustachesItems.size() < 2) {
+            view.findViewById(R.id.mustacheLayout).setVisibility(View.GONE);
+            return;
+        }
+
+        RecyclerView mustacheRV = view.findViewById(R.id.mustacheRV);
+        mustacheRV.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 5);
+        mustacheRV.setLayoutManager(layoutManager);
+        EditAvatarAdapter adapter = new EditAvatarAdapter(getContext(), mustachesItems, avatar, imageView);
+        mustacheRV.setAdapter(adapter);
+    }
+
+    private void initHairAccessoriesLayout(View view) {
+
+        ArrayList<Avatar.Item> hairAccessoriesItems = new ArrayList<>();
+        getHairAccessories(hairAccessoriesItems);
+
+        if (hairAccessoriesItems.size() < 2) {
+            view.findViewById(R.id.hairAccessoriesLayout).setVisibility(View.GONE);
+            return;
+        }
+
+        RecyclerView hairAccessoriesRV = view.findViewById(R.id.hairAccessoriesRV);
+        hairAccessoriesRV.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 5);
+        hairAccessoriesRV.setLayoutManager(layoutManager);
+        EditAvatarAdapter adapter = new EditAvatarAdapter(getContext(), hairAccessoriesItems, avatar, imageView);
+        hairAccessoriesRV.setAdapter(adapter);
+    }
+
+
+    private void getSkins(ArrayList<Avatar.Item> skinItems) {
+
+        skinItems.add(new Avatar.Item(Avatar.ItemType.SKIN, 1));
+        skinItems.add(new Avatar.Item(Avatar.ItemType.SKIN, 2));
+        skinItems.add(new Avatar.Item(Avatar.ItemType.SKIN, 3));
+        skinItems.add(new Avatar.Item(Avatar.ItemType.SKIN, 4));
+        skinItems.add(new Avatar.Item(Avatar.ItemType.SKIN, 5));
+    }
+
+    private void getEyes(ArrayList<Avatar.Item> eyesItems) {
+
+        for (int i = 1; i < 6; i++) {
+            eyesItems.add(new Avatar.Item(Avatar.ItemType.EYES, i));
+
+        }
+    }
+
+    private void getHairs(ArrayList<Avatar.Item> hairTypeItems) {
+
         for (int i = 1; i < 13; i++) {
-            String tag = "hair" + i;
-            ImageButton hairButton = view.findViewWithTag(tag);
-            hairButton.setOnClickListener(new HairTypeOnClickListener(getDrawable(getContext(),tag), i));
+            hairTypeItems.add(new Avatar.Item(Avatar.ItemType.HAIR, i, avatar.getHairColor()));
         }
     }
 
+    private void getShirts(ArrayList<Avatar.Item> shirtsItems) {
 
-    private class HairTypeOnClickListener implements View.OnClickListener {
-
-        Drawable drawable;
-        int hair_index;
-
-        public HairTypeOnClickListener(Drawable drawable, int hair_index) {
-            this.drawable = drawable;
-            this.hair_index = hair_index;
+        // Blank t-shirts for everyone
+        for (int i = 1; i < 11; i++) {
+            shirtsItems.add(new Avatar.Item(Avatar.ItemType.SHIRT, 0, i));
         }
 
-        @Override
-        public void onClick(View v) {
-            String hairColor = "hair" + avatar.getHairColor();
-            drawable.setTint(getColor(getContext(),hairColor));
-            avatar.setHairType(hair_index);
-            layer.setDrawableByLayerId(R.id.hair, drawable);
-            imageView.setImageDrawable(layer);
+        for (Avatar.Item item : avatar.getUnlockedItems()) {
+            if (item.getType() == Avatar.ItemType.SHIRT) {
+                shirtsItems.add(item);
+            }
         }
     }
 
+    private void getGlasses(ArrayList<Avatar.Item> glassesItems) {
 
-    private class ShirtColorOnClickListener implements View.OnClickListener {
+        glassesItems.add(new Avatar.Item(Avatar.ItemType.GLASSES, 0));
 
-        int color_index;
-
-        public ShirtColorOnClickListener(int color_index) {
-            this.color_index = color_index;
+        for (Avatar.Item item : avatar.getUnlockedItems()) {
+            if (item.getType() == Avatar.ItemType.GLASSES) {
+                glassesItems.add(item);
+            }
         }
+    }
 
-        @Override
-        public void onClick(View v) {
-            avatar.setShirtColor(color_index);
-            Drawable shirt = layer.findDrawableByLayerId(R.id.shirt);
-            shirt.setTint(getColor(getContext(), "shirt" + color_index));
-            imageView.setImageDrawable(layer);
+    private void getMustaches(ArrayList<Avatar.Item> mustachesItems) {
+
+        mustachesItems.add(new Avatar.Item(Avatar.ItemType.MUSTACHE, 0));
+
+        for (Avatar.Item item : avatar.getUnlockedItems()) {
+            if (item.getType() == Avatar.ItemType.MUSTACHE) {
+                item.setColorIndex(avatar.getHairColor());
+                mustachesItems.add(item);
+            }
+        }
+    }
+
+    private void getHairAccessories(ArrayList<Avatar.Item> hairAccessoriesItems) {
+
+        hairAccessoriesItems.add(new Avatar.Item(Avatar.ItemType.HAIR_ACCESSORY, 0));
+
+        for (Avatar.Item item : avatar.getUnlockedItems()) {
+            if (item.getType() == Avatar.ItemType.HAIR_ACCESSORY) {
+                hairAccessoriesItems.add(item);
+            }
         }
     }
 

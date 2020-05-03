@@ -19,7 +19,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginRight="20dp"
         android:elevation="3dp"
-        android:src="@drawable/avatar_layout"
+        android:src="@color/transparent"
         app:civ_circle_background_color="@color/white" />
 
     <TextView

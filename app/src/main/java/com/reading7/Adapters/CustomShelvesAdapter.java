@@ -118,7 +118,7 @@ public class CustomShelvesAdapter extends RecyclerView.Adapter<CustomShelvesAdap
         viewHolder.shelf_title_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainActivity) mContext).addFragment(new ShelfFragment(viewHolder.shelfBookNames, shelfName, user_email, ShelfFragment.ShelfType.WISHLIST));
+                ((MainActivity) mContext).loadFragment(new ShelfFragment(viewHolder.shelfBookNames, shelfName, user_email, ShelfFragment.ShelfType.WISHLIST));
             }
         });
     }
