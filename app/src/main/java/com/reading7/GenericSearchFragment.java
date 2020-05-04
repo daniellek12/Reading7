@@ -79,7 +79,7 @@ public class GenericSearchFragment<T> extends Fragment implements androidx.appco
 //        }
 
         CollectionReference requestBooksRef = FirebaseFirestore.getInstance().collection("Books"); // FIXME make generic!
-        requestBooksRef.whereEqualTo("title", ((androidx.appcompat.widget.SearchView) getActivity().findViewById(R.id.searchView)).getQuery().toString()).limit(2).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() { // FIXME get limit
+        requestBooksRef.whereEqualTo("title", "").limit(2).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() { // FIXME get limit
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
@@ -92,9 +92,9 @@ public class GenericSearchFragment<T> extends Fragment implements androidx.appco
 
 //                adapter = new SearchBooksAdapter(getContext(), books);
                     list.setAdapter(adapter);
-                    int last_index = task.getResult().size() - 1;
+                    int last_index = task.getResult().size();
                     if (last_index > 0) {
-                        lastVisible = task.getResult().getDocuments().get(last_index);
+                        lastVisible = task.getResult().getDocuments().get(last_index - 1);
                     } else {
                         lastVisible = null;
                     }
@@ -181,9 +181,15 @@ public class GenericSearchFragment<T> extends Fragment implements androidx.appco
                         if (adapter != null) {
                             adapter.notifyDataSetChanged();
                         }
-                        lastVisible = task.getResult().getDocuments().get(task.getResult().size() - 1);
-                        if (task.getResult().size() < 4) {
-                            isLastItemReached = true;
+
+                        int last_index = task.getResult().size();
+                        if (last_index > 0) {
+                            lastVisible = task.getResult().getDocuments().get(last_index - 1);
+                            if (task.getResult().size() < 4) {
+                                isLastItemReached = true;
+                            }
+                        } else {
+                            lastVisible = null;
                         }
                     }
                 }
