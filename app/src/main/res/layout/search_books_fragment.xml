@@ -97,6 +97,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="LOAD MORE"
-        android:id="@+id/search_load_more_btn"/>
+        android:id="@+id/search_load_more_btn"
+        android:visibility="visible"/>
 
 </RelativeLayout>
