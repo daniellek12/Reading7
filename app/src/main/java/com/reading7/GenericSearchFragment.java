@@ -84,6 +84,7 @@ public class GenericSearchFragment<T> extends Fragment implements androidx.appco
                 load_items();
             }
         });
+        load_btn.bringToFront();
         initItems();
         initAdapter();
 
