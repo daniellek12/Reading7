@@ -206,11 +206,13 @@ public class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.V
         if (notification.getBook_title().equals("request_approved_notification") || notification.getBook_title().equals("follow_notification_public") || notification.getBook_title().equals("follow_notification_accepted")) {
             holder.clickNotificationBtn.setOnClickListener(new Utils.OpenProfileOnClick(mContext, notification.getFrom()));
             holder.content.setText((notification.getType()));
+            return;
 
         }
         if (notification.getType().equals(mContext.getResources().getString(R.string.invite_notificiation))) {
             holder.clickNotificationBtn.setOnClickListener(new Utils.OpenBookOnClick(mContext, notification.getBook_title()));
             holder.content.setText((notification.getType()) + " על הספר " + notification.getBook_title());
+
         } else {
             holder.clickNotificationBtn.setOnClickListener(new OpenReviewOnBookOnClick(notification.getBook_title()));
             holder.content.setText((notification.getType()) + " על הספר " + notification.getBook_title());
