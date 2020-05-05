@@ -122,7 +122,7 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         android:rotation="180"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="9dp"
         app:backgroundTint="@color/colorPrimaryDark"
         app:srcCompat="@drawable/arrow_right" />
 
