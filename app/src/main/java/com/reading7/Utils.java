@@ -918,6 +918,32 @@ public class Utils {
         }
     }
 
+    public static class OpenChallengeOnBookOnClick implements View.OnClickListener {
+
+        private Context mContext;
+        private String question_content;
+        private ArrayList<String> possible_answers;
+        private String right_answer;
+        private String book_title;
+
+        public OpenChallengeOnBookOnClick(Context context,String book_title,String question_content, ArrayList<String> possible_answers, String right_answer) {
+            this.mContext = context;
+            this.question_content = question_content;
+            this.possible_answers=possible_answers;
+            this.right_answer = right_answer;
+            this.book_title= book_title;
+        }
+
+        @Override
+        public void onClick(View v) {
+            //((MainActivity) mContext).addFragment(new ChallengeFragment(book_title,question_content,possible_answers,right_answer);
+            Toast.makeText(mContext, "HOLA", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+
+
+
 }
 
 

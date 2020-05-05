@@ -244,17 +244,6 @@ public class Post implements Comparable {
     }
 
 
-    public boolean getIs_notify() {
-        if (type == PostType.Review)
-            return mReview.getIs_notify();
-
-        return true;
-    }
-
-    public void setIs_notify(boolean is_notify) {
-        if (type == PostType.Review)
-            mReview.setIs_notify(is_notify);
-    }
 
 
     public HashMap<String, Comment> getComments() {

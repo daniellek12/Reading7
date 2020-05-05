@@ -109,7 +109,7 @@ public class RankBookDialog extends AppCompatDialogFragment {
                             userAge = Utils.calculateAge(user.getBirth_date());
                             if (mReview == null) {
 
-                                mReview = new Review("", book_id, mAuth.getCurrentUser().getEmail(), Utils.calculateAge(user.getBirth_date()), rank, review_title, review_content, Timestamp.now(), user.getFull_name(), book_title, book_author, user.getAvatar(), user.getIs_notify());
+                                mReview = new Review("", book_id, mAuth.getCurrentUser().getEmail(), Utils.calculateAge(user.getBirth_date()), rank, review_title, review_content, Timestamp.now(), book_title, book_author);
                                 mReview.setReview_id(newReview.getId());
                                 final float newAvg = ((numOfRaters * currAvg) + rank) / (numOfRaters + 1);
                                 final float newAge = ((numOfRaters * currAge) + userAge) / (numOfRaters + 1);

@@ -208,7 +208,7 @@ public class PublicProfileFragment extends Fragment {
                         userRef = db.collection("Users").document(user.getEmail());
                         userRef.update("follow_requests", FieldValue.arrayUnion(user_me.getEmail()));
                     }
-                    addNotificationFollow(user.getEmail(), user.getIs_notify(), user.getIs_private());
+                    addNotificationFollow(user.getEmail(), user.getIs_private());
 
                 } else { // already following / requested
                     follow.setText(follow_string);
@@ -265,8 +265,8 @@ public class PublicProfileFragment extends Fragment {
         });
     }
 
-    private void addNotificationFollow(String to_email, boolean is_notify, boolean is_private) {
-        if (is_notify) {
+    private void addNotificationFollow(String to_email,  boolean is_private) {
+
             db = FirebaseFirestore.getInstance();
 
             Map<String, Object> notificationMessegae = new HashMap<>();
@@ -282,9 +282,7 @@ public class PublicProfileFragment extends Fragment {
             }
 
             notificationMessegae.put("from", mAuth.getCurrentUser().getEmail());
-            notificationMessegae.put("user_name", ((MainActivity) getActivity()).getCurrentUser().getFull_name());
             notificationMessegae.put("time", Timestamp.now());
-            notificationMessegae.put("user_avatar", ((MainActivity) getActivity()).getCurrentUser().getAvatar());
 
 
             db.collection("Users/" + to_email + "/Notifications").add(notificationMessegae).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -292,7 +290,7 @@ public class PublicProfileFragment extends Fragment {
                 public void onSuccess(DocumentReference documentReference) {
                 }
             });
-        }
+
     }
 
 

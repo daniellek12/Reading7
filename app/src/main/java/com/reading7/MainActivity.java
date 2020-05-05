@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -140,6 +141,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 }
             });
 
+        }
+        if(type.equals(getResources().getString(R.string.challenge_notificiation))){
+            //((MainActivity) mContext).addFragment(new ChallengeFragment(book_title,question_content,possible_answers,right_answer);
+            Toast.makeText(this, "HOLA", Toast.LENGTH_SHORT).show();
+            return;
         }
 
         if ((type.equals(getResources().getString(R.string.like_notificiation)))

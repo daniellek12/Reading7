@@ -152,22 +152,9 @@ public class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.V
                 UpdatePrivateNotification(j);
 
                 //add notification for approving
-                Query followeRef = db.collection("Users").whereEqualTo("email", follower_mail);
-                followeRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (DocumentSnapshot doc : task.getResult()) {
-                                User u = (doc.toObject(User.class));
-                                addNotificationRequestApproved(u.getEmail(), u.getIs_notify());
-                                break;
-                            }
-                        }
-                    }
-                });
+                addNotificationRequestApproved(followed_mail);
 
-            }
-        });
+            }});
     }
 
     private void bindPrivateUser(final NotificationListAdapter.PrivateNotificationHolder holder, final String email) {
@@ -211,9 +198,16 @@ public class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
         if (notification.getType().equals(mContext.getResources().getString(R.string.invite_notificiation))) {
             holder.clickNotificationBtn.setOnClickListener(new Utils.OpenBookOnClick(mContext, notification.getBook_title()));
-            holder.content.setText((notification.getType()) + " על הספר " + notification.getBook_title());
+            holder.content.setText((notification.getType()) + " את הספר " + notification.getBook_title());
+            return;
 
-        } else {
+        }
+        if(notification.getType().equals(mContext.getResources().getString(R.string.challenge_notificiation)))
+        {
+            holder.clickNotificationBtn.setOnClickListener(new Utils.OpenChallengeOnBookOnClick(mContext,notification.getBook_title(),notification.getQuestion_content(),notification.getPossible_answers(),notification.getRight_answer()));
+            holder.content.setText((notification.getType()) + " על הספר " + notification.getBook_title());
+        }
+        else {
             holder.clickNotificationBtn.setOnClickListener(new OpenReviewOnBookOnClick(notification.getBook_title()));
             holder.content.setText((notification.getType()) + " על הספר " + notification.getBook_title());
         }
@@ -289,21 +283,19 @@ public class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.V
      * ********************************** Other Functions *******************************************
      */
 
-    private void addNotificationRequestApproved(String to_email, boolean is_notify) {
+    private void addNotificationRequestApproved(String to_email) {
 
-        if (is_notify) {
+
 
             Map<String, Object> notificationMessegae = new HashMap<>();
 
             notificationMessegae.put("type", mContext.getResources().getString(R.string.request_approved_notificiation));
             notificationMessegae.put("book_title", "request_approved_notification");//not relvant
             notificationMessegae.put("from", mAuth.getCurrentUser().getEmail());
-            notificationMessegae.put("user_name", ((MainActivity) mContext).getCurrentUser().getFull_name());
             notificationMessegae.put("time", Timestamp.now());
-            notificationMessegae.put("user_avatar", ((MainActivity) mContext).getCurrentUser().getAvatar());
 
             db.collection("Users/" + to_email + "/Notifications").add(notificationMessegae);
-        }
+
     }
 
     private class OpenReviewOnBookOnClick implements View.OnClickListener {

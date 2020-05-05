@@ -102,11 +102,10 @@ public class AddCommentDialog extends AppCompatDialogFragment {
                                 user = document.toObject(User.class);
                             }
 
-                            mComment = new Comment(review_id, user.getEmail(), comment_content, Timestamp.now(),
-                                    user.getFull_name(), user.getAvatar(), user.getIs_notify());
+                            mComment = new Comment(review_id, user.getEmail(), comment_content, Timestamp.now());
                             mReview.addComment(mComment);
                             db.collection("Reviews").document(review_id).update("comments", mReview.getComments());
-                            addNotificationComment(user, mReview.getReviewer_email(), mReview.getBook_title(), mReview.getIs_notify());
+                            addNotificationComment(user, mReview.getReviewer_email(), mReview.getBook_title());
                             sendResult(303, review_id);
 
                         }
@@ -123,18 +122,16 @@ public class AddCommentDialog extends AppCompatDialogFragment {
     }
 
 
-    private void addNotificationComment(User user,String to_email,String book_title,boolean is_notify){
-        if(is_notify&& (!(to_email.equals(mAuth.getCurrentUser().getEmail())))) {
+    private void addNotificationComment(User user,String to_email,String book_title){
+        if( (!(to_email.equals(mAuth.getCurrentUser().getEmail())))) {
             db = FirebaseFirestore.getInstance();
 
             Map<String, Object> notificationMessegae = new HashMap<>();
 
             notificationMessegae.put("type","הגיב על הביקורת שלך");
             notificationMessegae.put("from", user.getEmail());
-            notificationMessegae.put("user_name",user.getFull_name());
             notificationMessegae.put("book_title", book_title);
             notificationMessegae.put("time", Timestamp.now());
-            notificationMessegae.put("user_avatar", user.getAvatar());
 
 
             db.collection("Users/" + to_email + "/Notifications").add(notificationMessegae).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {

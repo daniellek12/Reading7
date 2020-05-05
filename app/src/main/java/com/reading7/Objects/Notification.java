@@ -2,14 +2,17 @@ package com.reading7.Objects;
 
 import com.google.firebase.Timestamp;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 
 public class Notification {
-
     private String type;
     private String from;
     private String book_title;
     private Timestamp time;
+    private String question_content;
+    private ArrayList<String> possible_answers;
+    private String right_answer;
 
     public Notification() {
 
@@ -66,23 +69,27 @@ public class Notification {
 
         if (object != null && object instanceof Notification) {
 
-            if (type.equals("הגיב על הביקורת שלך") && (((Notification) object).getType()).equals("הגיב על הביקורת שלך"))
                 same = (this.book_title.equals(((Notification) object).book_title)) && (this.from.equals(((Notification) object).from));
-            if (type.equals("הזמין אותך לקרוא ספר- לחץ כאן כדי לגלות איזה") && (((Notification) object).getType()).equals("הזמין אותך לקרוא ספר- לחץ כאן כדי לגלות איזה"))
-                same = (this.book_title.equals(((Notification) object).book_title)) && (this.from.equals(((Notification) object).from));
-            if (type.equals("אהב את הביקורת שלך") && (((Notification) object).getType()).equals("אהב את הביקורת שלך"))
-                same = (this.book_title.equals(((Notification) object).book_title)) && (this.from.equals(((Notification) object).from));
-            else {
+
                 if ((type.equals("הסכים שתעקוב אחריו") && (((Notification) object).getType()).equals("הסכים שתעקוב אחריו")))
                     same = (this.from.equals(((Notification) object).from));
-                else if ((!type.equals("הסכים שתעקוב אחריו") && !(((Notification) object).getType()).equals("הסכים שתעקוב אחריו"))
-                        && (!type.equals("אהב את הביקורת שלך") && !(((Notification) object).getType()).equals("אהב את הביקורת שלך")) &&
-                        (!type.equals("הגיב על הביקורת שלך") && !(((Notification) object).getType()).equals("הגיב על הביקורת שלך"))) {
-                    same = (this.from.equals(((Notification) object).from));
-                }
+                if(type.equals("שלח לך אתגר") && (((Notification) object).getType()).equals("שלח לך אתגר"))
+                    same = (this.time.equals(((Notification) object).time));// user can send as much challenges as he wants for now
+
             }
-        }
+
         return same;
     }
 
+    public String getQuestion_content() {
+        return question_content;
+    }
+
+    public ArrayList<String> getPossible_answers() {
+        return possible_answers;
+    }
+
+    public String getRight_answer() {
+        return right_answer;
+    }
 }
