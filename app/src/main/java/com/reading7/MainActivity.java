@@ -143,8 +143,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         }
         if(type.equals(getResources().getString(R.string.challenge_notificiation))){
-//            this.addFragment(new ChallengeFragment(book_title,question_content,possible_answers,right_answer));
-            Toast.makeText(this, "HOLA", Toast.LENGTH_SHORT).show();
+//           this.addFragment(new ChallengeFragment(book_title,question_content,possible_answers,right_answer));
+            loadFragment(new NotificationsFragment());
             return;
         }
 

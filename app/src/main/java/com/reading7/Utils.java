@@ -937,7 +937,6 @@ public class Utils {
         @Override
         public void onClick(View v) {
             ((MainActivity) mContext).addFragment(new ChallengeFragment(book_title,question_content,possible_answers,right_answer));
-            Toast.makeText(mContext, "HOLA", Toast.LENGTH_SHORT).show();
                 }
             }
 
