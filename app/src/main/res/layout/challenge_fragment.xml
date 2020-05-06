@@ -21,7 +21,7 @@
         android:gravity="center">
 
         <TextView
-            android:id="@+id/title_book_name_question"
+            android:id="@+id/question_on_book"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -30,15 +30,16 @@
             android:text=":שאלה על הספר"
             android:textColor="@color/black"
             android:textDirection="rtl"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            />
 
         <TextView
-            android:id="@+id/book_name_question"
+            android:id="@+id/book_name_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginRight="5dp"
-            android:layout_toLeftOf="@id/title_book_name_question"
+            android:layout_toLeftOf="@id/question_on_book"
             android:gravity="center"
             android:text="הארי פוטר ואבן החכמים"
             android:textColor="@color/black"
@@ -117,7 +118,7 @@
    </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButton"
+        android:id="@+id/send_answer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="true"

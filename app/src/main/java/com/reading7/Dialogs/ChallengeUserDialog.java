@@ -66,15 +66,15 @@ public class ChallengeUserDialog extends AppCompatDialogFragment {
                 final String to_email = emailText.getText().toString().trim();
                 String ans1 = possible_answer1.getText().toString().trim();
                 String ans2= possible_answer2.getText().toString().trim();
-                String ans3= possible_answer2.getText().toString().trim();
-                String ans4= possible_answer2.getText().toString().trim();
+                String ans3= possible_answer3.getText().toString().trim();
+                String ans4= possible_answer4.getText().toString().trim();
                 possibleAnswers.add(ans1);
                 possibleAnswers.add(ans2);
                 possibleAnswers.add(ans3);
                 possibleAnswers.add(ans4);
 
 
-                final String questionContent=questionContentText.getText().toString().trim();
+                final String questionContent = questionContentText.getText().toString().trim();
 
                 if (to_email.isEmpty()){
                     String error = to_email + "עדיין לא בחרת משתמש ...";
@@ -89,7 +89,7 @@ public class ChallengeUserDialog extends AppCompatDialogFragment {
 
                 }
 
-                if(ans1.isEmpty()&&ans2.isEmpty()&&ans3.isEmpty()&&ans4.isEmpty())
+                if(ans1.isEmpty() && ans2.isEmpty() && ans3.isEmpty() && ans4.isEmpty())
                 {
                     String error = "לא ניתן לשלוח אתגר ללא תשובות אפשריות ...";
                     Toast.makeText(getContext(), error, Toast.LENGTH_LONG).show();
@@ -105,7 +105,8 @@ public class ChallengeUserDialog extends AppCompatDialogFragment {
                     return;
 
                 }
-                String right_answer_trimed=right_answer_txt.getText().toString().trim();
+
+                String right_answer_trimed = right_answer_txt.getText().toString().trim();
                 if(right_answer_trimed.isEmpty())
                 {
                     String error = "לא ניתן לשלוח אתגר ללא תשובה נכונה ...";
@@ -114,7 +115,7 @@ public class ChallengeUserDialog extends AppCompatDialogFragment {
 
                 }else {
                     try {
-                        int x=Integer.parseInt(right_answer_trimed);
+                        int x = Integer.parseInt(right_answer_trimed);
                         if(x<1 || x>4){
                             String error = "לא ניתן לשלוח אתגר עם תשובה נכונה לא תקנית ...";
                             Toast.makeText(getContext(), error, Toast.LENGTH_LONG).show();
@@ -127,7 +128,7 @@ public class ChallengeUserDialog extends AppCompatDialogFragment {
                         return;
                     }
                 }
-                final String right_answer=possibleAnswers.get(parseInt(right_answer_trimed));
+                final String right_answer = possibleAnswers.get(parseInt(right_answer_trimed));
 
                 Query requestQuery = db.collection("Users").whereEqualTo("email", to_email);
                 requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -139,7 +140,6 @@ public class ChallengeUserDialog extends AppCompatDialogFragment {
                                 Toast.makeText(getContext(), error, Toast.LENGTH_LONG).show();
                                 return;}
                             else {
-
 
                                 addNotificationChallengeUser(to_email, book_title,questionContent,
                                         possibleAnswers ,right_answer);
@@ -162,7 +162,7 @@ public class ChallengeUserDialog extends AppCompatDialogFragment {
         return builder.create();
     }
 
-    private void addNotificationChallengeUser(String to_email, String book_title,String question_content,ArrayList<String> possible_answers, String right_answer) {
+    private void addNotificationChallengeUser(String to_email, String book_title, String question_content, ArrayList<String> possible_answers, String right_answer) {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         if ( (!(to_email.equals(mAuth.getCurrentUser().getEmail())))) {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
