@@ -128,7 +128,7 @@ public class ChallengeUserDialog extends AppCompatDialogFragment {
                         return;
                     }
                 }
-                final String right_answer = possibleAnswers.get(parseInt(right_answer_trimed));
+                final String right_answer = possibleAnswers.get(parseInt(right_answer_trimed)-1);
 
                 Query requestQuery = db.collection("Users").whereEqualTo("email", to_email);
                 requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

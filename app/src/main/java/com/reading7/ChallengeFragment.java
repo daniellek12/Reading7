@@ -32,13 +32,12 @@ public class ChallengeFragment extends Fragment {
     private TextView choice4;
 
 
-    public ChallengeFragment(String book_title, String question_content, ArrayList<String> possible_answers, String right_answer){
+    public ChallengeFragment(String book_title, String question_content, ArrayList<String> possible_answers, String right_answer) {
         this.book_title = book_title;
         this.question_content = question_content;
         this.possible_answers = possible_answers;
         this.right_answer = right_answer;
     }
-
 
 
     @Override
@@ -50,22 +49,29 @@ public class ChallengeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        ((TextView) getView().findViewById(R.id.book_name_title)).setText(book_title);
+
         ((TextView) getView().findViewById(R.id.question)).setText(question_content);
 
         choice1 = (TextView) getView().findViewById(R.id.choice1);
         choice1.setText(possible_answers.get(0));
         choice1.setOnClickListener(new View.OnClickListener() {
-                                       @Override
-                                       public void onClick(View view) { chooseAnswer("1");
-                                       }
-                                   });
+            @Override
+            public void onClick(View view) {
+                checkSelected();
+                choice1.setBackgroundColor(getActivity().getResources().getColor(R.color.colorPrimary));
+                selected_answer = choice1.getText().toString();
+            }
+        });
 
         choice2 = (TextView) getView().findViewById(R.id.choice2);
         choice2.setText(possible_answers.get(1));
         choice2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                chooseAnswer("2");
+                checkSelected();
+                choice2.setBackgroundColor(getActivity().getResources().getColor(R.color.colorPrimary));
+                selected_answer = choice2.getText().toString();
             }
         });
 
@@ -74,7 +80,9 @@ public class ChallengeFragment extends Fragment {
         choice3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                chooseAnswer("3");
+                checkSelected();
+                choice3.setBackgroundColor(getActivity().getResources().getColor(R.color.colorPrimary));
+                selected_answer = choice3.getText().toString();
             }
         });
 
@@ -83,7 +91,9 @@ public class ChallengeFragment extends Fragment {
         choice4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                chooseAnswer("4");
+                checkSelected();
+                choice4.setBackgroundColor(getActivity().getResources().getColor(R.color.colorPrimary));
+                selected_answer = choice4.getText().toString();
             }
         });
 
@@ -91,56 +101,36 @@ public class ChallengeFragment extends Fragment {
         send_answer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if( selected_answer.equals(right_answer)) {
+
+                if (selected_answer.equals(right_answer)) {
                     String msg = "תשובה נכונה! זכית ב50 נקודות ";
                     Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
-                    User user =((MainActivity) getActivity()).getCurrentUser();
+                    User user = ((MainActivity) getActivity()).getCurrentUser();
                     user.addPoints(50); //Add points for answering correctly the question
                     FirebaseFirestore.getInstance().collection("Users").document(user.getEmail()).update("points", user.getPoints());
-                }
-                else {
+                } else {
                     String msg = "תשובה לא נכונה! אולי בפעם הבאה ";
                     Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
                 }
+
+                getActivity().onBackPressed();
             }
         });
 
     }
 
-    public void chooseAnswer(String selected_answer){
-        if (!(this.selected_answer.isEmpty())){
-            switch (this.selected_answer){ //unselect previous answer to select a new answer
-                case "1":
-                    choice1.setBackground(getActivity().getResources().getDrawable(R.drawable.edittext_border_background));
-                    break;
-                case "2":
-                    choice2.setBackground(getActivity().getResources().getDrawable(R.drawable.edittext_border_background));
-                    break;
-                case "3":
-                    choice3.setBackground(getActivity().getResources().getDrawable(R.drawable.edittext_border_background));
-                    break;
-                case "4":
-                    choice4.setBackground(getActivity().getResources().getDrawable(R.drawable.edittext_border_background));
-                    break;
-            }
-        }
-        this.selected_answer = selected_answer;
-        switch (selected_answer){
-            case "1":
-                choice1.setBackgroundColor(getActivity().getResources().getColor(R.color.colorPrimary));
-                break;
-            case "2":
-                choice2.setBackgroundColor(getActivity().getResources().getColor(R.color.colorPrimary));
-                break;
-            case "3":
-                choice3.setBackgroundColor(getActivity().getResources().getColor(R.color.colorPrimary));
-                break;
-            case "4":
-                choice4.setBackgroundColor(getActivity().getResources().getColor(R.color.colorPrimary));
-                break;
+    public void checkSelected() {
+        if (!(selected_answer.isEmpty())) {
+            if (selected_answer.equals(possible_answers.get(0)))
+                choice1.setBackground(getActivity().getResources().getDrawable(R.drawable.edittext_border_background));
+            if (selected_answer.equals(possible_answers.get(1)))
+                choice2.setBackground(getActivity().getResources().getDrawable(R.drawable.edittext_border_background));
+            if (selected_answer.equals(possible_answers.get(2)))
+                choice3.setBackground(getActivity().getResources().getDrawable(R.drawable.edittext_border_background));
+            if (selected_answer.equals(possible_answers.get(3)))
+                choice4.setBackground(getActivity().getResources().getDrawable(R.drawable.edittext_border_background));
         }
     }
-
 }
 
 
