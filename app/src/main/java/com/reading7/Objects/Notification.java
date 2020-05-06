@@ -1,11 +1,13 @@
 package com.reading7.Objects;
 
 import com.google.firebase.Timestamp;
+import com.reading7.Utils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 
 public class Notification {
+
     private String type;
     private String from;
     private String book_title;
@@ -13,6 +15,7 @@ public class Notification {
     private String question_content;
     private ArrayList<String> possible_answers;
     private String right_answer;
+    private Utils.ChallengeState challengeState;
 
     public Notification() {
 
@@ -23,6 +26,17 @@ public class Notification {
         this.from = from;
         this.book_title = book_title;
         this.time = time;
+        this.challengeState = Utils.ChallengeState.NotAnswered;
+    }
+
+
+
+    public Utils.ChallengeState getChallengeState() {
+        return challengeState;
+    }
+
+    public void setChallengeState(Utils.ChallengeState challengeState) {
+        this.challengeState = challengeState;
     }
 
     public String getType() {

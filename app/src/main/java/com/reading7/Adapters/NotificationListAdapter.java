@@ -2,6 +2,7 @@ package com.reading7.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,12 +33,14 @@ import com.reading7.R;
 import com.reading7.ReviewCommentsFragment;
 import com.reading7.Utils;
 
+import java.sql.Time;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -50,13 +53,15 @@ public class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.V
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private Activity mActivity;
+    private Fragment fragment;
 
-    public NotificationListAdapter(Context context, List<Notification> notifications, Activity activity) {
+    public NotificationListAdapter(Context context, List<Notification> notifications, Activity activity, Fragment fragment) {
         this.mAuth = FirebaseAuth.getInstance();
         this.notifications = notifications;
         this.mContext = context;
         this.db = FirebaseFirestore.getInstance();
         this.mActivity = activity;
+        this.fragment=fragment;
     }
 
     @Override
@@ -204,8 +209,16 @@ public class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
         if(notification.getType().equals(mContext.getResources().getString(R.string.challenge_notificiation)))
         {
-            holder.clickNotificationBtn.setOnClickListener(new Utils.OpenChallengeOnBookOnClick(mContext,notification.getBook_title(),notification.getQuestion_content(),notification.getPossible_answers(),notification.getRight_answer()));
-            holder.content.setText((notification.getType()) + " על הספר " + notification.getBook_title());
+
+            if(notification.getChallengeState()== Utils.ChallengeState.Right)
+                holder.content.setText((notification.getType()) + " על הספר " + notification.getBook_title()+" וענית נכון ");
+            else if(notification.getChallengeState()== Utils.ChallengeState.Wrong)
+                holder.content.setText((notification.getType()) + " על הספר " + notification.getBook_title()+" וענית לא נכון ");
+            else{
+                holder.clickNotificationBtn.setOnClickListener(new Utils.OpenChallengeOnBookOnClick(mContext, notification,fragment));
+                holder.content.setText((notification.getType()) + " על הספר " + notification.getBook_title());
+            }
+
         }
         else {
             holder.clickNotificationBtn.setOnClickListener(new OpenReviewOnBookOnClick(notification.getBook_title()));
@@ -384,5 +397,36 @@ public class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.V
             }
         });
     }
+    public void notifyNotificationChallengedChanged(String strtime) {
+
+        for (int i = 0; i < getItemCount(); i++) {
+
+            final int finalI = i;
+            final Notification n = notifications.get(i);
+            final Timestamp time= new Timestamp(Long.parseLong(strtime.split(",")[0]), Integer.parseInt(strtime.split(",")[1]));
+            if (n.getTime().equals(time)) {
+
+                Query query = db.collection("Users").document(mAuth.getCurrentUser().getEmail()).collection("Notifications").whereEqualTo("time", time);
+                query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            Notification mNotification = null;
+                            for (QueryDocumentSnapshot doc : task.getResult()) {
+                                mNotification = doc.toObject(Notification.class);
+                            }
+
+                            n.setChallengeState(mNotification.getChallengeState());
+                            notifyItemChanged(finalI);
+                        }
+                    }
+                });
+
+                break;
+            }
+        }
+    }
+
+
 
 }

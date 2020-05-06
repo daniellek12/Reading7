@@ -232,7 +232,8 @@ public class PublicProfileFragment extends Fragment {
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
                                 for (QueryDocumentSnapshot document : task.getResult()) {
-                                    if (!document.toObject(Notification.class).getType().equals(getString(R.string.like_notificiation)))
+                                    if (document.toObject(Notification.class).getType().equals(getString(R.string.follow_notificiation_public))
+                                            ||document.toObject(Notification.class).getType().equals(getString(R.string.follow_notificiation_private)))
                                         document.getReference().delete();
                                 }
                             }
