@@ -62,15 +62,6 @@ public class GenericSearchFragment<T> extends Fragment implements androidx.appco
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initListView();
-//        load_results("");
-
-//        Button button = getActivity().findViewById(R.id.search_load_more_btn);
-//        button.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                load_results(((androidx.appcompat.widget.SearchView) getActivity().findViewById(R.id.searchView)).getQuery().toString());
-//            }
-//        });
     }
 
 
@@ -84,43 +75,30 @@ public class GenericSearchFragment<T> extends Fragment implements androidx.appco
                 load_items();
             }
         });
-        load_btn.bringToFront();
+//        load_btn.bringToFront();
         initItems();
         initAdapter();
+    }
 
-//        if(adapter != null){
-//            list.setAdapter(adapter);
-//            onQueryTextChange(((androidx.appcompat.widget.SearchView)getActivity().findViewById(R.id.searchView)).getQuery().toString());
-//            return;
-//        }
-
-//        CollectionReference requestBooksRef = FirebaseFirestore.getInstance().collection("Books"); // FIXME make generic!
-//        requestBooksRef.whereEqualTo("title", "").limit(2).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() { // FIXME get limit
-//            @Override
-//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                if (task.isSuccessful()) {
-//                    for (QueryDocumentSnapshot document : task.getResult()) {
-//                        T t = (T) document.toObject(class_type);
-//
-//                        if (!adapter_list.contains(t))
-//                            adapter_list.add(t);
-//                    }
-//
-////                adapter = new SearchBooksAdapter(getContext(), books);
-//                    list.setAdapter(adapter);
-//                    int last_index = task.getResult().size();
-//                    if (last_index > 0) {
-//                        lastVisible = task.getResult().getDocuments().get(last_index - 1);
-//                    } else {
-//                        lastVisible = null;
-//                    }
-////                onQueryTextChange(((androidx.appcompat.widget.SearchView) getActivity().findViewById(R.id.searchView)).getQuery().toString());
-//                }
-//            }
-//        });
-//        lastVisible = null;
-//        isLastItemReached = false;
-//        ((SearchFragment) getParentFragment()).initViewPagerOnPageChanged();
+    private void initItems() {
+        final ArrayList<T> newlist = new ArrayList<>();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final CollectionReference requestCollectionRef = db.collection("Books");
+        Query requestQuery = requestCollectionRef.orderBy("title").limit(limit); // init limit
+        requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (DocumentSnapshot document : task.getResult()) {
+                        T ob = (T) document.toObject(class_type);
+                        newlist.add(ob);
+                    }
+                    adapter_list.addAll(newlist);
+                    adapter.notifyDataSetChanged();//no problem cause this is the first update
+                    lastVisible = task.getResult().getDocuments().get(task.getResult().size() - 1);
+                }
+            }
+        });
     }
 
     private void initAdapter() {
@@ -131,15 +109,22 @@ public class GenericSearchFragment<T> extends Fragment implements androidx.appco
 
     private void load_items() {
         final ArrayList<T> newlist = new ArrayList<>();
+        String txt = search_txt;
+        String txtEnd;
+        if (txt.isEmpty()) {
+            txtEnd = "\uf8ff";
+        } else {
+            txtEnd = txt.substring(0, txt.length() - 1) + (char) (txt.charAt(txt.length() - 1) + 1);
+        }
         final CollectionReference requestCollectionRef = db.collection("Books");
-        Query requestQuery = requestCollectionRef.orderBy("title").limit(limit);
+        Query requestQuery = requestCollectionRef.orderBy("title").whereGreaterThanOrEqualTo("title", txt).whereLessThan("title", txtEnd).limit(limit);
 
         int firstVisibleItemPosition = list.getFirstVisiblePosition();
         int visibleItemCount = list.getChildCount();
         final int totalItemCount = list.getCount();
 
         if ((firstVisibleItemPosition + visibleItemCount == totalItemCount) && !isLastItemReached) {
-            Query nextQuery = requestCollectionRef.startAfter(lastVisible).limit(limit);
+            Query nextQuery = requestQuery.startAfter(lastVisible).limit(limit);
             nextQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> t) {
@@ -163,29 +148,12 @@ public class GenericSearchFragment<T> extends Fragment implements androidx.appco
         }
     }
 
-    private void initItems() {
-        final ArrayList<T> newlist = new ArrayList<>();
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        final CollectionReference requestCollectionRef = db.collection("Books");
-        Query requestQuery = requestCollectionRef.orderBy("title").limit(7); // init limit
-        requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (DocumentSnapshot document : task.getResult()) {
-                        T ob = (T) document.toObject(class_type);
-                        newlist.add(ob);
-                    }
-                    adapter_list.addAll(newlist);
-                    adapter.notifyDataSetChanged();//no problem cause this is the first update
-                    lastVisible = task.getResult().getDocuments().get(task.getResult().size() - 1);
-                }
-            }
-        });
-    }
 
-    private void searchItems(String txt) {
+    private void newSearchItems(String txt) {
         adapter_list.clear();
+        lastVisible = null;
+        isLastItemReached = false;
+        search_txt = txt;
         final ArrayList<T> newlist = new ArrayList<>();
         String txtEnd;
         if (txt.isEmpty()) {
@@ -204,6 +172,10 @@ public class GenericSearchFragment<T> extends Fragment implements androidx.appco
                         T ob = (T) document.toObject(class_type);
                         newlist.add(ob);
                     }
+                    lastVisible = task.getResult().getDocuments().get(task.getResult().size() - 1);
+                    if (task.getResult().size() < limit) {
+                        isLastItemReached = true;
+                    }
                     adapter_list.addAll(newlist);
                     adapter.notifyDataSetChanged();//no problem cause this is the first update
                 }
@@ -211,68 +183,6 @@ public class GenericSearchFragment<T> extends Fragment implements androidx.appco
         });
     }
 
-//    private void load_results(String string) {
-//        adapter_list.clear();
-//        final ArrayList<T> newlist = new ArrayList<>();
-//        String txtEnd;
-//        if (string.isEmpty()) {
-//            txtEnd = "\uf8ff";
-//        } else {
-//            txtEnd = string.substring(0, string.length() - 1) + (char) (string.charAt(string.length() - 1) + 1);
-//        }
-//
-//        final CollectionReference requestCollectionRef = db.collection("Books");
-//        Query requestQuery = requestCollectionRef.orderBy("title").whereGreaterThanOrEqualTo("title", string).whereLessThan("title", txtEnd).limit(limit);
-//
-//
-//        int firstVisibleItemPosition = list.getFirstVisiblePosition();
-//        int visibleItemCount = list.getChildCount();
-//        final int totalItemCount = list.getCount();
-//
-//
-//        if ((firstVisibleItemPosition + visibleItemCount == totalItemCount) && !isLastItemReached) {
-//            Query query;
-//            if (lastVisible == null) {
-//                query = requestBooksRef.orderBy("title").startAt(string).endAt(string + "\uf8ff").limit(4);
-//            } else {
-//                query = requestBooksRef.orderBy("title").startAt(string).endAt(string + "\uf8ff").startAfter(lastVisible).limit(4);
-//            }
-//            query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() { // FIXME get limit
-//                @Override
-//                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                    if (task.isSuccessful()) {
-////                        adapter_list.clear();
-//
-//                        for (QueryDocumentSnapshot document : task.getResult()) {
-//                            T t = (T) document.toObject(class_type);
-//
-////                    if (!books.contains(book))
-////                        books.add(book);
-//                            newlist.add(t);
-//                        }
-//                        adapter_list.addAll(newlist);
-////                    for (int i = totalItemCount; i < totalItemCount + task.getResult().size(); i++) {
-////                        adapter.notifyItemInserted(i);
-////                    }
-////                Toast.makeText(getContext(), "list size: ".concat(Integer.toString(books.size())), Toast.LENGTH_SHORT).show();
-//                        if (adapter != null) {
-//                            adapter.notifyDataSetChanged();
-//                        }
-//
-//                        int last_index = task.getResult().size();
-//                        if (last_index > 0) {
-//                            lastVisible = task.getResult().getDocuments().get(last_index - 1);
-//                        } else {
-//                            lastVisible = null;
-//                        }
-//                        if (task.getResult().size() < 4) {
-//                            isLastItemReached = true;
-//                        }
-//                    }
-//                }
-//            });
-//        }
-//    }
 
     @Override
     public boolean onQueryTextSubmit(String string) {
@@ -299,7 +209,7 @@ public class GenericSearchFragment<T> extends Fragment implements androidx.appco
             }
 
             public void onFinish() {
-                searchItems(string);
+                newSearchItems(string);
             }
         };
 
