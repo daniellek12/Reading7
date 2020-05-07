@@ -46,6 +46,8 @@ public class GenericSearchFragment<T> extends Fragment implements androidx.appco
 
     CountDownTimer search_timer;
 
+    Button load_btn;
+
     public GenericSearchFragment(Class class_type, BaseAdapter baseAdapter, ArrayList<T> list) {
         this.adapter = baseAdapter;
         this.adapter_list = list;
@@ -68,7 +70,7 @@ public class GenericSearchFragment<T> extends Fragment implements androidx.appco
     private void initListView() {
 
         db = FirebaseFirestore.getInstance();
-        Button load_btn = getActivity().findViewById(R.id.search_load_more_btn);
+        load_btn = getActivity().findViewById(R.id.search_load_more_btn);
         load_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -172,10 +174,17 @@ public class GenericSearchFragment<T> extends Fragment implements androidx.appco
                         T ob = (T) document.toObject(class_type);
                         newlist.add(ob);
                     }
-                    lastVisible = task.getResult().getDocuments().get(task.getResult().size() - 1);
-                    if (task.getResult().size() < limit) {
-                        isLastItemReached = true;
+                    if (task.getResult().size() <= 0) { // No results
+                        load_btn.setVisibility(View.GONE);
+                    } else {
+                        load_btn.setVisibility(View.VISIBLE);
+                        lastVisible = task.getResult().getDocuments().get(task.getResult().size() - 1);
+                        if (task.getResult().size() < limit) {
+                            isLastItemReached = true;
+                            load_btn.setVisibility(View.GONE);
+                        }
                     }
+
                     adapter_list.addAll(newlist);
                     adapter.notifyDataSetChanged();//no problem cause this is the first update
                 }
