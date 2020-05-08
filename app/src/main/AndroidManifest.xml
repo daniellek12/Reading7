@@ -12,7 +12,12 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".StoreFragment"></activity>
+        <activity
+            android:name=".AdminActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity android:name=".StoreFragment" />
         <activity android:name=".ReviewCommentsFragment" />
         <activity android:name=".Dialogs.AddCommentDialog" />
         <activity android:name=".Dialogs.ChangePasswordDialog" />

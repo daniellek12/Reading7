@@ -29,6 +29,8 @@
     <string name="wrong_details">פרטי התחברות שגויים</string>
     <string name="no_internet">אין חיבור לאינטרנט</string>
     <string name="already_logged">משתמש זה מחובר במכשיר אחר</string>
+    <string name="admin_login">התחבר כאדמין</string>
+    <string name="enter_admin_credentials">הכנס סיסמה כדי להתחבר כאדמין</string>
 
     <!--Signup-->
     <string name="signup">הרשמה</string>

@@ -20,6 +20,8 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.reading7.Dialogs.AdminCredentialsDialog;
+import com.reading7.Dialogs.EditAvatarDialog;
 import com.reading7.Objects.User;
 
 import androidx.annotation.NonNull;
@@ -43,17 +45,32 @@ public class LoginActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser != null)
+        if(currentUser != null && !currentUser.getEmail().equals("admin@admin.com")) //fixme: redirect when admin too?
             redirectAgain();
 
         setUpLoginBtn();
         setUpSignupBtn();
+        setAdminBtn();
 
         /*try {
             Utils.convertTxtToBook(this);
         } catch (IOException e) {
             e.printStackTrace();
         }*/
+    }
+
+    private void setAdminBtn() {
+        Button admin_button = findViewById(R.id.admin_button);
+        admin_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AdminCredentialsDialog dialog = new AdminCredentialsDialog();
+                dialog.show(LoginActivity.this.getSupportFragmentManager(), "admin credentials");
+//                Intent intent = new Intent(LoginActivity.this, AdminActivity.class);
+//                startActivity(intent);
+//                finish();
+            }
+        });
     }
 
     protected void redirectAgain() {
@@ -64,7 +81,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    protected void redirectToMain(){
+    public void redirectToMain(){
         final Intent intent = new Intent(this, MainActivity.class);
         CollectionReference requestCollectionRef = db.collection("Users");
         Query requestQuery = requestCollectionRef.whereEqualTo("email",mAuth.getCurrentUser().getEmail());

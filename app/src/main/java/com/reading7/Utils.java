@@ -45,6 +45,7 @@ import androidx.core.content.ContextCompat;
 public class Utils {
 
     public static boolean clicksEnabled = true;
+    public static boolean isAdmin = false;
 //    public static void updateBooks() {
 //        final FirebaseFirestore db = FirebaseFirestore.getInstance();
 //
@@ -360,8 +361,8 @@ public class Utils {
                 enableDisableClicks(activity, (ViewGroup) view, enabled);
             }
         }
-
-        ((MainActivity) activity).setBottomNavigationEnabled(enabled);
+        if (!isAdmin)
+            ((MainActivity) activity).setBottomNavigationEnabled(enabled);
     }
 
 

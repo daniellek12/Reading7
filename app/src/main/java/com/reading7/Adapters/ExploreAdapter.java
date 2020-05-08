@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 
+import com.reading7.AdminActivity;
 import com.reading7.Objects.Book;
 import com.reading7.BookFragment;
 import com.reading7.MainActivity;
@@ -84,7 +85,10 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
         viewHolder.cover.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainActivity) mContext).addFragment(new BookFragment(books.get(i)));
+                if (mContext.getClass() == MainActivity.class)
+                    ((MainActivity) mContext).addFragment(new BookFragment(books.get(i)));
+                else if (mContext.getClass() == AdminActivity.class)
+                    ((AdminActivity) mContext).addFragment(new BookFragment(books.get(i)));
             }
         });
     }

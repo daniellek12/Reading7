@@ -3,6 +3,7 @@ package com.reading7;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -35,7 +36,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         setContentView(R.layout.activity_main);
 
         BottomNavigationView navigation = findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(this);
+        if (Utils.isAdmin)
+            navigation.setVisibility(View.GONE);
+        else
+            navigation.setOnNavigationItemSelectedListener(this);
 
         initCurrentUser();
 
