@@ -1,8 +1,9 @@
 package com.reading7.Objects;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Comment implements Comparable {
+public class Comment implements Comparable, Serializable {
 
     // id of comment defined by (review_id, commenter_email)
     private String review_id;

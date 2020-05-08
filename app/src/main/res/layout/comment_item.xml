@@ -25,7 +25,7 @@
         android:id="@+id/commentLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
+        android:layout_marginLeft="30dp"
         android:layout_marginTop="10dp"
         android:layout_toLeftOf="@id/profileImage"
         android:background="@drawable/rounded_corners"
@@ -73,5 +73,48 @@
         android:layout_toLeftOf="@id/profileImage"
         android:tint="@color/darkGrey"
         app:srcCompat="@drawable/time" />
+
+    <ImageButton
+        android:id="@+id/more"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="false"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/transparent"
+        android:tint="@color/lightGrey"
+        android:visibility="gone"
+        app:srcCompat="@drawable/dots" />
+
+    <LinearLayout
+        android:id="@+id/deleteComment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/more"
+        android:background="@drawable/edittext_border_background_light"
+        android:backgroundTint="@color/white"
+        android:elevation="5dp"
+        android:gravity="center"
+        android:layoutDirection="rtl"
+        android:orientation="horizontal"
+        android:padding="5dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginTop="1dp"
+            android:src="@drawable/delete"
+            android:tint="@color/darkGrey" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/delete_comment" />
+
+    </LinearLayout>
 
 </RelativeLayout>

@@ -366,19 +366,24 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
-    private void initAddCommentButton(FeedAdapter.ReviewPostHolder holder, int position) {
+    private void initAddCommentButton(final FeedAdapter.ReviewPostHolder holder, int position) {
 
         final Post post = posts.get(position);
 
         holder.addCommentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ReviewCommentsFragment mReviewCommentsFragment = new ReviewCommentsFragment(post.toReview());
+                mReviewCommentsFragment.setTargetFragment(fragment, 303);
+                ((MainActivity) mContext).addFragment(mReviewCommentsFragment);
+
                 AddCommentDialog dialog = new AddCommentDialog();
                 Bundle args = new Bundle();
                 args.putString("review_id", post.getReview_id());
                 dialog.setArguments(args);
-                dialog.setTargetFragment(fragment, 303);
+                dialog.setTargetFragment(mReviewCommentsFragment, 303);
                 dialog.show(fragment.getActivity().getSupportFragmentManager(), "example dialog");
+
             }
         });
     }
@@ -418,7 +423,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     addNotificationLike(post.getReviewer_email(), post.getBook_title());
                 }
 
-                ((MainActivity)mContext).setCurrentUser(user);
+                ((MainActivity) mContext).setCurrentUser(user);
             }
         });
 

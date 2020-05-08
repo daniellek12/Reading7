@@ -18,21 +18,15 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.reading7.Adapters.CommentsAdapter;
-import com.reading7.Adapters.FeedAdapter;
 import com.reading7.Dialogs.AddCommentDialog;
 import com.reading7.Objects.Comment;
-import com.reading7.Objects.Post;
 import com.reading7.Objects.Review;
 import com.reading7.Objects.User;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import androidx.annotation.NonNull;
@@ -135,15 +129,10 @@ public class ReviewCommentsFragment extends Fragment {
         RecyclerView commentsRV = getActivity().findViewById(R.id.commentsRV);
         commentsRV.setLayoutManager(layoutManager);
 
-        List<Comment> commentsList = new ArrayList<>();
-        Map<String, Comment> commentsMap = mReview.getComments();
+        ArrayList<Comment> comments = mReview.getComments();
+        Collections.sort(comments);
 
-        for (Comment comment : commentsMap.values()) {
-            commentsList.add(comment);
-        }
-        Collections.sort(commentsList);
-
-        CommentsAdapter adapter = new CommentsAdapter(getActivity(), commentsList);
+        CommentsAdapter adapter = new CommentsAdapter(getActivity(), this, comments);
         commentsRV.setAdapter(adapter);
     }
 
@@ -195,7 +184,7 @@ public class ReviewCommentsFragment extends Fragment {
                     addNotificationLike(mReview.getReviewer_email(), mReview.getBook_title());
                 }
 
-                ((MainActivity)getActivity()).setCurrentUser(mUser);
+                ((MainActivity) getActivity()).setCurrentUser(mUser);
             }
         });
     }
@@ -218,7 +207,7 @@ public class ReviewCommentsFragment extends Fragment {
 
 
     private void addNotificationLike(String to_email, String book_title) {
-        if ( (!(to_email.equals(mAuth.getCurrentUser().getEmail())))) {
+        if ((!(to_email.equals(mAuth.getCurrentUser().getEmail())))) {
 
             Map<String, Object> notificationMessegae = new HashMap<>();
 
@@ -248,39 +237,6 @@ public class ReviewCommentsFragment extends Fragment {
     }
 
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        switch (requestCode) {
-
-            case 303:
-                updateReviewAndComments();
-                break;
-
-        }
-    }
-
-
-    private void updateReviewAndComments() {
-        Query query = db.collection("Reviews").whereEqualTo("review_id", mReview.getReview_id());
-        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    Review review = null;
-                    for (QueryDocumentSnapshot doc : task.getResult()) {
-                        review = doc.toObject(Review.class);
-                    }
-
-                    mReview.setComments(review.getComments());
-                    initComments();
-                    ((TextView) getView().findViewById(R.id.likeNum)).setText(String.valueOf(mReview.getLikes_count()));
-                    ((TextView) getView().findViewById(R.id.commentsNum)).setText(String.valueOf(mReview.getComments().size()));
-                }
-            }
-        });
-    }
-
-
     public void sendResult(int REQUEST_CODE, String review_id) {
         Intent intent = new Intent();
         intent.putExtra("review_id", review_id);
@@ -292,6 +248,25 @@ public class ReviewCommentsFragment extends Fragment {
 
     public String getReviewId() {
         return mReview.getReview_id();
+    }
+
+
+    public void updateCommentsNum() {
+        ((TextView) getView().findViewById(R.id.commentsNum)).setText(String.valueOf(mReview.getComments().size()));
+    }
+
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        switch (requestCode) {
+            case 303:
+                Comment comment = (Comment) data.getSerializableExtra("comment");
+                CommentsAdapter adapter = (CommentsAdapter) ((RecyclerView) getActivity().findViewById(R.id.commentsRV)).getAdapter();
+                mReview.addComment(comment);
+                adapter.notifyAddComment();
+                updateCommentsNum();
+                break;
+        }
     }
 
 }

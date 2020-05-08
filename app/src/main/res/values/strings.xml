@@ -110,6 +110,8 @@
     <string name="hair_title">שיער</string>
     <string name="accessories_title">אביזרים</string>
     <string name="glasses">משקפיים</string>
+    <string name="mustache_title">שפם</string>
+
 
     <!--Genres-->
     <string name="adventures">הרפתקאות</string>
@@ -154,8 +156,8 @@
     <string name="like">אהבתי</string>
     <string name="review_fragment_title">הביקורת של</string>
     <string name="buy_now">קנה עכשיו</string>
-    <string name="mustache_title">שפם</string>
     <string name="ok">אישור</string>
+    <string name="delete_comment">מחק תגובה</string>
 
 
 </resources>
