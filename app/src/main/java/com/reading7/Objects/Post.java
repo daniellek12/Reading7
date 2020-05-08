@@ -246,7 +246,7 @@ public class Post implements Comparable {
 
 
 
-    public HashMap<String, Comment> getComments() {
+    public ArrayList<Comment> getComments() {
         if (type == PostType.Review)
             return mReview.getComments();
 

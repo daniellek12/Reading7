@@ -2,6 +2,7 @@ package com.reading7.Objects;
 
 import com.google.firebase.Timestamp;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Review implements Comparable {
@@ -17,7 +18,7 @@ public class Review implements Comparable {
     private Timestamp review_time;      // time the review was published // note - constructor gets miliseconds(System.currentTimeMillis())
     private int likes_count;
     private int reviewer_age;           // age and not birth year needs to be static
-    private HashMap<String, Comment> comments;
+    private ArrayList<Comment> comments;
 
     // instead array of comments, we will save collection of comments with the review_id
 
@@ -52,7 +53,7 @@ public class Review implements Comparable {
         this.review_time = review_time;
         this.likes_count = 0;
         this.reviewer_age = reviewer_age;
-        this.comments = new HashMap<String, Comment>();
+        this.comments = new ArrayList<Comment>();
     }
 
 
@@ -161,20 +162,19 @@ public class Review implements Comparable {
 
 
     public void addComment(Comment comment) {
-        if (comments.containsKey(comment.getCommenter_email()))
-            comments.remove(comment.getCommenter_email());
-        comments.put(comment.getCommenter_email(), comment);
+        comments.add(comment);
     }
 
-    public void removeComment(String commenter_email) {
-        if (comments.containsKey(commenter_email)) comments.remove(commenter_email);
+    public void removeComment(Comment comment) {
+        if (comments.contains(comment))
+            comments.remove(comment);
     }
 
-    public void setComments(HashMap<String, Comment> comments) {
+    public void setComments(ArrayList<Comment> comments) {
         this.comments = comments;
     }
 
-    public HashMap<String, Comment> getComments() {
+    public ArrayList<Comment> getComments() {
         return this.comments;
     }
 

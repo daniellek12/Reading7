@@ -25,7 +25,6 @@ import com.reading7.Objects.User;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -78,17 +77,9 @@ public class LoginActivity extends AppCompatActivity {
                         user = document.toObject(User.class);
                     }
 
-//                    if(user.getConnected() == 0) {
-//                        editUserFlagIn();
                     editTokenId();
                     startActivity(intent);
                         finish();
-//                    }
-//
-//                    else {
-//                        hideProgressBar();
-//                        findViewById(R.id.already_logged).setVisibility(View.VISIBLE);
-//                    }
                 }
 
             }
@@ -97,8 +88,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private boolean checkEnteredDetails(String email, String password){
-
-        //Animation shake = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.shake_animation);
 
         if(email.equals("")) {
 //            findViewById(R.id.mail_icon).startAnimation(shake);
