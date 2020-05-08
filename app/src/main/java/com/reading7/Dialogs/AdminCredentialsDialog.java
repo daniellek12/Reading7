@@ -49,7 +49,6 @@ public class AdminCredentialsDialog extends AppCompatDialogFragment {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-                                    dismiss();
                                     Utils.isAdmin = true;
                                     ((LoginActivity)getActivity()).redirectToMain();
 //                                    Intent intent = new Intent(getActivity(), AdminActivity.class);
