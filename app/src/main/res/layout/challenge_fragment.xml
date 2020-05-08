@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparentGrey"
+    android:clickable="true"
+    android:gravity="bottom"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/rounded_corners"
+        android:clipToPadding="false"
+        android:elevation="5dp"
+        android:layoutDirection="rtl"
+        android:paddingTop="10dp">
+
+        <RelativeLayout
+            android:id="@+id/book_details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/question_on_book"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="שאלה על הספר:"
+                android:textColor="@color/black"
+                android:textDirection="rtl"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/book_name_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="5dp"
+                android:layout_toLeftOf="@id/question_on_book"
+                android:gravity="center"
+                android:text="הארי פוטר ואבן החכמים"
+                android:textColor="@color/black"
+                android:textDirection="rtl"
+                android:textSize="14sp" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/book_details"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/question"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:layout_marginBottom="20dp"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="מי מהדמויות הבאות לא מופיעה בספר?"
+                android:textColor="@color/black"
+                android:textDirection="rtl"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+
+            <TextView
+                android:id="@+id/choice1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:background="@drawable/edittext_border_background"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="רון ויזלי"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/choice2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:background="@drawable/edittext_border_background"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="הרמיוני גריינגר"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/choice3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:background="@drawable/edittext_border_background"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="מינרווה מקגונגל"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/choice4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:background="@drawable/edittext_border_background"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="דובי"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/send_answer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/linear_layout"
+            android:layout_alignLeft="@id/linear_layout"
+            android:layout_gravity="left"
+            android:layout_marginLeft="15dp"
+            android:layout_marginBottom="10dp"
+            android:clickable="true"
+            android:rotation="180"
+            app:backgroundTint="@color/colorPrimaryDark"
+            app:srcCompat="@drawable/arrow_right" />
+
+
+    </RelativeLayout>
+
+
+
+</LinearLayout>

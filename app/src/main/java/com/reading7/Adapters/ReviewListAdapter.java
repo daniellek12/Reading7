@@ -225,15 +225,13 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
     }
 
 
-    private void addNotificationLike(String to_email, String book_title, boolean is_notify) {
-        if (is_notify && (!(to_email.equals(mAuth.getCurrentUser().getEmail())))) {
+    private void addNotificationLike(String to_email, String book_title) {
+        if ( (!(to_email.equals(mAuth.getCurrentUser().getEmail())))) {
 
             Map<String, Object> notificationMessegae = new HashMap<>();
 
             notificationMessegae.put("type", mContext.getResources().getString(R.string.like_notificiation));
             notificationMessegae.put("from", mAuth.getCurrentUser().getEmail());
-            notificationMessegae.put("user_name", ((MainActivity) mContext).getCurrentUser().getFull_name());
-            notificationMessegae.put("user_avatar", ((MainActivity) mContext).getCurrentUser().getAvatar());
             notificationMessegae.put("book_title", book_title);
             notificationMessegae.put("time", Timestamp.now());
 
@@ -311,7 +309,7 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
                     setLikeButton(viewHolder, true);
                     viewHolder.likeNum.setText(Integer.toString(review.getLikes_count()));
 
-                    addNotificationLike(review.getReviewer_email(), review.getBook_title(), review.getIs_notify());
+                    addNotificationLike(review.getReviewer_email(), review.getBook_title());
                 }
 
                 ((MainActivity) mContext).setCurrentUser(user);

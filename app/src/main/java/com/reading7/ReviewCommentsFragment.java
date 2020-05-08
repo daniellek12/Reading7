@@ -192,7 +192,7 @@ public class ReviewCommentsFragment extends Fragment {
                     setLikeButton(true);
                     ((TextView) getView().findViewById(R.id.likeNum)).setText(String.valueOf(mReview.getLikes_count()));
 
-                    addNotificationLike(mReview.getReviewer_email(), mReview.getBook_title(), mReview.getIs_notify());
+                    addNotificationLike(mReview.getReviewer_email(), mReview.getBook_title());
                 }
 
                 ((MainActivity)getActivity()).setCurrentUser(mUser);
@@ -217,17 +217,15 @@ public class ReviewCommentsFragment extends Fragment {
     }
 
 
-    private void addNotificationLike(String to_email, String book_title, boolean is_notify) {
-        if (is_notify && (!(to_email.equals(mAuth.getCurrentUser().getEmail())))) {
+    private void addNotificationLike(String to_email, String book_title) {
+        if ( (!(to_email.equals(mAuth.getCurrentUser().getEmail())))) {
 
             Map<String, Object> notificationMessegae = new HashMap<>();
 
             notificationMessegae.put("type", getResources().getString(R.string.like_notificiation));
             notificationMessegae.put("from", mAuth.getCurrentUser().getEmail());
-            notificationMessegae.put("user_name", mUser.getFull_name());
             notificationMessegae.put("book_title", book_title);
             notificationMessegae.put("time", Timestamp.now());
-            notificationMessegae.put("user_avatar", mUser.getAvatar());
 
             db.collection("Users/" + to_email + "/Notifications").add(notificationMessegae);
         }

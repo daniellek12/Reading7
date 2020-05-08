@@ -93,10 +93,11 @@
     <string name="follow_notificiation_public">התחיל לעקוב אחרייך</string>
     <string name="follow_notificiation_private">רוצה לעקוב אחרייך</string>
     <string name="like_notificiation">אהב את הביקורת שלך</string>
-    <string name="invite_notificiation">הזמין אותך לקרוא ספר- לחץ כאן כדי לגלות איזה</string>
+    <string name="invite_notificiation">הזמין אותך לקרוא</string>
     <string name="comment_notificiation">הגיב על הביקורת שלך</string>
     <string name="request_approved_notificiation">הסכים שתעקוב אחריו</string>
     <string name="notifications">התראות</string>
+    <string name="challenge_notificiation">שלח לך אתגר</string>
     <string name="accept">קבל</string>
 
     <!--Edit Avatar-->

@@ -12,23 +12,21 @@ public class WishList implements Comparable {
     private String book_title;
     private String book_author;
     private String user_email;
-    private String user_name;
-    private Avatar user_avatar;
+
 
 
     public WishList() {
 
     }
 
-    public WishList(String id, String user_email, String user_name, String book_id, String book_name, String book_author, Timestamp adding_time, Avatar user_avatar) {
+    public WishList(String id, String user_email,  String book_id, String book_name, String book_author, Timestamp adding_time) {
         this.id = id;
         this.adding_time = adding_time;
         this.book_id = book_id;
         this.book_title = book_name;
         this.book_author = book_author;
         this.user_email = user_email;
-        this.user_name = user_name;
-        this.user_avatar = user_avatar;
+
     }
 
 

@@ -92,11 +92,16 @@
     <ListView
         android:id="@+id/booksListView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_above="@id/search_load_more_btn"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="LOAD MORE"
-        android:id="@+id/search_load_more_btn"/>
+        android:id="@+id/search_load_more_btn"
+        android:layout_centerHorizontal="true"
+        android:visibility="visible"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="100dp"/>
 
 </RelativeLayout>

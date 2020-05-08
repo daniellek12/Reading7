@@ -12,6 +12,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -35,11 +36,17 @@ public class GenericSearchFragment<T> extends Fragment implements androidx.appco
     private ArrayList<T> adapter_list;
     private Class class_type;
     private ListView list;
+    private FirebaseFirestore db;
 
     private DocumentSnapshot lastVisible = null;
     private boolean isLastItemReached = false;
+    private int limit = 5;
+
+    private String search_txt = null;
 
     CountDownTimer search_timer;
+
+    Button load_btn;
 
     public GenericSearchFragment(Class class_type, BaseAdapter baseAdapter, ArrayList<T> list) {
         this.adapter = baseAdapter;
@@ -55,56 +62,136 @@ public class GenericSearchFragment<T> extends Fragment implements androidx.appco
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        initListView();
         super.onViewCreated(view, savedInstanceState);
-
-        Button button = getActivity().findViewById(R.id.search_load_more_btn);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                load_results(((androidx.appcompat.widget.SearchView) getActivity().findViewById(R.id.searchView)).getQuery().toString());
-            }
-        });
+        initListView();
     }
 
 
     private void initListView() {
 
-        list = getActivity().findViewById(R.id.booksListView); // FIXME make generic!
+        db = FirebaseFirestore.getInstance();
+        load_btn = getActivity().findViewById(R.id.search_load_more_btn);
+        load_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                load_items();
+            }
+        });
+//        load_btn.bringToFront();
+        initItems();
+        initAdapter();
+    }
 
-//        if(adapter != null){
-//            list.setAdapter(adapter);
-//            onQueryTextChange(((androidx.appcompat.widget.SearchView)getActivity().findViewById(R.id.searchView)).getQuery().toString());
-//            return;
-//        }
-
-        CollectionReference requestBooksRef = FirebaseFirestore.getInstance().collection("Books"); // FIXME make generic!
-        requestBooksRef.whereEqualTo("title", ((androidx.appcompat.widget.SearchView) getActivity().findViewById(R.id.searchView)).getQuery().toString()).limit(2).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() { // FIXME get limit
+    private void initItems() {
+        final ArrayList<T> newlist = new ArrayList<>();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final CollectionReference requestCollectionRef = db.collection("Books");
+        Query requestQuery = requestCollectionRef.orderBy("title").limit(limit); // init limit
+        requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        T t = (T) document.toObject(class_type);
-
-                        if (!adapter_list.contains(t))
-                            adapter_list.add(t);
+                    for (DocumentSnapshot document : task.getResult()) {
+                        T ob = (T) document.toObject(class_type);
+                        newlist.add(ob);
                     }
-
-//                adapter = new SearchBooksAdapter(getContext(), books);
-                    list.setAdapter(adapter);
-                    int last_index = task.getResult().size() - 1;
-                    if (last_index > 0) {
-                        lastVisible = task.getResult().getDocuments().get(last_index);
-                    } else {
-                        lastVisible = null;
-                    }
-//                onQueryTextChange(((androidx.appcompat.widget.SearchView) getActivity().findViewById(R.id.searchView)).getQuery().toString());
+                    adapter_list.addAll(newlist);
+                    adapter.notifyDataSetChanged();//no problem cause this is the first update
+                    lastVisible = task.getResult().getDocuments().get(task.getResult().size() - 1);
                 }
             }
         });
-
-        ((SearchFragment) getParentFragment()).initViewPagerOnPageChanged();
     }
+
+    private void initAdapter() {
+        list = getActivity().findViewById(R.id.booksListView); // FIXME make generic!
+        list.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+    }
+
+    private void load_items() {
+        final ArrayList<T> newlist = new ArrayList<>();
+        String txt = search_txt;
+        String txtEnd;
+        if (txt.isEmpty()) {
+            txtEnd = "\uf8ff";
+        } else {
+            txtEnd = txt.substring(0, txt.length() - 1) + (char) (txt.charAt(txt.length() - 1) + 1);
+        }
+        final CollectionReference requestCollectionRef = db.collection("Books");
+        Query requestQuery = requestCollectionRef.orderBy("title").whereGreaterThanOrEqualTo("title", txt).whereLessThan("title", txtEnd).limit(limit);
+
+        int firstVisibleItemPosition = list.getFirstVisiblePosition();
+        int visibleItemCount = list.getChildCount();
+        final int totalItemCount = list.getCount();
+
+        if ((firstVisibleItemPosition + visibleItemCount == totalItemCount) && !isLastItemReached) {
+            Query nextQuery = requestQuery.startAfter(lastVisible).limit(limit);
+            nextQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> t) {
+                    if (t.isSuccessful()) {
+                        for (DocumentSnapshot d : t.getResult()) {
+                            T ob = (T) d.toObject(class_type);
+                            newlist.add(ob);
+                        }
+                        adapter_list.addAll(newlist);
+//                        for (int i = totalItemCount; i < totalItemCount + t.getResult().size(); i++) {
+////                            adapter.notifyItemInserted(i);
+//                        }
+                        adapter.notifyDataSetChanged();
+                        lastVisible = t.getResult().getDocuments().get(t.getResult().size() - 1);
+                        if (t.getResult().size() < limit) {
+                            isLastItemReached = true;
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+
+    private void newSearchItems(String txt) {
+        adapter_list.clear();
+        lastVisible = null;
+        isLastItemReached = false;
+        search_txt = txt;
+        final ArrayList<T> newlist = new ArrayList<>();
+        String txtEnd;
+        if (txt.isEmpty()) {
+            txtEnd = "\uf8ff";
+        } else {
+            txtEnd = txt.substring(0, txt.length() - 1) + (char) (txt.charAt(txt.length() - 1) + 1);
+        }
+        final CollectionReference requestCollectionRef = db.collection("Books");
+        Query requestQuery = requestCollectionRef.orderBy("title").whereGreaterThanOrEqualTo("title", txt).whereLessThan("title", txtEnd).limit(limit);
+
+        requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (DocumentSnapshot document : task.getResult()) {
+                        T ob = (T) document.toObject(class_type);
+                        newlist.add(ob);
+                    }
+                    if (task.getResult().size() <= 0) { // No results
+                        load_btn.setVisibility(View.GONE);
+                    } else {
+                        load_btn.setVisibility(View.VISIBLE);
+                        lastVisible = task.getResult().getDocuments().get(task.getResult().size() - 1);
+                        if (task.getResult().size() < limit) {
+                            isLastItemReached = true;
+                            load_btn.setVisibility(View.GONE);
+                        }
+                    }
+
+                    adapter_list.addAll(newlist);
+                    adapter.notifyDataSetChanged();//no problem cause this is the first update
+                }
+            }
+        });
+    }
+
 
     @Override
     public boolean onQueryTextSubmit(String string) {
@@ -125,12 +212,13 @@ public class GenericSearchFragment<T> extends Fragment implements androidx.appco
 
 //        search_timer.cancel();
 
+        if (search_timer != null) search_timer.cancel();
         search_timer = new CountDownTimer(500, 1000) { //1st parameter in msec
             public void onTick(long millisUntilFinished) {
             }
 
             public void onFinish() {
-                load_results(string);
+                newSearchItems(string);
             }
         };
 
@@ -138,57 +226,5 @@ public class GenericSearchFragment<T> extends Fragment implements androidx.appco
         return false;
     }
 
-    private void load_results(String string) {
-        if (string.equals("")) {
-            adapter.notifyDataSetChanged();
-            return;
-        }
-        CollectionReference requestBooksRef = FirebaseFirestore.getInstance().collection("Books");
-//        requestBooksRef.whereEqualTo("title", string).limit(2).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-        final ArrayList<T> newlist = new ArrayList<>();
-
-
-        int firstVisibleItemPosition = list.getFirstVisiblePosition();
-        int visibleItemCount = list.getChildCount();
-        final int totalItemCount = list.getCount();
-
-
-        if ((firstVisibleItemPosition + visibleItemCount == totalItemCount) && !isLastItemReached) {
-            Query query;
-            if (lastVisible == null) {
-                query = requestBooksRef.orderBy("title").startAt(string).endAt(string + "\uf8ff").limit(4);
-            } else {
-                query = requestBooksRef.orderBy("title").startAt(string).endAt(string + "\uf8ff").startAfter(lastVisible).limit(4);
-            }
-            query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() { // FIXME get limit
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
-//                        adapter_list.clear();
-
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            T t = (T) document.toObject(class_type);
-
-//                    if (!books.contains(book))
-//                        books.add(book);
-                            newlist.add(t);
-                        }
-                        adapter_list.addAll(newlist);
-//                    for (int i = totalItemCount; i < totalItemCount + task.getResult().size(); i++) {
-//                        adapter.notifyItemInserted(i);
-//                    }
-//                Toast.makeText(getContext(), "list size: ".concat(Integer.toString(books.size())), Toast.LENGTH_SHORT).show();
-                        if (adapter != null) {
-                            adapter.notifyDataSetChanged();
-                        }
-                        lastVisible = task.getResult().getDocuments().get(task.getResult().size() - 1);
-                        if (task.getResult().size() < 4) {
-                            isLastItemReached = true;
-                        }
-                    }
-                }
-            });
-        }
-    }
 }
 

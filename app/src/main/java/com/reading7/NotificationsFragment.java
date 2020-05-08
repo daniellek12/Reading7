@@ -1,5 +1,6 @@
 package com.reading7;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -15,6 +17,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.reading7.Adapters.NotificationListAdapter;
+import com.reading7.Adapters.ReviewListAdapter;
 import com.reading7.Objects.Notification;
 
 import java.util.ArrayList;
@@ -33,6 +36,7 @@ public class NotificationsFragment extends Fragment {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private List<Notification> notifications = new ArrayList<Notification>();
+    private RecyclerView notificationsRV;
 
     @Nullable
     @Override
@@ -64,7 +68,7 @@ public class NotificationsFragment extends Fragment {
     private void initNotifications() {
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        RecyclerView notificationsRV = getActivity().findViewById(R.id.notifications);
+         notificationsRV = getActivity().findViewById(R.id.notifications);
         notificationsRV.setLayoutManager(layoutManager);
         createNotifications(notificationsRV);
     }
@@ -89,7 +93,7 @@ public class NotificationsFragment extends Fragment {
                     }
 
                     notifications.addAll(newlist);
-                    final NotificationListAdapter adapter = new NotificationListAdapter(getActivity(), notifications,getActivity());
+                    final NotificationListAdapter adapter = new NotificationListAdapter(getActivity(), notifications,getActivity(),NotificationsFragment.this);
                     notificationsRV.setAdapter(adapter);
 
                     //Swipe to delete
@@ -113,6 +117,20 @@ public class NotificationsFragment extends Fragment {
         });
 
     }
+
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode==808) {
+
+
+            String stringtime = data.getStringExtra("time");
+            ((NotificationListAdapter) notificationsRV.getAdapter()).notifyNotificationChallengedChanged(stringtime);
+        }
+
+
+    }
+
 
 }
 

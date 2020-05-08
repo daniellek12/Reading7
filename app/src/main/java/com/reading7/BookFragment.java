@@ -30,6 +30,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.reading7.Adapters.ReviewListAdapter;
 import com.reading7.Dialogs.AddToShelfDialog;
+import com.reading7.Dialogs.ChallengeUserDialog;
 import com.reading7.Dialogs.InviteUserDialog;
 import com.reading7.Dialogs.RankBookDialog;
 import com.reading7.Objects.Book;
@@ -113,6 +114,7 @@ public class BookFragment extends Fragment {
         initScrollView();
         initShelfButton();
         initInviteButton();
+        initChallengeButton();
     }
 
     private void getBookInformation() {
@@ -320,7 +322,7 @@ public class BookFragment extends Fragment {
                     updateWishlistButton();
 
                 } else {
-                    WishList wlist = new WishList("", currentUser.getEmail(), currentUser.getFull_name(), mBook.getId(), mBook.getTitle(), mBook.getAuthor(), Timestamp.now(), currentUser.getAvatar());
+                    WishList wlist = new WishList("", currentUser.getEmail(),  mBook.getId(), mBook.getTitle(), mBook.getAuthor(), Timestamp.now());
                     DocumentReference newWish = db.collection("Wishlist").document();
                     wlist.setId(newWish.getId());
                     newWish.set(wlist);
@@ -530,6 +532,23 @@ public class BookFragment extends Fragment {
 
                 dialog.setArguments(args);
                 dialog.setTargetFragment(BookFragment.this, 505);
+                dialog.show(getActivity().getSupportFragmentManager(), "example dialog");
+            }
+        });
+    }
+
+    private void initChallengeButton() {
+        ImageButton inviteButton = getActivity().findViewById(R.id.button_challenge_user);
+        inviteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ChallengeUserDialog dialog = new ChallengeUserDialog();
+
+                Bundle args = new Bundle();
+                args.putString("book_title", mBook.getTitle());
+
+                dialog.setArguments(args);
+                dialog.setTargetFragment(BookFragment.this, 606);
                 dialog.show(getActivity().getSupportFragmentManager(), "example dialog");
             }
         });

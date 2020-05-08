@@ -11,15 +11,12 @@ public class Review implements Comparable {
     private String book_title;
     private String book_author;
     private String reviewer_email;      // key for user
-    private String reviewer_name;
-    private Avatar reviewer_avatar;
     private int rank;                   // 1-5(number of stars)
     private String review_title;
     private String review_content;      // NEED to decide whether we want to limit the length
     private Timestamp review_time;      // time the review was published // note - constructor gets miliseconds(System.currentTimeMillis())
     private int likes_count;
-    private int reviewer_age;           // age and not birth year
-    private boolean is_notify;
+    private int reviewer_age;           // age and not birth year needs to be static
     private HashMap<String, Comment> comments;
 
     // instead array of comments, we will save collection of comments with the review_id
@@ -42,25 +39,19 @@ public class Review implements Comparable {
                   String review_title,
                   String review_content,
                   Timestamp review_time,
-                  String reviewer_name,
                   String book_title,
-                  String book_author,
-                  Avatar reviewer_avatar,
-                  boolean is_notify) {
+                  String book_author) {
         this.review_id = review_id;
         this.book_id = book_id;
         this.book_title = book_title;
         this.book_author = book_author;
         this.reviewer_email = reviewer_email;
-        this.reviewer_name = reviewer_name;
-        this.reviewer_avatar = reviewer_avatar;
         this.rank = rank;
         this.review_title = review_title;
         this.review_content = review_content;
         this.review_time = review_time;
         this.likes_count = 0;
         this.reviewer_age = reviewer_age;
-        this.is_notify = is_notify;
         this.comments = new HashMap<String, Comment>();
     }
 
@@ -167,14 +158,6 @@ public class Review implements Comparable {
         this.book_author = book_author;
     }
 
-
-    public boolean getIs_notify() {
-        return is_notify;
-    }
-
-    public void setIs_notify(boolean is_notify) {
-        this.is_notify = is_notify;
-    }
 
 
     public void addComment(Comment comment) {

@@ -27,6 +27,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.reading7.Objects.Book;
+import com.reading7.Objects.Notification;
 import com.reading7.Objects.Review;
 
 import java.io.BufferedReader;
@@ -41,6 +42,7 @@ import java.util.Collections;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 
 public class Utils {
 
@@ -69,7 +71,15 @@ public class Utils {
 //                });
 //    }
 
+
+    public enum ChallengeState {
+        Right,
+        Wrong,
+        NotAnswered,
+
+    }
     public static void convertTxtToBook(final Context context) throws IOException {
+
         /*Map<String,Integer> counts= new HashMap<String,Integer>();//for random genres
         counts.put("הרפתקאות",0);
         counts.put("דרמה",0);
@@ -918,6 +928,33 @@ public class Utils {
             });
         }
     }
+
+    public static class OpenChallengeOnBookOnClick implements View.OnClickListener {
+
+        private Context mContext;
+        private Notification notification;
+        private Fragment fragment;
+
+        public OpenChallengeOnBookOnClick(Context context, Notification notification,Fragment fragment) {
+            this.mContext = context;
+            this.notification = notification;
+            this.fragment= fragment;
+
+        }
+
+        @Override
+        public void onClick(View v) {
+            ChallengeFragment mFragment= new ChallengeFragment(notification.getBook_title(),notification.getQuestion_content(),notification.getPossible_answers(),notification.getRight_answer(),notification.getTime());
+            mFragment.setTargetFragment(fragment, 808);
+
+            ((MainActivity) mContext).addFragment(mFragment);
+                }
+            }
+
+
+
+
+
 
 }
 
