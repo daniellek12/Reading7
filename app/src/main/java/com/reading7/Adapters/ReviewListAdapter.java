@@ -114,8 +114,14 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
 
         viewHolder.commentsNum.setText(String.valueOf(review.getComments().size()));
 
-        initAddCommentButton(viewHolder, i);
-        initLikeMechanics(viewHolder, i);
+        if (Utils.isAdmin){
+            viewHolder.deleteLayout.setVisibility(View.VISIBLE);
+            viewHolder.likeLayout.setVisibility(View.GONE);
+        }
+        else {
+            initAddCommentButton(viewHolder, i);
+            initLikeMechanics(viewHolder, i);
+        }
 
         viewHolder.countersLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -164,6 +170,8 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
         RelativeLayout countersLayout;
         LinearLayout likeBtn;
         LinearLayout addCommentBtn;
+        RelativeLayout likeLayout;
+        RelativeLayout deleteLayout;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -180,6 +188,9 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
             commentsNum = itemView.findViewById(R.id.commentsNum);
             addCommentBtn = itemView.findViewById(R.id.button_add_comment);
             countersLayout = itemView.findViewById(R.id.activityCountersLayout);
+            likeLayout = itemView.findViewById(R.id.likeLayout);
+            deleteLayout = itemView.findViewById(R.id.deleteLayout);
+
         }
     }
 

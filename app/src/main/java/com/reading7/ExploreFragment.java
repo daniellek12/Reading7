@@ -78,12 +78,18 @@ public class ExploreFragment extends Fragment {
             }
         });
 
-        getActivity().findViewById(R.id.store).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ((MainActivity) getActivity()).addFragment(new StoreFragment());
-            }
-        });
+        if (Utils.isAdmin) {
+            getActivity().findViewById(R.id.store).setVisibility(View.GONE);
+        }
+        else {
+            getActivity().findViewById(R.id.store).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ((MainActivity) getActivity()).addFragment(new StoreFragment());
+                }
+            });
+        }
+
 
     }
 

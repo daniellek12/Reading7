@@ -69,7 +69,8 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
                 comment.getComment_time().toDate().getTime());
         holder.postTime.setText(time);
 
-        setupDeleteComment(holder, position);
+        if (!Utils.isAdmin) // TODO add delete comment for admin
+            setupDeleteComment(holder, position);
     }
 
 

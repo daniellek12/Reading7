@@ -63,8 +63,16 @@ public class ReviewCommentsFragment extends Fragment {
         initBackButton();
         initReviewDetails();
         initComments();
-        initLikeMechanics();
-        initAddCommentButton();
+
+        if (Utils.isAdmin){
+            getView().findViewById(R.id.deleteLayout).setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.likeLayout).setVisibility(View.GONE);
+        }
+        else {
+            initLikeMechanics();
+            initAddCommentButton();
+        }
+
 
         Animation slide_up = AnimationUtils.loadAnimation(getContext(), R.anim.slide_up);
         getView().findViewById(R.id.layout).startAnimation(slide_up);
