@@ -430,7 +430,7 @@ public class BookFragment extends Fragment {
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        switch (requestCode) {
+        switch (resultCode) {
 
             case 202:
                 float avg = data.getFloatExtra("avg", 0);
@@ -450,7 +450,29 @@ public class BookFragment extends Fragment {
                 ((ReviewListAdapter) reviewsRV.getAdapter()).notifyReviewCommentsChanged(review_id);
                 break;
 
+            case 404:
+                int rank = data.getIntExtra("rank", 0);
+                int reviewer_age = data.getIntExtra("reviewer_age", 0);
+                updateAfterReviewDeleted(rank, reviewer_age);
+                getBookReviews();
+                getActivity().onBackPressed();
+
         }
+    }
+
+    private void updateAfterReviewDeleted(int rank, int reviewer_age) {
+
+        final float newAvg, newAvgAge;
+        if (mBook.getRaters_count() == 1) {
+            newAvg = 0;
+            newAvgAge = 0;
+        } else {
+            newAvg = ((mBook.getAvg_rating() * mBook.getRaters_count()) - rank) / (mBook.getRaters_count() - 1);
+            newAvgAge = ((mBook.getAvg_age() * mBook.getRaters_count()) - reviewer_age) / (mBook.getRaters_count() - 1);
+        }
+        final int countRaters = mBook.getRaters_count() - 1;
+        db.collection("Books").document(mBook.getId()).update("avg_rating", newAvg, "avg_age", newAvgAge, "raters_count", countRaters);
+        updateUIAfterDeleteReview(newAvg, newAvgAge, countRaters);
     }
 
 

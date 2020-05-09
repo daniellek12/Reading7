@@ -87,7 +87,7 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
         if (i == 0 && ((BookFragment) fragment).isReviewedWithContent()) {
             viewHolder.relativeLayout.setBackgroundColor(mContext.getResources().getColor(R.color.grey));
             viewHolder.deleteBtn.setVisibility(View.VISIBLE);
-            viewHolder.deleteBtn.setOnClickListener(new DeleteReviewOnClick(review));
+            viewHolder.deleteBtn.setOnClickListener(new DeleteReviewOnClick(review, i));
         }
 
         bindReviewUser(viewHolder, review.getReviewer_email());
@@ -117,6 +117,7 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
         if (Utils.isAdmin){
             viewHolder.deleteLayout.setVisibility(View.VISIBLE);
             viewHolder.likeLayout.setVisibility(View.GONE);
+            viewHolder.adminDeleteBtn.setOnClickListener(new DeleteReviewOnClick(review, i));
         }
         else {
             initAddCommentButton(viewHolder, i);
@@ -132,7 +133,6 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
             }
         });
     }
-
 
     private void bindReviewUser(final ViewHolder holder, final String email) {
 
@@ -172,6 +172,7 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
         LinearLayout addCommentBtn;
         RelativeLayout likeLayout;
         RelativeLayout deleteLayout;
+        LinearLayout adminDeleteBtn;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -190,7 +191,7 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
             countersLayout = itemView.findViewById(R.id.activityCountersLayout);
             likeLayout = itemView.findViewById(R.id.likeLayout);
             deleteLayout = itemView.findViewById(R.id.deleteLayout);
-
+            adminDeleteBtn = itemView.findViewById(R.id.adminDeleteBtn);
         }
     }
 
@@ -198,9 +199,11 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
     private class DeleteReviewOnClick implements View.OnClickListener {
 
         private Review review;
+        private int position;
 
-        public DeleteReviewOnClick(Review review) {
+        public DeleteReviewOnClick(Review review, int i) {
             this.review = review;
+            this.position = i;
         }
 
         @Override
@@ -208,8 +211,8 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
             ((BookFragment) fragment).setReviewed(false);
             ((BookFragment) fragment).setReviewedWithContent(false);
 
-            reviews.remove(0);
-            notifyItemRemoved(0);
+            reviews.remove(position);
+            notifyItemRemoved(position);
 
             DocumentReference reviewReference = db.collection("Reviews").document(review.getReview_id());
             reviewReference.delete();
@@ -266,7 +269,6 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
         }
 
     }
-
 
     private void initAddCommentButton(ViewHolder viewHolder, final int i) {
 

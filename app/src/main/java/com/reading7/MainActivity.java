@@ -264,7 +264,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         // Customize onBackPressed for specific fragments //
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragmant_container);
         if (fragment instanceof ReviewCommentsFragment)
-            ((ReviewCommentsFragment) fragment).sendResult(303, ((ReviewCommentsFragment) fragment).getReviewId());
+            if (((ReviewCommentsFragment) fragment).admin_delete)
+                ((ReviewCommentsFragment) fragment).sendResultDeleted(404);
+            else
+                ((ReviewCommentsFragment) fragment).sendResult(303, ((ReviewCommentsFragment) fragment).getReviewId());
 
         if (count == 1)
             finish();

@@ -39,7 +39,10 @@ public class AdminCredentialsDialog extends AppCompatDialogFragment {
         dialog_view.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
+
                 final String password = editText.getText().toString();
+                if (password.trim().isEmpty())
+                    return;
 
                 showProgressBar();
                 dialog_view.findViewById(R.id.wrong_details_txt).setVisibility(View.GONE);

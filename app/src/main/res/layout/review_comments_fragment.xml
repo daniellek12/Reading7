@@ -195,13 +195,17 @@
                         android:textSize="12sp" />
                 </RelativeLayout>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/divider"
+                    android:orientation="vertical">
+
                 <RelativeLayout
                     android:id="@+id/deleteLayout"
                     android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/divider"
-                    android:layout_alignParentBottom="true"
                     android:gravity="center_vertical"
                     android:layoutDirection="rtl"
                     android:orientation="horizontal"
@@ -239,11 +243,11 @@
                     </LinearLayout>
                 </RelativeLayout>
 
+
                 <RelativeLayout
                     android:id="@+id/likeLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/divider"
                     android:layoutDirection="rtl"
                     android:orientation="horizontal"
                     android:paddingLeft="60dp"
@@ -315,18 +319,16 @@
                     android:id="@+id/divider19"
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
-                    android:layout_below="@id/likeLayout"
                     android:background="@color/lightGrey" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/commentsRV"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/divider19"
                     android:background="@drawable/rounded_corners"
                     android:clipToPadding="false"
                     android:paddingBottom="5dp" />
-
+                </LinearLayout>
 
             </RelativeLayout>
 

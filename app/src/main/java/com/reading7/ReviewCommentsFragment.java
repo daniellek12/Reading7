@@ -42,6 +42,7 @@ public class ReviewCommentsFragment extends Fragment {
     private FirebaseAuth mAuth;
     private Review mReview;
     private User mUser;
+    public boolean admin_delete = false;
 
 
     public ReviewCommentsFragment(Review review) {
@@ -67,6 +68,16 @@ public class ReviewCommentsFragment extends Fragment {
         if (Utils.isAdmin){
             getView().findViewById(R.id.deleteLayout).setVisibility(View.VISIBLE);
             getView().findViewById(R.id.likeLayout).setVisibility(View.GONE);
+            getView().findViewById(R.id.adminDeleteBtn).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    DocumentReference reviewReference = db.collection("Reviews").document(mReview.getReview_id());
+                    reviewReference.delete();
+                    //sendResultDeleted(404);
+                    admin_delete = true;
+                    getActivity().onBackPressed(); //fixme: why doesn't this actually go back?
+                }
+            });
         }
         else {
             initLikeMechanics();
@@ -248,6 +259,15 @@ public class ReviewCommentsFragment extends Fragment {
     public void sendResult(int REQUEST_CODE, String review_id) {
         Intent intent = new Intent();
         intent.putExtra("review_id", review_id);
+
+        if (getTargetFragment() != null)
+            getTargetFragment().onActivityResult(getTargetRequestCode(), REQUEST_CODE, intent);
+    }
+
+    public void sendResultDeleted(int REQUEST_CODE) {
+        Intent intent = new Intent();
+        intent.putExtra("rank", mReview.getRank());
+        intent.putExtra("reviewer_age", mReview.getReviewer_age());
 
         if (getTargetFragment() != null)
             getTargetFragment().onActivityResult(getTargetRequestCode(), REQUEST_CODE, intent);

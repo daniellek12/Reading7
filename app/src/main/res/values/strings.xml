@@ -158,6 +158,7 @@
     <string name="buy_now">קנה עכשיו</string>
     <string name="ok">אישור</string>
     <string name="delete_comment">מחק תגובה</string>
+    <string name="delete_review">מחק ביקורת</string>
 
 
 </resources>
