@@ -39,6 +39,29 @@
             android:stepSize=".5" />
 
         <ImageView
+            android:id="@+id/delete_background"
+            android:visibility="gone"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_alignTop="@id/coverImage"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="-40dp"
+            android:layout_marginTop="-40dp"
+            android:alpha="0.8"
+            android:background="@drawable/round_button_white" />
+
+        <ImageView
+            android:id="@+id/delete_button"
+            android:visibility="gone"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignTop="@id/coverImage"
+            android:layout_alignParentLeft="true"
+            android:src="@drawable/delete"
+            android:layout_margin="5dp"
+            android:tint="@color/design_default_color_error" />
+
+        <ImageView
             android:id="@+id/imageView2"
             android:layout_width="match_parent"
             android:layout_height="30dp"

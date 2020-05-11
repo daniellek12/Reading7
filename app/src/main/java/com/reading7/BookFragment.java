@@ -16,6 +16,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -107,14 +108,35 @@ public class BookFragment extends Fragment {
         getBookInformation();
         initReviews();
         initOpenSummary();
-        initWishlistButton();
-        initRankButton();
-        initAlreadyReadButton();
         initBackButton();
         initScrollView();
-        initShelfButton();
-        initInviteButton();
-        initChallengeButton();
+
+        if (Utils.isAdmin){
+            getActivity().findViewById(R.id.button_wishlist).setVisibility(View.GONE);
+            getActivity().findViewById(R.id.button_read).setVisibility(View.INVISIBLE);
+            getActivity().findViewById(R.id.button_already_read).setVisibility(View.GONE);
+            getActivity().findViewById(R.id.top_buttons_layout).setVisibility(View.GONE);
+            getActivity().findViewById(R.id.button_delete_book).setVisibility(View.VISIBLE);
+            initDeleteButton();
+        }
+        else {
+            initWishlistButton();
+            initRankButton();
+            initAlreadyReadButton();
+            initShelfButton();
+            initInviteButton();
+            initChallengeButton();
+        }
+
+    }
+
+    private void initDeleteButton() {
+        getActivity().findViewById(R.id.button_delete_book).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getContext(), "delete clicked", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void getBookInformation() {

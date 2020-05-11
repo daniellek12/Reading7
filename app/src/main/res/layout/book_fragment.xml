@@ -217,6 +217,27 @@
                     android:textSize="12sp" />
 
                 <Button
+                    android:id="@+id/button_delete_book"
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp"
+                    android:layout_below="@id/summary"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/rounded_button"
+                    android:backgroundTint="@color/design_default_color_error"
+                    android:drawableRight="@drawable/delete"
+                    android:drawableTint="@color/white"
+                    android:drawablePadding="5dp"
+                    android:paddingLeft="15dp"
+                    android:paddingTop="5dp"
+                    android:paddingRight="15dp"
+                    android:paddingBottom="5dp"
+                    android:text="@string/delete_book"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:visibility="gone"/>
+
+                <Button
                     android:id="@+id/button_wishlist"
                     android:layout_width="wrap_content"
                     android:layout_height="35dp"
@@ -376,6 +397,7 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/top_buttons_layout"
                 android:layout_width="285dp"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true">
@@ -409,6 +431,7 @@
                     android:layout_height="52dp"
                     android:layout_alignParentLeft="true"
                     android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="60dp"
                     android:background="@drawable/rounded_button"
                     android:backgroundTint="@color/white"
                     android:src="@drawable/ic_person_add"
@@ -420,7 +443,7 @@
                     android:layout_height="50dp"
                     android:layout_alignParentLeft="true"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginLeft="60dp"
+                    android:layout_marginLeft="61dp"
                     android:layout_marginTop="1dp"
                     android:background="@drawable/rounded_button"
                     android:backgroundTint="@color/colorPrimaryDark"
@@ -433,6 +456,7 @@
                     android:layout_height="52dp"
                     android:layout_alignParentLeft="true"
                     android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="120dp"
                     android:background="@drawable/rounded_button"
                     android:backgroundTint="@color/white"
                     android:src="@drawable/ic_person_add"
@@ -444,7 +468,7 @@
                     android:layout_height="50dp"
                     android:layout_alignParentLeft="true"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginLeft="120dp"
+                    android:layout_marginLeft="121dp"
                     android:layout_marginTop="1dp"
                     android:background="@drawable/rounded_button"
                     android:backgroundTint="@color/colorPrimaryDark"

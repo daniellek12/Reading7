@@ -69,8 +69,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
                 comment.getComment_time().toDate().getTime());
         holder.postTime.setText(time);
 
-        if (!Utils.isAdmin) // TODO add delete comment for admin
-            setupDeleteComment(holder, position);
+        setupDeleteComment(holder, position);
     }
 
 
@@ -100,7 +99,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
         final Comment comment = comments.get(position);
         User user = ((MainActivity) mContext).getCurrentUser();
 
-        if (comment.getCommenter_email().equals(user.getEmail())) {
+        if (Utils.isAdmin || comment.getCommenter_email().equals(user.getEmail())) {
             holder.more.setVisibility(View.VISIBLE);
             holder.more.setOnClickListener(new View.OnClickListener() {
                 @Override

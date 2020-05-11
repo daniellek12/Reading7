@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.reading7.AdminActivity;
 import com.reading7.Objects.Book;
@@ -48,12 +49,16 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
 
         RatingBar ratingBar;
         ImageView cover;
+        ImageView delete_background;
+        ImageView delete_button;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             ratingBar = itemView.findViewById(R.id.ratingBar);
             cover = itemView.findViewById(R.id.coverImage);
+            delete_background = itemView.findViewById(R.id.delete_background);
+            delete_button = itemView.findViewById(R.id.delete_button);
         }
     }
 
@@ -91,6 +96,17 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
                     ((AdminActivity) mContext).addFragment(new BookFragment(books.get(i)));
             }
         });
+
+        if (Utils.isAdmin){
+            viewHolder.delete_background.setVisibility(View.VISIBLE);
+            viewHolder.delete_button.setVisibility(View.VISIBLE);
+            viewHolder.delete_background.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(mContext, "clicked delete", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
 

@@ -62,7 +62,15 @@ public class ExploreFragment extends Fragment {
         first = 0;
         showProgressBar();
         initAppBar();
-        initPlaylists();
+
+        if (Utils.isAdmin){
+            getActivity().findViewById(R.id.playlistsRV).setVisibility(View.GONE);
+        }
+        else{
+            initPlaylists();
+        }
+
+
         initExplore();
         first_load_books();
     }

@@ -160,6 +160,7 @@
     <string name="delete_comment">מחק תגובה</string>
     <string name="delete_review">מחק ביקורת</string>
     <string name="load_more">טען תוצאות נוספות</string>
+    <string name="delete_book">מחק ספר</string>
 
 
 </resources>
