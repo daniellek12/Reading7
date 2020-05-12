@@ -21,6 +21,7 @@ import com.reading7.Objects.Book;
 import com.reading7.BookFragment;
 import com.reading7.MainActivity;
 import com.reading7.R;
+import com.reading7.ReviewCommentsFragment;
 import com.reading7.Utils;
 
 import java.util.List;
@@ -34,14 +35,15 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
     private List<Book> books;
     private Context mContext;
     private Activity mActivity;
+    private Fragment fragment;
 
-
-    public ExploreAdapter(Context context, Activity activity, List<Book> books) {
+    public ExploreAdapter(Context context, Activity activity, List<Book> books, Fragment fragment) {
 
         //get me some books
         this.books = books;
         this.mContext = context;
         this.mActivity = activity;
+        this.fragment = fragment;
     }
 
 
@@ -90,10 +92,10 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
         viewHolder.cover.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mContext.getClass() == MainActivity.class)
-                    ((MainActivity) mContext).addFragment(new BookFragment(books.get(i)));
-                else if (mContext.getClass() == AdminActivity.class)
-                    ((AdminActivity) mContext).addFragment(new BookFragment(books.get(i)));
+                BookFragment bookFragment = new BookFragment(books.get(i));
+                bookFragment.setTargetFragment(fragment, 101);
+                ((MainActivity) mContext).addFragment(bookFragment);
+                //((MainActivity) mContext).addFragment(new BookFragment(books.get(i)));
             }
         });
 

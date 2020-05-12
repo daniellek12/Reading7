@@ -1,5 +1,6 @@
 package com.reading7;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -75,6 +76,18 @@ public class ExploreFragment extends Fragment {
         first_load_books();
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        switch (resultCode){
+            case 101:
+                String book_id = data.getStringExtra("book_id");
+                first = 0;
+                showProgressBar();
+                bookList.clear();
+                myAdapter.notifyDataSetChanged();
+                first_load_books();
+        }
+    }
 
     private void initAppBar() {
 
@@ -192,7 +205,7 @@ public class ExploreFragment extends Fragment {
         exploreRV = getActivity().findViewById(R.id.exploreRV);
         exploreRV.setLayoutManager(layoutManager);
 
-        myAdapter = new ExploreAdapter(getContext(), getActivity(), bookList);
+        myAdapter = new ExploreAdapter(getContext(), getActivity(), bookList, this);
         myAdapter.setHasStableIds(true);
 
         exploreRV.setAdapter(myAdapter);

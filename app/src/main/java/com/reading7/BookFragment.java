@@ -70,6 +70,7 @@ public class BookFragment extends Fragment {
     private boolean isReviewed = false;
     private boolean isReviewedWithContent = false;
 
+    public boolean admin_delete = false;
 
     public boolean isReviewedWithContent() {
         return isReviewedWithContent;
@@ -134,9 +135,32 @@ public class BookFragment extends Fragment {
         getActivity().findViewById(R.id.button_delete_book).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(), "delete clicked", Toast.LENGTH_SHORT).show();
+//                DocumentReference bookReference = db.collection("Books").document(mBook.getId());
+//                bookReference.delete();
+                Query query = db.collection("Books").whereEqualTo("id", mBook.getId());
+                query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()){
+                            for (QueryDocumentSnapshot doc : task.getResult()) {
+                                doc.getReference().delete();
+                            }
+                        }
+                    }
+                });
+                //sendResult(101);
+                admin_delete = true;
+                getActivity().onBackPressed();
             }
         });
+    }
+
+    public void sendResult(int result_code) {
+        Intent intent = new Intent();
+        intent.putExtra("book_id", mBook.getId());
+
+        if (getTargetFragment() != null)
+            getTargetFragment().onActivityResult(getTargetRequestCode(), result_code, intent);
     }
 
     private void getBookInformation() {
@@ -477,7 +501,7 @@ public class BookFragment extends Fragment {
                 int reviewer_age = data.getIntExtra("reviewer_age", 0);
                 updateAfterReviewDeleted(rank, reviewer_age);
                 getBookReviews();
-                getActivity().onBackPressed();
+                //getActivity().onBackPressed();
 
         }
     }
