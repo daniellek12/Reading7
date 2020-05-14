@@ -21,8 +21,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.reading7.Adapters.SearchBooksAdapter;
-import com.reading7.Objects.Book;
+
 
 import java.util.ArrayList;
 
@@ -133,8 +132,8 @@ public class GenericSearchFragment<T> extends Fragment implements androidx.appco
         } else {
             txtEnd = txt.substring(0, txt.length() - 1) + (char) (txt.charAt(txt.length() - 1) + 1);
         }
-        final CollectionReference requestCollectionRef = db.collection("Books");
-        Query requestQuery = requestCollectionRef.orderBy("title").whereGreaterThanOrEqualTo("title", txt).whereLessThan("title", txtEnd).limit(limit);
+        final CollectionReference requestCollectionRef = db.collection(collection_name);
+        Query requestQuery = requestCollectionRef.orderBy(field_name).whereGreaterThanOrEqualTo(field_name, txt).whereLessThan(field_name, txtEnd).limit(limit);
 
         int firstVisibleItemPosition = list.getFirstVisiblePosition();
         int visibleItemCount = list.getChildCount();
@@ -178,8 +177,8 @@ public class GenericSearchFragment<T> extends Fragment implements androidx.appco
         } else {
             txtEnd = txt.substring(0, txt.length() - 1) + (char) (txt.charAt(txt.length() - 1) + 1);
         }
-        final CollectionReference requestCollectionRef = db.collection("Books");
-        Query requestQuery = requestCollectionRef.orderBy("title").whereGreaterThanOrEqualTo("title", txt).whereLessThan("title", txtEnd).limit(limit);
+        final CollectionReference requestCollectionRef = db.collection(collection_name);
+        Query requestQuery = requestCollectionRef.orderBy(field_name).whereGreaterThanOrEqualTo(field_name, txt).whereLessThan(field_name, txtEnd).limit(limit);
 
         requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override

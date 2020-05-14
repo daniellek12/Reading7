@@ -112,7 +112,7 @@
         android:textColor="@color/white"
         android:textSize="12sp"
         android:visibility="visible" />
-    <!--    FIXME: add a nice icon-->
+    <!--    FIXME: add a nice icon to load more button -->
     <!--    android:drawableEnd="@drawable/chat_bubble"-->
 
 
