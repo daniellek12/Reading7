@@ -81,7 +81,8 @@ public class SearchFragment extends Fragment implements androidx.appcompat.widge
 
 //        tabsPagerAdapter.addFragment(new SearchBooksFragment(), "ספרים");//TODO remove
         ArrayList<Book> books = new ArrayList<Book>();
-        tabsPagerAdapter.addFragment(new GenericSearchFragment<Book>(Book.class, new SearchBooksAdapter(getContext(), books), books), "ספרים"); //TODO implement
+        Fragment fragment = new GenericSearchFragment<Book>(Book.class, new SearchBooksAdapter(getContext(), books), books, R.layout.search_books_fragment, R.id.booksListView,"Books", "title");
+        tabsPagerAdapter.addFragment(fragment, "ספרים"); //TODO implement
 //        tabsPagerAdapter.addFragment(new SearchAuthorsFragment(), "סופרים");
         tabsPagerAdapter.addFragment(new SearchFriendsFragment(), "חברים");
 
