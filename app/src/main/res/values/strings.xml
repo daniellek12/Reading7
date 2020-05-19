@@ -143,6 +143,14 @@
     <string name="book_details">פרטי הספר</string>
     <string name="pages">עמודים</string>
 
+    <!--Challenges-->
+    <string name="question_about_book">שאלה על הספר</string>
+    <string name="you_won">קיבלת</string>
+    <string name="good_job">כל הכבוד</string>
+    <string name="your_answer_is_wrong">ענית תשובה לא נכונה,</string>
+    <string name="not_getting_points">לא הרווחת נקודות הפעם…</string>
+    <string name="times_up">נגמר הזמן!</string>
+
     <string name="choose_friend_email">יש להקליד את המייל של המשתמש עבורו תישלח הזמנה לקרוא את הספר</string>
     <string name="invite_user">הזמנת המשתמש</string>
 
@@ -160,6 +168,7 @@
     <string name="delete_comment">מחק תגובה</string>
     <string name="delete_review">מחק ביקורת</string>
     <string name="load_more">טען תוצאות נוספות</string>
+
 
 
 </resources>

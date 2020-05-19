@@ -44,7 +44,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.reading7.Utils.calculateAge;
@@ -126,18 +125,18 @@ public class ProfileFragment extends Fragment {
     }
 
 
-    private void initCustomShelves(){
+    private void initCustomShelves() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         final RecyclerView customShelvesRV = getActivity().findViewById(R.id.customShelvesRV);
         customShelvesRV.setLayoutManager(layoutManager);
-        adapterCustomShelves = new CustomShelvesAdapter(shelfNames, getActivity(), mAuth.getCurrentUser().getEmail(),(ViewGroup)getView(),getActivity());
+        adapterCustomShelves = new CustomShelvesAdapter(shelfNames, getActivity(), mAuth.getCurrentUser().getEmail(), (ViewGroup) getView(), getActivity());
         customShelvesRV.setAdapter(adapterCustomShelves);
 
         getUserShelves();
 
     }
 
-    private void getUserShelves(){
+    private void getUserShelves() {
         db.collection("Users").document(mAuth.getCurrentUser().getEmail())
                 .collection("Shelves").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -160,7 +159,7 @@ public class ProfileFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         final RecyclerView wishlistRV = getActivity().findViewById(R.id.wishlistRV);
         wishlistRV.setLayoutManager(layoutManager);
-        adapterWishList = new ProfileShelfAdapter(getActivity(), usersWishlistBookNames, wishlistShelf,(ViewGroup) getView(),getActivity());
+        adapterWishList = new ProfileShelfAdapter(getActivity(), usersWishlistBookNames, wishlistShelf, (ViewGroup) getView(), getActivity());
         wishlistRV.setAdapter(adapterWishList);
 
         getUserWishList();
@@ -206,7 +205,7 @@ public class ProfileFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         RecyclerView myBooksRV = getActivity().findViewById(R.id.myBooksRV);
         myBooksRV.setLayoutManager(layoutManager);
-        adapterReviews = new ProfileShelfAdapter(getActivity(), usersReviewBookNames, myBooksShelf,(ViewGroup) getView(),getActivity());
+        adapterReviews = new ProfileShelfAdapter(getActivity(), usersReviewBookNames, myBooksShelf, (ViewGroup) getView(), getActivity());
         myBooksRV.setAdapter(adapterReviews);
 
         getUserReviews();
@@ -302,7 +301,7 @@ public class ProfileFragment extends Fragment {
         initAddShelfBtn();
     }
 
-    private void initAddShelfBtn(){
+    private void initAddShelfBtn() {
         final Context context = getContext();
         Button add_shelf_btn = getActivity().findViewById(R.id.add_custom_list_btn);
         add_shelf_btn.setOnClickListener(new View.OnClickListener() {
@@ -319,12 +318,12 @@ public class ProfileFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         String text = shelfNameEditText.getText().toString();
-                        if(text.isEmpty()){
+                        if (text.isEmpty()) {
                             String error = "אופס! צריך לבחור שם למדף...";
                             Toast.makeText(context, error, Toast.LENGTH_LONG).show();
                             return;
                         }
-                        if(shelfNames.contains(text)){
+                        if (shelfNames.contains(text)) {
                             String error = "כבר יש לך מדף עם השם הזה!";
                             Toast.makeText(context, error, Toast.LENGTH_LONG).show();
                             return;
@@ -346,7 +345,7 @@ public class ProfileFragment extends Fragment {
 
     }
 
-    private void addNewShelf(String shelfName){
+    private void addNewShelf(String shelfName) {
         User currentUser = ((MainActivity) getActivity()).getCurrentUser();
         Shelf shelf = new Shelf("", shelfName);
         DocumentReference newShelf = db.collection("Users").document(currentUser.getEmail())

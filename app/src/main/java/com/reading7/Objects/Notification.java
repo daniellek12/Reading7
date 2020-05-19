@@ -26,9 +26,8 @@ public class Notification {
         this.from = from;
         this.book_title = book_title;
         this.time = time;
-        this.challengeState = Utils.ChallengeState.NotAnswered;
+        this.challengeState = Utils.ChallengeState.NOT_ANSWERED;
     }
-
 
 
     public Utils.ChallengeState getChallengeState() {
@@ -83,14 +82,14 @@ public class Notification {
 
         if (object != null && object instanceof Notification) {
 
-                same = (this.book_title.equals(((Notification) object).book_title)) && (this.from.equals(((Notification) object).from));
+            same = (this.book_title.equals(((Notification) object).book_title)) && (this.from.equals(((Notification) object).from));
 
-                if ((type.equals("הסכים שתעקוב אחריו") && (((Notification) object).getType()).equals("הסכים שתעקוב אחריו")))
-                    same = (this.from.equals(((Notification) object).from));
-                if(type.equals("שלח לך אתגר") && (((Notification) object).getType()).equals("שלח לך אתגר"))
-                    same = (this.time.equals(((Notification) object).time));// user can send as much challenges as he wants for now
+            if ((type.equals("הסכים שתעקוב אחריו") && (((Notification) object).getType()).equals("הסכים שתעקוב אחריו")))
+                same = (this.from.equals(((Notification) object).from));
+            if (type.equals("שלח לך אתגר") && (((Notification) object).getType()).equals("שלח לך אתגר"))
+                same = (this.time.equals(((Notification) object).time));// user can send as much challenges as he wants for now
 
-            }
+        }
 
         return same;
     }

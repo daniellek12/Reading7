@@ -12,12 +12,14 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profileImage"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
+        android:layout_width="47dp"
+        android:layout_height="47dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:elevation="3dp"
-        android:src="@drawable/avatar_layout"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:src="@color/grey"
         app:civ_circle_background_color="@color/white" />
 
     <RelativeLayout

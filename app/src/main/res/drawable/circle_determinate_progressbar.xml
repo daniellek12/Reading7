@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape
+            android:shape="ring"
+            android:thicknessRatio="15"
+            android:useLevel="false">
+            <solid android:color="#DDDDDD" />
+        </shape>
+    </item>
+    <item>
+        <rotate
+            android:fromDegrees="270"
+            android:toDegrees="-90"
+            android:pivotX="50%"
+            android:pivotY="50%">
+            <shape
+                android:shape="ring"
+                android:thicknessRatio="15"
+                android:useLevel="true">
+                <solid android:color="@color/colorPrimaryDark" />
+            </shape>
+        </rotate>
+    </item>
+</layer-list>
+
+<!--<layer-list xmlns:android="http://schemas.android.com/apk/res/android">-->
+
+<!--    <item android:id="@android:id/background">-->
+<!--        <shape>-->
+<!--            <corners android:radius="5dp" />-->
+<!--            <solid android:color="@color/grey"/>-->
+<!--        </shape>-->
+<!--    </item>-->
+
+<!--    <item android:id="@android:id/secondaryProgress">-->
+<!--        <clip>-->
+<!--            <shape>-->
+<!--                <corners android:radius="5dip" />-->
+<!--                <gradient-->
+<!--                    android:startColor="#80ffd300"-->
+<!--                    android:centerColor="#80ffb600"-->
+<!--                    android:centerY="0.75"-->
+<!--                    android:endColor="#a0ffcb00"-->
+<!--                    android:angle="270"-->
+<!--                    />-->
+<!--            </shape>-->
+<!--        </clip>-->
+<!--    </item>-->
+
+<!--    <item android:id="@android:id/progress">-->
+<!--        <clip>-->
+<!--            <shape>-->
+<!--                <corners android:radius="5dip" />-->
+<!--                <solid android:color="@color/colorPrimaryDark"/>-->
+<!--            </shape>-->
+<!--        </clip>-->
+<!--    </item>-->
+
+<!--</layer-list>-->

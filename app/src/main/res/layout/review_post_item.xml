@@ -20,7 +20,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginRight="20dp"
         android:elevation="3dp"
-        android:src="@color/transparent"
+        android:src="@color/grey"
         app:civ_circle_background_color="@color/white" />
 
     <TextView
@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
         android:layout_toLeftOf="@id/profileImage"
-        android:text="אליאנה תדהר"
+        android:text=""
         android:textColor="@color/black"
         android:textSize="14sp"
         android:textStyle="bold" />

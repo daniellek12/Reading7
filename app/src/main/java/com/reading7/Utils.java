@@ -20,7 +20,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -29,6 +28,7 @@ import com.google.firebase.storage.StorageReference;
 import com.reading7.Objects.Book;
 import com.reading7.Objects.Notification;
 import com.reading7.Objects.Review;
+import com.reading7.Objects.User;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -73,11 +73,12 @@ public class Utils {
 
 
     public enum ChallengeState {
-        Right,
-        Wrong,
-        NotAnswered,
-
+        RIGHT,
+        WRONG,
+        NOT_ANSWERED,
+        OUT_OF_TIME
     }
+
     public static void convertTxtToBook(final Context context) throws IOException {
 
         /*Map<String,Integer> counts= new HashMap<String,Integer>();//for random genres
@@ -289,7 +290,7 @@ public class Utils {
      */
     public static Drawable getDrawable(Context context, String drawable_name) {
         try {
-            return ContextCompat.getDrawable(context,context.getResources().getIdentifier(drawable_name, "drawable", context.getPackageName()));
+            return ContextCompat.getDrawable(context, context.getResources().getIdentifier(drawable_name, "drawable", context.getPackageName()));
         } catch (Exception e) {
             throw new AssertionError("OOPS, you tried getting a drawable that doesnt exist");
         }
@@ -829,6 +830,24 @@ public class Utils {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
+                    for(DocumentSnapshot doc: task.getResult()) {
+                        doc.getReference().collection("Notifications").get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> taski) {
+                                for(DocumentSnapshot document: taski.getResult()){
+                                    try {
+                                        String state = document.getData().get("challengeState").toString();
+                                        if (state.equals("Wrong"))
+                                            document.getReference().update("challengeState", "WRONG");
+                                        if (state.equals("Right"))
+                                            document.getReference().update("challengeState", "RIGHT");
+                                    } catch (Exception e) {}
+                                }
+                            }
+                        });
+
+                    }
 
                 }
             }
@@ -935,25 +954,21 @@ public class Utils {
         private Notification notification;
         private Fragment fragment;
 
-        public OpenChallengeOnBookOnClick(Context context, Notification notification,Fragment fragment) {
+        public OpenChallengeOnBookOnClick(Context context, Notification notification, Fragment fragment) {
             this.mContext = context;
             this.notification = notification;
-            this.fragment= fragment;
+            this.fragment = fragment;
 
         }
 
         @Override
         public void onClick(View v) {
-            ChallengeFragment mFragment= new ChallengeFragment(notification.getBook_title(),notification.getQuestion_content(),notification.getPossible_answers(),notification.getRight_answer(),notification.getTime());
+            ChallengeFragment mFragment = new ChallengeFragment(notification.getBook_title(), notification.getQuestion_content(), notification.getPossible_answers(), notification.getRight_answer(), notification.getTime());
             mFragment.setTargetFragment(fragment, 808);
 
             ((MainActivity) mContext).addFragment(mFragment);
-                }
-            }
-
-
-
-
+        }
+    }
 
 
 }

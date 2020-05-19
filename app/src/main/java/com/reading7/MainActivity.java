@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -25,8 +24,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-
-import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
@@ -119,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         String type = intent.getStringExtra("type");
 
-        if(type == null) {
+        if (type == null) {
             loadFragment(new ExploreFragment());
             return;
         }
@@ -148,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             });
 
         }
-        if(type.equals(getResources().getString(R.string.challenge_notificiation))){
+        if (type.equals(getResources().getString(R.string.challenge_notificiation))) {
 //            this.addFragment(new ChallengeFragment(intent.getStringExtra("book_title"), intent.getStringExtra("question_content"), intent.getStringExtra("possible_answers"), intent.getStringExtra("right_answer")));
 //           this.addFragment(new ChallengeFragment(book_title,question_content,possible_answers,right_answer));
             loadFragment(new NotificationsFragment());
@@ -263,11 +260,15 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         // Customize onBackPressed for specific fragments //
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragmant_container);
-        if (fragment instanceof ReviewCommentsFragment)
+        if (fragment instanceof ReviewCommentsFragment) {
             if (((ReviewCommentsFragment) fragment).admin_delete)
                 ((ReviewCommentsFragment) fragment).sendResultDeleted(404);
             else
                 ((ReviewCommentsFragment) fragment).sendResult(303, ((ReviewCommentsFragment) fragment).getReviewId());
+        } else if (fragment instanceof ChallengeFragment) {
+            if (!((ChallengeFragment) fragment).isDone())
+                return;
+        }
 
         if (count == 1)
             finish();
