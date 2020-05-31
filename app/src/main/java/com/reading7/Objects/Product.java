@@ -22,6 +22,7 @@ public class Product {
         return item;
     }
 
+
     public void setItem(Avatar.Item item) {
         this.item = item;
     }
