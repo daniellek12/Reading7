@@ -37,22 +37,22 @@ public class InviteUserDialog extends AppCompatDialogFragment {
         book_title = getArguments().getString("book_title");
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        View view = getActivity().getLayoutInflater().inflate(R.layout.invite_user_dialog, null);
+        final View dialogView = getActivity().getLayoutInflater().inflate(R.layout.invite_user_dialog, null);
 
-        initShareButtons(view);
-        initInAppInviteButton(view);
+        initShareButtons(dialogView);
+        initInAppInviteButton(dialogView);
 
-        builder.setView(view);
+        builder.setView(dialogView);
         return builder.create();
     }
 
 
-    private void initInAppInviteButton(View view) {
-        view.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
+    private void initInAppInviteButton(final View dialogView) {
+        dialogView.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                final EditText emailText = view.findViewById(R.id.user_email);
+                final EditText emailText = dialogView.findViewById(R.id.user_email);
                 final String to_email = emailText.getText().toString().trim();
 
                 if (to_email.isEmpty()) {
