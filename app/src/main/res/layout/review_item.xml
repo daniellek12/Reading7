@@ -61,7 +61,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_marginLeft="20dp"
+        android:layout_marginLeft="15dp"
         android:layout_marginTop="15dp"
         android:progressBackgroundTint="@color/colorPrimaryDark"
         android:progressTint="@color/colorPrimaryDark"
@@ -89,6 +89,50 @@
         android:text="ספר מדהים!!!! חובה קריאה , אהבתי ממש אני לא רוצה לעשות לכם ספוילרים אבל הסוף מפתיע בטירוף רוצו לקרוא "
         android:textColor="@color/black"
         android:textIsSelectable="false" />
+
+    <ImageButton
+        android:id="@+id/more"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/transparent"
+        android:tint="@color/lightGrey"
+        android:visibility="gone"
+        app:srcCompat="@drawable/dots" />
+
+    <LinearLayout
+        android:id="@+id/deleteReview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/more"
+        android:background="@drawable/edittext_border_background_light"
+        android:backgroundTint="@color/white"
+        android:elevation="5dp"
+        android:gravity="center"
+        android:layoutDirection="rtl"
+        android:orientation="horizontal"
+        android:padding="5dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginTop="1dp"
+            android:src="@drawable/delete"
+            android:tint="@color/darkGrey" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:text="@string/delete_review" />
+
+    </LinearLayout>
 
     <ImageButton
         android:id="@+id/deleteBtn"
@@ -177,7 +221,6 @@
 
     <RelativeLayout
         android:id="@+id/deleteLayout"
-        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/divider"
@@ -188,7 +231,8 @@
         android:paddingLeft="60dp"
         android:paddingTop="10dp"
         android:paddingRight="60dp"
-        android:paddingBottom="10dp">
+        android:paddingBottom="10dp"
+        android:visibility="gone">
 
         <LinearLayout
             android:id="@+id/adminDeleteBtn"
@@ -202,8 +246,8 @@
                 android:id="@+id/delIcon"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                app:srcCompat="@drawable/delete"
-                android:tint="@color/design_default_color_error"/>
+                android:tint="@color/design_default_color_error"
+                app:srcCompat="@drawable/delete" />
 
             <TextView
                 android:id="@+id/delText"

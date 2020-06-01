@@ -28,7 +28,6 @@ import com.google.firebase.storage.StorageReference;
 import com.reading7.Objects.Book;
 import com.reading7.Objects.Notification;
 import com.reading7.Objects.Review;
-import com.reading7.Objects.User;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -830,22 +829,23 @@ public class Utils {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
-                    for(DocumentSnapshot doc: task.getResult()) {
+                    for (DocumentSnapshot doc : task.getResult()) {
                         doc.getReference().collection("Notifications").get()
                                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> taski) {
-                                for(DocumentSnapshot document: taski.getResult()){
-                                    try {
-                                        String state = document.getData().get("challengeState").toString();
-                                        if (state.equals("Wrong"))
-                                            document.getReference().update("challengeState", "WRONG");
-                                        if (state.equals("Right"))
-                                            document.getReference().update("challengeState", "RIGHT");
-                                    } catch (Exception e) {}
-                                }
-                            }
-                        });
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> taski) {
+                                        for (DocumentSnapshot document : taski.getResult()) {
+                                            try {
+                                                String state = document.getData().get("challengeState").toString();
+                                                if (state.equals("Wrong"))
+                                                    document.getReference().update("challengeState", "WRONG");
+                                                if (state.equals("Right"))
+                                                    document.getReference().update("challengeState", "RIGHT");
+                                            } catch (Exception e) {
+                                            }
+                                        }
+                                    }
+                                });
 
                     }
 

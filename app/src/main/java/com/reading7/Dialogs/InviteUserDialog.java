@@ -8,106 +8,87 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatDialogFragment;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.reading7.MainActivity;
-import com.reading7.Objects.Shelf;
 import com.reading7.R;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDialogFragment;
+
 public class InviteUserDialog extends AppCompatDialogFragment {
-    private FirebaseFirestore db;
-    private FirebaseAuth mAuth;
-    private View view;
+
+    private String book_title;
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         super.onCreateDialog(savedInstanceState);
-        final String book_title = getArguments().getString("book_title");
-
-        db = FirebaseFirestore.getInstance();
-        mAuth = FirebaseAuth.getInstance();
+        book_title = getArguments().getString("book_title");
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        view = getActivity().getLayoutInflater().inflate(R.layout.invite_user_dialog, null);
-        final EditText emailText = view.findViewById(R.id.user_email);
-        view.findViewById(R.id.share_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ShareInviteOutsideTheApp(book_title);
-            }});
+        View view = getActivity().getLayoutInflater().inflate(R.layout.invite_user_dialog, null);
 
-        view.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final String to_email = emailText.getText().toString().trim();
-
-                if (to_email.isEmpty()){
-                    String error = to_email + "עדיין לא בחרת משתמש ...";
-                    Toast.makeText(getContext(), error, Toast.LENGTH_LONG).show();
-                    return;
-                }
-                if(to_email.equals(mAuth.getCurrentUser().getEmail()))
-                {
-                    String error = "לא ניתן לשלוח הזמנה לעצמך ...";
-                    Toast.makeText(getContext(), error, Toast.LENGTH_LONG).show();
-                    return;
-
-                }
-
-                Query requestQuery = db.collection("Users").whereEqualTo("email", to_email);
-                requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            if(task.getResult().isEmpty()){
-                            String error = "אופס! לא קיים משתמש עם המייל " + to_email;
-                            Toast.makeText(getContext(), error, Toast.LENGTH_LONG).show();
-                            return;}
-                            else {
-
-
-                                addNotificationInviteToRead(to_email, book_title);
-                            }
-                        }
-                    }});
-
-
-            }
-        });
-
-        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismiss();
-            }
-        });
+        initShareButtons(view);
+        initInAppInviteButton(view);
 
         builder.setView(view);
         return builder.create();
     }
 
+
+    private void initInAppInviteButton(View view) {
+        view.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                final EditText emailText = view.findViewById(R.id.user_email);
+                final String to_email = emailText.getText().toString().trim();
+
+                if (to_email.isEmpty()) {
+                    String error = to_email + "עדיין לא בחרת משתמש ...";
+                    Toast.makeText(getContext(), error, Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                if (to_email.equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())) {
+                    String error = "לא ניתן לשלוח הזמנה לעצמך ...";
+                    Toast.makeText(getContext(), error, Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                Query requestQuery = FirebaseFirestore.getInstance().collection("Users").whereEqualTo("email", to_email);
+                requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            if (task.getResult().isEmpty()) {
+                                String error = "אופס! לא קיים משתמש עם המייל " + to_email;
+                                Toast.makeText(getContext(), error, Toast.LENGTH_LONG).show();
+                                return;
+                            } else {
+                                addNotificationInviteToRead(to_email, book_title);
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    }
+
     private void addNotificationInviteToRead(String to_email, String book_title) {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        if ( (!(to_email.equals(mAuth.getCurrentUser().getEmail())))) {
+        if ((!(to_email.equals(mAuth.getCurrentUser().getEmail())))) {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 
             Map<String, Object> notificationMessegae = new HashMap<>();
@@ -116,8 +97,6 @@ public class InviteUserDialog extends AppCompatDialogFragment {
             notificationMessegae.put("from", mAuth.getCurrentUser().getEmail());
             notificationMessegae.put("book_title", book_title);
             notificationMessegae.put("time", Timestamp.now());
-
-
 
 
             db.collection("Users/" + to_email + "/Notifications").add(notificationMessegae).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -134,14 +113,44 @@ public class InviteUserDialog extends AppCompatDialogFragment {
         }
     }
 
-    private void ShareInviteOutsideTheApp(String book_title){
-        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-        sharingIntent.setType("text/plain");
-        String shareBody = "כדאי לך לנסות את הספר: "+book_title;
-        String shareSubject = "אני רוצה להמליץ לך על ספר שווה קריאה";
-        sharingIntent.putExtra(Intent.EXTRA_TEXT,shareBody);
-        sharingIntent.putExtra(Intent.EXTRA_SUBJECT,shareSubject);
-        startActivity(Intent.createChooser(sharingIntent,"שתף באמצעות"));
+
+    private void initShareButtons(View view) {
+        view.findViewById(R.id.facebook).setOnClickListener(new ShareOutsideAppOnClick("com.facebook.orca"));
+        view.findViewById(R.id.instagram).setOnClickListener(new ShareOutsideAppOnClick("com.instagram.android"));
+        view.findViewById(R.id.whatsapp).setOnClickListener(new ShareOutsideAppOnClick("com.whatsapp"));
+        view.findViewById(R.id.email).setOnClickListener(new ShareOutsideAppOnClick("email"));
+    }
+
+    private class ShareOutsideAppOnClick implements View.OnClickListener {
+
+        private String intentPackage;
+
+        public ShareOutsideAppOnClick(String intentPackage) {
+            this.intentPackage = intentPackage;
+        }
+
+        @Override
+        public void onClick(View v) {
+
+            if (intentPackage.equals("email")) {
+                Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
+                emailIntent.setType("text/plain");
+                String shareBody = "כדאי לך לנסות את הספר " + book_title;
+                String shareSubject = "אני רוצה להמליץ לך על ספר שווה קריאה";
+                emailIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, shareSubject);
+                startActivity(Intent.createChooser(emailIntent, "שלח דואר אלקטרוני"));
+            } else {
+                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                sharingIntent.setType("text/plain");
+                sharingIntent.setPackage(intentPackage);
+                String shareBody = "כדאי לך לנסות את הספר " + book_title;
+                String shareSubject = "אני רוצה להמליץ לך על ספר שווה קריאה";
+                sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
+                sharingIntent.putExtra(Intent.EXTRA_SUBJECT, shareSubject);
+                startActivity(sharingIntent);
+            }
+        }
     }
 
 }

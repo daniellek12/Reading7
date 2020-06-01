@@ -151,7 +151,7 @@
     <string name="not_getting_points">לא הרווחת נקודות הפעם…</string>
     <string name="times_up">נגמר הזמן!</string>
 
-    <string name="choose_friend_email">יש להקליד את המייל של המשתמש עבורו תישלח הזמנה לקרוא את הספר</string>
+    <string name="choose_friend_email">יש להקליד את האימייל של משתמש עבורו תישלח הזמנת קריאה</string>
     <string name="invite_user">הזמנת המשתמש</string>
 
     <string name="choose_shelf_txt">לאיזה מדף להוסיף את הספר?</string>
@@ -168,7 +168,25 @@
     <string name="delete_comment">מחק תגובה</string>
     <string name="delete_review">מחק ביקורת</string>
     <string name="load_more">טען תוצאות נוספות</string>
+    <string name="share">שיתוף</string>
+    <string name="challenge_a_friend">שליחת אתגר לחבר</string>
+    <string name="select_user_title">את מי תרצה לאתגר?</string>
+    <string name="select_user_email">האימייל של המשתמש</string>
+    <string name="question_content">גוף השאלה</string>
 
 
+    <string name="choosing_user_to_challenge">בחירת משתמש לשליחת האתגר</string>
+    <string name="creating_question_challenge">ניסוח שאלה ותשובות אפשריות</string>
+    <string name="choosing_right_answer">סימון התשובה הנכונה</string>
+    <string name="user_doesnt_exist">המשתמש לא קיים במערכת</string>
+    <string name="enter_email">הכנס כתובת אימייל</string>
+    <string name="cant_challenge_yourself">לא ניתן לשלוח אתגר לעצמך</string>
+    <string name="enter_question">לא ניתן לשלוח אתגר ללא שאלה</string>
+    <string name="enter_possible_answers">יש למלא 4 תשובות אפשריות לשאלה</string>
+    <string name="choose_right_answer">סמן את התשובה הנכונה</string>
+    <string name="invite_user_in_app">שיתוף באפלקיציה</string>
+    <string name="or">או</string>
+    <string name="send_invitation">שליחת הזמנה</string>
+    <string name="share_through_other_apps">שיתוף באפליקציות אחרות</string>
 
 </resources>

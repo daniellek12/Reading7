@@ -2,24 +2,21 @@ package com.reading7.Dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.reading7.AdminActivity;
 import com.reading7.LoginActivity;
 import com.reading7.R;
 import com.reading7.Utils;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDialogFragment;
 
 public class AdminCredentialsDialog extends AppCompatDialogFragment {
 
@@ -53,12 +50,11 @@ public class AdminCredentialsDialog extends AppCompatDialogFragment {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
                                     Utils.isAdmin = true;
-                                    ((LoginActivity)getActivity()).redirectToMain();
+                                    ((LoginActivity) getActivity()).redirectToMain();
 //                                    Intent intent = new Intent(getActivity(), AdminActivity.class);
 //                                    startActivity(intent);
 //                                    getActivity().finish();
-                                }
-                                else{
+                                } else {
                                     //Toast.makeText(getContext(), "סיסמה שגויה", Toast.LENGTH_LONG).show();
                                     dialog_view.findViewById(R.id.wrong_details_txt).setVisibility(View.VISIBLE);
                                     hideProgressBar();
@@ -79,7 +75,8 @@ public class AdminCredentialsDialog extends AppCompatDialogFragment {
         return builder.create();
     }
 
-    private void hideProgressBar(){
+
+    private void hideProgressBar() {
         dialog_view.findViewById(R.id.progress_background).setVisibility(View.GONE);
         dialog_view.findViewById(R.id.progressBar).setVisibility(View.GONE);
         dialog_view.findViewById(R.id.lock).setVisibility(View.VISIBLE);
@@ -88,7 +85,7 @@ public class AdminCredentialsDialog extends AppCompatDialogFragment {
         dialog_view.findViewById(R.id.cancel).setEnabled(true);
     }
 
-    private void showProgressBar(){
+    private void showProgressBar() {
         dialog_view.findViewById(R.id.lock).setVisibility(View.GONE);
         dialog_view.findViewById(R.id.progress_background).setVisibility(View.VISIBLE);
         dialog_view.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
