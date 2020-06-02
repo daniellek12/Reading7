@@ -118,7 +118,7 @@ public class SimilarUsersAdapter extends RecyclerView.Adapter<SimilarUsersAdapte
                 holder.user_name.setText(name);
 
                 String age = "" + Utils.calculateAge(user.getBirth_date());
-                holder.user_age.setText(holder.user_age.getText()+" "+age);
+                holder.user_age.setText("גיל: "+age);
                 Avatar avatar = user.getAvatar();
                 avatar.loadIntoImage(mContext, holder.profile_image);
                     Utils.OpenProfileOnClick profileListener = new Utils.OpenProfileOnClick(mContext, user.getEmail());
