@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -23,12 +24,14 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.reading7.Objects.Book;
 import com.reading7.Objects.Notification;
 import com.reading7.Objects.Review;
+import com.reading7.Objects.WishList;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -948,13 +951,83 @@ public class Utils {
             mFragment.setTargetFragment(fragment, 808);
 
             ((MainActivity) mContext).addFragment(mFragment);
+        }
+    }
+
+    public static void deleteBookFromDB(final Book book) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Query query1 = db.collection("Books").whereEqualTo("id", book.getId());
+        query1.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()){
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                        doc.getReference().delete();
+                    }
                 }
             }
+        });
 
+        Query query2 = db.collection("Wishlist").whereEqualTo("book_id", book.getId());
+        query2.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()){
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                        doc.getReference().delete();
+                    }
+                }
+            }
+        });
 
+        Query query3 = db.collection("Reviews").whereEqualTo("book_id", book.getId());
+        query3.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()){
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                        doc.getReference().delete();
+                    }
+                }
+            }
+        });
 
+        Query query4 = db.collection("Recommendations").whereEqualTo("book_id", book.getId());
+        query4.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()){
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                        doc.getReference().delete();
+                    }
+                }
+            }
+        });
 
-
+        Query query5 = db.collectionGroup("Shelves").whereArrayContains("book_names", book.getTitle());
+        query5.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()){
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                        DocumentReference ref = doc.getReference();
+                        ref.update("book_names", FieldValue.arrayRemove(book.getTitle())).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful())
+                                    Log.d("TEST_DELETE", "SUCCESS");
+                                else
+                                    Log.d("TEST_DELETE", "FAILURE");
+                            }
+                        });
+                    }
+                }
+                else{
+                    Log.d("TEST_DELETE", task.getException().getMessage());
+                }
+            }
+        });
+    }
 
 }
 

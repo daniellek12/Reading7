@@ -135,20 +135,19 @@ public class BookFragment extends Fragment {
         getActivity().findViewById(R.id.button_delete_book).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                DocumentReference bookReference = db.collection("Books").document(mBook.getId());
-//                bookReference.delete();
-                Query query = db.collection("Books").whereEqualTo("id", mBook.getId());
-                query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()){
-                            for (QueryDocumentSnapshot doc : task.getResult()) {
-                                doc.getReference().delete();
-                            }
-                        }
-                    }
-                });
+//                Query query = db.collection("Books").whereEqualTo("id", mBook.getId());
+//                query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if (task.isSuccessful()){
+//                            for (QueryDocumentSnapshot doc : task.getResult()) {
+//                                doc.getReference().delete();
+//                            }
+//                        }
+//                    }
+//                });
                 //sendResult(101);
+                Utils.deleteBookFromDB(mBook);
                 admin_delete = true;
                 getActivity().onBackPressed();
             }

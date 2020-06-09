@@ -81,12 +81,16 @@ public class ExploreFragment extends Fragment {
         switch (resultCode){
             case 101:
                 String book_id = data.getStringExtra("book_id");
-                first = 0;
-                showProgressBar();
-                bookList.clear();
-                myAdapter.notifyDataSetChanged();
-                first_load_books();
+                loadAgain();
         }
+    }
+
+    public void loadAgain() {
+        first = 0;
+        showProgressBar();
+        bookList.clear();
+        myAdapter.notifyDataSetChanged();
+        first_load_books();
     }
 
     private void initAppBar() {

@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.reading7.AdminActivity;
+import com.reading7.ExploreFragment;
 import com.reading7.Objects.Book;
 import com.reading7.BookFragment;
 import com.reading7.MainActivity;
@@ -105,7 +106,9 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
             viewHolder.delete_background.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(mContext, "clicked delete", Toast.LENGTH_SHORT).show();
+                    Utils.deleteBookFromDB(books.get(i));
+                    notifyDataSetChanged();
+                    ((ExploreFragment) fragment).loadAgain();
                 }
             });
         }

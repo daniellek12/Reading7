@@ -43,6 +43,8 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
+        Utils.isAdmin = false;
+
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null && !currentUser.getEmail().equals("admin@admin.com")) //fixme: redirect when admin too?
             redirectAgain();
