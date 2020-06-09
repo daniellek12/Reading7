@@ -9,6 +9,7 @@
     <color name="grey">#F7FAFB</color>
     <color name="lightGrey">#BFBFBF</color>
     <color name="darkGrey">#7A7A7A</color>
+    <color name="red">#DE261A</color>
 
     <color name="transparent">#00ff0000</color>
     <color name="transparentPrimaryDark">#DAFFC21C</color>

@@ -2,7 +2,6 @@ package com.reading7.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,7 +31,6 @@ import com.reading7.R;
 import com.reading7.ReviewCommentsFragment;
 import com.reading7.Utils;
 
-import java.sql.Time;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -61,7 +58,7 @@ public class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.V
         this.mContext = context;
         this.db = FirebaseFirestore.getInstance();
         this.mActivity = activity;
-        this.fragment=fragment;
+        this.fragment = fragment;
     }
 
     @Override
@@ -159,7 +156,8 @@ public class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.V
                 //add notification for approving
                 addNotificationRequestApproved(followed_mail);
 
-            }});
+            }
+        });
     }
 
     private void bindPrivateUser(final NotificationListAdapter.PrivateNotificationHolder holder, final String email) {
@@ -207,20 +205,20 @@ public class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.V
             return;
 
         }
-        if(notification.getType().equals(mContext.getResources().getString(R.string.challenge_notificiation)))
-        {
+        if (notification.getType().equals(mContext.getResources().getString(R.string.challenge_notificiation))) {
 
-            if(notification.getChallengeState()== Utils.ChallengeState.Right)
-                holder.content.setText((notification.getType()) + " על הספר " + notification.getBook_title()+" וענית נכון ");
-            else if(notification.getChallengeState()== Utils.ChallengeState.Wrong)
-                holder.content.setText((notification.getType()) + " על הספר " + notification.getBook_title()+" וענית לא נכון ");
-            else{
-                holder.clickNotificationBtn.setOnClickListener(new Utils.OpenChallengeOnBookOnClick(mContext, notification,fragment));
+            if (notification.getChallengeState() == Utils.ChallengeState.RIGHT)
+                holder.content.setText((notification.getType()) + " על הספר " + notification.getBook_title() + " וענית נכון ");
+            else if (notification.getChallengeState() == Utils.ChallengeState.WRONG)
+                holder.content.setText((notification.getType()) + " על הספר " + notification.getBook_title() + " וענית לא נכון ");
+            else if (notification.getChallengeState() == Utils.ChallengeState.OUT_OF_TIME)
+                holder.content.setText((notification.getType()) + " על הספר " + notification.getBook_title() + " ולא הספקת לענות בזמן ");
+            else {
+                holder.clickNotificationBtn.setOnClickListener(new Utils.OpenChallengeOnBookOnClick(mContext, notification, fragment));
                 holder.content.setText((notification.getType()) + " על הספר " + notification.getBook_title());
             }
 
-        }
-        else {
+        } else {
             holder.clickNotificationBtn.setOnClickListener(new OpenReviewOnBookOnClick(notification.getBook_title()));
             holder.content.setText((notification.getType()) + " על הספר " + notification.getBook_title());
         }
@@ -299,15 +297,14 @@ public class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.V
     private void addNotificationRequestApproved(String to_email) {
 
 
+        Map<String, Object> notificationMessegae = new HashMap<>();
 
-            Map<String, Object> notificationMessegae = new HashMap<>();
+        notificationMessegae.put("type", mContext.getResources().getString(R.string.request_approved_notificiation));
+        notificationMessegae.put("book_title", "request_approved_notification");//not relvant
+        notificationMessegae.put("from", mAuth.getCurrentUser().getEmail());
+        notificationMessegae.put("time", Timestamp.now());
 
-            notificationMessegae.put("type", mContext.getResources().getString(R.string.request_approved_notificiation));
-            notificationMessegae.put("book_title", "request_approved_notification");//not relvant
-            notificationMessegae.put("from", mAuth.getCurrentUser().getEmail());
-            notificationMessegae.put("time", Timestamp.now());
-
-            db.collection("Users/" + to_email + "/Notifications").add(notificationMessegae);
+        db.collection("Users/" + to_email + "/Notifications").add(notificationMessegae);
 
     }
 
@@ -360,7 +357,8 @@ public class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.V
                             userRef.update("follow_requests", FieldValue.arrayRemove(notification.getFrom()));
                         }
                     }
-                } else Toast.makeText(mContext, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                } else
+                    Toast.makeText(mContext, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -393,17 +391,19 @@ public class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.V
                             document.getReference().delete();
                         }
                     }
-                } else Toast.makeText(mContext, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                } else
+                    Toast.makeText(mContext, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
+
     public void notifyNotificationChallengedChanged(String strtime) {
 
         for (int i = 0; i < getItemCount(); i++) {
 
             final int finalI = i;
             final Notification n = notifications.get(i);
-            final Timestamp time= new Timestamp(Long.parseLong(strtime.split(",")[0]), Integer.parseInt(strtime.split(",")[1]));
+            final Timestamp time = new Timestamp(Long.parseLong(strtime.split(",")[0]), Integer.parseInt(strtime.split(",")[1]));
             if (n.getTime().equals(time)) {
 
                 Query query = db.collection("Users").document(mAuth.getCurrentUser().getEmail()).collection("Notifications").whereEqualTo("time", time);
@@ -426,7 +426,6 @@ public class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.V
             }
         }
     }
-
 
 
 }

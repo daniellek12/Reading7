@@ -1,10 +1,13 @@
 package com.reading7;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.duolingo.open.rtlviewpager.RtlViewPager;
 import com.google.android.material.tabs.TabLayout;
@@ -19,6 +22,9 @@ import androidx.viewpager.widget.ViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+
+import static android.app.Activity.RESULT_OK;
 
 
 public class SearchFragment extends Fragment implements androidx.appcompat.widget.SearchView.OnQueryTextListener {
@@ -42,6 +48,7 @@ public class SearchFragment extends Fragment implements androidx.appcompat.widge
         initTabsViewPager();
         initSearchView();
         initBackButton();
+        initSpeechButton();
     }
 
 
@@ -75,13 +82,42 @@ public class SearchFragment extends Fragment implements androidx.appcompat.widge
     }
 
 
+    private void initSpeechButton() {
+
+        ImageView backButton = getActivity().findViewById(R.id.speechButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+                intent.putExtra(RecognizerIntent.EXTRA_PROMPT,("ניתן לומר שם של ספר או חבר"));
+                startActivityForResult(intent,1000);
+            }
+        });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case 1000: {
+                if(resultCode == RESULT_OK && data!=null){
+                    ArrayList<String> res =data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    searchView.setQuery(res.get(0), false);
+                }
+            }
+        }
+    }
+
     private void initTabsViewPager() {
 
         TabsPagerAdapter tabsPagerAdapter = new TabsPagerAdapter(getChildFragmentManager());
 
 //        tabsPagerAdapter.addFragment(new SearchBooksFragment(), "ספרים");//TODO remove
         ArrayList<Book> books = new ArrayList<Book>();
-        tabsPagerAdapter.addFragment(new GenericSearchFragment<Book>(Book.class, new SearchBooksAdapter(getContext(), books), books), "ספרים"); //TODO implement
+        Fragment fragment = new GenericSearchFragment<Book>(Book.class, new SearchBooksAdapter(getContext(), books), books, R.layout.search_books_fragment, R.id.booksListView,"Books", "title");
+        tabsPagerAdapter.addFragment(fragment, "ספרים"); //TODO implement
 //        tabsPagerAdapter.addFragment(new SearchAuthorsFragment(), "סופרים");
         tabsPagerAdapter.addFragment(new SearchFriendsFragment(), "חברים");
 

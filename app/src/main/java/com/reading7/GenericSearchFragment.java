@@ -2,6 +2,7 @@ package com.reading7;
 
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +21,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.reading7.Adapters.SearchBooksAdapter;
-import com.reading7.Objects.Book;
+
 
 import java.util.ArrayList;
 
@@ -30,17 +30,25 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+
 public class GenericSearchFragment<T> extends Fragment implements androidx.appcompat.widget.SearchView.OnQueryTextListener {
 
+    private static final String TAG = "GenericSearchFragment";
     private BaseAdapter adapter;
     private ArrayList<T> adapter_list;
     private Class class_type;
     private ListView list;
+    private int layout;
+    private int list_id;
+
     private FirebaseFirestore db;
 
     private DocumentSnapshot lastVisible = null;
     private boolean isLastItemReached = false;
     private int limit = 5;
+
+    private String collection_name;
+    private String field_name;
 
     private String search_txt = null;
 
@@ -48,16 +56,20 @@ public class GenericSearchFragment<T> extends Fragment implements androidx.appco
 
     Button load_btn;
 
-    public GenericSearchFragment(Class class_type, BaseAdapter baseAdapter, ArrayList<T> list) {
+    public GenericSearchFragment(Class class_type, BaseAdapter baseAdapter, ArrayList<T> list, int layout, int list_id, String collection_name, String field_name) {
         this.adapter = baseAdapter;
         this.adapter_list = list;
         this.class_type = class_type;
+        this.layout = layout;
+        this.list_id = list_id;
+        this.collection_name = collection_name;
+        this.field_name = field_name;
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.search_books_fragment, null); // FIXME make generic!
+        return inflater.inflate(this.layout, null);
     }
 
     @Override
@@ -86,8 +98,8 @@ public class GenericSearchFragment<T> extends Fragment implements androidx.appco
     private void initItems() {
         final ArrayList<T> newlist = new ArrayList<>();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        final CollectionReference requestCollectionRef = db.collection("Books");
-        Query requestQuery = requestCollectionRef.orderBy("title").limit(limit); // init limit
+        final CollectionReference requestCollectionRef = db.collection(collection_name);
+        Query requestQuery = requestCollectionRef.orderBy(field_name).limit(limit); // init limit
         requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -105,7 +117,8 @@ public class GenericSearchFragment<T> extends Fragment implements androidx.appco
     }
 
     private void initAdapter() {
-        list = getActivity().findViewById(R.id.booksListView); // FIXME make generic!
+        Log.e(TAG, Integer.toString(list_id));
+        list = getActivity().findViewById(list_id); // FIXME make generic!
         list.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
@@ -119,8 +132,8 @@ public class GenericSearchFragment<T> extends Fragment implements androidx.appco
         } else {
             txtEnd = txt.substring(0, txt.length() - 1) + (char) (txt.charAt(txt.length() - 1) + 1);
         }
-        final CollectionReference requestCollectionRef = db.collection("Books");
-        Query requestQuery = requestCollectionRef.orderBy("title").whereGreaterThanOrEqualTo("title", txt).whereLessThan("title", txtEnd).limit(limit);
+        final CollectionReference requestCollectionRef = db.collection(collection_name);
+        Query requestQuery = requestCollectionRef.orderBy(field_name).whereGreaterThanOrEqualTo(field_name, txt).whereLessThan(field_name, txtEnd).limit(limit);
 
         int firstVisibleItemPosition = list.getFirstVisiblePosition();
         int visibleItemCount = list.getChildCount();
@@ -164,8 +177,8 @@ public class GenericSearchFragment<T> extends Fragment implements androidx.appco
         } else {
             txtEnd = txt.substring(0, txt.length() - 1) + (char) (txt.charAt(txt.length() - 1) + 1);
         }
-        final CollectionReference requestCollectionRef = db.collection("Books");
-        Query requestQuery = requestCollectionRef.orderBy("title").whereGreaterThanOrEqualTo("title", txt).whereLessThan("title", txtEnd).limit(limit);
+        final CollectionReference requestCollectionRef = db.collection(collection_name);
+        Query requestQuery = requestCollectionRef.orderBy(field_name).whereGreaterThanOrEqualTo(field_name, txt).whereLessThan(field_name, txtEnd).limit(limit);
 
         requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override

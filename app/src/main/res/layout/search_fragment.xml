@@ -18,6 +18,14 @@
             android:background="@color/white"
             app:layout_scrollFlags="scroll|enterAlways">
 
+            <ImageView
+                android:id="@+id/speechButton"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="left"
+                android:layout_marginLeft="16dp"
+                android:src="@drawable/speech_btn"
+                android:tint="@color/darkGrey" />
 
             <androidx.appcompat.widget.SearchView
                 android:id="@+id/searchView"
@@ -27,7 +35,6 @@
                 android:maxWidth="300dp"
                 app:searchHintIcon="@color/transparent"
                 app:queryHint="@string/search_hint" />
-
 
             <ImageView
                 android:id="@+id/backButton"

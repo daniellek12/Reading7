@@ -1,5 +1,7 @@
 package com.reading7;
 
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.PorterDuff;
@@ -24,7 +26,6 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -90,7 +91,9 @@ public class BookFragment extends Fragment {
         this.mBook = book;
     }
 
-    public Book getBook() {return mBook;}
+    public Book getBook() {
+        return mBook;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -344,7 +347,7 @@ public class BookFragment extends Fragment {
         });
 
         // Set the wishlist button functionality
-        getActivity().findViewById(R.id.button_wishlist).setOnClickListener(new View.OnClickListener() {
+        getActivity().findViewById(R.id.addToWishlist).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -367,7 +370,7 @@ public class BookFragment extends Fragment {
                     updateWishlistButton();
 
                 } else {
-                    WishList wlist = new WishList("", currentUser.getEmail(),  mBook.getId(), mBook.getTitle(), mBook.getAuthor(), Timestamp.now());
+                    WishList wlist = new WishList("", currentUser.getEmail(), mBook.getId(), mBook.getTitle(), mBook.getAuthor(), Timestamp.now());
                     DocumentReference newWish = db.collection("Wishlist").document();
                     wlist.setId(newWish.getId());
                     newWish.set(wlist);
@@ -381,22 +384,28 @@ public class BookFragment extends Fragment {
 
     private void updateWishlistButton() {
 
-        final Button wishListBtn = getActivity().findViewById(R.id.button_wishlist);
-        Drawable heart = (wishListBtn.getCompoundDrawables())[2];
+        final Button wishListBtn = getActivity().findViewById(R.id.addToWishlist);
+        Drawable heart = Utils.getDrawable(getContext(), "heart");
 
         if (isWishlist) {
             wishListBtn.setText(getString(R.string.remove_from_wishlist));
+            wishListBtn.setTextColor(getResources().getColor(R.color.lightGrey));
             wishListBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.grey)));
-            wishListBtn.setTextColor(getResources().getColor(R.color.darkGrey));
-            heart.setColorFilter(getResources().getColor(R.color.darkGrey), PorterDuff.Mode.SRC_ATOP);
+            heart.setColorFilter(getResources().getColor(R.color.lightGrey), PorterDuff.Mode.SRC_ATOP);
+            wishListBtn.setCompoundDrawablesWithIntrinsicBounds(null, null, heart, null);
         } else {
             wishListBtn.setText(getString(R.string.add_to_wishlist));
-            wishListBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorAccent)));
             wishListBtn.setTextColor(getResources().getColor(R.color.white));
+            wishListBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorAccent)));
             heart.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+            wishListBtn.setCompoundDrawablesWithIntrinsicBounds(null, null, heart, null);
         }
 
-        wishListBtn.setCompoundDrawables(null, null, heart, null);
+        ObjectAnimator.ofPropertyValuesHolder(wishListBtn,
+                PropertyValuesHolder.ofFloat(View.SCALE_X, 1, 1.1f, 1),
+                PropertyValuesHolder.ofFloat(View.SCALE_Y, 1, 1.1f, 1))
+                .setDuration(200)
+                .start();
     }
 
 
@@ -429,15 +438,16 @@ public class BookFragment extends Fragment {
     private void updateRankButton() {
 
         final Button rankBtn = getActivity().findViewById(R.id.button_read);
-        Drawable bubble = (rankBtn.getCompoundDrawables())[2];
 
         if (isReviewed) {
             rankBtn.setVisibility(View.INVISIBLE);
-            getActivity().findViewById(R.id.button_wishlist).setVisibility(View.GONE);
             getActivity().findViewById(R.id.button_already_read).setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.addToWishlist).setVisibility(View.GONE);
+        } else {
+            rankBtn.setVisibility(View.VISIBLE);
+            getActivity().findViewById(R.id.button_already_read).setVisibility(View.GONE);
+            getView().findViewById(R.id.addToWishlist).setVisibility(View.VISIBLE);
         }
-
-        rankBtn.setCompoundDrawables(null, null, bubble, null);
     }
 
 
@@ -571,7 +581,7 @@ public class BookFragment extends Fragment {
 
 
     private void initShelfButton() {
-        ImageButton shelfButton = getActivity().findViewById(R.id.button_custom_shelf);
+        Button shelfButton = getActivity().findViewById(R.id.addToShelf);
         shelfButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -588,7 +598,7 @@ public class BookFragment extends Fragment {
     }
 
     private void initInviteButton() {
-        ImageButton inviteButton = getActivity().findViewById(R.id.button_invite_user);
+        Button inviteButton = getActivity().findViewById(R.id.share_button);
         inviteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -605,8 +615,8 @@ public class BookFragment extends Fragment {
     }
 
     private void initChallengeButton() {
-        ImageButton inviteButton = getActivity().findViewById(R.id.button_challenge_user);
-        inviteButton.setOnClickListener(new View.OnClickListener() {
+        ImageButton challengeButton = getActivity().findViewById(R.id.challenge_button);
+        challengeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ChallengeUserDialog dialog = new ChallengeUserDialog();
@@ -622,6 +632,7 @@ public class BookFragment extends Fragment {
     }
 
     public void updateUIAfterDeleteReview(float rank_avg, float age_avg, int count_raters) {
+
         rankRatingBar.setRating(rank_avg);
         ratingNum.setText(Float.toString(rank_avg));
         mAvgAge = age_avg;
@@ -631,10 +642,8 @@ public class BookFragment extends Fragment {
             countRatersText.setText(getResources().getString(R.string.one_reviewer));
         else
             countRatersText.setText(count_raters + " " + getResources().getString(R.string.reviewers));
-        Button rankBtn = getActivity().findViewById(R.id.button_read);
-        rankBtn.setVisibility(View.VISIBLE);
-        getActivity().findViewById(R.id.button_wishlist).setVisibility(View.VISIBLE);
-        getActivity().findViewById(R.id.button_already_read).setVisibility(View.GONE);
+
+        updateRankButton();
     }
 
 

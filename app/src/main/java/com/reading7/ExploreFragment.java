@@ -111,6 +111,15 @@ public class ExploreFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     ((MainActivity) getActivity()).addFragment(new StoreFragment());
+
+
+                }
+            });
+
+            getActivity().findViewById(R.id.similar_users_btn).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ((MainActivity) getActivity()).loadFragment(new SimilarUserFragment());
                 }
             });
         }
@@ -310,7 +319,7 @@ public class ExploreFragment extends Fragment {
                                 bookList.addAll(newlist);
                                 newlist.clear();
 
-                                myAdapter.notifyDataSetChanged();//no problem cause this is the first update
+                               myAdapter.notifyDataSetChanged();//no problem cause this is the first update
                                 lastVisible = task.getResult().getDocuments().get(task.getResult().size() - 1);
                                 hideProgressBar();
                             }

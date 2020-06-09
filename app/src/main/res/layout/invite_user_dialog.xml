@@ -8,86 +8,174 @@
     android:orientation="vertical">
 
 
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        app:srcCompat="@color/colorPrimaryDark" />
-
-    <ImageView
-        android:id="@+id/share_button"
+    <TextView
+        android:id="@+id/invite_inApp_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
-        app:srcCompat="@drawable/ic_share_icon"
-        android:scaleX="2.5"
-        android:scaleY="2.5"
-        android:tint="@color/darkGrey"
-        android:foregroundTint="@color/white"/>
-
-
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="30dp"
+        android:text="@string/invite_user_in_app"
+        android:textStyle="bold"
+        android:textSize="14sp"/>
 
     <TextView
-        android:id="@+id/ratingBar"
+        android:id="@+id/invite_inApp_subtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/share_button"
+        android:layout_below="@id/invite_inApp_title"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp"
-        android:text="@string/choose_friend_email"/>
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="5dp"
+        android:text="@string/choose_friend_email"
+        android:textSize="12sp"/>
 
     <EditText
         android:id="@+id/user_email"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/ratingBar"
+        android:layout_height="40dp"
+        android:layout_below="@id/invite_inApp_subtitle"
+        android:layout_centerInParent="true"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
         android:layout_marginRight="20dp"
-        android:background="@drawable/edittext_border_background_light"
-        android:hint="מייל של משתמש להזמנה"
-        android:inputType="text"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/edittext_border_background_grey"
+        android:drawableStart="@drawable/user"
+        android:drawablePadding="10dp"
+        android:drawableTint="@color/transparentPrimaryDark"
+        android:hint="@string/select_user_email"
+        android:inputType="textEmailAddress"
         android:lines="1"
+        android:maxLines="1"
         android:paddingLeft="10dp"
-        android:paddingTop="10dp"
-        android:paddingRight="10dp"
-        android:paddingBottom="10dp"
-        android:textColorHint="@color/lightGrey"
+        android:paddingRight="15dp"
+        android:singleLine="true"
+        android:textAlignment="viewStart"
         android:textSize="14sp" />
 
     <Button
         android:id="@+id/ok"
-        android:layout_width="130dp"
+        android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_below="@id/user_email"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
         android:background="@drawable/rounded_button"
         android:backgroundTint="@color/colorPrimaryDark"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:text="@string/invite_user"
+        android:text="@string/send_invitation"
         android:textColor="@color/white" />
 
-    <Button
-        android:id="@+id/cancel"
-        android:layout_width="130dp"
-        android:layout_height="40dp"
-        android:layout_below="@id/user_email"
-        android:layout_alignParentRight="true"
-        android:layout_marginLeft="20dp"
+    <View
+        android:id="@+id/divider23"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"
+        android:layout_below="@id/ok"
         android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"/>
+
+    <TextView
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/round_button_white"
+        android:text="@string/or"
+        android:textColor="@color/lightGrey"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/ok"
+        android:layout_marginTop="20dp"
+        android:gravity="center"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/divider23"
         android:layout_marginRight="20dp"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/rounded_button"
-        android:backgroundTint="@color/grey"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:text="@string/cancel"
-        android:textColor="@color/darkGrey" />
+        android:layout_marginLeft="20dp"
+        android:layout_marginBottom="30dp">
+
+        <ImageButton
+            android:id="@+id/email"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/share_email"
+            android:scaleType="centerInside"
+            android:background="@color/transparent"
+            android:layout_weight="1"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"/>
+
+        <ImageButton
+            android:id="@+id/whatsapp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/share_whatsapp"
+            android:scaleType="centerInside"
+            android:background="@color/transparent"
+            android:layout_weight="1"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"/>
+
+        <ImageButton
+            android:id="@+id/instagram"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/share_instagram"
+            android:scaleType="centerInside"
+            android:background="@color/transparent"
+            android:layout_weight="1"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"/>
+
+        <ImageButton
+            android:id="@+id/facebook"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/share_facebook"
+            android:scaleType="centerInside"
+            android:background="@color/transparent"
+            android:layout_weight="1"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"/>
+
+
+    </LinearLayout>
+
+
+<!--    <Button-->
+<!--        android:id="@+id/share_button"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="40dp"-->
+<!--        android:layout_below="@id/divider23"-->
+<!--        android:background="@drawable/rounded_button"-->
+<!--        android:backgroundTint="@color/grey"-->
+<!--        android:layout_centerHorizontal="true"-->
+<!--        android:text="@string/share_through_other_apps"-->
+<!--        android:layout_marginRight="20dp"-->
+<!--        android:layout_marginLeft="20dp"-->
+<!--        android:layout_marginBottom="20dp"-->
+<!--        android:textColor="@color/darkGrey"/>-->
+
+<!--    <Button-->
+<!--        android:id="@+id/cancel"-->
+<!--        android:layout_width="130dp"-->
+<!--        android:layout_height="40dp"-->
+<!--        android:layout_below="@id/share_button"-->
+<!--        android:layout_alignParentRight="true"-->
+<!--        android:layout_marginLeft="20dp"-->
+<!--        android:layout_marginTop="30dp"-->
+<!--        android:layout_marginRight="20dp"-->
+<!--        android:layout_marginBottom="20dp"-->
+<!--        android:background="@drawable/rounded_button"-->
+<!--        android:backgroundTint="@color/grey"-->
+<!--        android:paddingLeft="20dp"-->
+<!--        android:paddingRight="20dp"-->
+<!--        android:text="@string/cancel"-->
+<!--        android:textColor="@color/darkGrey" />-->
 
 
 </RelativeLayout>

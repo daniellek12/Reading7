@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/yellow_books_background"
     android:layoutDirection="rtl"
     tools:context=".BookFragment">
-
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolBar"
@@ -69,7 +67,6 @@
 
     </RelativeLayout>
 
-
     <ImageView
         android:id="@+id/bookCoverImage2"
         android:layout_width="260dp"
@@ -82,7 +79,6 @@
         android:elevation="10dp"
         android:scaleType="fitXY" />
 
-
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
@@ -94,7 +90,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="330dp"
             android:background="@color/transparent">
-
 
             <RelativeLayout
                 android:id="@+id/scrollLayout"
@@ -143,7 +138,6 @@
                     android:textDirection="rtl"
                     android:textSize="12sp" />
 
-
                 <TextView
                     android:id="@+id/genres"
                     android:layout_width="wrap_content"
@@ -156,6 +150,34 @@
                     android:text=" מד״ב ופנטזיה|ילדים ונוער|הרפקאות"
                     android:textColor="@color/lightGrey"
                     android:textSize="12sp" />
+
+                <LinearLayout
+                    android:id="@+id/numPagesLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/book_name"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/numPages"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="458"
+                        android:textColor="@color/lightGrey"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/numPagesTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/pages"
+                        android:textColor="@color/lightGrey"
+                        android:textSize="12sp" />
+                </LinearLayout>
 
                 <RatingBar
                     android:id="@+id/bookRatingBar"
@@ -187,7 +209,6 @@
                     android:textColor="@color/black"
                     android:textSize="14sp"
                     android:textStyle="bold" />
-
 
                 <TextView
                     android:id="@+id/summary_title"
@@ -237,8 +258,9 @@
                     android:textSize="12sp"
                     android:visibility="gone"/>
 
+
                 <Button
-                    android:id="@+id/button_wishlist"
+                    android:id="@+id/addToWishlist"
                     android:layout_width="wrap_content"
                     android:layout_height="35dp"
                     android:layout_below="@id/summary"
@@ -247,6 +269,7 @@
                     android:layout_marginTop="5dp"
                     android:background="@drawable/rounded_button"
                     android:drawableRight="@drawable/heart"
+                    android:drawableTint="@color/white"
                     android:drawablePadding="5dp"
                     android:paddingLeft="15dp"
                     android:paddingTop="5dp"
@@ -262,11 +285,13 @@
                     android:layout_height="35dp"
                     android:layout_below="@id/summary"
                     android:layout_alignParentRight="true"
+                    android:layout_toRightOf="@id/addToWishlist"
+                    android:layout_marginLeft="10dp"
                     android:layout_marginTop="5dp"
                     android:layout_marginRight="20dp"
                     android:background="@drawable/rounded_button"
                     android:backgroundTint="@color/colorPrimaryDark"
-                    android:drawableRight="@drawable/chat_bubble"
+                    android:drawableStart="@drawable/chat_bubble"
                     android:drawablePadding="5dp"
                     android:paddingLeft="15dp"
                     android:paddingTop="5dp"
@@ -274,7 +299,9 @@
                     android:paddingBottom="5dp"
                     android:text="@string/add_review"
                     android:textColor="@color/white"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    android:lines="1"
+                    android:maxLines="1"/>
 
                 <Button
                     android:id="@+id/button_already_read"
@@ -298,12 +325,72 @@
                     android:textSize="12sp"
                     android:visibility="gone" />
 
+
+                <RelativeLayout
+                    android:id="@+id/share_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:layout_below="@id/button_read">
+
+                    <Button
+                        android:id="@+id/share_button"
+                        android:layout_width="55dp"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="16dp"
+                        android:background="@color/transparent"
+                        android:text="@string/share"
+                        android:textColor="@color/lightGrey"
+                        android:drawableRight="@drawable/share"
+                        android:drawableTint="@color/lightGrey"
+                        android:layout_alignParentLeft="true"
+                        android:textSize="12sp"/>
+
+                    <View
+                        android:id="@+id/divider22"
+                        android:layout_width="1dp"
+                        android:layout_height="20dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_toRightOf="@id/share_button"
+                        android:layout_centerVertical="true"
+                        android:background="?android:attr/listDivider" />
+
+                    <Button
+                        android:id="@+id/addToShelf"
+                        android:layout_width="55dp"
+                        android:layout_height="40dp"
+                        android:background="@color/transparent"
+                        android:text="@string/save"
+                        android:textColor="@color/lightGrey"
+                        android:drawableRight="@drawable/bookmark_plus"
+                        android:drawableTint="@color/lightGrey"
+                        android:layout_toRightOf="@id/divider22"
+                        android:textSize="12sp"/>
+
+<!--                    <Button-->
+<!--                        android:id="@+id/addToWishlist"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="40dp"-->
+<!--                        android:layout_marginRight="16dp"-->
+<!--                        android:layout_alignParentRight="true"-->
+<!--                        android:background="@color/transparent"-->
+<!--                        android:drawableRight="@drawable/hollow_heart"-->
+<!--                        android:drawableTint="@color/lightGrey"-->
+<!--                        android:text="@string/add_to_wishlist"-->
+<!--                        android:textColor="@color/lightGrey"-->
+<!--                        android:textSize="12sp"-->
+<!--                        android:drawablePadding="3dp"-->
+<!--                        android:textAlignment="viewStart"/>-->
+
+
+                </RelativeLayout>
+
                 <View
                     android:id="@+id/divider1"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_below="@id/button_read"
-                    android:layout_marginTop="25dp"
+                    android:layout_below="@id/share_layout"
                     android:background="?android:attr/listDivider" />
 
                 <RelativeLayout
@@ -347,7 +434,6 @@
 
                 </RelativeLayout>
 
-
                 <View
                     android:id="@+id/divider2"
                     android:layout_width="match_parent"
@@ -357,7 +443,6 @@
                     android:focusable="true"
                     android:focusableInTouchMode="true" />
 
-
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/reviews"
                     android:layout_width="match_parent"
@@ -365,34 +450,6 @@
                     android:layout_below="@id/divider2"
                     android:background="@color/grey"
                     android:clipToPadding="false" />
-
-                <LinearLayout
-                    android:id="@+id/numPagesLayout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignTop="@id/book_name"
-                    android:layout_alignParentLeft="true"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="10dp"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/numPages"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="458"
-                        android:textColor="@color/lightGrey"
-                        android:textSize="12sp" />
-
-                    <TextView
-                        android:id="@+id/numPagesTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/pages"
-                        android:textColor="@color/lightGrey"
-                        android:textSize="12sp" />
-                </LinearLayout>
 
             </RelativeLayout>
 
@@ -408,12 +465,10 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerHorizontal="true"
                     android:background="@drawable/rounded_button"
-                    android:backgroundTint="@color/white"
-                    android:src="@drawable/bookmark_plus"
-                    android:tint="@color/white" />
+                    android:backgroundTint="@color/white" />
 
                 <ImageButton
-                    android:id="@+id/button_custom_shelf"
+                    android:id="@+id/challenge_button"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_alignParentLeft="true"
@@ -422,58 +477,7 @@
                     android:layout_marginTop="1dp"
                     android:background="@drawable/rounded_button"
                     android:backgroundTint="@color/colorPrimaryDark"
-                    android:elevation="2dp"
-                    android:src="@drawable/bookmark_plus"
-                    android:tint="@color/white" />
-
-                <ImageButton
-                    android:layout_width="52dp"
-                    android:layout_height="52dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginLeft="60dp"
-                    android:background="@drawable/rounded_button"
-                    android:backgroundTint="@color/white"
-                    android:src="@drawable/ic_person_add"
-                    android:tint="@color/white" />
-
-                <ImageButton
-                    android:id="@+id/button_invite_user"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginLeft="61dp"
-                    android:layout_marginTop="1dp"
-                    android:background="@drawable/rounded_button"
-                    android:backgroundTint="@color/colorPrimaryDark"
-                    android:elevation="2dp"
-                    android:src="@drawable/ic_person_add"
-                    android:tint="@color/white" />
-
-                <ImageButton
-                    android:layout_width="52dp"
-                    android:layout_height="52dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginLeft="120dp"
-                    android:background="@drawable/rounded_button"
-                    android:backgroundTint="@color/white"
-                    android:src="@drawable/ic_person_add"
-                    android:tint="@color/white" />
-
-                <ImageButton
-                    android:id="@+id/button_challenge_user"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginLeft="121dp"
-                    android:layout_marginTop="1dp"
-                    android:background="@drawable/rounded_button"
-                    android:backgroundTint="@color/colorPrimaryDark"
-                    android:elevation="2dp"
-                    android:src="@drawable/ic_whatshot_black"
+                    android:src="@drawable/fire"
                     android:tint="@color/white" />
 
             </RelativeLayout>
@@ -481,4 +485,5 @@
         </RelativeLayout>
 
     </androidx.core.widget.NestedScrollView>
+
 </RelativeLayout>
