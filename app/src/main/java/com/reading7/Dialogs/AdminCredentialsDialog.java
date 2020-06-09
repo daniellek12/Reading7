@@ -44,7 +44,7 @@ public class AdminCredentialsDialog extends AppCompatDialogFragment {
                 showProgressBar();
                 dialog_view.findViewById(R.id.wrong_details_txt).setVisibility(View.GONE);
 
-                mAuth.signInWithEmailAndPassword("admin@admin.com", password)
+                mAuth.signInWithEmailAndPassword(getResources().getString(R.string.admin_email), password)
                         .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {

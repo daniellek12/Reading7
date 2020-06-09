@@ -105,6 +105,20 @@ public class BookFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (Utils.isAdmin) {
+            getActivity().findViewById(R.id.addToWishlist).setVisibility(View.GONE);
+            getActivity().findViewById(R.id.button_read).setVisibility(View.INVISIBLE);
+            getActivity().findViewById(R.id.button_already_read).setVisibility(View.GONE);
+            getActivity().findViewById(R.id.top_buttons_layout).setVisibility(View.GONE);
+            getActivity().findViewById(R.id.share_layout).setVisibility(View.INVISIBLE);
+            getActivity().findViewById(R.id.button_delete_book).setVisibility(View.VISIBLE);
+            getActivity().findViewById(R.id.editButton).setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -122,7 +136,9 @@ public class BookFragment extends Fragment {
             getActivity().findViewById(R.id.top_buttons_layout).setVisibility(View.GONE);
             getActivity().findViewById(R.id.share_layout).setVisibility(View.INVISIBLE);
             getActivity().findViewById(R.id.button_delete_book).setVisibility(View.VISIBLE);
+            getActivity().findViewById(R.id.editButton).setVisibility(View.VISIBLE);
             initDeleteButton();
+            initEditButton();
         }
         else {
             initWishlistButton();
@@ -135,22 +151,19 @@ public class BookFragment extends Fragment {
 
     }
 
+    private void initEditButton() {
+        getActivity().findViewById(R.id.editButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getContext(), "edit mode", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void initDeleteButton() {
         getActivity().findViewById(R.id.button_delete_book).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Query query = db.collection("Books").whereEqualTo("id", mBook.getId());
-//                query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if (task.isSuccessful()){
-//                            for (QueryDocumentSnapshot doc : task.getResult()) {
-//                                doc.getReference().delete();
-//                            }
-//                        }
-//                    }
-//                });
-                //sendResult(101);
                 Utils.deleteBookFromDB(mBook);
                 admin_delete = true;
                 getActivity().onBackPressed();

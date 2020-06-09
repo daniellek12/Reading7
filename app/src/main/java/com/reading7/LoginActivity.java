@@ -45,7 +45,7 @@ public class LoginActivity extends AppCompatActivity {
         Utils.isAdmin = false;
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser != null && !currentUser.getEmail().equals("admin@admin.com")) //fixme: redirect when admin too?
+        if (currentUser != null && !currentUser.getEmail().equals(getResources().getString(R.string.admin_email))) //fixme: redirect when admin too?
             redirectAgain();
 
         setUpLoginBtn();

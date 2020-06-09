@@ -16,6 +16,16 @@
         android:elevation="21dp"
         android:layoutDirection="rtl">
 
+        <ImageView
+            android:id="@+id/editButton"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="left"
+            android:layout_marginLeft="16dp"
+            android:src="@drawable/edit"
+            android:tint="@color/white"
+            android:visibility="gone" />
+
         <TextView
             android:id="@+id/toolbar_title"
             style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"

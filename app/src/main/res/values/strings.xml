@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Reading7</string>
 
+    <string name="admin_email">reading7reports@gmail.com</string>
+
     <!--Main-->
     <string name="home">Home</string>
     <string name="explore">Explore</string>
