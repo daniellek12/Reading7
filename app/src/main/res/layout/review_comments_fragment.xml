@@ -235,7 +235,7 @@
                             android:layout_height="20dp"
                             android:layout_marginRight="5dp"
                             android:gravity="center_vertical"
-                            android:text="@string/delete_comment"
+                            android:text="@string/delete_review"
                             android:textColor="@color/design_default_color_error"
                             android:textSize="12sp"
                             android:textStyle="bold" />

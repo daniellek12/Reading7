@@ -43,6 +43,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.reading7.Utils.calculateAge;
+import static com.reading7.Utils.isAdmin;
 
 public class PublicProfileFragment extends Fragment {
 
@@ -108,8 +109,13 @@ public class PublicProfileFragment extends Fragment {
                         TextView following = getActivity().findViewById(R.id.publicProfile_following);
                         following.setText(Integer.toString(user.getFollowing().size()));
 
+                        if (isAdmin){
+                            getActivity().findViewById(R.id.follow).setVisibility(View.GONE);
+                        } else {
+                            initFollowButton();
+                        }
+
                         check_private();
-                        initFollowButton();
                         initWishlist();
                         initMyBookslist();
                         initCustomShelves();
@@ -150,7 +156,7 @@ public class PublicProfileFragment extends Fragment {
     }
 
     private void check_private() {
-        if (!user.getIs_private() || user.getFollowers().contains(mAuth.getCurrentUser().getEmail())) {
+        if (!user.getIs_private() || user.getFollowers().contains(mAuth.getCurrentUser().getEmail()) || Utils.isAdmin) {
             getActivity().findViewById(R.id.private_alert).setVisibility(View.GONE);
             getActivity().findViewById(R.id.classified_data).setVisibility(View.VISIBLE);
         } else {

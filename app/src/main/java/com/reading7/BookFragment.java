@@ -116,10 +116,11 @@ public class BookFragment extends Fragment {
         initScrollView();
 
         if (Utils.isAdmin){
-            getActivity().findViewById(R.id.button_wishlist).setVisibility(View.GONE);
+            getActivity().findViewById(R.id.addToWishlist).setVisibility(View.GONE);
             getActivity().findViewById(R.id.button_read).setVisibility(View.INVISIBLE);
             getActivity().findViewById(R.id.button_already_read).setVisibility(View.GONE);
             getActivity().findViewById(R.id.top_buttons_layout).setVisibility(View.GONE);
+            getActivity().findViewById(R.id.share_layout).setVisibility(View.INVISIBLE);
             getActivity().findViewById(R.id.button_delete_book).setVisibility(View.VISIBLE);
             initDeleteButton();
         }
