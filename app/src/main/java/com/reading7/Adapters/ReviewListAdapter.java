@@ -1,6 +1,7 @@
 package com.reading7.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -118,6 +120,7 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
         } else {
             initAddCommentButton(viewHolder, i);
             initLikeMechanics(viewHolder, i);
+            initReportButton(viewHolder, i);
         }
 
         viewHolder.countersLayout.setOnClickListener(new View.OnClickListener() {
@@ -194,6 +197,7 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
         RelativeLayout countersLayout;
         LinearLayout likeBtn;
         LinearLayout addCommentBtn;
+        LinearLayout reportBtn;
         RelativeLayout likeLayout;
         RelativeLayout deleteLayout;
         LinearLayout adminDeleteBtn;
@@ -217,6 +221,7 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
             likeLayout = itemView.findViewById(R.id.likeLayout);
             deleteLayout = itemView.findViewById(R.id.deleteLayout);
             adminDeleteBtn = itemView.findViewById(R.id.adminDeleteBtn);
+            reportBtn = itemView.findViewById(R.id.reportBtn);
         }
     }
 
@@ -312,6 +317,27 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
         });
     }
 
+    private void initReportButton(final ViewHolder viewHolder, int i) {
+        final Review review = reviews.get(i);
+        //TODO change to report without email?
+        viewHolder.reportBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_SENDTO);
+                intent.setType("message/rfc822");
+                intent.putExtra(Intent.EXTRA_EMAIL, new String[]{mContext.getResources().getString(R.string.admin_email)});
+                intent.putExtra(Intent.EXTRA_SUBJECT, "דיווח על ביקורת");
+                String content = "הביקורת בעלת המזהה " + review.getReview_id() + " של המשתמש " + review.getReviewer_email() + " על הספר " + review.getBook_title() + " איננה הולמת.";
+                intent.putExtra(Intent.EXTRA_TEXT, content);
+                try {
+                    mContext.startActivity(Intent.createChooser(intent, "שליחה באמצעות..."));
+
+                } catch (android.content.ActivityNotFoundException ex) {
+                    Toast.makeText(mContext, "לא קיימת אפליקציה שניתן לשלוח באמצעותה דואר אלקטרוני", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
 
     private void initLikeMechanics(final ViewHolder viewHolder, int i) {
 
