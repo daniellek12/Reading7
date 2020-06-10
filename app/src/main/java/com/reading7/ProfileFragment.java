@@ -248,6 +248,13 @@ public class ProfileFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), true);
+        getActivity().findViewById(R.id.progressBar3).setVisibility(View.GONE);
+        getActivity().findViewById(R.id.optionsMenuLayout).setVisibility(View.GONE);
+    }
 
     private void initOptionsMenu() {
 
@@ -285,6 +292,30 @@ public class ProfileFragment extends Fragment {
             public void onClick(View view) {
                 ((MainActivity) getActivity()).loadFragment(new PrivacySettingsFragment());
                 optionsLayout.setVisibility(View.GONE);
+            }
+        });
+
+        final RelativeLayout reportButton = getActivity().findViewById(R.id.reportButton);
+        reportButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), false);
+                getActivity().findViewById(R.id.progressBar3).setVisibility(View.VISIBLE);
+                Intent i = new Intent(Intent.ACTION_SENDTO);
+                i.setType("message/rfc822");
+                i.putExtra(Intent.EXTRA_EMAIL  , new String[]{getResources().getString(R.string.admin_email)});
+                i.putExtra(Intent.EXTRA_SUBJECT, "נושא הפניה");
+                i.putExtra(Intent.EXTRA_TEXT   , "פירוט על הבעיה");
+                try {
+                    startActivity(Intent.createChooser(i, "שליחה באמצעות..."));
+//                    TODO enable, hide progress, hide menu after return (but in activity result doesn't work)
+                    Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), true);
+                    getActivity().findViewById(R.id.progressBar3).setVisibility(View.GONE);
+                    optionsLayout.setVisibility(View.GONE);
+
+                } catch (android.content.ActivityNotFoundException ex) {
+                    Toast.makeText(getContext(), "לא קיימת אפליקציה שניתן לשלוח באמצעותה דואר אלקטרוני", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
