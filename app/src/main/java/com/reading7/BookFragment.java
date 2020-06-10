@@ -453,6 +453,10 @@ public class BookFragment extends Fragment {
 
         final Button rankBtn = getActivity().findViewById(R.id.button_read);
 
+        if (Utils.isAdmin) {
+            return;
+        }
+
         if (isReviewed) {
             rankBtn.setVisibility(View.INVISIBLE);
             getActivity().findViewById(R.id.button_already_read).setVisibility(View.VISIBLE);
