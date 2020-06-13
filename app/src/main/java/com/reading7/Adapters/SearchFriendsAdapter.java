@@ -102,8 +102,8 @@ public class SearchFriendsAdapter extends BaseAdapter implements Filterable {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.search_item, parent, false);
             holder = new SearchFriendsAdapter.ViewHolder();
             holder.container = convertView.findViewById(R.id.container);
-            holder.name = convertView.findViewById(R.id.title);
-            holder.toDelete = convertView.findViewById(R.id.author);
+            holder.name = convertView.findViewById(R.id.title_search);
+            holder.toDelete = convertView.findViewById(R.id.author_search);
             holder.image = convertView.findViewById(R.id.cover);
             convertView.setTag(holder);
 
