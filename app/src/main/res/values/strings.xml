@@ -193,5 +193,9 @@
     <string name="share_through_other_apps">שיתוף באפליקציות אחרות</string>
     <string name="report_problem">דיווח על בעיה</string>
     <string name="report">דיווח</string>
+    <string name="book_title">שם הספר</string>
+    <string name="author">שם הסופר</string>
+    <string name="genres">ז\'אנרים</string>
+    <string name="publisher_hint">הוצאת ספרים</string>
 
 </resources>

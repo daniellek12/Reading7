@@ -108,6 +108,11 @@
                 android:layout_marginTop="30dp"
                 android:background="@drawable/edittext_background">
 
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/book_details">
+
                 <TextView
                     android:id="@+id/book_name"
                     android:layout_width="wrap_content"
@@ -122,6 +127,25 @@
                     android:textSize="22sp"
                     android:textStyle="bold" />
 
+                <EditText
+                    android:id="@+id/book_name_edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_toRightOf="@id/numPagesLayout"
+                    android:text="הארי פוטר ואבן החכמים"
+                    android:textColor="@color/black"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:background="@drawable/edittext_border_background_light"
+                    android:inputType="text"
+                    android:padding="10dp"
+                    android:hint="@string/book_title"
+                    android:visibility="gone"/>
+
                 <TextView
                     android:id="@+id/author"
                     android:layout_width="wrap_content"
@@ -132,6 +156,23 @@
                     android:text="סוזן קולינס,"
                     android:textColor="@color/black"
                     android:textSize="12sp" />
+
+                <EditText
+                    android:id="@+id/author_edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/book_name_edit"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="20dp"
+                    android:layoutDirection="rtl"
+                    android:text="סוזן קולינס"
+                    android:textColor="@color/black"
+                    android:textSize="12sp"
+                    android:background="@drawable/edittext_border_background_light"
+                    android:inputType="text"
+                    android:padding="10dp"
+                    android:hint="@string/author"
+                    android:visibility="gone"/>
 
                 <TextView
                     android:id="@+id/publisher"
@@ -148,6 +189,27 @@
                     android:textDirection="rtl"
                     android:textSize="12sp" />
 
+                <EditText
+                    android:id="@+id/publisher_edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/book_name_edit"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="3dp"
+                    android:layout_toLeftOf="@id/author_edit"
+                    android:layout_toRightOf="@id/numPagesLayout"
+                    android:layoutDirection="rtl"
+                    android:text="הוצאת כנרת זמורה-דביר"
+                    android:textColor="@color/black"
+                    android:textDirection="rtl"
+                    android:textSize="12sp"
+                    android:background="@drawable/edittext_border_background_light"
+                    android:inputType="text"
+                    android:padding="10dp"
+                    android:hint="@string/publisher_hint"
+                    android:visibility="gone"/>
+
                 <TextView
                     android:id="@+id/genres"
                     android:layout_width="wrap_content"
@@ -160,6 +222,24 @@
                     android:text=" מד״ב ופנטזיה|ילדים ונוער|הרפקאות"
                     android:textColor="@color/lightGrey"
                     android:textSize="12sp" />
+
+                <EditText
+                    android:id="@+id/genres_edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/author_edit"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="20dp"
+                    android:gravity="right"
+                    android:text=" מד״ב ופנטזיה|ילדים ונוער|הרפקאות"
+                    android:textColor="@color/lightGrey"
+                    android:textSize="12sp"
+                    android:background="@drawable/edittext_border_background_light"
+                    android:inputType="text"
+                    android:padding="10dp"
+                    android:hint="@string/genres"
+                    android:visibility="gone"/>
 
                 <LinearLayout
                     android:id="@+id/numPagesLayout"
@@ -247,11 +327,36 @@
                     android:text="פאנם היא מדינה בעולם פוסט־אפוקליפטי, השוכנת במקום שבו עמדה פעם יבשת צפון אמריקה. בפאנם שנים עשר מחוזות, עליהם מופעל שלטון אכזרי וקשה מידי מנהיגיהם היפים השוכנים שם"
                     android:textSize="12sp" />
 
+                <EditText
+                    android:id="@+id/summary_edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/genres_edit"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layoutDirection="rtl"
+                    android:maxLines="6"
+                    android:paddingBottom="20dp"
+                    android:text="פאנם היא מדינה בעולם פוסט־אפוקליפטי, השוכנת במקום שבו עמדה פעם יבשת צפון אמריקה. בפאנם שנים עשר מחוזות, עליהם מופעל שלטון אכזרי וקשה מידי מנהיגיהם היפים השוכנים שם"
+                    android:textSize="12sp"
+                    android:background="@drawable/edittext_border_background_light"
+                    android:inputType="textMultiLine"
+                    android:padding="10dp"
+                    android:hint="@string/summary"
+                    android:visibility="gone" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/book_details">
+
                 <Button
                     android:id="@+id/button_delete_book"
                     android:layout_width="wrap_content"
                     android:layout_height="35dp"
-                    android:layout_below="@id/summary"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="5dp"
                     android:background="@drawable/rounded_button"
@@ -273,7 +378,6 @@
                     android:id="@+id/addToWishlist"
                     android:layout_width="wrap_content"
                     android:layout_height="35dp"
-                    android:layout_below="@id/summary"
                     android:layout_alignParentLeft="true"
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="5dp"
@@ -293,7 +397,6 @@
                     android:id="@+id/button_read"
                     android:layout_width="wrap_content"
                     android:layout_height="35dp"
-                    android:layout_below="@id/summary"
                     android:layout_alignParentRight="true"
                     android:layout_toRightOf="@id/addToWishlist"
                     android:layout_marginLeft="10dp"
@@ -317,7 +420,6 @@
                     android:id="@+id/button_already_read"
                     android:layout_width="wrap_content"
                     android:layout_height="35dp"
-                    android:layout_below="@id/summary"
                     android:layout_alignParentRight="true"
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="5dp"
@@ -493,7 +595,7 @@
             </RelativeLayout>
 
         </RelativeLayout>
-
+        </RelativeLayout>
     </androidx.core.widget.NestedScrollView>
 
 </RelativeLayout>
