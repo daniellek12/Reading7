@@ -101,8 +101,8 @@ public class SearchBooksAdapter extends BaseAdapter implements Filterable {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.search_item, parent, false);
             holder = new ViewHolder();
             holder.container = convertView.findViewById(R.id.container);
-            holder.title = convertView.findViewById(R.id.title);
-            holder.author = convertView.findViewById(R.id.author);
+            holder.title = convertView.findViewById(R.id.title_search);
+            holder.author = convertView.findViewById(R.id.author_search);
             holder.cover = convertView.findViewById(R.id.cover);
             convertView.setTag(holder);
 

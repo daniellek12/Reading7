@@ -39,14 +39,14 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/title"
+            android:id="@+id/title_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="TextView"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/author"
+            android:id="@+id/author_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="TextView"

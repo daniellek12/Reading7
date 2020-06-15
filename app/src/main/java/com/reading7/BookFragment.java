@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -105,20 +106,6 @@ public class BookFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        if (Utils.isAdmin) {
-            getActivity().findViewById(R.id.addToWishlist).setVisibility(View.GONE);
-            getActivity().findViewById(R.id.button_read).setVisibility(View.INVISIBLE);
-            getActivity().findViewById(R.id.button_already_read).setVisibility(View.GONE);
-            getActivity().findViewById(R.id.top_buttons_layout).setVisibility(View.GONE);
-            getActivity().findViewById(R.id.share_layout).setVisibility(View.INVISIBLE);
-            getActivity().findViewById(R.id.button_delete_book).setVisibility(View.VISIBLE);
-            getActivity().findViewById(R.id.editButton).setVisibility(View.VISIBLE);
-        }
-    }
-
-    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -155,7 +142,19 @@ public class BookFragment extends Fragment {
         getActivity().findViewById(R.id.editButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(), "edit mode", Toast.LENGTH_SHORT).show();
+                getActivity().findViewById(R.id.book_name).setVisibility(View.INVISIBLE);
+                getActivity().findViewById(R.id.book_name_edit).setVisibility(View.VISIBLE);
+                getActivity().findViewById(R.id.author).setVisibility(View.INVISIBLE);
+                getActivity().findViewById(R.id.author_edit).setVisibility(View.VISIBLE);
+                getActivity().findViewById(R.id.publisher).setVisibility(View.INVISIBLE);
+                getActivity().findViewById(R.id.publisher_edit).setVisibility(View.VISIBLE);
+                getActivity().findViewById(R.id.genres).setVisibility(View.INVISIBLE);
+                getActivity().findViewById(R.id.genres_edit).setVisibility(View.VISIBLE);
+                getActivity().findViewById(R.id.bookRatingBar).setVisibility(View.INVISIBLE);
+                getActivity().findViewById(R.id.ratingNum).setVisibility(View.INVISIBLE);
+                getActivity().findViewById(R.id.summary_title).setVisibility(View.INVISIBLE);
+                getActivity().findViewById(R.id.summary).setVisibility(View.INVISIBLE);
+                getActivity().findViewById(R.id.summary_edit).setVisibility(View.VISIBLE);
             }
         });
     }
@@ -219,6 +218,27 @@ public class BookFragment extends Fragment {
         }
 
         initScrollView();
+
+        if(Utils.isAdmin)
+            initEditFields();
+    }
+
+    private void initEditFields() {
+        EditText book_name_edit = getActivity().findViewById(R.id.book_name_edit);
+        book_name_edit.setText(mBook.getTitle());
+
+        EditText author_edit = getActivity().findViewById(R.id.author_edit);
+        author_edit.setText(mBook.getAuthor());
+
+        EditText publisher_edit = getActivity().findViewById(R.id.publisher_edit);
+        publisher_edit.setText(mBook.getPublisher());
+
+        TextView genres = getActivity().findViewById(R.id.genres);
+        EditText genres_edit = getActivity().findViewById(R.id.genres_edit);
+        genres_edit.setText(genres.getText());
+
+        EditText summary_edit = getActivity().findViewById(R.id.summary_edit);
+        summary_edit.setText(mBook.getDescription());
     }
 
     private void setBookGenres() {
