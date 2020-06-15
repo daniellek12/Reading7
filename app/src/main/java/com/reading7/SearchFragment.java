@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.duolingo.open.rtlviewpager.RtlViewPager;
 import com.google.android.material.tabs.TabLayout;
@@ -15,14 +14,13 @@ import com.reading7.Adapters.SearchBooksAdapter;
 import com.reading7.Adapters.TabsPagerAdapter;
 import com.reading7.Objects.Book;
 
+import java.util.ArrayList;
+import java.util.Locale;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -63,7 +61,7 @@ public class SearchFragment extends Fragment implements androidx.appcompat.widge
 
         //remove search icon
         ImageView searchViewIcon = searchView.findViewById(androidx.appcompat.R.id.search_mag_icon);
-        ((ViewGroup)searchViewIcon.getParent()).removeView(searchViewIcon);
+        ((ViewGroup) searchViewIcon.getParent()).removeView(searchViewIcon);
 
         searchView.setOnQueryTextListener(this);
     }
@@ -89,10 +87,10 @@ public class SearchFragment extends Fragment implements androidx.appcompat.widge
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
                 intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-                intent.putExtra(RecognizerIntent.EXTRA_PROMPT,("ניתן לומר שם של ספר או חבר"));
-                startActivityForResult(intent,1000);
+                intent.putExtra(RecognizerIntent.EXTRA_PROMPT, ("ניתן לומר שם של ספר או חבר"));
+                startActivityForResult(intent, 1000);
             }
         });
     }
@@ -100,10 +98,10 @@ public class SearchFragment extends Fragment implements androidx.appcompat.widge
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode){
+        switch (requestCode) {
             case 1000: {
-                if(resultCode == RESULT_OK && data!=null){
-                    ArrayList<String> res =data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                if (resultCode == RESULT_OK && data != null) {
+                    ArrayList<String> res = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                     searchView.setQuery(res.get(0), false);
                 }
             }
@@ -116,7 +114,7 @@ public class SearchFragment extends Fragment implements androidx.appcompat.widge
 
 //        tabsPagerAdapter.addFragment(new SearchBooksFragment(), "ספרים");//TODO remove
         ArrayList<Book> books = new ArrayList<Book>();
-        Fragment fragment = new GenericSearchFragment<Book>(Book.class, new SearchBooksAdapter(getContext(), books), books, R.layout.search_books_fragment, R.id.booksListView,"Books", "title");
+        Fragment fragment = new GenericSearchFragment<Book>(Book.class, new SearchBooksAdapter(getContext(), books), books, R.layout.search_books_fragment, R.id.booksListView, "Books", "title");
         tabsPagerAdapter.addFragment(fragment, "ספרים"); //TODO implement
 //        tabsPagerAdapter.addFragment(new SearchAuthorsFragment(), "סופרים");
         tabsPagerAdapter.addFragment(new SearchFriendsFragment(), "חברים");
@@ -153,15 +151,15 @@ public class SearchFragment extends Fragment implements androidx.appcompat.widge
 //                        ((SearchFriendsFragment)((TabsPagerAdapter)viewPager.getAdapter()).getItem(position)).onQueryTextChange(s);
 //                        break;
 //                }
-                switch (position){
+                switch (position) {
                     case 0:
-                        ((SearchBooksFragment)((TabsPagerAdapter)viewPager.getAdapter()).getItem(position)).onQueryTextChange(s);
+                        ((SearchBooksFragment) ((TabsPagerAdapter) viewPager.getAdapter()).getItem(position)).onQueryTextChange(s);
                         break;
 //                    case 1:
 //                        ((SearchAuthorsFragment)((TabsPagerAdapter)viewPager.getAdapter()).getItem(position)).onQueryTextChange(s);
 //                        break;
                     case 1:
-                        ((SearchFriendsFragment)((TabsPagerAdapter)viewPager.getAdapter()).getItem(position)).onQueryTextChange(s);
+                        ((SearchFriendsFragment) ((TabsPagerAdapter) viewPager.getAdapter()).getItem(position)).onQueryTextChange(s);
                         break;
                 }
             }
@@ -178,17 +176,17 @@ public class SearchFragment extends Fragment implements androidx.appcompat.widge
     @Override
     public boolean onQueryTextSubmit(String s) {
 
-        Fragment frag = ((TabsPagerAdapter)viewPager.getAdapter()).getItem(viewPager.getCurrentItem());
+        Fragment frag = ((TabsPagerAdapter) viewPager.getAdapter()).getItem(viewPager.getCurrentItem());
         switch (viewPager.getCurrentItem()) {
 
             case 0:
-                ((GenericSearchFragment)frag).onQueryTextChange(s);
+                ((GenericSearchFragment) frag).onQueryTextChange(s);
                 break;
             case 1:
-                ((SearchAuthorsFragment)frag).onQueryTextChange(s);
+                ((SearchAuthorsFragment) frag).onQueryTextChange(s);
                 break;
             case 2:
-                ((SearchFriendsFragment)frag).onQueryTextChange(s);
+                ((SearchFriendsFragment) frag).onQueryTextChange(s);
                 break;
         }
         return true;
@@ -198,18 +196,18 @@ public class SearchFragment extends Fragment implements androidx.appcompat.widge
     @Override
     public boolean onQueryTextChange(String s) {
 
-        Fragment frag = ((TabsPagerAdapter)viewPager.getAdapter()).getItem(viewPager.getCurrentItem());
+        Fragment frag = ((TabsPagerAdapter) viewPager.getAdapter()).getItem(viewPager.getCurrentItem());
         switch (viewPager.getCurrentItem()) {
 
             case 0:
-                ((GenericSearchFragment)frag).onQueryTextChange(s);
+                ((GenericSearchFragment) frag).onQueryTextChange(s);
                 break;
-                //FIXME currently only books and members allowed
+            //FIXME currently only books and members allowed
 //            case 1:
 //                ((SearchAuthorsFragment)frag).onQueryTextChange(s);
 //                break;
             case 1:
-                ((SearchFriendsFragment)frag).onQueryTextChange(s);
+                ((SearchFriendsFragment) frag).onQueryTextChange(s);
                 break;
         }
         return true;

@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -13,7 +12,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -22,6 +23,7 @@ import com.reading7.Objects.Review;
 import com.reading7.Objects.User;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -54,19 +56,14 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
 
     private void initCurrentUser() {
-
-        CollectionReference requestCollectionRef = FirebaseFirestore.getInstance().collection("Users");
-        Query requestQuery = requestCollectionRef.whereEqualTo("email", FirebaseAuth.getInstance().getCurrentUser().getEmail());
-        requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        mUser = document.toObject(User.class);
+        //Listens to user changes on firebase and updates mUser accordingly.
+        FirebaseFirestore.getInstance().collection("Users").document(FirebaseAuth.getInstance().getCurrentUser().getEmail())
+                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                        mUser = documentSnapshot.toObject(User.class);
                     }
-                }
-            }
-        });
+                });
     }
 
     public User getCurrentUser() {
@@ -266,7 +263,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 ((ReviewCommentsFragment) fragment).sendResultDeleted(404);
             else
                 ((ReviewCommentsFragment) fragment).sendResult(303, ((ReviewCommentsFragment) fragment).getReviewId());
-        } else if (fragment instanceof BookFragment && ((BookFragment)fragment).admin_delete) {
+        } else if (fragment instanceof BookFragment && ((BookFragment) fragment).admin_delete) {
             ((BookFragment) fragment).sendResult(101);
         } else if (fragment instanceof ChallengeFragment) {
             if (!((ChallengeFragment) fragment).isDone())

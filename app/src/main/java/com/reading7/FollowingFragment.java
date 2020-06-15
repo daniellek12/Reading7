@@ -4,48 +4,32 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.google.android.material.tabs.TabLayout;
+import com.reading7.Adapters.FollowingAdapter;
+import com.reading7.Adapters.TabsPagerAdapter;
+
+import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.reading7.Adapters.FollowingAdapter;
-import com.reading7.Objects.Notification;
-import com.reading7.Objects.User;
-
-import java.util.ArrayList;
+import androidx.viewpager.widget.ViewPager;
 
 public class FollowingFragment extends Fragment {
 
+    private FollowingFragmentType currentTabType;
 
-    private RecyclerView recyclerView;
-    private FollowingAdapter myAdapter;
-    private String type;
-    private TextView title;
 
-    private ArrayList<String> usersList;
-    FirebaseUser firebaseUser;
+    FollowingFragment(FollowingFragmentType type) {
+        this.currentTabType = type;
+    }
 
-    FollowingFragment(String type){
-        this.type = type;
+    public FollowingFragmentType getCurrentTabType() {
+        return currentTabType;
     }
 
     @Nullable
@@ -57,40 +41,11 @@ public class FollowingFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        recyclerView = getView().findViewById(R.id.my_recycler_view);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
         initBackButton();
-
-        title = getView().findViewById(R.id.my_title);
-
-        usersList = new ArrayList<String>();
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
-        Query query = FirebaseFirestore.getInstance().collection("Users").whereEqualTo("email", firebaseUser.getEmail());
-        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        User user = document.toObject(User.class);
-                        if(type == "following"){
-                            title.setText("נעקבים");
-                            usersList = user.getFollowing();
-                        }
-                        else {
-                            title.setText("עוקבים");
-                            usersList = user.getFollowers();
-                        }
-                        myAdapter = new FollowingAdapter(getContext(), usersList, type);
-                        recyclerView.setAdapter(myAdapter);
-                    }
-                }
-            }
-        });
+        initTitle();
+        initTabsViewPager();
     }
+
 
     private void initBackButton() {
         getActivity().findViewById(R.id.followingBackButton).setOnClickListener(new View.OnClickListener() {
@@ -101,5 +56,101 @@ public class FollowingFragment extends Fragment {
         });
     }
 
+    private void initTitle() {
+        TextView title = getView().findViewById(R.id.my_title);
+        String name = ((MainActivity) getActivity()).getCurrentUser().getFull_name();
+        title.setText(name);
+    }
 
+    public void initTabsViewPager() {
+
+        TabsPagerAdapter tabsPagerAdapter = new TabsPagerAdapter(getChildFragmentManager());
+
+        ArrayList<String> followersEmails = ((MainActivity) getActivity()).getCurrentUser().getFollowers();
+        tabsPagerAdapter.addFragment(new FollowingTabFragment(followersEmails, this), followersEmails.size() + " " + "עוקבים");
+
+        ArrayList<String> followingEmails = ((MainActivity) getActivity()).getCurrentUser().getFollowing();
+        tabsPagerAdapter.addFragment(new FollowingTabFragment(followingEmails, this), followingEmails.size() + " " + "נעקבים");
+
+        final ViewPager viewPager = getActivity().findViewById(R.id.viewPager);
+        viewPager.setAdapter(tabsPagerAdapter);
+
+        TabLayout tabs = getActivity().findViewById(R.id.tabs);
+        tabs.setupWithViewPager(viewPager);
+        tabs.selectTab(tabs.getTabAt(currentTabType.ordinal()));
+    }
+
+
+    /**
+     * Updates the Followers tab title.
+     */
+    public void updateFollowersNum() {
+        TabLayout tabs = getActivity().findViewById(R.id.tabs);
+        ArrayList<String> followersEmails = ((MainActivity) getActivity()).getCurrentUser().getFollowers();
+        tabs.getTabAt(0).setText(followersEmails.size() + " " + "עוקבים");
+    }
+
+    /**
+     * Increases the number represented in Following tab title.
+     */
+    public void increaseFollowingNum() {
+        TabLayout tabs = getActivity().findViewById(R.id.tabs);
+        ArrayList<String> followingEmails = ((MainActivity) getActivity()).getCurrentUser().getFollowing();
+        tabs.getTabAt(1).setText(followingEmails.size() + " " + "נעקבים");
+
+        final ViewPager viewPager = getActivity().findViewById(R.id.viewPager);
+        FollowingTabFragment fragment = (FollowingTabFragment) ((TabsPagerAdapter) viewPager.getAdapter()).getItem(1);
+        fragment.notifyItemInserted();
+    }
+
+    /**
+     * Decreases the number represented in Following tab title.
+     */
+    public void decreaseFollowingNum() {
+        TabLayout tabs = getActivity().findViewById(R.id.tabs);
+        ArrayList<String> followingEmails = ((MainActivity) getActivity()).getCurrentUser().getFollowing();
+        tabs.getTabAt(1).setText(followingEmails.size() + " " + "נעקבים");
+    }
+
+
+    public enum FollowingFragmentType {
+        FOLLOWERS,
+        FOLLOWING
+    }
+
+
+    public static class FollowingTabFragment extends Fragment {
+
+        private ArrayList<String> emails;
+        private FollowingFragment fragment;
+        private FollowingAdapter adapter;
+
+        public FollowingTabFragment(ArrayList<String> emails, FollowingFragment fragment) {
+            this.emails = emails;
+            this.fragment = fragment;
+        }
+
+
+        @Nullable
+        @Override
+        public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+            return inflater.inflate(R.layout.following_tab_fragment, null);
+        }
+
+        @Override
+        public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+
+            RecyclerView usersRV = getView().findViewById(R.id.usersRV);
+            usersRV.setHasFixedSize(true);
+            usersRV.setLayoutManager(new LinearLayoutManager(getContext()));
+            adapter = new FollowingAdapter(getContext(), fragment, emails);
+            usersRV.setAdapter(adapter);
+
+            super.onViewCreated(view, savedInstanceState);
+        }
+
+        public void notifyItemInserted() {
+            adapter.notifyItemInserted(emails.size() - 1);
+        }
+    }
 }

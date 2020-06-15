@@ -39,7 +39,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.reading7.Utils.calculateAge;
@@ -47,6 +46,7 @@ import static com.reading7.Utils.isAdmin;
 
 public class PublicProfileFragment extends Fragment {
 
+    final private ArrayList<String> shelfNames = new ArrayList<String>();
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private ArrayList<String> usersReviewBookNames = new ArrayList<>();
@@ -55,7 +55,6 @@ public class PublicProfileFragment extends Fragment {
     private User user;
     private ProfileShelfAdapter adapterReviews;
     private ProfileShelfAdapter adapterWishList;
-    final private ArrayList<String> shelfNames = new ArrayList<String>();
     private CustomShelvesAdapter adapterCustomShelves;
 
 
@@ -109,7 +108,7 @@ public class PublicProfileFragment extends Fragment {
                         TextView following = getActivity().findViewById(R.id.publicProfile_following);
                         following.setText(Integer.toString(user.getFollowing().size()));
 
-                        if (isAdmin){
+                        if (isAdmin) {
                             getActivity().findViewById(R.id.follow).setVisibility(View.GONE);
                         } else {
                             initFollowButton();
@@ -239,7 +238,7 @@ public class PublicProfileFragment extends Fragment {
                             if (task.isSuccessful()) {
                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                     if (document.toObject(Notification.class).getType().equals(getString(R.string.follow_notificiation_public))
-                                            ||document.toObject(Notification.class).getType().equals(getString(R.string.follow_notificiation_private)))
+                                            || document.toObject(Notification.class).getType().equals(getString(R.string.follow_notificiation_private)))
                                         document.getReference().delete();
                                 }
                             }
@@ -272,31 +271,31 @@ public class PublicProfileFragment extends Fragment {
         });
     }
 
-    private void addNotificationFollow(String to_email,  boolean is_private) {
+    private void addNotificationFollow(String to_email, boolean is_private) {
 
-            db = FirebaseFirestore.getInstance();
+        db = FirebaseFirestore.getInstance();
 
-            Map<String, Object> notificationMessegae = new HashMap<>();
+        Map<String, Object> notificationMessegae = new HashMap<>();
 
-            if (!is_private) {
-                notificationMessegae.put("type", getContext().getResources().getString(R.string.follow_notificiation_public));
-                notificationMessegae.put("book_title", "follow_notification_public");//not relvant
+        if (!is_private) {
+            notificationMessegae.put("type", getContext().getResources().getString(R.string.follow_notificiation_public));
+            notificationMessegae.put("book_title", "follow_notification_public");//not relvant
 
-            } else {
-                notificationMessegae.put("type", getContext().getResources().getString(R.string.follow_notificiation_private));
-                notificationMessegae.put("book_title", "follow_notification_private");//not relvant
+        } else {
+            notificationMessegae.put("type", getContext().getResources().getString(R.string.follow_notificiation_private));
+            notificationMessegae.put("book_title", "follow_notification_private");//not relvant
 
+        }
+
+        notificationMessegae.put("from", mAuth.getCurrentUser().getEmail());
+        notificationMessegae.put("time", Timestamp.now());
+
+
+        db.collection("Users/" + to_email + "/Notifications").add(notificationMessegae).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
             }
-
-            notificationMessegae.put("from", mAuth.getCurrentUser().getEmail());
-            notificationMessegae.put("time", Timestamp.now());
-
-
-            db.collection("Users/" + to_email + "/Notifications").add(notificationMessegae).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                @Override
-                public void onSuccess(DocumentReference documentReference) {
-                }
-            });
+        });
 
     }
 

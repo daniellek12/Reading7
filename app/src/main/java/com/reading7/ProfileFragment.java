@@ -50,13 +50,13 @@ import static com.reading7.Utils.calculateAge;
 
 public class ProfileFragment extends Fragment {
 
-    private FirebaseAuth mAuth;
-    private FirebaseFirestore db;
     final private ArrayList<String> usersReviewBookNames = new ArrayList<String>();
     final private ArrayList<String> usersWishlistBookNames = new ArrayList<String>();
+    final private ArrayList<String> shelfNames = new ArrayList<String>();
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
     private ProfileShelfAdapter adapterReviews;
     private ProfileShelfAdapter adapterWishList;
-    final private ArrayList<String> shelfNames = new ArrayList<String>();
     private CustomShelvesAdapter adapterCustomShelves;
 
     @Nullable
@@ -104,27 +104,25 @@ public class ProfileFragment extends Fragment {
 
                         TextView followers = getActivity().findViewById(R.id.followers);
                         followers.setText(Integer.toString(user.getFollowers().size()));
-                        if(user.getFollowers().size() > 0){
+                        if (user.getFollowers().size() > 0) {
                             followers.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    ((MainActivity) getActivity()).loadFragment(new FollowingFragment("followers"));
+                                    ((MainActivity) getActivity()).loadFragment(new FollowingFragment(FollowingFragment.FollowingFragmentType.FOLLOWERS));
                                 }
                             });
                         }
 
                         TextView following = getActivity().findViewById(R.id.following);
                         following.setText(Integer.toString(user.getFollowing().size()));
-                        if(user.getFollowing().size() > 0){
+                        if (user.getFollowing().size() > 0) {
                             following.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    ((MainActivity) getActivity()).loadFragment(new FollowingFragment("following"));
+                                    ((MainActivity) getActivity()).loadFragment(new FollowingFragment(FollowingFragment.FollowingFragmentType.FOLLOWING));
                                 }
                             });
                         }
-
-
 
 
                         //initPrivateBtn();
@@ -322,9 +320,9 @@ public class ProfileFragment extends Fragment {
                 getActivity().findViewById(R.id.progressBar3).setVisibility(View.VISIBLE);
                 Intent i = new Intent(Intent.ACTION_SENDTO);
                 i.setType("message/rfc822");
-                i.putExtra(Intent.EXTRA_EMAIL  , new String[]{getResources().getString(R.string.admin_email)});
+                i.putExtra(Intent.EXTRA_EMAIL, new String[]{getResources().getString(R.string.admin_email)});
                 i.putExtra(Intent.EXTRA_SUBJECT, "נושא הפניה");
-                i.putExtra(Intent.EXTRA_TEXT   , "פירוט על הבעיה");
+                i.putExtra(Intent.EXTRA_TEXT, "פירוט על הבעיה");
                 try {
                     startActivity(Intent.createChooser(i, "שליחה באמצעות..."));
 //                    TODO enable, hide progress, hide menu after return (but in activity result doesn't work)
