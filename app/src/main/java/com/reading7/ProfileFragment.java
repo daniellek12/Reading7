@@ -104,9 +104,28 @@ public class ProfileFragment extends Fragment {
 
                         TextView followers = getActivity().findViewById(R.id.followers);
                         followers.setText(Integer.toString(user.getFollowers().size()));
+                        if(user.getFollowers().size() > 0){
+                            followers.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    ((MainActivity) getActivity()).loadFragment(new FollowingFragment("followers"));
+                                }
+                            });
+                        }
 
                         TextView following = getActivity().findViewById(R.id.following);
                         following.setText(Integer.toString(user.getFollowing().size()));
+                        if(user.getFollowing().size() > 0){
+                            following.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    ((MainActivity) getActivity()).loadFragment(new FollowingFragment("following"));
+                                }
+                            });
+                        }
+
+
+
 
                         //initPrivateBtn();
                         initLogOutBtn();
