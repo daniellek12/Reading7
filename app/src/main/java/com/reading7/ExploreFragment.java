@@ -112,8 +112,6 @@ public class ExploreFragment extends Fragment {
                 }
             });
         }
-
-
     }
 
     private ArrayList<String> getPlaylistsNames() {

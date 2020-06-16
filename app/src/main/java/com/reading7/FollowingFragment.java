@@ -78,6 +78,25 @@ public class FollowingFragment extends Fragment {
         TabLayout tabs = getActivity().findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
         tabs.selectTab(tabs.getTabAt(currentTabType.ordinal()));
+        tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                if (tab.getPosition() == 0)
+                    currentTabType = FollowingFragmentType.FOLLOWERS;
+                if (tab.getPosition() == 1)
+                    currentTabType = FollowingFragmentType.FOLLOWING;
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
     }
 
 
