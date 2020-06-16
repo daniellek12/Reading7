@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layoutDirection="rtl"
+    android:padding="10dp"
+    android:background="@color/white"
+    android:layout_marginBottom="2dp">
+
+    <RelativeLayout
+        android:id="@+id/coverLayout"
+        android:layout_width="40dp"
+        android:layout_height="40dp">
+
+        <ProgressBar
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerInParent="true"
+            android:indeterminateTint="@color/lightGrey"
+            android:progressTint="@color/lightGrey"
+            android:secondaryProgressTint="@color/lightGrey" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profileImage"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:src="@color/transparent"
+            app:civ_border_color="@color/darkGrey"
+            app:civ_border_width="0.5dp" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/userName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:layout_toLeftOf="@+id/coverLayout"
+        android:layout_toRightOf="@id/followBack_button"
+        android:textAlignment="viewStart"
+        android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/remove_button"
+            android:layout_width="70dp"
+            android:layout_height="25dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/edittext_border_background_light"
+            android:text="הסרה"
+            android:textColor="@color/darkGrey"
+            android:textSize="12sp" />
+
+    <Button
+        android:id="@+id/followBack_button"
+        android:layout_width="70dp"
+        android:layout_height="25dp"
+        android:layout_toRightOf="@id/remove_button"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="5dp"
+        android:background="@drawable/edittext_border_background_light"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:text="עקוב"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        android:visibility="gone"/>
+
+</RelativeLayout>
