@@ -137,24 +137,24 @@
                         android:textSize="22sp"
                         android:textStyle="bold" />
 
-                    <EditText
-                        android:id="@+id/book_name_edit"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="20dp"
-                        android:layout_marginRight="20dp"
-                        android:layout_toRightOf="@id/numPagesLayout"
-                        android:background="@drawable/edittext_border_background_light"
-                        android:hint="@string/book_title"
-                        android:inputType="text"
-                        android:padding="10dp"
-                        android:text="הארי פוטר ואבן החכמים"
-                        android:textColor="@color/black"
-                        android:textSize="22sp"
-                        android:textStyle="bold"
-                        android:visibility="gone" />
+<!--                    <EditText-->
+<!--                        android:id="@+id/book_name_edit"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_alignParentRight="true"-->
+<!--                        android:layout_marginLeft="20dp"-->
+<!--                        android:layout_marginTop="20dp"-->
+<!--                        android:layout_marginRight="20dp"-->
+<!--                        android:layout_toRightOf="@id/numPagesLayout"-->
+<!--                        android:background="@drawable/edittext_border_background_light"-->
+<!--                        android:hint="@string/book_title"-->
+<!--                        android:inputType="text"-->
+<!--                        android:padding="10dp"-->
+<!--                        android:text="הארי פוטר ואבן החכמים"-->
+<!--                        android:textColor="@color/black"-->
+<!--                        android:textSize="22sp"-->
+<!--                        android:textStyle="bold"-->
+<!--                        android:visibility="gone" />-->
 
                     <TextView
                         android:id="@+id/author"
@@ -171,7 +171,7 @@
                         android:id="@+id/author_edit"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/book_name_edit"
+                        android:layout_below="@id/book_name"
                         android:layout_marginTop="10dp"
                         android:layout_marginRight="20dp"
                         android:layout_marginLeft="20dp"

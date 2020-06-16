@@ -328,7 +328,7 @@ public class ProfileFragment extends Fragment {
                 Intent i = new Intent(Intent.ACTION_SENDTO);
                 i.setType("message/rfc822");
                 i.putExtra(Intent.EXTRA_EMAIL, new String[]{getResources().getString(R.string.admin_email)});
-                i.putExtra(Intent.EXTRA_SUBJECT, "פניה בנוגע לאפליקציה Reading7");
+                i.putExtra(Intent.EXTRA_SUBJECT, "פנייה בנוגע לאפליקציה Reading7");
                 i.putExtra(Intent.EXTRA_TEXT, "");
                 try {
                     startActivityForResult(Intent.createChooser(i, "שליחה באמצעות..."), SEND_MAIL_CODE);
