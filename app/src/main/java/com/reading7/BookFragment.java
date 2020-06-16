@@ -63,6 +63,7 @@ public class BookFragment extends Fragment {
     private Book mBook;
 
     private List<Review> lstReviews;
+    private List<Review> lstAllReviews;
     private RecyclerView reviewsRV;
 
     private int countRaters;
@@ -113,6 +114,7 @@ public class BookFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         lstReviews = new ArrayList<>();
+        lstAllReviews = new ArrayList<>();
         getBookInformation();
         initReviews();
         initOpenSummary();
@@ -371,6 +373,7 @@ public class BookFragment extends Fragment {
         Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), false);
         countRaters = 0;
         lstReviews.clear();
+        lstAllReviews.clear();
 
         final List<Review> newlist = new ArrayList<Review>();
         Query query = db.collection("Reviews").whereEqualTo("book_id", mBook.getId());
@@ -381,6 +384,7 @@ public class BookFragment extends Fragment {
                     for (QueryDocumentSnapshot doc : task.getResult()) {
                         countRaters++;
                         Review review = doc.toObject(Review.class);
+                        lstAllReviews.add(review);
                         if (!(review.getReview_title().equals("") && review.getReview_content().equals("")))
                             newlist.add(review);
                     }
@@ -396,18 +400,20 @@ public class BookFragment extends Fragment {
     private void findMyReview() {
 
         final List<Review> tempList = new ArrayList<Review>();
-        tempList.addAll(lstReviews);
+        tempList.addAll(lstAllReviews);
         for (Review review : tempList) {
             if (review.getReviewer_email().equals(mAuth.getCurrentUser().getEmail())) {
                 isReviewed = true;
                 mRank = review.getRank();
                 mReviewTitle = review.getReview_title();
                 mReviewContent = review.getReview_content();
-                lstReviews.remove(review);
-                lstReviews.add(0, review);
                 updateRankButton();
-                if ((!review.getReview_title().isEmpty()) || (!review.getReview_content().isEmpty()))
+
+                if ((!review.getReview_title().isEmpty()) || (!review.getReview_content().isEmpty())){
+                    lstReviews.remove(review);
+                    lstReviews.add(0, review);
                     isReviewedWithContent = true;
+                }
                 break;
             }
         }
