@@ -30,6 +30,11 @@ public class Post implements Comparable {
         this.mWishlist = wishList;
     }
 
+    public Post(PostType type) {
+        if (type.equals(PostType.Review) || type.equals(PostType.WishList))
+            throw new AssertionError("Wrong constructor.");
+        this.type = type;
+    }
 
 /**
      *********************************** Getters and Setters ************************************
@@ -244,8 +249,6 @@ public class Post implements Comparable {
     }
 
 
-
-
     public ArrayList<Comment> getComments() {
         if (type == PostType.Review)
             return mReview.getComments();
@@ -261,6 +264,10 @@ public class Post implements Comparable {
     }
 
 
+/**
+ *********************************** Comparing & Sorting ************************************
+ */
+
     @Override
     public int compareTo(Object o) {
         if (type == PostType.Recommendation) {
@@ -275,6 +282,10 @@ public class Post implements Comparable {
 
     public static class SortByDate implements Comparator<Post> {
         public int compare(Post a, Post b) {
+            if(a.getType().equals(PostType.UserSuggestions))
+                return -1;
+            if(b.getType().equals(PostType.UserSuggestions))
+                return 1;
             return -a.getPost_time().compareTo(b.getPost_time()); // reverse, because newer posts are more relevant
         }
     }

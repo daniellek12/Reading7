@@ -17,6 +17,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.reading7.Adapters.FeedAdapter;
 import com.reading7.Objects.Post;
+import com.reading7.Objects.PostType;
 import com.reading7.Objects.Review;
 import com.reading7.Objects.User;
 import com.reading7.Objects.WishList;
@@ -66,6 +67,7 @@ public class HomeFragment extends Fragment {
         CollectionReference collection_wishlist = db.collection("Wishlist");
 
         if (!following.isEmpty()) {
+            // FIXME: 'in' filters support a maximum of 10 elements in the value array.
             Query query = collection_reviews.whereIn("reviewer_email", following);
             final Query query_wishlist = collection_wishlist.whereIn("user_email", following);
 
@@ -114,6 +116,8 @@ public class HomeFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         RecyclerView postsRV = getActivity().findViewById(R.id.posts);
         postsRV.setLayoutManager(layoutManager);
+
+        posts.add(new Post(PostType.UserSuggestions));
         createPosts(postsRV);
     }
 

@@ -105,7 +105,6 @@ public class ExploreFragment extends Fragment {
 
         if (Utils.isAdmin) {
             getActivity().findViewById(R.id.store).setVisibility(View.GONE);
-            getActivity().findViewById(R.id.similar_users_btn).setVisibility(View.GONE);
         }
         else {
             getActivity().findViewById(R.id.store).setOnClickListener(new View.OnClickListener() {
@@ -114,13 +113,6 @@ public class ExploreFragment extends Fragment {
                     ((MainActivity) getActivity()).addFragment(new StoreFragment());
 
 
-                }
-            });
-
-            getActivity().findViewById(R.id.similar_users_btn).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    ((MainActivity) getActivity()).loadFragment(new SimilarUserFragment());
                 }
             });
         }

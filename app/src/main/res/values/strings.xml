@@ -197,5 +197,6 @@
     <string name="author">שם הסופר</string>
     <string name="genres">ז\'אנרים</string>
     <string name="publisher_hint">הוצאת ספרים</string>
+    <string name="users_you_might_want_to_follow">משתמשים שכדאי לך להכיר</string>
 
 </resources>

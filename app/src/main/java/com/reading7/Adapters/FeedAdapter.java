@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -69,22 +70,25 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
 
-        View view = null;
-        switch (viewType) {
-
-            case 0: // ReviewPost Holder
+        View view;
+        switch (PostType.values()[viewType]) {
+            case Review:
                 view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.review_post_item, viewGroup, false);
                 return new ReviewPostHolder(view);
 
-            case 1:
+            case WishList:
                 view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.wishlist_post_item, viewGroup, false);
                 return new WishListPostHolder(view);
 
-            case 2:
+            case Recommendation:
                 //TODO: return new RecommendationPostHolder();
 
-            case 3:
+            case NewBook:
                 //TODO: return new NewBookPostHolder();
+
+            case UserSuggestions:
+                view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.user_suggestions_fragment, viewGroup, false);
+                return new UsersSuggestionsPostHolder(view);
         }
 
         return null;
@@ -92,34 +96,35 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 
     @Override
-    public int getItemViewType(int i) {
+    public int getItemViewType(int position) {
 
-        switch (posts.get(i).getType()) {
+        switch (posts.get(position).getType()) {
             case Review:
-                return 0;
+                return PostType.Review.ordinal();
             case WishList:
-                return 1;
+                return PostType.WishList.ordinal();
             case Recommendation:
-                return 2;
+                return PostType.Recommendation.ordinal();
             case NewBook:
-                return 3;
+                return PostType.NewBook.ordinal();
+            case UserSuggestions:
+                return PostType.UserSuggestions.ordinal();
         }
-
         return -1;
     }
 
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
 
         switch (viewHolder.getItemViewType()) {
 
             case 0:
-                bindReview(viewHolder, i);
+                bindReview(viewHolder, position);
                 break;
 
             case 1:
-                bindWishList(viewHolder, i);
+                bindWishList(viewHolder, position);
                 break;
 
             case 2:
@@ -128,6 +133,10 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
             case 3:
                 //TODO: bindNewBook
+                break;
+
+            case 4:
+                findUserSuggestions(viewHolder);
                 break;
         }
     }
@@ -259,71 +268,71 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         });
     }
 
+    private void findUserSuggestions(final RecyclerView.ViewHolder viewHolder) {
 
-    /**
-     * ********************************** View Holders *******************************************
-     */
+        final User user = ((MainActivity) mContext).getCurrentUser();
+        final ArrayList<String> emails = new ArrayList<>();
 
-    public class ReviewPostHolder extends RecyclerView.ViewHolder {
+        db.collection("SimilarUsers").whereEqualTo("user_id", user.getEmail())
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        String email = (String) document.get("similar_user");
+                        if (!user.getFollowing().contains(email))
+                            emails.add(email);
+                    }
 
-        TextView postTime;
-        TextView userName;
-        CircleImageView profileImage;
-        RatingBar ratingBar;
-        TextView rating;
-        ImageView cover;
-        ImageView coverBackground;
-        TextView bookName;
-        TextView authorName;
-        LinearLayout addCommentButton;
-        LinearLayout likeButton;
-        TextView likesNum;
-        TextView commentsNum;
-        TextView review_content;
-        TextView review_title;
-        RelativeLayout countersLayout;
+                    //If there are'nt at least 3, try to find other users.
+                    if (emails.size() < 3) {
+                        db.collection("Users").limit(10).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    String email = document.toObject(User.class).getEmail();
+                                    if (!user.getFollowing().contains(email))
+                                        emails.add(email);
+                                }
 
-        public ReviewPostHolder(@NonNull View itemView) {
-            super(itemView);
+                                if (emails.size() >= 3)
+                                    bindUserSuggestions((UsersSuggestionsPostHolder) viewHolder, emails);
+                                else
+                                    viewHolder.itemView.setVisibility(View.GONE);
+                            }
+                        });
+                    }
 
-            postTime = itemView.findViewById(R.id.postTime);
-            userName = itemView.findViewById(R.id.userName);
-            profileImage = itemView.findViewById(R.id.profileImage);
-            ratingBar = itemView.findViewById(R.id.ratingBar);
-            rating = itemView.findViewById(R.id.rating);
-            cover = itemView.findViewById(R.id.coverImage);
-            coverBackground = itemView.findViewById(R.id.coverBackground);
-            bookName = itemView.findViewById(R.id.bookTitle);
-            authorName = itemView.findViewById(R.id.authorName);
-            addCommentButton = itemView.findViewById(R.id.button_add_comment);
-            likeButton = itemView.findViewById(R.id.likeButton);
-            likesNum = itemView.findViewById(R.id.likeNum);
-            commentsNum = itemView.findViewById(R.id.commentsNum);
-            review_content = itemView.findViewById(R.id.review);
-            review_title = itemView.findViewById(R.id.title);
-            countersLayout = itemView.findViewById(R.id.activityCountersLayout);
-        }
+                } else
+                    Toast.makeText(mContext, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
-    public class WishListPostHolder extends RecyclerView.ViewHolder {
+    private void bindUserSuggestions(final UsersSuggestionsPostHolder holder, final ArrayList<String> emails) {
 
-        ImageView cover;
-        ImageView coverBackground;
-        TextView userName;
-        TextView postTime;
-        TextView bookName;
-        CircleImageView profileImage;
+        for (int i = 0; i < 3; i++) {
+            final int j = i + 1;
 
+            db.collection("Users").document(emails.get(i)).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    User user = task.getResult().toObject(User.class);
 
-        public WishListPostHolder(@NonNull View itemView) {
-            super(itemView);
+                    String usernameTag = "username" + j;
+                    TextView username = holder.itemView.findViewWithTag(usernameTag);
+                    username.setText(user.getFull_name());
 
-            cover = itemView.findViewById(R.id.coverImage);
-            coverBackground = itemView.findViewById(R.id.coverBackground);
-            userName = itemView.findViewById(R.id.userName);
-            bookName = itemView.findViewById(R.id.bookName);
-            postTime = itemView.findViewById(R.id.postTime);
-            profileImage = itemView.findViewById(R.id.profileImage);
+                    String profileImageTag = "profileImage" + j;
+                    CircleImageView profileImage = holder.itemView.findViewWithTag(profileImageTag);
+                    user.getAvatar().loadIntoImage(mContext, profileImage);
+
+                    Utils.OpenProfileOnClick profileListener = new Utils.OpenProfileOnClick(mContext, emails.get(j - 1));
+                    username.setOnClickListener(profileListener);
+                    profileImage.setOnClickListener(profileListener);
+                }
+            });
         }
     }
 
@@ -457,6 +466,100 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                 break;
             }
+        }
+    }
+
+    private void getUserEmailsSuggestions() {
+
+
+    }
+
+    /**
+     * ********************************** View Holders *******************************************
+     */
+
+    public class ReviewPostHolder extends RecyclerView.ViewHolder {
+
+        TextView postTime;
+        TextView userName;
+        CircleImageView profileImage;
+        RatingBar ratingBar;
+        TextView rating;
+        ImageView cover;
+        ImageView coverBackground;
+        TextView bookName;
+        TextView authorName;
+        LinearLayout addCommentButton;
+        LinearLayout likeButton;
+        TextView likesNum;
+        TextView commentsNum;
+        TextView review_content;
+        TextView review_title;
+        RelativeLayout countersLayout;
+
+        public ReviewPostHolder(@NonNull View itemView) {
+            super(itemView);
+
+            postTime = itemView.findViewById(R.id.postTime);
+            userName = itemView.findViewById(R.id.userName);
+            profileImage = itemView.findViewById(R.id.profileImage);
+            ratingBar = itemView.findViewById(R.id.ratingBar);
+            rating = itemView.findViewById(R.id.rating);
+            cover = itemView.findViewById(R.id.coverImage);
+            coverBackground = itemView.findViewById(R.id.coverBackground);
+            bookName = itemView.findViewById(R.id.bookTitle);
+            authorName = itemView.findViewById(R.id.authorName);
+            addCommentButton = itemView.findViewById(R.id.button_add_comment);
+            likeButton = itemView.findViewById(R.id.likeButton);
+            likesNum = itemView.findViewById(R.id.likeNum);
+            commentsNum = itemView.findViewById(R.id.commentsNum);
+            review_content = itemView.findViewById(R.id.review);
+            review_title = itemView.findViewById(R.id.title);
+            countersLayout = itemView.findViewById(R.id.activityCountersLayout);
+        }
+    }
+
+    public class WishListPostHolder extends RecyclerView.ViewHolder {
+
+        ImageView cover;
+        ImageView coverBackground;
+        TextView userName;
+        TextView postTime;
+        TextView bookName;
+        CircleImageView profileImage;
+
+
+        public WishListPostHolder(@NonNull View itemView) {
+            super(itemView);
+
+            cover = itemView.findViewById(R.id.coverImage);
+            coverBackground = itemView.findViewById(R.id.coverBackground);
+            userName = itemView.findViewById(R.id.userName);
+            bookName = itemView.findViewById(R.id.bookName);
+            postTime = itemView.findViewById(R.id.postTime);
+            profileImage = itemView.findViewById(R.id.profileImage);
+        }
+    }
+
+    public class UsersSuggestionsPostHolder extends RecyclerView.ViewHolder {
+
+        CircleImageView profileImage1;
+        CircleImageView profileImage2;
+        CircleImageView profileImage3;
+        TextView userName1;
+        TextView userName2;
+        TextView userName3;
+
+        public UsersSuggestionsPostHolder(@NonNull View itemView) {
+            super(itemView);
+
+            profileImage1 = itemView.findViewById(R.id.profileImage1);
+            profileImage2 = itemView.findViewById(R.id.profileImage2);
+            profileImage3 = itemView.findViewById(R.id.profileImage3);
+            userName1 = itemView.findViewById(R.id.username1);
+            userName2 = itemView.findViewById(R.id.username2);
+            userName3 = itemView.findViewById(R.id.username3);
+
         }
     }
 
