@@ -5,4 +5,5 @@ public enum PostType {
     WishList,
     NewBook,
     Recommendation,
+    UserSuggestions
 }
