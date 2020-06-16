@@ -198,5 +198,7 @@
     <string name="genres">ז\'אנרים</string>
     <string name="publisher_hint">הוצאת ספרים</string>
     <string name="num_pages">מספר עמודים</string>
+    <string name="save_question">אתה יוצא ממצב עריכה. האם לשמור את השינויים לפני היציאה?</string>
+    <string name="dont_save">צא בלי לשמור</string>
 
 </resources>

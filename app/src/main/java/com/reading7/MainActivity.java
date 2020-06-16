@@ -18,6 +18,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.reading7.Dialogs.SaveEditBookDialog;
 import com.reading7.Objects.Book;
 import com.reading7.Objects.Review;
 import com.reading7.Objects.User;
@@ -269,7 +270,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 ((BookFragment) fragment).sendResult(101);
             }
             else if (((BookFragment) fragment).edit_mode) {
-
+                SaveEditBookDialog dialog = new SaveEditBookDialog();
+                dialog.show(MainActivity.this.getSupportFragmentManager(), "save changes");
+                return;
             }
         }
         else if (fragment instanceof ChallengeFragment) {
