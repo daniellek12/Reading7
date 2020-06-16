@@ -34,6 +34,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.reading7.Adapters.ReviewListAdapter;
 import com.reading7.Dialogs.AddToShelfDialog;
 import com.reading7.Dialogs.ChallengeUserDialog;
+import com.reading7.Dialogs.DeleteBookDialog;
 import com.reading7.Dialogs.InviteUserDialog;
 import com.reading7.Dialogs.RankBookDialog;
 import com.reading7.Objects.Book;
@@ -245,9 +246,19 @@ public class BookFragment extends Fragment {
         getActivity().findViewById(R.id.button_delete_book).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Utils.deleteBookFromDB(mBook);
-                admin_delete = true;
-                getActivity().onBackPressed();
+                DeleteBookDialog dialog = new DeleteBookDialog();
+
+                Bundle args = new Bundle();
+                args.putString("book_id", mBook.getId());
+                args.putString("book_title", mBook.getTitle());
+                args.putString("context", "book fragment");
+
+                dialog.setArguments(args);
+                dialog.setTargetFragment(BookFragment.this, 404);
+                dialog.show(getActivity().getSupportFragmentManager(), "example dialog");
+//                Utils.deleteBookFromDB(mBook.getId(), mBook.getTitle());
+//                admin_delete = true;
+//                getActivity().onBackPressed();
             }
         });
     }

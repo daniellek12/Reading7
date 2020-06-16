@@ -201,5 +201,6 @@
     <string name="num_pages">מספר עמודים</string>
     <string name="save_question">אתה יוצא ממצב עריכה. האם לשמור את השינויים לפני היציאה?</string>
     <string name="dont_save">צא בלי לשמור</string>
+    <string name="delete_question">הספר יימחק מהמאגר ומכל המדפים של משתמשים ששמרו אותו. האם אתה בטוח שברצונך למחוק ספר זה?</string>
 
 </resources>

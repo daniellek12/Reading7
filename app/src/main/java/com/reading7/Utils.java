@@ -974,9 +974,9 @@ public class Utils {
         }
     }
 
-    public static void deleteBookFromDB(final Book book) {
+    public static void deleteBookFromDB(final String bookID, final String title) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        Query query1 = db.collection("Books").whereEqualTo("id", book.getId());
+        Query query1 = db.collection("Books").whereEqualTo("id", bookID);
         query1.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -988,7 +988,7 @@ public class Utils {
             }
         });
 
-        Query query2 = db.collection("Wishlist").whereEqualTo("book_id", book.getId());
+        Query query2 = db.collection("Wishlist").whereEqualTo("book_id", bookID);
         query2.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -1000,7 +1000,7 @@ public class Utils {
             }
         });
 
-        Query query3 = db.collection("Reviews").whereEqualTo("book_id", book.getId());
+        Query query3 = db.collection("Reviews").whereEqualTo("book_id", bookID);
         query3.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -1012,7 +1012,7 @@ public class Utils {
             }
         });
 
-        Query query4 = db.collection("Recommendations").whereEqualTo("book_id", book.getId());
+        Query query4 = db.collection("Recommendations").whereEqualTo("book_id", bookID);
         query4.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -1024,14 +1024,14 @@ public class Utils {
             }
         });
 
-        Query query5 = db.collectionGroup("Shelves").whereArrayContains("book_names", book.getTitle());
+        Query query5 = db.collectionGroup("Shelves").whereArrayContains("book_names", title);
         query5.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()){
                     for (QueryDocumentSnapshot doc : task.getResult()) {
                         DocumentReference ref = doc.getReference();
-                        ref.update("book_names", FieldValue.arrayRemove(book.getTitle())).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        ref.update("book_names", FieldValue.arrayRemove(title)).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful())
