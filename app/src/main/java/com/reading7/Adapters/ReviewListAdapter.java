@@ -112,6 +112,7 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
         }
 
         viewHolder.commentsNum.setText(String.valueOf(review.getComments().size()));
+        viewHolder.likeNum.setText(Integer.toString(review.getLikes_count()));
 
         if (Utils.isAdmin) {
             viewHolder.deleteLayout.setVisibility(View.VISIBLE);

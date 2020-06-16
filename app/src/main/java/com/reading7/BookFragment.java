@@ -73,6 +73,7 @@ public class BookFragment extends Fragment {
     private boolean isReviewedWithContent = false;
 
     public boolean admin_delete = false;
+    public boolean edit_mode = false;
 
     public boolean isReviewedWithContent() {
         return isReviewedWithContent;
@@ -126,6 +127,7 @@ public class BookFragment extends Fragment {
             getActivity().findViewById(R.id.editButton).setVisibility(View.VISIBLE);
             initDeleteButton();
             initEditButton();
+            initSaveButton();
         }
         else {
             initWishlistButton();
@@ -142,6 +144,9 @@ public class BookFragment extends Fragment {
         getActivity().findViewById(R.id.editButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                edit_mode = true;
+                getActivity().findViewById(R.id.editButton).setVisibility(View.GONE);
+                getActivity().findViewById(R.id.saveButton).setVisibility(View.VISIBLE);
                 getActivity().findViewById(R.id.book_name).setVisibility(View.INVISIBLE);
                 getActivity().findViewById(R.id.book_name_edit).setVisibility(View.VISIBLE);
                 getActivity().findViewById(R.id.author).setVisibility(View.INVISIBLE);
@@ -157,6 +162,35 @@ public class BookFragment extends Fragment {
                 getActivity().findViewById(R.id.summary_edit).setVisibility(View.VISIBLE);
                 getActivity().findViewById(R.id.numPages).setVisibility(View.GONE);
                 getActivity().findViewById(R.id.numPages_edit).setVisibility(View.VISIBLE);
+                getActivity().findViewById(R.id.button_delete_book).setVisibility(View.GONE);
+                initEditFields();
+            }
+        });
+    }
+
+    private void initSaveButton() {
+        getActivity().findViewById(R.id.saveButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                edit_mode = false;
+                getActivity().findViewById(R.id.editButton).setVisibility(View.VISIBLE);
+                getActivity().findViewById(R.id.saveButton).setVisibility(View.GONE);
+                getActivity().findViewById(R.id.book_name).setVisibility(View.VISIBLE);
+                getActivity().findViewById(R.id.book_name_edit).setVisibility(View.GONE);
+                getActivity().findViewById(R.id.author).setVisibility(View.VISIBLE);
+                getActivity().findViewById(R.id.author_edit).setVisibility(View.GONE);
+                getActivity().findViewById(R.id.publisher).setVisibility(View.VISIBLE);
+                getActivity().findViewById(R.id.publisher_edit).setVisibility(View.GONE);
+                getActivity().findViewById(R.id.genres).setVisibility(View.VISIBLE);
+                getActivity().findViewById(R.id.genres_edit).setVisibility(View.GONE);
+                getActivity().findViewById(R.id.bookRatingBar).setVisibility(View.VISIBLE);
+                getActivity().findViewById(R.id.ratingNum).setVisibility(View.VISIBLE);
+                getActivity().findViewById(R.id.summary_title).setVisibility(View.VISIBLE);
+                getActivity().findViewById(R.id.summary).setVisibility(View.VISIBLE);
+                getActivity().findViewById(R.id.summary_edit).setVisibility(View.GONE);
+                getActivity().findViewById(R.id.numPages).setVisibility(View.VISIBLE);
+                getActivity().findViewById(R.id.numPages_edit).setVisibility(View.GONE);
+                getActivity().findViewById(R.id.button_delete_book).setVisibility(View.VISIBLE);
             }
         });
     }

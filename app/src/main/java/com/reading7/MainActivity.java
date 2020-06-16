@@ -263,9 +263,16 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 ((ReviewCommentsFragment) fragment).sendResultDeleted(404);
             else
                 ((ReviewCommentsFragment) fragment).sendResult(303, ((ReviewCommentsFragment) fragment).getReviewId());
-        } else if (fragment instanceof BookFragment && ((BookFragment) fragment).admin_delete) {
-            ((BookFragment) fragment).sendResult(101);
-        } else if (fragment instanceof ChallengeFragment) {
+        }
+        else if (fragment instanceof BookFragment) {
+            if (((BookFragment) fragment).admin_delete) {
+                ((BookFragment) fragment).sendResult(101);
+            }
+            else if (((BookFragment) fragment).edit_mode) {
+
+            }
+        }
+        else if (fragment instanceof ChallengeFragment) {
             if (!((ChallengeFragment) fragment).isDone())
                 return;
         }

@@ -4,6 +4,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,11 +52,13 @@ import static com.reading7.Utils.calculateAge;
 
 public class ProfileFragment extends Fragment {
 
+    public int SEND_MAIL_CODE = 707;
+
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
     final private ArrayList<String> usersReviewBookNames = new ArrayList<String>();
     final private ArrayList<String> usersWishlistBookNames = new ArrayList<String>();
     final private ArrayList<String> shelfNames = new ArrayList<String>();
-    private FirebaseAuth mAuth;
-    private FirebaseFirestore db;
     private ProfileShelfAdapter adapterReviews;
     private ProfileShelfAdapter adapterWishList;
     private CustomShelvesAdapter adapterCustomShelves;
@@ -268,9 +272,12 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), true);
-        getActivity().findViewById(R.id.progressBar3).setVisibility(View.GONE);
-        getActivity().findViewById(R.id.optionsMenuLayout).setVisibility(View.GONE);
+        if (requestCode == SEND_MAIL_CODE) {
+            Log.d("PROFILE", "in onResult of send mail");
+            Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), true);
+            getActivity().findViewById(R.id.progressBar3).setVisibility(View.GONE);
+            getActivity().findViewById(R.id.optionsMenuLayout).setVisibility(View.GONE);
+        }
     }
 
     private void initOptionsMenu() {
@@ -321,14 +328,10 @@ public class ProfileFragment extends Fragment {
                 Intent i = new Intent(Intent.ACTION_SENDTO);
                 i.setType("message/rfc822");
                 i.putExtra(Intent.EXTRA_EMAIL, new String[]{getResources().getString(R.string.admin_email)});
-                i.putExtra(Intent.EXTRA_SUBJECT, "נושא הפניה");
-                i.putExtra(Intent.EXTRA_TEXT, "פירוט על הבעיה");
+                i.putExtra(Intent.EXTRA_SUBJECT, "פניה בנוגע לאפליקציה Reading7");
+                i.putExtra(Intent.EXTRA_TEXT, "");
                 try {
-                    startActivity(Intent.createChooser(i, "שליחה באמצעות..."));
-//                    TODO enable, hide progress, hide menu after return (but in activity result doesn't work)
-                    Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), true);
-                    getActivity().findViewById(R.id.progressBar3).setVisibility(View.GONE);
-                    optionsLayout.setVisibility(View.GONE);
+                    startActivityForResult(Intent.createChooser(i, "שליחה באמצעות..."), SEND_MAIL_CODE);
 
                 } catch (android.content.ActivityNotFoundException ex) {
                     Toast.makeText(getContext(), "לא קיימת אפליקציה שניתן לשלוח באמצעותה דואר אלקטרוני", Toast.LENGTH_SHORT).show();

@@ -26,6 +26,16 @@
             android:tint="@color/white"
             android:visibility="gone" />
 
+        <ImageView
+            android:id="@+id/saveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginLeft="16dp"
+            android:src="@drawable/ic_check"
+            android:tint="@color/white"
+            android:visibility="gone" />
+
         <TextView
             android:id="@+id/toolbar_title"
             style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
@@ -159,11 +169,12 @@
 
                     <EditText
                         android:id="@+id/author_edit"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/book_name_edit"
                         android:layout_marginTop="10dp"
                         android:layout_marginRight="20dp"
+                        android:layout_marginLeft="20dp"
                         android:background="@drawable/edittext_border_background_light"
                         android:hint="@string/author"
                         android:inputType="text"
@@ -172,6 +183,7 @@
                         android:text="סוזן קולינס"
                         android:textColor="@color/black"
                         android:textSize="12sp"
+                        android:layout_toRightOf="@id/numPagesLayout"
                         android:visibility="gone" />
 
                     <TextView
@@ -191,14 +203,12 @@
 
                     <EditText
                         android:id="@+id/publisher_edit"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/book_name_edit"
+                        android:layout_below="@id/author_edit"
                         android:layout_marginLeft="20dp"
                         android:layout_marginTop="10dp"
-                        android:layout_marginRight="3dp"
-                        android:layout_toLeftOf="@id/author_edit"
-                        android:layout_toRightOf="@id/numPagesLayout"
+                        android:layout_marginRight="20dp"
                         android:background="@drawable/edittext_border_background_light"
                         android:hint="@string/publisher_hint"
                         android:inputType="text"
@@ -208,6 +218,7 @@
                         android:textColor="@color/black"
                         android:textDirection="rtl"
                         android:textSize="12sp"
+                        android:layout_toRightOf="@id/numPagesLayout"
                         android:visibility="gone" />
 
                     <TextView
@@ -225,9 +236,9 @@
 
                     <EditText
                         android:id="@+id/genres_edit"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/author_edit"
+                        android:layout_below="@id/publisher_edit"
                         android:layout_marginLeft="20dp"
                         android:layout_marginTop="10dp"
                         android:layout_marginRight="20dp"
@@ -352,7 +363,6 @@
                         android:hint="@string/summary"
                         android:inputType="textMultiLine"
                         android:layoutDirection="rtl"
-                        android:maxLines="6"
                         android:padding="10dp"
                         android:paddingBottom="20dp"
                         android:text="פאנם היא מדינה בעולם פוסט־אפוקליפטי, השוכנת במקום שבו עמדה פעם יבשת צפון אמריקה. בפאנם שנים עשר מחוזות, עליהם מופעל שלטון אכזרי וקשה מידי מנהיגיהם היפים השוכנים שם"
