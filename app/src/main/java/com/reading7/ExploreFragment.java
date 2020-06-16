@@ -34,6 +34,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class ExploreFragment extends Fragment {
 
+    private final List<Book> bookList = new ArrayList<>();
     private RecyclerView exploreRV;
     private ExploreAdapter myAdapter;
     private int limit = 11;
@@ -43,9 +44,6 @@ public class ExploreFragment extends Fragment {
     private DocumentSnapshot lastVisible;
     private boolean isScrolling = false;
     private boolean isLastItemReached = false;
-
-    private final List<Book> bookList = new ArrayList<>();
-
 
     @Nullable
     @Override
@@ -64,10 +62,9 @@ public class ExploreFragment extends Fragment {
         showProgressBar();
         initAppBar();
 
-        if (Utils.isAdmin){
+        if (Utils.isAdmin) {
             getActivity().findViewById(R.id.playlistsRV).setVisibility(View.GONE);
-        }
-        else{
+        } else {
             initPlaylists();
         }
 
@@ -78,7 +75,7 @@ public class ExploreFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        switch (resultCode){
+        switch (resultCode) {
             case 101:
                 String book_id = data.getStringExtra("book_id");
                 loadAgain();
@@ -105,8 +102,7 @@ public class ExploreFragment extends Fragment {
 
         if (Utils.isAdmin) {
             getActivity().findViewById(R.id.store).setVisibility(View.GONE);
-        }
-        else {
+        } else {
             getActivity().findViewById(R.id.store).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -283,8 +279,8 @@ public class ExploreFragment extends Fragment {
 
                 final CollectionReference bookRef = FirebaseFirestore.getInstance().collection("Books");
                 lstBooksIds.add("dummy");
-                int size = Math.min(lstBooksIds.size(),9);
-                Query booksQuery = bookRef.whereIn("id", lstBooksIds.subList(0,size));
+                int size = Math.min(lstBooksIds.size(), 9);
+                Query booksQuery = bookRef.whereIn("id", lstBooksIds.subList(0, size));
                 booksQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -296,7 +292,7 @@ public class ExploreFragment extends Fragment {
 
                             }
                         }
-                        Query booksQuery1 = bookRef.limit(limit-newlist.size());
+                        Query booksQuery1 = bookRef.limit(limit - newlist.size());
                         booksQuery1.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -312,7 +308,7 @@ public class ExploreFragment extends Fragment {
                                 bookList.addAll(newlist);
                                 newlist.clear();
 
-                               myAdapter.notifyDataSetChanged();//no problem cause this is the first update
+                                myAdapter.notifyDataSetChanged();//no problem cause this is the first update
                                 lastVisible = task.getResult().getDocuments().get(task.getResult().size() - 1);
                                 hideProgressBar();
                             }
