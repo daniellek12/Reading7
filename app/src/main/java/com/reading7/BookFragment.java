@@ -155,6 +155,8 @@ public class BookFragment extends Fragment {
                 getActivity().findViewById(R.id.summary_title).setVisibility(View.INVISIBLE);
                 getActivity().findViewById(R.id.summary).setVisibility(View.INVISIBLE);
                 getActivity().findViewById(R.id.summary_edit).setVisibility(View.VISIBLE);
+                getActivity().findViewById(R.id.numPages).setVisibility(View.GONE);
+                getActivity().findViewById(R.id.numPages_edit).setVisibility(View.VISIBLE);
             }
         });
     }
@@ -239,6 +241,9 @@ public class BookFragment extends Fragment {
 
         EditText summary_edit = getActivity().findViewById(R.id.summary_edit);
         summary_edit.setText(mBook.getDescription());
+
+        EditText pages_edit = getActivity().findViewById(R.id.numPages_edit);
+        pages_edit.setText(Integer.toString(mBook.getNum_pages()));
     }
 
     private void setBookGenres() {
