@@ -337,6 +337,7 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
             @Override
             public void onClick(View view) {
                 addReport(review.getReviewer_email(), review.getBook_title());
+                Toast.makeText(mContext, "תודה! הדיווח שלך התקבל", Toast.LENGTH_SHORT).show();
 //                TODO change to report without email?
 //                Intent intent = new Intent(Intent.ACTION_SENDTO);
 //                intent.setType("message/rfc822");

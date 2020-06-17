@@ -332,6 +332,9 @@ public class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.V
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     if (task.isSuccessful()) {
                         Review review = null;
+                        if (task.getResult().isEmpty()) {
+                            Toast.makeText(mContext, "ביקורת זו נמחקה", Toast.LENGTH_SHORT).show();
+                        }
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             review = document.toObject(Review.class);
                             ((MainActivity) mActivity).loadFragment(new ReviewCommentsFragment(review));
@@ -346,6 +349,25 @@ public class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.V
     public void deleteNotification(final int position) {
 
         final Notification notification = notifications.get(position);
+        if (notification.getType().equals(mContext.getResources().getString(R.string.report_notificiation))) {
+            CollectionReference reportsRef = db.collection("Reports");
+            Query reportQuery = reportsRef.whereEqualTo("time", notification.getTime().toDate()).whereEqualTo("from", notification.getFrom());
+            reportQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            document.getReference().delete();
+                            notifications.remove(document.toObject(Notification.class));
+                            notifyItemRemoved(position);
+                        }
+                    }
+                    else
+                        Toast.makeText(mContext, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+            return;
+        }
         CollectionReference requestsRef = db.collection("Users").document(mAuth.getCurrentUser().getEmail()).collection("Notifications");
         Query requestQuery = requestsRef.whereEqualTo("book_title", notification.getBook_title()).whereEqualTo("from", notification.getFrom()).whereEqualTo("type", notification.getType());
         requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
