@@ -152,7 +152,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         }
 
         if ((type.equals(getResources().getString(R.string.like_notificiation)))
-                || (type.equals(getResources().getString(R.string.comment_notificiation)))) {
+                || (type.equals(getResources().getString(R.string.comment_notificiation)))
+                || (type.equals(getResources().getString(R.string.report_notificiation)))) {
             final Intent intent1 = intent;
             CollectionReference requestCollectionRef = FirebaseFirestore.getInstance().collection("Users");
             Query requestQuery = requestCollectionRef.whereEqualTo("email", FirebaseAuth.getInstance().getCurrentUser().getEmail());

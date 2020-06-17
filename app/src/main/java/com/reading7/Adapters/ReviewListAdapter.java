@@ -285,6 +285,18 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
 
     }
 
+    private void addReport(String reviewer_email, String book_title) {
+            Map<String, Object> notificationMessegae = new HashMap<>();
+
+            notificationMessegae.put("type", mContext.getResources().getString(R.string.report_notificiation));
+            notificationMessegae.put("from", mAuth.getCurrentUser().getEmail());
+            notificationMessegae.put("book_title", book_title);
+            notificationMessegae.put("time", Timestamp.now());
+            notificationMessegae.put("reviewer_email", reviewer_email);
+
+            db.collection("Reports").add(notificationMessegae);
+    }
+
 
     private void setLikeButton(ViewHolder viewHolder, boolean liked) {
 
@@ -320,22 +332,24 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
 
     private void initReportButton(final ViewHolder viewHolder, int i) {
         final Review review = reviews.get(i);
-        //TODO change to report without email?
+
         viewHolder.reportBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_SENDTO);
-                intent.setType("message/rfc822");
-                intent.putExtra(Intent.EXTRA_EMAIL, new String[]{mContext.getResources().getString(R.string.admin_email)});
-                intent.putExtra(Intent.EXTRA_SUBJECT, "דיווח על ביקורת");
-                String content = "הביקורת בעלת המזהה " + review.getReview_id() + " של המשתמש " + review.getReviewer_email() + " על הספר " + review.getBook_title() + " איננה הולמת.";
-                intent.putExtra(Intent.EXTRA_TEXT, content);
-                try {
-                    mContext.startActivity(Intent.createChooser(intent, "שליחה באמצעות..."));
-
-                } catch (android.content.ActivityNotFoundException ex) {
-                    Toast.makeText(mContext, "לא קיימת אפליקציה שניתן לשלוח באמצעותה דואר אלקטרוני", Toast.LENGTH_SHORT).show();
-                }
+                addReport(review.getReviewer_email(), review.getBook_title());
+//                TODO change to report without email?
+//                Intent intent = new Intent(Intent.ACTION_SENDTO);
+//                intent.setType("message/rfc822");
+//                intent.putExtra(Intent.EXTRA_EMAIL, new String[]{mContext.getResources().getString(R.string.admin_email)});
+//                intent.putExtra(Intent.EXTRA_SUBJECT, "דיווח על ביקורת");
+//                String content = "הביקורת בעלת המזהה " + review.getReview_id() + " של המשתמש " + review.getReviewer_email() + " על הספר " + review.getBook_title() + " איננה הולמת.";
+//                intent.putExtra(Intent.EXTRA_TEXT, content);
+//                try {
+//                    mContext.startActivity(Intent.createChooser(intent, "שליחה באמצעות..."));
+//
+//                } catch (android.content.ActivityNotFoundException ex) {
+//                    Toast.makeText(mContext, "לא קיימת אפליקציה שניתן לשלוח באמצעותה דואר אלקטרוני", Toast.LENGTH_SHORT).show();
+//                }
             }
         });
     }
