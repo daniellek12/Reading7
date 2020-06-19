@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array
+        name= "genres">
+        );
+
+        <item>הרפתקאות</item>
+        <item>מדע בדיוני</item>
+        <item>היסטוריה</item>
+        <item>דרמה</item>
+        <item>אהבה</item>
+        <item>אימה</item>
+        <item>מדע</item>
+        <item>קומדיה</item>
+        <item>מתח</item>
+    </string-array>
+</resources>

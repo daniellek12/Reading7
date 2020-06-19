@@ -63,6 +63,9 @@ dependencies {
     implementation 'androidx.viewpager:viewpager:1.0.0'
     implementation 'com.duolingo.open:rtl-viewpager:2.0.0'
 
+    //Pie Chart
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
     //Pagination
     implementation 'android.arch.paging:runtime:1.0.1'
 

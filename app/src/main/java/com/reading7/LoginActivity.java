@@ -67,8 +67,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
+
     public void redirectToMain() {
-        final Intent intent = new Intent(this, MainActivity.class);
+        /*final Intent intent = new Intent(this, MainActivity.class);
         CollectionReference requestCollectionRef = db.collection("Users");
         Query requestQuery = requestCollectionRef.whereEqualTo("email", mAuth.getCurrentUser().getEmail());
         requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -87,7 +88,11 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
             }
-        });
+        });*/
+        Intent intent = new Intent(this, MainActivity.class);
+        editTokenId();
+        startActivity(intent);
+        finish();
 
     }
 

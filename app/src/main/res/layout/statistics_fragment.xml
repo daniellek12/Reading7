@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".StatisticsFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/titleMaxReads"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:text="הכי נקראים"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"></TextView>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/maxReadsRV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
+                android:clipToPadding="false"
+                android:layoutDirection="rtl"
+                android:orientation="horizontal"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+            <TextView
+                android:id="@+id/titleMaxRated"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:text="בעלי הדירוג הגבוה ביותר"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"></TextView>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/maxRatedRV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
+                android:clipToPadding="false"
+                android:layoutDirection="rtl"
+                android:orientation="horizontal"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+
+
+            <TextView
+                android:id="@+id/title0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:text="chart1"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"></TextView>
+
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/pieBar1"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"></com.github.mikephil.charting.charts.PieChart>
+
+            <TextView
+                android:id="@+id/title01"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:text="chart2"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"></TextView>
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/spinner">
+
+        </Spinner>
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/pieBar2"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"></com.github.mikephil.charting.charts.PieChart>
+
+
+
+
+            <TextView
+                android:id="@+id/titleBar1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:text="chart1"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"></TextView>
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/chartBar1"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="20dp"></com.github.mikephil.charting.charts.BarChart>
+
+
+
+            <!--            <TextView-->
+            <!--                android:id="@+id/title3"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_gravity="center"-->
+            <!--                android:layout_marginTop="20dp"-->
+            <!--                android:text="chart3"-->
+            <!--                android:textColor="@color/black"-->
+            <!--                android:textSize="18sp"-->
+            <!--                android:textStyle="bold"></TextView>-->
+
+            <!--            <com.github.mikephil.charting.charts.PieChart-->
+            <!--                android:id="@+id/chart3"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="250dp"-->
+            <!--                android:layout_gravity="center"-->
+            <!--                android:layout_marginTop="10dp"-->
+            <!--                android:layout_marginBottom="20dp"></com.github.mikephil.charting.charts.PieChart>-->
+        </LinearLayout>
+
+    </ScrollView>
+
+
+
+</LinearLayout>
