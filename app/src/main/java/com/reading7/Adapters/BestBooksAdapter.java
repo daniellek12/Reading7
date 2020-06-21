@@ -53,7 +53,7 @@ public class BestBooksAdapter extends RecyclerView.Adapter<BestBooksAdapter.View
         @NonNull
         @Override
         public BestBooksAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.comment_item, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.best_book_item, parent, false);
             return new BestBooksAdapter.ViewHolder(view);
         }
 
@@ -91,10 +91,10 @@ public class BestBooksAdapter extends RecyclerView.Adapter<BestBooksAdapter.View
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
                 //convertView = LayoutInflater.from(mContext).inflate(R.layout.search_item, parent, false);
-                this.container = itemView.findViewById(R.id.container);
-                this.title = itemView.findViewById(R.id.title_search);
-                this.author = itemView.findViewById(R.id.author_search);
-                this.cover = itemView.findViewById(R.id.cover);
+                this.container = itemView.findViewById(R.id.container_book);
+                this.title = itemView.findViewById(R.id.title_book);
+                this.author = itemView.findViewById(R.id.author_book);
+                this.cover = itemView.findViewById(R.id.cover_book);
             }
         }
 

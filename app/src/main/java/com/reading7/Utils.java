@@ -1049,18 +1049,18 @@ public class Utils {
         });
     }
     public static String calcRangeOfAge(double num) {
-        if (num >= 0 && num <= 6)
+        if (num >= 0 && num <7)
             return "0-6";
-        if (num >= 7 && num <= 9)
+        if (num >= 7 && num <10)
             return "7-9";
-        if (num >= 10 && num <= 13)
+        if (num >= 10 && num <14)
             return "10-13";
-        if (num >= 14 && num <= 16)
+        if (num >= 14 && num <17)
             return "14-16";
-        if (num >= 17 && num <= 18)
+        if (num >= 17 && num <=18)
             return "17-18";
-        if (num >= 18 )
-            return "18+";
+        if (num > 18 )
+            return "19-100";
 
         return "";
     }
