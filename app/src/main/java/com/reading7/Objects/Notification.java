@@ -16,6 +16,7 @@ public class Notification {
     private ArrayList<String> possible_answers;
     private String right_answer;
     private Utils.ChallengeState challengeState;
+    private String reviewer_email;
 
     public Notification() {
 
@@ -68,6 +69,10 @@ public class Notification {
 
     public void setTime(Timestamp time) {
         this.time = time;
+    }
+
+    public String getReviewer_email() {
+        return reviewer_email;
     }
 
     public static class SortByDate implements Comparator<Notification> {

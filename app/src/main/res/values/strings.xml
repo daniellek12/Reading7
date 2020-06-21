@@ -101,6 +101,7 @@
     <string name="notifications">התראות</string>
     <string name="challenge_notificiation">שלח לך אתגר</string>
     <string name="accept">קבל</string>
+    <string name="report_notificiation">דיווח על ביקורת</string>
 
     <!--Edit Avatar-->
     <string name="skin_color">צבע עור</string>
@@ -199,5 +200,12 @@
     <string name="publisher_hint">הוצאת ספרים</string>
     <string name="users_you_might_want_to_follow">משתמשים שכדאי לך להכיר</string>
     <string name="num_pages">מספר עמודים</string>
+    <string name="save_question">אתה יוצא ממצב עריכה. האם לשמור את השינויים לפני היציאה?</string>
+    <string name="dont_save">צא בלי לשמור</string>
+    <string name="delete_question">הספר יימחק מהמאגר ומכל המדפים של משתמשים ששמרו אותו. האם אתה בטוח שברצונך למחוק ספר זה?</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="reports">דיווחים על ביקורות</string>
 
 </resources>

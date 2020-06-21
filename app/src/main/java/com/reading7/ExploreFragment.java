@@ -102,12 +102,20 @@ public class ExploreFragment extends Fragment {
 
         if (Utils.isAdmin) {
             getActivity().findViewById(R.id.store).setVisibility(View.GONE);
+            getActivity().findViewById(R.id.reports).setVisibility(View.VISIBLE);
+            getActivity().findViewById(R.id.reports).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ((MainActivity) getActivity()).loadFragment(new ReportsFragment());
+                }
+            });
             getActivity().findViewById(R.id.statistics).setVisibility(View.GONE);
         } else {
             getActivity().findViewById(R.id.store).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     ((MainActivity) getActivity()).addFragment(new StoreFragment());
+
 
                 }
             });

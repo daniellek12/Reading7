@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.transition.Fade;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.reading7.AdminActivity;
+import com.reading7.Dialogs.DeleteBookDialog;
 import com.reading7.ExploreFragment;
 import com.reading7.Objects.Book;
 import com.reading7.BookFragment;
@@ -106,9 +108,20 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
             viewHolder.delete_background.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Utils.deleteBookFromDB(books.get(i));
-                    notifyDataSetChanged();
-                    ((ExploreFragment) fragment).loadAgain();
+                    Book book = books.get(i);
+                    DeleteBookDialog dialog = new DeleteBookDialog();
+
+                    Bundle args = new Bundle();
+                    args.putString("book_id", book.getId());
+                    args.putString("book_title", book.getTitle());
+                    args.putString("context", "explore fragment");
+
+                    dialog.setArguments(args);
+                    dialog.setTargetFragment(fragment, 404);
+                    dialog.show(((MainActivity)mContext).getSupportFragmentManager(), "example dialog");
+//                    Utils.deleteBookFromDB(book.getId(), book.getTitle());
+//                    notifyDataSetChanged();
+//                    ((ExploreFragment) fragment).loadAgain();
                 }
             });
         }

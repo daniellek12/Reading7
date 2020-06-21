@@ -218,8 +218,11 @@ public class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.V
                 holder.content.setText((notification.getType()) + " על הספר " + notification.getBook_title());
             }
 
+        } else if (notification.getType().equals(mContext.getResources().getString(R.string.report_notificiation))) {
+            holder.clickNotificationBtn.setOnClickListener(new OpenReviewOnBookOnClick(notification.getReviewer_email(), notification.getBook_title()));
+            holder.content.setText((notification.getType()) + " שנכתבה על הספר " + notification.getBook_title());
         } else {
-            holder.clickNotificationBtn.setOnClickListener(new OpenReviewOnBookOnClick(notification.getBook_title()));
+            holder.clickNotificationBtn.setOnClickListener(new OpenReviewOnBookOnClick(mAuth.getCurrentUser().getEmail(), notification.getBook_title()));
             holder.content.setText((notification.getType()) + " על הספר " + notification.getBook_title());
         }
     }
@@ -311,9 +314,11 @@ public class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.V
     private class OpenReviewOnBookOnClick implements View.OnClickListener {
 
         private String book_title;
+        private String reviewer_mail;
 
-        public OpenReviewOnBookOnClick(String book_title) {
+        public OpenReviewOnBookOnClick(String reviewer_mail, String book_title) {
             this.book_title = book_title;
+            this.reviewer_mail = reviewer_mail;
         }
 
         @Override
@@ -321,18 +326,21 @@ public class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.V
 
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             CollectionReference requestCollectionRef = db.collection("Reviews");
-            Query requestQuery = requestCollectionRef.whereEqualTo("reviewer_email", mAuth.getCurrentUser().getEmail()).whereEqualTo("book_title", book_title);
+            Query requestQuery = requestCollectionRef.whereEqualTo("reviewer_email", reviewer_mail).whereEqualTo("book_title", book_title);
             requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     if (task.isSuccessful()) {
                         Review review = null;
+                        if (task.getResult().isEmpty()) {
+                            Toast.makeText(mContext, "ביקורת זו נמחקה", Toast.LENGTH_SHORT).show();
+                        }
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             review = document.toObject(Review.class);
                             ((MainActivity) mActivity).loadFragment(new ReviewCommentsFragment(review));
                         }
                     } else
-                        Toast.makeText(mContext, "מחקת את הביקורת שלך על ספר זה", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "ביקורת זו נמחקה", Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -341,6 +349,25 @@ public class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.V
     public void deleteNotification(final int position) {
 
         final Notification notification = notifications.get(position);
+        if (notification.getType().equals(mContext.getResources().getString(R.string.report_notificiation))) {
+            CollectionReference reportsRef = db.collection("Reports");
+            Query reportQuery = reportsRef.whereEqualTo("time", notification.getTime().toDate()).whereEqualTo("from", notification.getFrom());
+            reportQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            document.getReference().delete();
+                            notifications.remove(document.toObject(Notification.class));
+                            notifyItemRemoved(position);
+                        }
+                    }
+                    else
+                        Toast.makeText(mContext, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+            return;
+        }
         CollectionReference requestsRef = db.collection("Users").document(mAuth.getCurrentUser().getEmail()).collection("Notifications");
         Query requestQuery = requestsRef.whereEqualTo("book_title", notification.getBook_title()).whereEqualTo("from", notification.getFrom()).whereEqualTo("type", notification.getType());
         requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
