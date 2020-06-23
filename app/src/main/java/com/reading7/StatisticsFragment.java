@@ -186,7 +186,7 @@ public class StatisticsFragment extends Fragment {
     }
 
     private void getStatistics() {
-       // Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), false);
+        Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), false);
 
         CollectionReference collection = db.collection("Books");
         Query query = collection.orderBy("avg_rating", Query.Direction.DESCENDING);
@@ -219,7 +219,7 @@ public class StatisticsFragment extends Fragment {
 
 
     private void getBestUsers() {
-        // Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), false);
+         //Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), false);
 
         CollectionReference collection = db.collection("Users");
         Query query = collection.orderBy("points", Query.Direction.DESCENDING).limit(NUM_USERS);
@@ -236,7 +236,7 @@ public class StatisticsFragment extends Fragment {
                     initUI();
 
 
-                    // Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), true);
+                     Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), true);
                 }
             }});
     }
