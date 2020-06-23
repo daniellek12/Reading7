@@ -133,7 +133,8 @@ public class GenericSearchFragment<T> extends Fragment implements androidx.appco
             txtEnd = txt.substring(0, txt.length() - 1) + (char) (txt.charAt(txt.length() - 1) + 1);
         }
         final CollectionReference requestCollectionRef = db.collection(collection_name);
-        Query requestQuery = requestCollectionRef.orderBy(field_name).whereGreaterThanOrEqualTo(field_name, txt).whereLessThan(field_name, txtEnd).limit(limit);
+//        Query requestQuery = requestCollectionRef.orderBy(field_name).whereGreaterThanOrEqualTo(field_name, txt).whereLessThan(field_name, txtEnd).limit(limit);
+        Query requestQuery = requestCollectionRef.orderBy(field_name).whereArrayContains("keywords", search_txt).limit(limit);
 
         int firstVisibleItemPosition = list.getFirstVisiblePosition();
         int visibleItemCount = list.getChildCount();
@@ -178,7 +179,8 @@ public class GenericSearchFragment<T> extends Fragment implements androidx.appco
             txtEnd = txt.substring(0, txt.length() - 1) + (char) (txt.charAt(txt.length() - 1) + 1);
         }
         final CollectionReference requestCollectionRef = db.collection(collection_name);
-        Query requestQuery = requestCollectionRef.orderBy(field_name).whereGreaterThanOrEqualTo(field_name, txt).whereLessThan(field_name, txtEnd).limit(limit);
+//        Query requestQuery = requestCollectionRef.orderBy(field_name).whereGreaterThanOrEqualTo(field_name, txt).whereLessThan(field_name, txtEnd).limit(limit);
+        Query requestQuery = requestCollectionRef.orderBy(field_name).whereArrayContains("keywords", search_txt).limit(limit);
 
         requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
