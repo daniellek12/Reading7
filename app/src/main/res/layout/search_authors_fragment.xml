@@ -89,7 +89,7 @@
     -->
 
     <ListView
-        android:id="@+id/authorsListView"
+        android:id="@+id/search_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/search_load_more_btn" />

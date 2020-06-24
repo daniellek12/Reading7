@@ -80,7 +80,7 @@ public class AuthorFragment extends Fragment {
 //            }
 //        });
         ArrayList<Book> books = new ArrayList<Book>();
-        GenericSearchFragment fragment = new GenericSearchFragment<Book>(Book.class, new SearchBooksAdapter(getContext(), books), books, R.layout.search_books_fragment, R.id.booksListView, "Books", "author", false);
+        GenericSearchFragment fragment = new GenericSearchFragment<Book>(Book.class, new SearchBooksAdapter(getContext(), books), books, R.layout.search_books_fragment, "Books", "author", false);
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.books_container, fragment, fragment.toString())

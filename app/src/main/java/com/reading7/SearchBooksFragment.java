@@ -44,7 +44,7 @@ public class SearchBooksFragment extends Fragment implements androidx.appcompat.
 
     private void initListView() {
 
-        final ListView list = getActivity().findViewById(R.id.booksListView);
+        final ListView list = getView().findViewById(R.id.search_list);
 
 //        if(adapter != null){
 //            list.setAdapter(adapter);

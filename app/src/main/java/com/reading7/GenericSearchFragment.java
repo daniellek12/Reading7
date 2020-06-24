@@ -39,7 +39,6 @@ public class GenericSearchFragment<T> extends Fragment implements androidx.appco
     private Class class_type;
     private ListView list;
     private int layout;
-    private int list_id;
     private boolean is_keyword;
 
     private FirebaseFirestore db;
@@ -58,12 +57,11 @@ public class GenericSearchFragment<T> extends Fragment implements androidx.appco
     Button load_btn;
 
 
-    public GenericSearchFragment(Class class_type, BaseAdapter baseAdapter, ArrayList<T> list, int layout, int list_id, String collection_name, String field_name, boolean is_keyword) {
+    public GenericSearchFragment(Class class_type, BaseAdapter baseAdapter, ArrayList<T> list, int layout, String collection_name, String field_name, boolean is_keyword) {
         this.adapter = baseAdapter;
         this.adapter_list = list;
         this.class_type = class_type;
         this.layout = layout;
-        this.list_id = list_id;
         this.collection_name = collection_name;
         this.field_name = field_name;
         this.is_keyword = is_keyword;
@@ -120,7 +118,7 @@ public class GenericSearchFragment<T> extends Fragment implements androidx.appco
     }
 
     private void initAdapter() {
-        list = getView().findViewById(list_id); // FIXME make generic!
+        list = getView().findViewById(R.id.search_list);
         list.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }

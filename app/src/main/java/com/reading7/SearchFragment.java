@@ -118,17 +118,17 @@ public class SearchFragment extends Fragment implements androidx.appcompat.widge
 
 //        tabsPagerAdapter.addFragment(new SearchBooksFragment(), "ספרים");//TODO remove
         ArrayList<Book> books = new ArrayList<Book>();
-        Fragment fragment1 = new GenericSearchFragment<Book>(Book.class, new SearchBooksAdapter(getContext(), books), books, R.layout.search_books_fragment, R.id.booksListView, "Books", "title", true);
+        Fragment fragment1 = new GenericSearchFragment<Book>(Book.class, new SearchBooksAdapter(getContext(), books), books, R.layout.search_books_fragment, "Books", "title", true);
         tabsPagerAdapter.addFragment(fragment1, "ספרים");
 
 //        tabsPagerAdapter.addFragment(new SearchAuthorsFragment(), "סופרים");
         ArrayList<Author> authors = new ArrayList<Author>();
-        Fragment fragment2 = new GenericSearchFragment<Author>(Author.class, new SearchAuthorsAdapter(getContext(), authors), authors, R.layout.search_authors_fragment, R.id.authorsListView, "Authors", "name", false);
+        Fragment fragment2 = new GenericSearchFragment<Author>(Author.class, new SearchAuthorsAdapter(getContext(), authors), authors, R.layout.search_authors_fragment, "Authors", "name", false);
         tabsPagerAdapter.addFragment(fragment2, "סופרים");
 
 //        tabsPagerAdapter.addFragment(new SearchFriendsFragment(), "חברים");
         ArrayList<User> users = new ArrayList<User>();
-        Fragment fragment3 = new GenericSearchFragment<User>(User.class, new SearchFriendsAdapter(getContext(), users), users, R.layout.search_friends_fragment, R.id.usersListView, "Users", "full_name", false);
+        Fragment fragment3 = new GenericSearchFragment<User>(User.class, new SearchFriendsAdapter(getContext(), users), users, R.layout.search_friends_fragment, "Users", "full_name", false);
         tabsPagerAdapter.addFragment(fragment3, "חברים");
 
 
