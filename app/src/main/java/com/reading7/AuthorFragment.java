@@ -87,5 +87,6 @@ public class AuthorFragment extends Fragment {
                 .addToBackStack(fragment.getClass().toString())
                 .commit();
         fragment.onQueryTextChange(author.getName());
+        //FIXME need to press back button twice
     }
 }
