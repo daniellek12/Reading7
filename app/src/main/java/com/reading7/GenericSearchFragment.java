@@ -46,7 +46,7 @@ public class GenericSearchFragment<T> extends Fragment implements androidx.appco
 
     private DocumentSnapshot lastVisible = null;
     private boolean isLastItemReached = false;
-    private int limit = 5;
+    private int limit = 7;
 
     private String collection_name;
     private String field_name;
@@ -56,7 +56,6 @@ public class GenericSearchFragment<T> extends Fragment implements androidx.appco
     CountDownTimer search_timer;
 
     Button load_btn;
-
 
 
     public GenericSearchFragment(Class class_type, BaseAdapter baseAdapter, ArrayList<T> list, int layout, int list_id, String collection_name, String field_name, boolean is_keyword) {
@@ -95,7 +94,7 @@ public class GenericSearchFragment<T> extends Fragment implements androidx.appco
         });
 //        load_btn.bringToFront();
         load_btn.setVisibility(View.GONE);
-        initItems();
+//        initItems();
         initAdapter();
     }
 

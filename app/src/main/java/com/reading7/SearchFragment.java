@@ -120,17 +120,17 @@ public class SearchFragment extends Fragment implements androidx.appcompat.widge
         ArrayList<Book> books = new ArrayList<Book>();
         Fragment fragment1 = new GenericSearchFragment<Book>(Book.class, new SearchBooksAdapter(getContext(), books), books, R.layout.search_books_fragment, R.id.booksListView, "Books", "title", true);
         tabsPagerAdapter.addFragment(fragment1, "ספרים");
+
 //        tabsPagerAdapter.addFragment(new SearchAuthorsFragment(), "סופרים");
+        ArrayList<Author> authors = new ArrayList<Author>();
+        Fragment fragment2 = new GenericSearchFragment<Author>(Author.class, new SearchAuthorsAdapter(getContext(), authors), authors, R.layout.search_authors_fragment, R.id.authorsListView, "Authors", "name", false);
+        tabsPagerAdapter.addFragment(fragment2, "סופרים");
 
 //        tabsPagerAdapter.addFragment(new SearchFriendsFragment(), "חברים");
         ArrayList<User> users = new ArrayList<User>();
-        Fragment fragment2 = new GenericSearchFragment<User>(User.class, new SearchFriendsAdapter(getContext(), users), users, R.layout.search_friends_fragment, R.id.usersListView, "Users", "full_name", false);
-        tabsPagerAdapter.addFragment(fragment2, "חברים");
+        Fragment fragment3 = new GenericSearchFragment<User>(User.class, new SearchFriendsAdapter(getContext(), users), users, R.layout.search_friends_fragment, R.id.usersListView, "Users", "full_name", false);
+        tabsPagerAdapter.addFragment(fragment3, "חברים");
 
-
-        ArrayList<Author> authors = new ArrayList<Author>();
-        Fragment fragment3 = new GenericSearchFragment<Author>(Author.class, new SearchAuthorsAdapter(getContext(), authors), authors, R.layout.search_authors_fragment, R.id.authorsListView, "Authors", "name", false);
-        tabsPagerAdapter.addFragment(fragment3, "סופרים");
 
         final ViewPager viewPager = getActivity().findViewById(R.id.viewPager);
         viewPager.setAdapter(tabsPagerAdapter);
@@ -150,8 +150,8 @@ public class SearchFragment extends Fragment implements androidx.appcompat.widge
 
             @Override
             public void onPageSelected(int position) {
-
-//                String s = searchView.getQuery().toString();
+                String s = searchView.getQuery().toString();
+                ((GenericSearchFragment) ((TabsPagerAdapter) viewPager.getAdapter()).getItem(position)).onQueryTextChange(s);
 //                //FIXME commented code is correct for 3 tabs (Books, Authors and members search). current code works only for 2 tabs (Books and members)
 ////                switch (position){
 ////                    case 0:
@@ -190,7 +190,7 @@ public class SearchFragment extends Fragment implements androidx.appcompat.widge
     public boolean onQueryTextSubmit(String s) {
 
         Fragment frag = ((TabsPagerAdapter) viewPager.getAdapter()).getItem(viewPager.getCurrentItem());
-//        ((GenericSearchFragment) frag).onQueryTextChange(s);
+        ((GenericSearchFragment) frag).onQueryTextChange(s);
 //        switch (viewPager.getCurrentItem()) {
 //
 //            case 0:
