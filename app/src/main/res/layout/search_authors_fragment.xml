@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SearchAuthorsFragment"
-    android:layoutDirection="rtl">
+    android:layoutDirection="rtl"
+    tools:context=".SearchAuthorsFragment">
 
     <!--
         <RelativeLayout
@@ -92,6 +91,27 @@
     <ListView
         android:id="@+id/authorsListView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_above="@id/search_load_more_btn" />
+
+    <Button
+        android:id="@+id/search_load_more_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/rounded_button"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:drawablePadding="5dp"
+        android:paddingLeft="15dp"
+        android:paddingTop="5dp"
+        android:paddingRight="15dp"
+        android:paddingBottom="5dp"
+        android:text="@string/load_more"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        android:visibility="visible" />
 
 </RelativeLayout>

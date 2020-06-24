@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.reading7.Adapters.SearchBooksAdapter;
+import com.reading7.Objects.Author;
 import com.reading7.Objects.Book;
 
 import java.util.ArrayList;
@@ -20,12 +21,13 @@ public class AuthorFragment  extends Fragment {
 
     private FirebaseFirestore db;
     private ArrayList<Book> books = new ArrayList<Book>();
-    private String author_name;
+//    private String author_name;
+    private Author author;
     private SearchBooksAdapter adapter;
 
 
-    public AuthorFragment(String author_name){
-        this.author_name = author_name;
+    public AuthorFragment(Author author){
+        this.author = author;
     }
 
     @Nullable
@@ -41,7 +43,7 @@ public class AuthorFragment  extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         initBooks();
         initBackBtn();
-        ((TextView)view.findViewById(R.id.toolbar_title)).setText("הספרים של "+author_name);
+        ((TextView)view.findViewById(R.id.toolbar_title)).setText("הספרים של "+author.getName());
     }
 
 
@@ -56,7 +58,6 @@ public class AuthorFragment  extends Fragment {
 
 
     private void initBooks() {
-
         //TODO re-implement this correctly without fuck the firebase's resources up
         //If needed, ask me (Rotem) how to or I'll do it some day.......................
 
@@ -78,8 +79,6 @@ public class AuthorFragment  extends Fragment {
 //                list.setAdapter(adapter);
 //            }
 //        });
-
-
     }
 
 }

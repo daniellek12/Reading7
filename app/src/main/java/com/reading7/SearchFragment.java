@@ -10,9 +10,11 @@ import android.widget.ImageView;
 
 import com.duolingo.open.rtlviewpager.RtlViewPager;
 import com.google.android.material.tabs.TabLayout;
+import com.reading7.Adapters.SearchAuthorsAdapter;
 import com.reading7.Adapters.SearchBooksAdapter;
 import com.reading7.Adapters.SearchFriendsAdapter;
 import com.reading7.Adapters.TabsPagerAdapter;
+import com.reading7.Objects.Author;
 import com.reading7.Objects.Book;
 import com.reading7.Objects.User;
 
@@ -124,6 +126,11 @@ public class SearchFragment extends Fragment implements androidx.appcompat.widge
         ArrayList<User> users = new ArrayList<User>();
         Fragment fragment2 = new GenericSearchFragment<User>(User.class, new SearchFriendsAdapter(getContext(), users), users, R.layout.search_friends_fragment, R.id.usersListView, "Users", "full_name", false);
         tabsPagerAdapter.addFragment(fragment2, "חברים");
+
+
+        ArrayList<Author> authors = new ArrayList<Author>();
+        Fragment fragment3 = new GenericSearchFragment<Author>(Author.class, new SearchAuthorsAdapter(getContext(), authors), authors, R.layout.search_authors_fragment, R.id.authorsListView, "Authors", "name", false);
+        tabsPagerAdapter.addFragment(fragment3, "סופרים");
 
         final ViewPager viewPager = getActivity().findViewById(R.id.viewPager);
         viewPager.setAdapter(tabsPagerAdapter);
