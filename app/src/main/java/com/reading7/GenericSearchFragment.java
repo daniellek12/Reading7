@@ -57,6 +57,8 @@ public class GenericSearchFragment<T> extends Fragment implements androidx.appco
 
     Button load_btn;
 
+
+
     public GenericSearchFragment(Class class_type, BaseAdapter baseAdapter, ArrayList<T> list, int layout, int list_id, String collection_name, String field_name, boolean is_keyword) {
         this.adapter = baseAdapter;
         this.adapter_list = list;
@@ -82,7 +84,6 @@ public class GenericSearchFragment<T> extends Fragment implements androidx.appco
 
 
     private void initListView() {
-
         db = FirebaseFirestore.getInstance();
         load_btn = getView().findViewById(R.id.search_load_more_btn);
         load_btn.setOnClickListener(new View.OnClickListener() {

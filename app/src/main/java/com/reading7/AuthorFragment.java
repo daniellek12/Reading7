@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -17,23 +18,22 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-public class AuthorFragment  extends Fragment {
+public class AuthorFragment extends Fragment {
 
     private FirebaseFirestore db;
-    private ArrayList<Book> books = new ArrayList<Book>();
-//    private String author_name;
+    //    private String author_name;
     private Author author;
     private SearchBooksAdapter adapter;
 
 
-    public AuthorFragment(Author author){
+    public AuthorFragment(Author author) {
         this.author = author;
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        db = FirebaseFirestore.getInstance();
+//        db = FirebaseFirestore.getInstance();
         return inflater.inflate(R.layout.author_fragment, null);
     }
 
@@ -43,7 +43,7 @@ public class AuthorFragment  extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         initBooks();
         initBackBtn();
-        ((TextView)view.findViewById(R.id.toolbar_title)).setText("הספרים של "+author.getName());
+        ((TextView) view.findViewById(R.id.toolbar_title)).setText("הספרים של " + author.getName());
     }
 
 
@@ -79,6 +79,13 @@ public class AuthorFragment  extends Fragment {
 //                list.setAdapter(adapter);
 //            }
 //        });
+        ArrayList<Book> books = new ArrayList<Book>();
+        GenericSearchFragment fragment = new GenericSearchFragment<Book>(Book.class, new SearchBooksAdapter(getContext(), books), books, R.layout.search_books_fragment, R.id.booksListView, "Books", "author", false);
+        getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.books_container, fragment, fragment.toString())
+                .addToBackStack(fragment.getClass().toString())
+                .commit();
+        fragment.onQueryTextChange(author.getName());
     }
-
 }

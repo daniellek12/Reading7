@@ -42,16 +42,23 @@
     </androidx.appcompat.widget.Toolbar>
 
 
-    <ListView
-        android:id="@+id/booksRV"
+<!--    <ListView-->
+<!--        android:id="@+id/booksRV"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:layout_below="@id/toolbar"-->
+<!--        android:clipToPadding="true"-->
+<!--        android:nestedScrollingEnabled="false"-->
+<!--        android:paddingLeft="3dp"-->
+<!--        android:paddingRight="3dp"-->
+<!--        android:paddingBottom="2dp" />-->
+    <FrameLayout
+        android:id="@+id/books_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbar"
-        android:clipToPadding="true"
-        android:nestedScrollingEnabled="false"
-        android:paddingLeft="3dp"
-        android:paddingRight="3dp"
-        android:paddingBottom="2dp" />
+        android:layout_below="@+id/toolbar">
+
+    </FrameLayout>
 
 
 </RelativeLayout>
