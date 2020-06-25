@@ -203,9 +203,6 @@
     <string name="save_question">אתה יוצא ממצב עריכה. האם לשמור את השינויים לפני היציאה?</string>
     <string name="dont_save">צא בלי לשמור</string>
     <string name="delete_question">הספר יימחק מהמאגר ומכל המדפים של משתמשים ששמרו אותו. האם אתה בטוח שברצונך למחוק ספר זה?</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="reports">דיווחים על ביקורות</string>
 
 </resources>

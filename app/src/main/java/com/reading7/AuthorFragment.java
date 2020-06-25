@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -20,11 +19,7 @@ import androidx.fragment.app.Fragment;
 
 public class AuthorFragment extends Fragment {
 
-    private FirebaseFirestore db;
-    //    private String author_name;
     private Author author;
-    private SearchBooksAdapter adapter;
-
 
     public AuthorFragment(Author author) {
         this.author = author;
@@ -33,7 +28,6 @@ public class AuthorFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-//        db = FirebaseFirestore.getInstance();
         return inflater.inflate(R.layout.author_fragment, null);
     }
 
@@ -58,35 +52,12 @@ public class AuthorFragment extends Fragment {
 
 
     private void initBooks() {
-        //TODO re-implement this correctly without fuck the firebase's resources up
-        //If needed, ask me (Rotem) how to or I'll do it some day.......................
-
-//        final ListView list = getActivity().findViewById(R.id.booksRV);
-//
-//        CollectionReference requestBooksRef = FirebaseFirestore.getInstance().collection("Books");
-//        requestBooksRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//
-//                for (QueryDocumentSnapshot document : task.getResult()) {
-//                    Book book = document.toObject(Book.class);
-//
-//                    if(!books.contains(book) && book.getAuthor().equals(author_name))
-//                        books.add(book);
-//                }
-//
-//                adapter = new SearchBooksAdapter(getContext(), books);
-//                list.setAdapter(adapter);
-//            }
-//        });
         ArrayList<Book> books = new ArrayList<Book>();
-        GenericSearchFragment fragment = new GenericSearchFragment<Book>(Book.class, new SearchBooksAdapter(getContext(), books), books, R.layout.search_books_fragment, "Books", "author", false);
+        GenericSearchFragment fragment = new GenericSearchFragment<>(Book.class, new SearchBooksAdapter(getContext(), books), books, R.layout.search_books_fragment, "Books", "author", false);
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.books_container, fragment, fragment.toString())
-                .addToBackStack(fragment.getClass().toString())
                 .commit();
         fragment.onQueryTextChange(author.getName());
-        //FIXME need to press back button twice
     }
 }

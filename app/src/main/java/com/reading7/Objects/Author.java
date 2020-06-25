@@ -1,8 +1,5 @@
 package com.reading7.Objects;
 
-import androidx.annotation.NonNull;
-
-
 public class Author {
     private String id;
     private String name;
