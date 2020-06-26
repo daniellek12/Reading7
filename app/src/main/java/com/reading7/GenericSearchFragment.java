@@ -39,13 +39,13 @@ public class GenericSearchFragment<T> extends Fragment implements androidx.appco
     private Class class_type;
     private ListView list;
     private int layout;
-    private int list_id;
+    private boolean is_keyword;
 
     private FirebaseFirestore db;
 
     private DocumentSnapshot lastVisible = null;
     private boolean isLastItemReached = false;
-    private int limit = 5;
+    private int limit = 7;
 
     private String collection_name;
     private String field_name;
@@ -56,14 +56,15 @@ public class GenericSearchFragment<T> extends Fragment implements androidx.appco
 
     Button load_btn;
 
-    public GenericSearchFragment(Class class_type, BaseAdapter baseAdapter, ArrayList<T> list, int layout, int list_id, String collection_name, String field_name) {
+
+    public GenericSearchFragment(Class class_type, BaseAdapter baseAdapter, ArrayList<T> list, int layout, String collection_name, String field_name, boolean is_keyword) {
         this.adapter = baseAdapter;
         this.adapter_list = list;
         this.class_type = class_type;
         this.layout = layout;
-        this.list_id = list_id;
         this.collection_name = collection_name;
         this.field_name = field_name;
+        this.is_keyword = is_keyword;
     }
 
     @Nullable
@@ -80,18 +81,18 @@ public class GenericSearchFragment<T> extends Fragment implements androidx.appco
 
 
     private void initListView() {
-
         db = FirebaseFirestore.getInstance();
-        load_btn = getActivity().findViewById(R.id.search_load_more_btn);
+        load_btn = getView().findViewById(R.id.search_load_more_btn);
         load_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.d(TAG, search_txt);
                 load_items();
             }
         });
-        load_btn.bringToFront();
+//        load_btn.bringToFront();
         load_btn.setVisibility(View.GONE);
-        initItems();
+//        initItems();
         initAdapter();
     }
 
@@ -109,7 +110,7 @@ public class GenericSearchFragment<T> extends Fragment implements androidx.appco
                         newlist.add(ob);
                     }
                     adapter_list.addAll(newlist);
-                    adapter.notifyDataSetChanged();//no problem cause this is the first update
+                    adapter.notifyDataSetChanged();//no problem because this is the first update
                     lastVisible = task.getResult().getDocuments().get(task.getResult().size() - 1);
                 }
             }
@@ -117,8 +118,7 @@ public class GenericSearchFragment<T> extends Fragment implements androidx.appco
     }
 
     private void initAdapter() {
-        Log.e(TAG, Integer.toString(list_id));
-        list = getActivity().findViewById(list_id); // FIXME make generic!
+        list = getView().findViewById(R.id.search_list);
         list.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
@@ -133,7 +133,12 @@ public class GenericSearchFragment<T> extends Fragment implements androidx.appco
             txtEnd = txt.substring(0, txt.length() - 1) + (char) (txt.charAt(txt.length() - 1) + 1);
         }
         final CollectionReference requestCollectionRef = db.collection(collection_name);
-        Query requestQuery = requestCollectionRef.orderBy(field_name).whereGreaterThanOrEqualTo(field_name, txt).whereLessThan(field_name, txtEnd).limit(limit);
+        Query requestQuery;
+        if (!is_keyword) {
+            requestQuery = requestCollectionRef.orderBy(field_name).whereGreaterThanOrEqualTo(field_name, txt).whereLessThan(field_name, txtEnd).limit(limit);
+        } else {
+            requestQuery = requestCollectionRef.orderBy(field_name).whereArrayContains("keywords", search_txt).limit(limit);
+        }
 
         int firstVisibleItemPosition = list.getFirstVisiblePosition();
         int visibleItemCount = list.getChildCount();
@@ -154,9 +159,13 @@ public class GenericSearchFragment<T> extends Fragment implements androidx.appco
 ////                            adapter.notifyItemInserted(i);
 //                        }
                         adapter.notifyDataSetChanged();
-                        lastVisible = t.getResult().getDocuments().get(t.getResult().size() - 1);
-                        if (t.getResult().size() < limit) {
+                        int res_size = t.getResult().size();
+                        if (res_size < limit) {
                             isLastItemReached = true;
+                            load_btn.setVisibility(View.GONE);
+                        }
+                        if (res_size != 0) {
+                            lastVisible = t.getResult().getDocuments().get(res_size - 1);
                         }
                     }
                 }
@@ -178,8 +187,12 @@ public class GenericSearchFragment<T> extends Fragment implements androidx.appco
             txtEnd = txt.substring(0, txt.length() - 1) + (char) (txt.charAt(txt.length() - 1) + 1);
         }
         final CollectionReference requestCollectionRef = db.collection(collection_name);
-        Query requestQuery = requestCollectionRef.orderBy(field_name).whereGreaterThanOrEqualTo(field_name, txt).whereLessThan(field_name, txtEnd).limit(limit);
-
+        Query requestQuery;
+        if (!is_keyword) {
+            requestQuery = requestCollectionRef.orderBy(field_name).whereGreaterThanOrEqualTo(field_name, txt).whereLessThan(field_name, txtEnd).limit(limit);
+        } else {
+            requestQuery = requestCollectionRef.orderBy(field_name).whereArrayContains("keywords", search_txt).limit(limit);
+        }
         requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -198,7 +211,6 @@ public class GenericSearchFragment<T> extends Fragment implements androidx.appco
                             load_btn.setVisibility(View.GONE);
                         }
                     }
-
                     adapter_list.addAll(newlist);
                     adapter.notifyDataSetChanged();//no problem cause this is the first update
                 }

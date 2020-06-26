@@ -187,7 +187,7 @@ public class AutoCompleteAdapter extends ArrayAdapter<Book> {
 
         TextView title = convertView.findViewById(R.id.title);
         TextView author = convertView.findViewById(R.id.author);
-        CircleImageView cover = convertView.findViewById(R.id.cover);
+        CircleImageView cover = convertView.findViewById(R.id.cover_search);
 
         Book book = getItem(position);
 

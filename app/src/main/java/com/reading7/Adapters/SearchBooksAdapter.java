@@ -103,7 +103,7 @@ public class SearchBooksAdapter extends BaseAdapter implements Filterable {
             holder.container = convertView.findViewById(R.id.container);
             holder.title = convertView.findViewById(R.id.title_search);
             holder.author = convertView.findViewById(R.id.author_search);
-            holder.cover = convertView.findViewById(R.id.cover);
+            holder.cover = convertView.findViewById(R.id.cover_search);
             convertView.setTag(holder);
 
         } else {

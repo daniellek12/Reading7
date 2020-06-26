@@ -46,7 +46,7 @@ public class SearchFriendsFragment extends Fragment implements androidx.appcompa
 
     private void initListView() {
 
-        final ListView list = getActivity().findViewById(R.id.usersListView);
+        final ListView list = getView().findViewById(R.id.search_list);
 
         if(adapter != null){
             list.setAdapter(adapter);
