@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             return;
         }
 
-        if (type.equals(getResources().getString(R.string.invite_notificiation))) {
+        if (type.equals(getResources().getString(R.string.invite_notificiation) )||type.equals("Censored")) {
             Utils.enableDisableClicks(this, (ViewGroup) findViewById(android.R.id.content).getRootView(), false);
             Query bookRef = FirebaseFirestore.getInstance().collection("Books").whereEqualTo("title", intent.getStringExtra("book_title"));
             bookRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
