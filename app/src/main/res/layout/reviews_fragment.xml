@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    tools:context=".AuthorFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ReviewsFragment">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -13,21 +12,23 @@
         android:layout_height="?actionBarSize"
         android:layout_alignParentTop="true"
         android:background="@color/white"
-        android:elevation="10dp"
         android:gravity="top"
-        app:layout_scrollFlags="scroll|enterAlways|snap">
+        app:layout_scrollFlags="scroll|enterAlways|snap"
+        android:elevation="10dp"
+        android:layoutDirection="rtl">
 
         <TextView
-            android:id="@+id/toolbar_title"
+            android:id="@+id/reviews_toolbar_title"
             style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:text="@string/books_reviews"
             android:textColor="@color/black"
             android:textSize="16sp" />
 
         <ImageView
-            android:id="@+id/af_backButton"
+            android:id="@+id/reviewsBackButton"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_gravity="right"
@@ -38,10 +39,11 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <FrameLayout
-        android:id="@+id/books_container"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/reviewsRV"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar" />
+        android:layout_below="@id/toolbar"
+        android:background="@color/grey"/>
 
 </RelativeLayout>

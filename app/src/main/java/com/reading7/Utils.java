@@ -31,13 +31,12 @@ import com.google.firebase.storage.StorageReference;
 import com.reading7.Objects.Book;
 import com.reading7.Objects.Notification;
 import com.reading7.Objects.Review;
-import com.reading7.Objects.WishList;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -51,29 +50,6 @@ public class Utils {
 
     public static boolean clicksEnabled = true;
     public static boolean isAdmin = false;
-//    public static void updateBooks() {
-//        final FirebaseFirestore db = FirebaseFirestore.getInstance();
-//
-//        db.collection("Books").get()//VERY BAD!!!!!!!!!!!!!!!!!
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if (task.isSuccessful()) {
-//                            for (final QueryDocumentSnapshot document : task.getResult()) {
-//                                db.collection("Books").document(document.getId()).update("avg_age", 0).addOnSuccessListener(new OnSuccessListener<Void>() {
-//                                    @Override
-//                                    public void onSuccess(Void aVoid) {
-//                                        Log.d("Utils", "Updated ".concat(document.get("title").toString()));
-//                                    }
-//                                });
-//                            }
-//                        } else {
-//                            Log.d("Utils", "Error getting documents: ", task.getException());
-//                        }
-//                    }
-//                });
-//    }
-
 
     public enum ChallengeState {
         RIGHT,
@@ -82,142 +58,7 @@ public class Utils {
         OUT_OF_TIME
     }
 
-    public static void convertTxtToBook(final Context context) throws IOException {
 
-        /*Map<String,Integer> counts= new HashMap<String,Integer>();//for random genres
-        counts.put("הרפתקאות",0);
-        counts.put("דרמה",0);
-        counts.put("אהבה",0);
-        counts.put("אימה",0);
-        counts.put("מדע",0);
-        counts.put("קומדיה",0);
-        counts.put("היסטוריה",0);
-        counts.put("מדע בדיוני",0);
-        counts.put("מתח",0);*/
-
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        for (String name : context.getAssets().list("")) {
-            //for random genres
-            /*int run=0;
-            for (String key : counts.keySet()) {
-                if ((!(key.equals("אימה")))&&counts.get(key) <= 50) ;
-                    run = 1;
-            }
-            if(run==0)
-                break;
-            //for random genres*/
-            if (!(name.contains(".")))
-                continue;
-            if (name.contains("huangli.idf")) {
-                continue;
-            }
-            if (name.contains("operators.dat")) {
-                continue;
-            }
-            if (name.contains("pinyinindex.idf")) {
-                continue;
-            }
-            if (name.contains("tel_uniqid_len8.dat")) {
-                continue;
-            }
-            if (name.contains("telocation.idf")) {
-                continue;
-            }
-            if (name.contains("xiaomi_mobile.dat")) {
-                continue;
-            }
-            InputStream is = context.getAssets().open(name);
-            BufferedReader br = new BufferedReader(new InputStreamReader(is, Charset.forName("utf-16")));
-
-            String st = "-1";
-            String title = "";
-            String num_pages = "-1";
-            ArrayList<String> genres;
-            String author = "";
-            String publisher = "";
-            String summary = "";
-            String geners = "";
-            ArrayList<String> genersarray = new ArrayList<String>();
-
-            while ((st = br.readLine()) != null) {
-
-                if (st.startsWith("Title: ")) {
-                    String[] sst = st.split("Title: ");
-                    title = sst[1];
-                }
-                if (st.startsWith("Num Pages: ")) {
-                    String[] sst = st.split("Num Pages: ");
-                    num_pages = sst[1].replace("\t", "").replace(" ", "");
-                }
-                if (st.startsWith("Author: ")) {
-                    String[] sst = st.split("Author: ");
-                    author = sst[1];
-                }
-                if (st.startsWith("Publisher: ")) {
-                    String[] sst = st.split("Publisher: ");
-                    publisher = sst[1];
-                }
-                if (st.startsWith("Description: ")) {
-                    String[] sst = st.split("Description: ");
-                    summary = sst[1];
-                }
-                if (st.startsWith("Genres: ")) {
-                    String[] sst = st.split("Genres: ");
-                    geners = sst[1];
-                    genersarray = new ArrayList<String>(Arrays.asList(geners.split(", ", -1)));
-                }
-            }
-            final String t = title;
-
-            Book b = new Book("", title, genersarray, new ArrayList<String>(), author, publisher, Integer.parseInt(num_pages), summary, 0, 0);
-            ArrayList<String> actual_genres = MapGenreToBook(b);
-
-            /*//for random genres
-            int add= 0;
-            for(String genre: actual_genres){
-                if((counts.get(genre) + 1)<=50) {
-                    add = 1;
-                    counts.put(genre,counts.get(genre) + 1);
-                }
-
-            }
-            if(add==0)
-                continue;
-            //for random genres*/
-
-
-            b.setActual_genres(actual_genres);
-            if (b.getTitle().equals("")) {
-                throw new AssertionError(name);
-            }
-            DocumentReference newBook = db.collection("Books").document();
-            b.setId(newBook.getId());
-            newBook.set(b).addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    if (task.isSuccessful()) {
-                        //Log.d("Utils", "Uploaded book: ".concat(t));
-                        //Toast.makeText(LoginActivity, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-
-                    } else {
-                        throw new AssertionError(t);
-                    }
-
-                }
-            });
-        }
-
-    }
-
-    public static String convertTitle(String t) {
-        int l = t.length();
-        String[] r = new String[l];
-        for (int i = 0; i < l; i++) {
-            char c = t.charAt(i);
-            r[i] = Integer.toString((int) c);
-        }
-        return TextUtils.join(" ", r);
-    }
 
 
     /**
@@ -251,6 +92,16 @@ public class Utils {
         });
     }
 
+    public static String convertTitle(String t) {
+        int l = t.length();
+        String[] r = new String[l];
+        for (int i = 0; i < l; i++) {
+            char c = t.charAt(i);
+            r[i] = Integer.toString(c);
+        }
+        return TextUtils.join(" ", r);
+    }
+
 
     /**
      * Returns the user's age based on it's birth date.
@@ -275,7 +126,6 @@ public class Utils {
         return age;
     }
 
-
     /**
      * Returns a color from colors.xml based on it's name.
      */
@@ -287,7 +137,6 @@ public class Utils {
         }
     }
 
-
     /**
      * Returns a drawable based on it's name.
      */
@@ -298,7 +147,6 @@ public class Utils {
             throw new AssertionError("OOPS, you tried getting a drawable that doesnt exist");
         }
     }
-
 
     /**
      * Returns the genre icon drawable.
@@ -357,7 +205,6 @@ public class Utils {
         return drawable;
     }
 
-
     /**
      * Enables/Disables all child views in a view group.
      * Sets clicksEnabled field (needed for back button)
@@ -382,16 +229,16 @@ public class Utils {
 
     public static void closeKeyboard(Context context) {
 
-        InputMethodManager imm = (InputMethodManager) context.getSystemService(context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         View view = ((Activity) context).getCurrentFocus();
         if (view == null)
-            view = new View((Activity) context);
+            view = new View(context);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     public static void openKeyboard(Context context) {
 
-        InputMethodManager imm = (InputMethodManager) context.getSystemService(context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
     }
 
@@ -414,52 +261,6 @@ public class Utils {
 
         }
         return genres;
-    }
-
-    public static String RelativeDateDisplay(long timeDifferenceMilliseconds) {
-        long diffSeconds = timeDifferenceMilliseconds / 1000;
-        long diffMinutes = timeDifferenceMilliseconds / (60 * 1000);
-        long diffHours = timeDifferenceMilliseconds / (60 * 60 * 1000);
-        long diffDays = timeDifferenceMilliseconds / (60 * 60 * 1000 * 24);
-        long diffWeeks = timeDifferenceMilliseconds / (60 * 60 * 1000 * 24 * 7);
-        long diffMonths = (long) (timeDifferenceMilliseconds / (60 * 60 * 1000 * 24 * 30.41666666));
-        long diffYears = timeDifferenceMilliseconds / ((long) 60 * 60 * 1000 * 24 * 365);
-
-        if (diffMinutes < 1) {
-            return "הרגע";
-        } else if (diffHours < 1) {
-            if (diffMinutes == 1)
-                return "לפני דקה";
-            return "לפני " + diffMinutes + " דקות";
-        } else if (diffDays < 1) {
-            if (diffHours == 1)
-                return "לפני שעה";
-            if (diffHours == 2)
-                return "לפני שעתיים";
-            return "לפני " + diffHours + " שעות";
-        } else if (diffWeeks < 1) {
-            if (diffDays == 1)
-                return "לפני יום";
-            if (diffDays == 2)
-                return "לפני יומיים";
-            return "לפני " + diffDays + " ימים";
-        } else if (diffMonths < 1) {
-            if (diffWeeks == 1)
-                return "לפני שבוע";
-            return "לפני " + diffWeeks + " שבועות";
-        } else if (diffYears < 1) {
-            if (diffMonths == 1)
-                return "לפני חודש";
-            if (diffMonths == 2)
-                return "לפני חודשיים";
-            return "לפני " + diffMonths + " חודשים";
-        } else {
-            if (diffYears == 1)
-                return "לפני שנה";
-            if (diffYears == 2)
-                return "לפני שנתיים";
-            return "לפני " + diffYears + " שנים";
-        }
     }
 
     public static boolean isBookFromGenre(Book book, String g) {
@@ -799,11 +600,226 @@ public class Utils {
         }
 
 
-        if (Collections.disjoint(book.getGenres(), generes))
-            return false;
-        return true;
+        return !Collections.disjoint(book.getGenres(), generes);
     }
 
+
+    public static String RelativeDateDisplay(long timeDifferenceMilliseconds) {
+        long diffSeconds = timeDifferenceMilliseconds / 1000;
+        long diffMinutes = timeDifferenceMilliseconds / (60 * 1000);
+        long diffHours = timeDifferenceMilliseconds / (60 * 60 * 1000);
+        long diffDays = timeDifferenceMilliseconds / (60 * 60 * 1000 * 24);
+        long diffWeeks = timeDifferenceMilliseconds / (60 * 60 * 1000 * 24 * 7);
+        long diffMonths = (long) (timeDifferenceMilliseconds / (60 * 60 * 1000 * 24 * 30.41666666));
+        long diffYears = timeDifferenceMilliseconds / ((long) 60 * 60 * 1000 * 24 * 365);
+
+        if (diffMinutes < 1) {
+            return "הרגע";
+        } else if (diffHours < 1) {
+            if (diffMinutes == 1)
+                return "לפני דקה";
+            return "לפני " + diffMinutes + " דקות";
+        } else if (diffDays < 1) {
+            if (diffHours == 1)
+                return "לפני שעה";
+            if (diffHours == 2)
+                return "לפני שעתיים";
+            return "לפני " + diffHours + " שעות";
+        } else if (diffWeeks < 1) {
+            if (diffDays == 1)
+                return "לפני יום";
+            if (diffDays == 2)
+                return "לפני יומיים";
+            return "לפני " + diffDays + " ימים";
+        } else if (diffMonths < 1) {
+            if (diffWeeks == 1)
+                return "לפני שבוע";
+            return "לפני " + diffWeeks + " שבועות";
+        } else if (diffYears < 1) {
+            if (diffMonths == 1)
+                return "לפני חודש";
+            if (diffMonths == 2)
+                return "לפני חודשיים";
+            return "לפני " + diffMonths + " חודשים";
+        } else {
+            if (diffYears == 1)
+                return "לפני שנה";
+            if (diffYears == 2)
+                return "לפני שנתיים";
+            return "לפני " + diffYears + " שנים";
+        }
+    }
+
+
+    public static String calcRangeOfAge(double num) {
+        if (num >= 0 && num < 7)
+            return "0-6";
+        if (num >= 7 && num < 10)
+            return "7-9";
+        if (num >= 10 && num < 14)
+            return "10-13";
+        if (num >= 14 && num < 17)
+            return "14-16";
+        if (num >= 17 && num <= 18)
+            return "17-18";
+        if (num > 18)
+            return "19-100";
+
+        return "";
+    }
+
+
+// ==================================== Firebase Functions ====================================== //
+
+    /*   public static void updateBooks() {
+        final FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("Books").get()//VERY BAD!!!!!!!!!!!!!!!!!
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (final QueryDocumentSnapshot document : task.getResult()) {
+                                db.collection("Books").document(document.getId()).update("avg_age", 0).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d("Utils", "Updated ".concat(document.get("title").toString()));
+                                    }
+                                });
+                            }
+                        } else {
+                            Log.d("Utils", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+    }*/
+
+    public static void convertTxtToBook(final Context context) throws IOException {
+
+        /*Map<String,Integer> counts= new HashMap<String,Integer>();//for random genres
+        counts.put("הרפתקאות",0);
+        counts.put("דרמה",0);
+        counts.put("אהבה",0);
+        counts.put("אימה",0);
+        counts.put("מדע",0);
+        counts.put("קומדיה",0);
+        counts.put("היסטוריה",0);
+        counts.put("מדע בדיוני",0);
+        counts.put("מתח",0);*/
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        for (String name : context.getAssets().list("")) {
+            //for random genres
+            /*int run=0;
+            for (String key : counts.keySet()) {
+                if ((!(key.equals("אימה")))&&counts.get(key) <= 50) ;
+                    run = 1;
+            }
+            if(run==0)
+                break;
+            //for random genres*/
+            if (!(name.contains(".")))
+                continue;
+            if (name.contains("huangli.idf")) {
+                continue;
+            }
+            if (name.contains("operators.dat")) {
+                continue;
+            }
+            if (name.contains("pinyinindex.idf")) {
+                continue;
+            }
+            if (name.contains("tel_uniqid_len8.dat")) {
+                continue;
+            }
+            if (name.contains("telocation.idf")) {
+                continue;
+            }
+            if (name.contains("xiaomi_mobile.dat")) {
+                continue;
+            }
+            InputStream is = context.getAssets().open(name);
+            BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_16));
+
+            String st = "-1";
+            String title = "";
+            String num_pages = "-1";
+            ArrayList<String> genres;
+            String author = "";
+            String publisher = "";
+            String summary = "";
+            String geners = "";
+            ArrayList<String> genersarray = new ArrayList<String>();
+
+            while ((st = br.readLine()) != null) {
+
+                if (st.startsWith("Title: ")) {
+                    String[] sst = st.split("Title: ");
+                    title = sst[1];
+                }
+                if (st.startsWith("Num Pages: ")) {
+                    String[] sst = st.split("Num Pages: ");
+                    num_pages = sst[1].replace("\t", "").replace(" ", "");
+                }
+                if (st.startsWith("Author: ")) {
+                    String[] sst = st.split("Author: ");
+                    author = sst[1];
+                }
+                if (st.startsWith("Publisher: ")) {
+                    String[] sst = st.split("Publisher: ");
+                    publisher = sst[1];
+                }
+                if (st.startsWith("Description: ")) {
+                    String[] sst = st.split("Description: ");
+                    summary = sst[1];
+                }
+                if (st.startsWith("Genres: ")) {
+                    String[] sst = st.split("Genres: ");
+                    geners = sst[1];
+                    genersarray = new ArrayList<String>(Arrays.asList(geners.split(", ", -1)));
+                }
+            }
+            final String t = title;
+
+            Book b = new Book("", title, genersarray, new ArrayList<String>(), author, publisher, Integer.parseInt(num_pages), summary, 0, 0);
+            ArrayList<String> actual_genres = MapGenreToBook(b);
+
+            /*//for random genres
+            int add= 0;
+            for(String genre: actual_genres){
+                if((counts.get(genre) + 1)<=50) {
+                    add = 1;
+                    counts.put(genre,counts.get(genre) + 1);
+                }
+
+            }
+            if(add==0)
+                continue;
+            //for random genres*/
+
+
+            b.setActual_genres(actual_genres);
+            if (b.getTitle().equals("")) {
+                throw new AssertionError(name);
+            }
+            DocumentReference newBook = db.collection("Books").document();
+            b.setId(newBook.getId());
+            newBook.set(b).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        //Log.d("Utils", "Uploaded book: ".concat(t));
+                        //Toast.makeText(LoginActivity, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+
+                    } else {
+                        throw new AssertionError(t);
+                    }
+
+                }
+            });
+        }
+
+    }
 
     public static void addToEachBookTheFieldGenres() {
 
@@ -899,10 +915,82 @@ public class Utils {
         });
     }
 
+    public static void deleteBookFromDB(final String bookID, final String title) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Query query1 = db.collection("Books").whereEqualTo("id", bookID);
+        query1.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                        doc.getReference().delete();
+                    }
+                }
+            }
+        });
 
-    /**
-     * ******************************** OnClick Listeners ****************************************
-     */
+        Query query2 = db.collection("Wishlist").whereEqualTo("book_id", bookID);
+        query2.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                        doc.getReference().delete();
+                    }
+                }
+            }
+        });
+
+        Query query3 = db.collection("Reviews").whereEqualTo("book_id", bookID);
+        query3.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                        doc.getReference().delete();
+                    }
+                }
+            }
+        });
+
+        Query query4 = db.collection("Recommendations").whereEqualTo("book_id", bookID);
+        query4.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                        doc.getReference().delete();
+                    }
+                }
+            }
+        });
+
+        Query query5 = db.collectionGroup("Shelves").whereArrayContains("book_names", title);
+        query5.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                        DocumentReference ref = doc.getReference();
+                        ref.update("book_names", FieldValue.arrayRemove(title)).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful())
+                                    Log.d("TEST_DELETE", "SUCCESS");
+                                else
+                                    Log.d("TEST_DELETE", "FAILURE");
+                            }
+                        });
+                    }
+                } else {
+                    Log.d("TEST_DELETE", task.getException().getMessage());
+                }
+            }
+        });
+    }
+
+
+// ==================================== OnClick Listeners ======================================= //
 
     public static class OpenProfileOnClick implements View.OnClickListener {
 
@@ -972,97 +1060,6 @@ public class Utils {
 
             ((MainActivity) mContext).addFragment(mFragment);
         }
-    }
-
-    public static void deleteBookFromDB(final String bookID, final String title) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        Query query1 = db.collection("Books").whereEqualTo("id", bookID);
-        query1.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()){
-                    for (QueryDocumentSnapshot doc : task.getResult()) {
-                        doc.getReference().delete();
-                    }
-                }
-            }
-        });
-
-        Query query2 = db.collection("Wishlist").whereEqualTo("book_id", bookID);
-        query2.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()){
-                    for (QueryDocumentSnapshot doc : task.getResult()) {
-                        doc.getReference().delete();
-                    }
-                }
-            }
-        });
-
-        Query query3 = db.collection("Reviews").whereEqualTo("book_id", bookID);
-        query3.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()){
-                    for (QueryDocumentSnapshot doc : task.getResult()) {
-                        doc.getReference().delete();
-                    }
-                }
-            }
-        });
-
-        Query query4 = db.collection("Recommendations").whereEqualTo("book_id", bookID);
-        query4.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()){
-                    for (QueryDocumentSnapshot doc : task.getResult()) {
-                        doc.getReference().delete();
-                    }
-                }
-            }
-        });
-
-        Query query5 = db.collectionGroup("Shelves").whereArrayContains("book_names", title);
-        query5.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()){
-                    for (QueryDocumentSnapshot doc : task.getResult()) {
-                        DocumentReference ref = doc.getReference();
-                        ref.update("book_names", FieldValue.arrayRemove(title)).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful())
-                                    Log.d("TEST_DELETE", "SUCCESS");
-                                else
-                                    Log.d("TEST_DELETE", "FAILURE");
-                            }
-                        });
-                    }
-                }
-                else{
-                    Log.d("TEST_DELETE", task.getException().getMessage());
-                }
-            }
-        });
-    }
-    public static String calcRangeOfAge(double num) {
-        if (num >= 0 && num <7)
-            return "0-6";
-        if (num >= 7 && num <10)
-            return "7-9";
-        if (num >= 10 && num <14)
-            return "10-13";
-        if (num >= 14 && num <17)
-            return "14-16";
-        if (num >= 17 && num <=18)
-            return "17-18";
-        if (num > 18 )
-            return "19-100";
-
-        return "";
     }
 
 }

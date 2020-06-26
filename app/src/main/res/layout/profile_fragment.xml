@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -41,7 +40,6 @@
 
 
     </androidx.appcompat.widget.Toolbar>
-
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -370,9 +368,9 @@
 
             <View
                 android:id="@+id/divider9"
-                android:layout_below="@id/customShelvesRV"
                 android:layout_width="match_parent"
                 android:layout_height="0.2dp"
+                android:layout_below="@id/customShelvesRV"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginRight="20dp"
@@ -387,11 +385,11 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="15dp"
                 android:background="@drawable/dashed_border_background"
+                android:elevation="5dp"
                 android:paddingStart="25dp"
                 android:paddingEnd="25dp"
                 android:text="@string/add_custom_list"
-                android:textColor="@color/lightGrey"
-                android:elevation="5dp"/>
+                android:textColor="@color/lightGrey" />
 
         </RelativeLayout>
 

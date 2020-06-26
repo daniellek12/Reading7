@@ -9,12 +9,10 @@
 
 
     <FrameLayout
-        android:id="@+id/fragmant_container"
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/navigation">
-
-    </FrameLayout>
+        android:layout_above="@+id/navigation"/>
 
     <View
         android:id="@+id/divider"

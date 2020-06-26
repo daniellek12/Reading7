@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         if (fragment != null) {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.fragmant_container, fragment, fragment.toString())
+                    .replace(R.id.fragment_container, fragment, fragment.toString())
                     .addToBackStack(fragment.getClass().toString())
                     .commit();
             return true;
@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         if (fragment != null) {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .add(R.id.fragmant_container, fragment, fragment.toString())
+                    .add(R.id.fragment_container, fragment, fragment.toString())
                     .addToBackStack(fragment.getClass().toString())
                     .commit();
             return true;
@@ -259,7 +259,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         int count = getSupportFragmentManager().getBackStackEntryCount();
 
         // Customize onBackPressed for specific fragments //
-        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragmant_container);
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         if (fragment instanceof ReviewCommentsFragment) {
             if (((ReviewCommentsFragment) fragment).admin_delete)
                 ((ReviewCommentsFragment) fragment).sendResultDeleted(404);
@@ -287,7 +287,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             getFragmentManager().popBackStack();
         else
             super.onBackPressed();
-
     }
 
 }

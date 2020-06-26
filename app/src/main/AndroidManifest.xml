@@ -16,7 +16,7 @@
             android:name=".AdminActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".StoreFragment" />
         <activity android:name=".ReviewCommentsFragment" />
         <activity android:name=".Dialogs.AddCommentDialog" />

@@ -4,16 +4,9 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
 import com.reading7.BookFragment;
-import com.reading7.LoginActivity;
 import com.reading7.R;
-import com.reading7.Utils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,7 +27,7 @@ public class SaveEditBookDialog extends AppCompatDialogFragment {
         dialog_view.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                Fragment f = getFragmentManager().findFragmentById(R.id.fragmant_container);
+                Fragment f = getFragmentManager().findFragmentById(R.id.fragment_container);
                 ((BookFragment)f).setEditMode(false);
                 ((BookFragment)f).updateBook();
                 dismiss();
@@ -44,7 +37,7 @@ public class SaveEditBookDialog extends AppCompatDialogFragment {
         dialog_view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment f = getFragmentManager().findFragmentById(R.id.fragmant_container);
+                Fragment f = getFragmentManager().findFragmentById(R.id.fragment_container);
                 ((BookFragment)f).setEditMode(false);
                 dismiss();
             }

@@ -1,7 +1,8 @@
 <resources>
-    <string name="app_name">Reading7</string>
 
+    <string name="app_name">Reading7</string>
     <string name="admin_email">reading7reports@gmail.com</string>
+    <string name="ok">אישור</string>
 
     <!--Main-->
     <string name="home">Home</string>
@@ -17,10 +18,11 @@
     <string name="search_tab3">חברים</string>
     <string name="search_hint">הזן טקסט לחיפוש</string>
     <string name="recent_searches">חיפושים אחרונים</string>
-
+    <string name="load_more">טען תוצאות נוספות</string>
 
     <!--Home Feed-->
     <string name="wishlist_post_title">הוסיף לרשימת המשאלות את הספר</string>
+    <string name="users_you_might_want_to_follow">משתמשים שכדאי לך להכיר</string>
 
     <!--Login-->
     <string name="signup_suggestion">עדיין לא רשום? הצטרף כעת</string>
@@ -115,7 +117,6 @@
     <string name="glasses">משקפיים</string>
     <string name="mustache_title">שפם</string>
 
-
     <!--Genres-->
     <string name="adventures">הרפתקאות</string>
     <string name="fantasy">מדע בדיוני</string>
@@ -145,6 +146,25 @@
     <string name="cancel">ביטול</string>
     <string name="book_details">פרטי הספר</string>
     <string name="pages">עמודים</string>
+    <string name="books_you_might_like">אם אהבת את הספר הזה, כדאי לך לבדוק גם את אלו</string>
+    <string name="show_all_reviews">לכל הביקורות</string>
+    <string name="books_reviews">ביקורות על הספר %1$s</string>
+
+    <!--Shelves-->
+    <string name="choose_shelf_txt">לאיזה מדף להוסיף את הספר?</string>
+    <string name="add_to_shelf">הוספה למדף</string>
+    <string name="empty_shelf">עדיין לא הוספת ספרים למדף זה.</string>
+    <string name="add_custom_list">הוספת מדף חדש</string>
+
+    <!--Reviews & Comments-->
+    <string name="add_comment">הוספת תגובה</string>
+    <string name="comments">תגובות</string>
+    <string name="like">אהבתי</string>
+    <string name="delete_comment">מחק תגובה</string>
+    <string name="delete_review">מחק ביקורת</string>
+
+    <!--Store Fragment-->
+    <string name="buy_now">קנה עכשיו</string>
 
     <!--Challenges-->
     <string name="question_about_book">שאלה על הספר</string>
@@ -153,32 +173,6 @@
     <string name="your_answer_is_wrong">ענית תשובה לא נכונה,</string>
     <string name="not_getting_points">לא הרווחת נקודות הפעם…</string>
     <string name="times_up">נגמר הזמן!</string>
-
-    <string name="choose_friend_email">יש להקליד את האימייל של משתמש עבורו תישלח הזמנת קריאה</string>
-    <string name="invite_user">הזמנת המשתמש</string>
-
-    <string name="choose_shelf_txt">לאיזה מדף להוסיף את הספר?</string>
-    <string name="add_to_shelf">הוספה למדף</string>
-    <string name="empty_shelf">עדיין לא הוספת ספרים למדף זה.</string>
-    <string name="add_custom_list">הוספת מדף חדש</string>
-
-    <string name="add_comment">הוספת תגובה</string>
-    <string name="comments">תגובות</string>
-    <string name="like">אהבתי</string>
-    <string name="review_fragment_title">הביקורת של</string>
-    <string name="buy_now">קנה עכשיו</string>
-    <string name="ok">אישור</string>
-    <string name="delete_comment">מחק תגובה</string>
-    <string name="delete_review">מחק ביקורת</string>
-    <string name="load_more">טען תוצאות נוספות</string>
-    <string name="delete_book">מחק ספר</string>
-    <string name="share">שיתוף</string>
-    <string name="challenge_a_friend">שליחת אתגר לחבר</string>
-    <string name="select_user_title">את מי תרצה לאתגר?</string>
-    <string name="select_user_email">האימייל של המשתמש</string>
-    <string name="question_content">גוף השאלה</string>
-
-
     <string name="choosing_user_to_challenge">בחירת משתמש לשליחת האתגר</string>
     <string name="creating_question_challenge">ניסוח שאלה ותשובות אפשריות</string>
     <string name="choosing_right_answer">סימון התשובה הנכונה</string>
@@ -188,21 +182,35 @@
     <string name="enter_question">לא ניתן לשלוח אתגר ללא שאלה</string>
     <string name="enter_possible_answers">יש למלא 4 תשובות אפשריות לשאלה</string>
     <string name="choose_right_answer">סמן את התשובה הנכונה</string>
+    <string name="challenge_a_friend">שליחת אתגר לחבר</string>
+    <string name="select_user_title">את מי תרצה לאתגר?</string>
+    <string name="select_user_email">האימייל של המשתמש</string>
+    <string name="question_content">גוף השאלה</string>
+
+    <!--Sharing-->
+    <string name="choose_friend_email">יש להקליד את האימייל של משתמש עבורו תישלח הזמנת קריאה</string>
+    <string name="invite_user">הזמנת המשתמש</string>
     <string name="invite_user_in_app">שיתוף באפלקיציה</string>
     <string name="or">או</string>
     <string name="send_invitation">שליחת הזמנה</string>
     <string name="share_through_other_apps">שיתוף באפליקציות אחרות</string>
-    <string name="report_problem">דיווח על בעיה באפליקציה</string>
+    <string name="share">שיתוף</string>
+
+    <!--Author Fragment-->
+    <string name="authors_books">הספרים של %1$s</string>
+
+    <!--Admin-->
+    <string name="report_problem">דיווח על בעיה</string>
     <string name="report">דיווח</string>
     <string name="book_title">שם הספר</string>
     <string name="author">שם הסופר</string>
     <string name="genres">ז\'אנרים</string>
     <string name="publisher_hint">הוצאת ספרים</string>
-    <string name="users_you_might_want_to_follow">משתמשים שכדאי לך להכיר</string>
     <string name="num_pages">מספר עמודים</string>
     <string name="save_question">אתה יוצא ממצב עריכה. האם לשמור את השינויים לפני היציאה?</string>
     <string name="dont_save">צא בלי לשמור</string>
     <string name="delete_question">הספר יימחק מהמאגר ומכל המדפים של משתמשים ששמרו אותו. האם אתה בטוח שברצונך למחוק ספר זה?</string>
     <string name="reports">דיווחים על ביקורות</string>
+    <string name="delete_book">מחק ספר</string>
 
 </resources>

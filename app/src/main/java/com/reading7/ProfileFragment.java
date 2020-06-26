@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,13 +51,12 @@ import static com.reading7.Utils.calculateAge;
 
 public class ProfileFragment extends Fragment {
 
-    public int SEND_MAIL_CODE = 707;
-
-    private FirebaseAuth mAuth;
-    private FirebaseFirestore db;
     final private ArrayList<String> usersReviewBookNames = new ArrayList<String>();
     final private ArrayList<String> usersWishlistBookNames = new ArrayList<String>();
     final private ArrayList<String> shelfNames = new ArrayList<String>();
+    public int SEND_MAIL_CODE = 707;
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
     private ProfileShelfAdapter adapterReviews;
     private ProfileShelfAdapter adapterWishList;
     private CustomShelvesAdapter adapterCustomShelves;
@@ -69,7 +67,6 @@ public class ProfileFragment extends Fragment {
         return inflater.inflate(R.layout.profile_fragment, null);
     }
 
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -77,10 +74,11 @@ public class ProfileFragment extends Fragment {
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
-        getUserInformation();
 
+        getUserInformation();
         initOptionsMenu();
     }
+
 
     private void getUserInformation() {
 
@@ -128,13 +126,10 @@ public class ProfileFragment extends Fragment {
                             });
                         }
 
-
-                        //initPrivateBtn();
                         initLogOutBtn();
                         initWishlist();
                         initMyBookslist();
                         initCustomShelves();
-
 
                     } else
                         Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();

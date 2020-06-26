@@ -19,7 +19,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -27,6 +26,7 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -58,35 +58,20 @@ import static android.text.Layout.JUSTIFICATION_MODE_INTER_WORD;
 
 public class BookFragment extends Fragment {
 
+    public boolean admin_delete = false;
+    public boolean edit_mode = false;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private Book mBook;
-
     private List<Review> lstReviews;
     private List<Review> lstAllReviews;
     private RecyclerView reviewsRV;
-
-    private int countRaters;
     private RatingBar rankRatingBar;
     private TextView ratingNum;
     private float mAvgAge;
-
     private boolean isWishlist = false;
     private boolean isReviewed = false;
     private boolean isReviewedWithContent = false;
-
-    public boolean admin_delete = false;
-    public boolean edit_mode = false;
-
-    public boolean isReviewedWithContent() {
-        return isReviewedWithContent;
-    }
-
-    public void setReviewedWithContent(boolean reviewedWithContent) {
-        isReviewedWithContent = reviewedWithContent;
-    }
-
-
     private Review mReview;
     private int mRank;
     private String mReviewTitle;
@@ -104,7 +89,6 @@ public class BookFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
-        countRaters = 0;
         mReview = null;
         return inflater.inflate(R.layout.book_fragment, container, false);
     }
@@ -120,8 +104,10 @@ public class BookFragment extends Fragment {
         initOpenSummary();
         initBackButton();
         initScrollView();
+        initShowAllReviewsButton();
+        initSimilarBooksSuggestions();
 
-        if (Utils.isAdmin){
+        if (Utils.isAdmin) {
             getActivity().findViewById(R.id.addToWishlist).setVisibility(View.GONE);
             getActivity().findViewById(R.id.button_read).setVisibility(View.INVISIBLE);
             getActivity().findViewById(R.id.button_already_read).setVisibility(View.GONE);
@@ -132,8 +118,7 @@ public class BookFragment extends Fragment {
             initDeleteButton();
             initEditButton();
             initSaveButton();
-        }
-        else {
+        } else {
             initWishlistButton();
             initRankButton();
             initAlreadyReadButton();
@@ -143,6 +128,454 @@ public class BookFragment extends Fragment {
         }
 
     }
+
+
+    /**
+     * Scrolls the nestedScrollView to the wanted initial position
+     */
+    private void initScrollView() {
+
+        final View view = getActivity().findViewById(R.id.summary);
+        final NestedScrollView scrollView = getActivity().findViewById(R.id.nestedScrollView);
+
+        scrollView.getViewTreeObserver().addOnScrollChangedListener(new ScrollPositionObserver());
+
+        scrollView.post(new Runnable() {
+            @Override
+            public void run() {
+                scrollView.fullScroll(View.FOCUS_UP);
+            }
+        });
+
+    }
+
+    private void getBookInformation() {
+
+        setBookGenres();
+
+        rankRatingBar = getActivity().findViewById(R.id.bookRatingBar);
+        rankRatingBar.setRating(mBook.getAvg_rating());
+
+        ratingNum = getActivity().findViewById(R.id.ratingNum);
+        ratingNum.setText(Float.toString(mBook.getAvg_rating()));
+
+        mAvgAge = mBook.getAvg_age();
+
+        TextView textViewAuthor = getActivity().findViewById(R.id.author);
+        textViewAuthor.setText(mBook.getAuthor() + ", ");
+
+        TextView textViewPublisher = getActivity().findViewById(R.id.publisher);
+        textViewPublisher.setText(getResources().getString(R.string.publisher) + " " + mBook.getPublisher());
+
+        TextView textViewTitle = getActivity().findViewById(R.id.book_name);
+        textViewTitle.setText(mBook.getTitle());
+
+        ImageView coverImage = getActivity().findViewById(R.id.bookCoverImage);
+        Utils.showImage(mBook.getTitle(), coverImage, getActivity());
+
+        TextView textViewSummary = getActivity().findViewById(R.id.summary);
+        textViewSummary.setText(mBook.getDescription());
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            textViewSummary.setJustificationMode(JUSTIFICATION_MODE_INTER_WORD);
+        }
+
+        String pages = Integer.toString(mBook.getNum_pages());
+        if (pages.equals("-1")) {
+            getActivity().findViewById(R.id.numPagesLayout).setVisibility(View.GONE);
+        } else {
+            TextView textViewPages = getActivity().findViewById(R.id.numPages);
+            textViewPages.setText(pages);
+        }
+
+        initScrollView();
+
+        if (Utils.isAdmin)
+            initEditFields();
+    }
+
+    private void setBookGenres() {
+
+        String geners = "";
+        boolean first = true;
+        for (String genre : mBook.getGenres()) {
+            if (!first)
+                geners += " | " + genre;
+            else {
+                geners += genre;
+                first = false;
+            }
+        }
+
+        TextView genres = getActivity().findViewById(R.id.genres);
+        genres.setText(geners);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            genres.setJustificationMode(JUSTIFICATION_MODE_INTER_WORD);
+        }
+    }
+
+    private void initOpenSummary() {
+
+        final TextView mSummary = getActivity().findViewById(R.id.summary);
+        mSummary.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mSummary.getEllipsize() == TextUtils.TruncateAt.END) {
+                    mSummary.setMaxLines(Integer.MAX_VALUE);
+                    mSummary.setEllipsize(null);
+                } else if (mSummary.getEllipsize() == null) {
+                    mSummary.setMaxLines(3);
+                    mSummary.setEllipsize(TextUtils.TruncateAt.END);
+                }
+            }
+        });
+    }
+
+    private void initBackButton() {
+        getActivity().findViewById(R.id.bookBackButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().onBackPressed();
+            }
+        });
+    }
+
+
+    private void initReviews() {
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        reviewsRV = getActivity().findViewById(R.id.reviews);
+        reviewsRV.setLayoutManager(layoutManager);
+        getBookReviews();
+    }
+
+    public void getBookReviews() {
+
+        Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), false);
+        lstReviews.clear();
+        lstAllReviews.clear();
+
+        final List<Review> newlist = new ArrayList<>();
+        Query query = db.collection("Reviews").whereEqualTo("book_id", mBook.getId()).limit(2);
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                        Review review = doc.toObject(Review.class);
+                        lstAllReviews.add(review);
+                        if (!(review.getReview_title().equals("") && review.getReview_content().equals("")))
+                            newlist.add(review);
+                    }
+
+                    lstReviews.addAll(newlist);
+                    Collections.sort(lstReviews, Collections.reverseOrder());
+                    findMyReview();
+                }
+            }
+        });
+    }
+
+    private void findMyReview() {
+
+        final List<Review> tempList = new ArrayList<Review>();
+        tempList.addAll(lstAllReviews);
+        for (Review review : tempList) {
+            if (review.getReviewer_email().equals(mAuth.getCurrentUser().getEmail())) {
+                isReviewed = true;
+                mRank = review.getRank();
+                mReviewTitle = review.getReview_title();
+                mReviewContent = review.getReview_content();
+                updateRankButton();
+
+                if ((!review.getReview_title().isEmpty()) || (!review.getReview_content().isEmpty())) {
+                    lstReviews.remove(review);
+                    lstReviews.add(0, review);
+                    isReviewedWithContent = true;
+                }
+                break;
+            }
+        }
+
+        TextView countRatersText = getActivity().findViewById(R.id.reviwersNum);
+        if (mBook.getRaters_count() == 1)
+            countRatersText.setText(getResources().getString(R.string.one_reviewer));
+        else
+            countRatersText.setText(mBook.getRaters_count() + " " + getResources().getString(R.string.reviewers));
+
+        ReviewListAdapter adapter = new ReviewListAdapter(getActivity(), lstReviews, this);
+        reviewsRV.setAdapter(adapter);
+        Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), true);
+
+    }
+
+    private void initShowAllReviewsButton() {
+        getView().findViewById(R.id.show_all_reviews).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((MainActivity) getActivity()).addFragment(new ReviewsFragment(BookFragment.this));
+            }
+        });
+    }
+
+
+    public boolean isReviewed() {
+        return isReviewed;
+    }
+
+    public void setReviewed(boolean reviewed) {
+        this.isReviewed = reviewed;
+    }
+
+    public boolean isReviewedWithContent() {
+        return isReviewedWithContent;
+    }
+
+    public void setReviewedWithContent(boolean reviewedWithContent) {
+        isReviewedWithContent = reviewedWithContent;
+    }
+
+
+    private void initRankButton() {
+
+        updateRankButton();
+
+        // Set the rank button functionality
+        Button rankBtn = getActivity().findViewById(R.id.button_read);
+        rankBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RankBookDialog dialog = new RankBookDialog();
+
+                Bundle args = new Bundle();
+                args.putString("book_id", mBook.getId());
+                args.putString("book_title", mBook.getTitle());
+                args.putString("book_author", mBook.getAuthor());
+                args.putFloat("avg", Float.parseFloat(ratingNum.getText().toString()));
+                args.putFloat("avgAge", mAvgAge);
+                args.putInt("countRaters", mBook.getRaters_count());
+
+                dialog.setArguments(args);
+                dialog.setTargetFragment(BookFragment.this, 202);
+                dialog.show(getActivity().getSupportFragmentManager(), "example dialog");
+            }
+        });
+    }
+
+    private void updateRankButton() {
+
+        final Button rankBtn = getActivity().findViewById(R.id.button_read);
+
+        if (Utils.isAdmin) {
+            return;
+        }
+
+        if (isReviewed) {
+            rankBtn.setVisibility(View.INVISIBLE);
+            getActivity().findViewById(R.id.button_already_read).setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.addToWishlist).setVisibility(View.GONE);
+        } else {
+            rankBtn.setVisibility(View.VISIBLE);
+            getActivity().findViewById(R.id.button_already_read).setVisibility(View.GONE);
+            getView().findViewById(R.id.addToWishlist).setVisibility(View.VISIBLE);
+        }
+    }
+
+
+    private void initWishlistButton() {
+
+        // Is the book already in wishlist?
+        CollectionReference requestCollectionRef = db.collection("Wishlist");
+        Query requestQuery = requestCollectionRef.whereEqualTo("user_email", mAuth.getCurrentUser().getEmail()).whereEqualTo("book_id", mBook.getId());
+        requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful() && !(task.getResult().isEmpty())) {
+                    isWishlist = true;
+                    updateWishlistButton();
+                }
+            }
+        });
+
+        // Set the wishlist button functionality
+        getActivity().findViewById(R.id.addToWishlist).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                User currentUser = ((MainActivity) getActivity()).getCurrentUser();
+                if (isWishlist) {
+                    CollectionReference requestCollectionRef = db.collection("Wishlist");
+                    Query requestQuery = requestCollectionRef.whereEqualTo("user_email", currentUser.getEmail()).whereEqualTo("book_id", mBook.getId());
+                    requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    document.getReference().delete();
+                                }
+                            }
+                        }
+                    });
+
+                    isWishlist = false;
+                    updateWishlistButton();
+
+                } else {
+                    WishList wlist = new WishList("", currentUser.getEmail(), mBook.getId(), mBook.getTitle(), mBook.getAuthor(), Timestamp.now());
+                    DocumentReference newWish = db.collection("Wishlist").document();
+                    wlist.setId(newWish.getId());
+                    newWish.set(wlist);
+
+                    isWishlist = true;
+                    updateWishlistButton();
+                }
+            }
+        });
+    }
+
+    private void updateWishlistButton() {
+
+        final Button wishListBtn = getActivity().findViewById(R.id.addToWishlist);
+        Drawable heart = Utils.getDrawable(getContext(), "heart");
+
+        if (isWishlist) {
+            wishListBtn.setText(getString(R.string.remove_from_wishlist));
+            wishListBtn.setTextColor(getResources().getColor(R.color.lightGrey));
+            wishListBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.grey)));
+            heart.setColorFilter(getResources().getColor(R.color.lightGrey), PorterDuff.Mode.SRC_ATOP);
+            wishListBtn.setCompoundDrawablesWithIntrinsicBounds(null, null, heart, null);
+        } else {
+            wishListBtn.setText(getString(R.string.add_to_wishlist));
+            wishListBtn.setTextColor(getResources().getColor(R.color.white));
+            wishListBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorAccent)));
+            heart.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+            wishListBtn.setCompoundDrawablesWithIntrinsicBounds(null, null, heart, null);
+        }
+
+        ObjectAnimator.ofPropertyValuesHolder(wishListBtn,
+                PropertyValuesHolder.ofFloat(View.SCALE_X, 1, 1.1f, 1),
+                PropertyValuesHolder.ofFloat(View.SCALE_Y, 1, 1.1f, 1))
+                .setDuration(200)
+                .start();
+    }
+
+
+    private void initAlreadyReadButton() {
+
+        Button alreadyReadButton = getActivity().findViewById(R.id.button_already_read);
+        alreadyReadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RankBookDialog dialog = new RankBookDialog();
+
+                Bundle args = new Bundle();
+                args.putString("book_id", mBook.getId());
+                args.putString("book_title", mBook.getTitle());
+                args.putString("book_author", mBook.getAuthor());
+                args.putFloat("avg", Float.parseFloat(ratingNum.getText().toString()));
+                args.putFloat("avgAge", mAvgAge);
+                args.putInt("countRaters", mBook.getRaters_count());
+
+                dialog.setArguments(args);
+                dialog.setTargetFragment(BookFragment.this, 202);
+                dialog.show(getActivity().getSupportFragmentManager(), "example dialog");
+            }
+        });
+
+    }
+
+    private void initShelfButton() {
+        Button shelfButton = getActivity().findViewById(R.id.addToShelf);
+        shelfButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AddToShelfDialog dialog = new AddToShelfDialog();
+
+                Bundle args = new Bundle();
+                args.putString("book_title", mBook.getTitle());
+
+                dialog.setArguments(args);
+                dialog.setTargetFragment(BookFragment.this, 404);
+                dialog.show(getActivity().getSupportFragmentManager(), "example dialog");
+            }
+        });
+    }
+
+    private void initInviteButton() {
+        Button inviteButton = getActivity().findViewById(R.id.share_button);
+        inviteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                InviteUserDialog dialog = new InviteUserDialog();
+
+                Bundle args = new Bundle();
+                args.putString("book_title", mBook.getTitle());
+
+                dialog.setArguments(args);
+                dialog.setTargetFragment(BookFragment.this, 505);
+                dialog.show(getActivity().getSupportFragmentManager(), "example dialog");
+            }
+        });
+    }
+
+    private void initChallengeButton() {
+        ImageButton challengeButton = getActivity().findViewById(R.id.challenge_button);
+        challengeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ChallengeUserDialog dialog = new ChallengeUserDialog();
+
+                Bundle args = new Bundle();
+                args.putString("book_title", mBook.getTitle());
+
+                dialog.setArguments(args);
+                dialog.setTargetFragment(BookFragment.this, 606);
+                dialog.show(getActivity().getSupportFragmentManager(), "example dialog");
+            }
+        });
+    }
+
+
+    private void initSimilarBooksSuggestions() {
+        FirebaseFirestore.getInstance().collection("SimilarBooks").whereEqualTo("book_id", mBook.getId())
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                for (int i = 0; i < 3; i++) {
+                    String similarId = (String) task.getResult().getDocuments().get(i).get("similar_book");
+                    loadSimilarBook(similarId, i + 1);
+                }
+            }
+        });
+    }
+
+    private void loadSimilarBook(String bookId, final int index) {
+
+        if (index < 1 || index > 3)
+            throw new AssertionError("Index must be in range [1,3]");
+
+        ImageView imageView = getView().findViewById(R.id.similar_book1);
+        if (index == 2) imageView = getView().findViewById(R.id.similar_book2);
+        if (index == 3) imageView = getView().findViewById(R.id.similar_book3);
+
+        final ImageView finalImageView = imageView;
+        db.collection("Books").document(bookId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                final Book book = task.getResult().toObject(Book.class);
+                Utils.showImage(book.getTitle(), finalImageView, getActivity());
+                finalImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        ((MainActivity) getActivity()).loadFragment(new BookFragment(book));
+                    }
+                });
+            }
+        });
+    }
+
+
+// ===================================== Admin Mechanisms ======================================= //
 
     private void initEditButton() {
         getActivity().findViewById(R.id.editButton).setOnClickListener(new View.OnClickListener() {
@@ -155,12 +588,10 @@ public class BookFragment extends Fragment {
     }
 
     public void setEditMode(boolean active) {
-        if (active){
+        if (active) {
             edit_mode = true;
             getActivity().findViewById(R.id.editButton).setVisibility(View.GONE);
             getActivity().findViewById(R.id.saveButton).setVisibility(View.VISIBLE);
-            //getActivity().findViewById(R.id.book_name).setVisibility(View.INVISIBLE);
-            //getActivity().findViewById(R.id.book_name_edit).setVisibility(View.VISIBLE);
             getActivity().findViewById(R.id.author).setVisibility(View.INVISIBLE);
             getActivity().findViewById(R.id.author_edit).setVisibility(View.VISIBLE);
             getActivity().findViewById(R.id.publisher).setVisibility(View.INVISIBLE);
@@ -175,8 +606,7 @@ public class BookFragment extends Fragment {
             getActivity().findViewById(R.id.numPages).setVisibility(View.GONE);
             getActivity().findViewById(R.id.numPages_edit).setVisibility(View.VISIBLE);
             getActivity().findViewById(R.id.button_delete_book).setVisibility(View.GONE);
-        }
-        else {
+        } else {
             edit_mode = false;
             getActivity().findViewById(R.id.editButton).setVisibility(View.VISIBLE);
             getActivity().findViewById(R.id.saveButton).setVisibility(View.GONE);
@@ -265,62 +695,7 @@ public class BookFragment extends Fragment {
         });
     }
 
-    public void sendResult(int result_code) {
-        Intent intent = new Intent();
-        intent.putExtra("book_id", mBook.getId());
-
-        if (getTargetFragment() != null)
-            getTargetFragment().onActivityResult(getTargetRequestCode(), result_code, intent);
-    }
-
-    private void getBookInformation() {
-
-        setBookGenres();
-
-        rankRatingBar = getActivity().findViewById(R.id.bookRatingBar);
-        rankRatingBar.setRating(mBook.getAvg_rating());
-
-        ratingNum = getActivity().findViewById(R.id.ratingNum);
-        ratingNum.setText(Float.toString(mBook.getAvg_rating()));
-
-        mAvgAge = mBook.getAvg_age();
-
-        TextView textViewAuthor = getActivity().findViewById(R.id.author);
-        textViewAuthor.setText(mBook.getAuthor() + ", ");
-
-        TextView textViewPublisher = getActivity().findViewById(R.id.publisher);
-        textViewPublisher.setText(getResources().getString(R.string.publisher) + " " + mBook.getPublisher());
-
-        TextView textViewTitle = getActivity().findViewById(R.id.book_name);
-        textViewTitle.setText(mBook.getTitle());
-
-        ImageView coverImage = getActivity().findViewById(R.id.bookCoverImage);
-        Utils.showImage(mBook.getTitle(), coverImage, getActivity());
-
-        TextView textViewSummary = getActivity().findViewById(R.id.summary);
-        textViewSummary.setText(mBook.getDescription());
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            textViewSummary.setJustificationMode(JUSTIFICATION_MODE_INTER_WORD);
-        }
-
-        String pages = Integer.toString(mBook.getNum_pages());
-        if (pages.equals("-1")) {
-            getActivity().findViewById(R.id.numPagesLayout).setVisibility(View.GONE);
-        } else {
-            TextView textViewPages = getActivity().findViewById(R.id.numPages);
-            textViewPages.setText(pages);
-        }
-
-        initScrollView();
-
-        if(Utils.isAdmin)
-            initEditFields();
-    }
-
     private void initEditFields() {
-//        EditText book_name_edit = getActivity().findViewById(R.id.book_name_edit);
-//        book_name_edit.setText(mBook.getTitle());
 
         EditText author_edit = getActivity().findViewById(R.id.author_edit);
         author_edit.setText(mBook.getAuthor());
@@ -339,300 +714,64 @@ public class BookFragment extends Fragment {
         pages_edit.setText(Integer.toString(mBook.getNum_pages()));
     }
 
-    private void setBookGenres() {
+// ============================================================================================== //
 
-        String geners = "";
-        boolean first = true;
-        for (String genre : mBook.getGenres()) {
-            if (!first)
-                geners += " | " + genre;
-            else {
-                geners += genre;
-                first = false;
-            }
+
+    public void updateAfterReviewDeleted(int rank, int reviewer_age) {
+        isReviewed = false;
+        isReviewedWithContent = false;
+
+        final float newAvg, newAvgAge;
+        if (mBook.getRaters_count() == 1) {
+            newAvg = 0;
+            newAvgAge = 0;
+        } else {
+            newAvg = ((mBook.getAvg_rating() * mBook.getRaters_count()) - rank) / (mBook.getRaters_count() - 1);
+            newAvgAge = ((mBook.getAvg_age() * mBook.getRaters_count()) - reviewer_age) / (mBook.getRaters_count() - 1);
         }
 
-        TextView genres = getActivity().findViewById(R.id.genres);
-        genres.setText(geners);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            genres.setJustificationMode(JUSTIFICATION_MODE_INTER_WORD);
-        }
+        mBook.setRaters_count(mBook.getRaters_count() - 1);
+        db.collection("Books").document(mBook.getId())
+                .update("avg_rating", newAvg, "avg_age", newAvgAge, "raters_count", mBook.getRaters_count());
+
+        updateUIAfterDeleteReview(newAvg, newAvgAge);
     }
 
+    public void updateUIAfterDeleteReview(float rank_avg, float age_avg) {
 
-    private void initReviews() {
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        reviewsRV = getActivity().findViewById(R.id.reviews);
-        reviewsRV.setLayoutManager(layoutManager);
-        getBookReviews();
-    }
-
-    private void getBookReviews() {
-
-        Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), false);
-        countRaters = 0;
-        lstReviews.clear();
-        lstAllReviews.clear();
-
-        final List<Review> newlist = new ArrayList<Review>();
-        Query query = db.collection("Reviews").whereEqualTo("book_id", mBook.getId());
-        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot doc : task.getResult()) {
-                        countRaters++;
-                        Review review = doc.toObject(Review.class);
-                        lstAllReviews.add(review);
-                        if (!(review.getReview_title().equals("") && review.getReview_content().equals("")))
-                            newlist.add(review);
-                    }
-
-                    lstReviews.addAll(newlist);
-                    Collections.sort(lstReviews, Collections.reverseOrder());
-                    findMyReview();
-                }
-            }
-        });
-    }
-
-    private void findMyReview() {
-
-        final List<Review> tempList = new ArrayList<Review>();
-        tempList.addAll(lstAllReviews);
-        for (Review review : tempList) {
-            if (review.getReviewer_email().equals(mAuth.getCurrentUser().getEmail())) {
-                isReviewed = true;
-                mRank = review.getRank();
-                mReviewTitle = review.getReview_title();
-                mReviewContent = review.getReview_content();
-                updateRankButton();
-
-                if ((!review.getReview_title().isEmpty()) || (!review.getReview_content().isEmpty())){
-                    lstReviews.remove(review);
-                    lstReviews.add(0, review);
-                    isReviewedWithContent = true;
-                }
-                break;
-            }
-        }
-
+        rankRatingBar.setRating(rank_avg);
+        ratingNum.setText(Float.toString(rank_avg));
+        mAvgAge = age_avg;
         TextView countRatersText = getActivity().findViewById(R.id.reviwersNum);
-        if (countRaters == 1)
+        if (mBook.getRaters_count() == 1)
             countRatersText.setText(getResources().getString(R.string.one_reviewer));
         else
-            countRatersText.setText(countRaters + " " + getResources().getString(R.string.reviewers));
-
-        ReviewListAdapter adapter = new ReviewListAdapter(getActivity(), lstReviews, this);
-        reviewsRV.setAdapter(adapter);
-        Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), true);
-
-    }
-
-
-    public boolean isReviewed() {
-        return isReviewed;
-    }
-
-    public void setReviewed(boolean reviewed) {
-        this.isReviewed = reviewed;
-    }
-
-
-    private void initOpenSummary() {
-
-        final TextView mSummary = getActivity().findViewById(R.id.summary);
-        mSummary.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mSummary.getEllipsize() == TextUtils.TruncateAt.END) {
-                    mSummary.setMaxLines(Integer.MAX_VALUE);
-                    mSummary.setEllipsize(null);
-                } else if (mSummary.getEllipsize() == null) {
-                    mSummary.setMaxLines(3);
-                    mSummary.setEllipsize(TextUtils.TruncateAt.END);
-                }
-            }
-        });
-    }
-
-    private void initBackButton() {
-        getActivity().findViewById(R.id.bookBackButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().onBackPressed();
-            }
-        });
-    }
-
-
-    private void initWishlistButton() {
-
-        // Is the book already in wishlist?
-        CollectionReference requestCollectionRef = db.collection("Wishlist");
-        Query requestQuery = requestCollectionRef.whereEqualTo("user_email", mAuth.getCurrentUser().getEmail()).whereEqualTo("book_id", mBook.getId());
-        requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful() && !(task.getResult().isEmpty())) {
-                    isWishlist = true;
-                    updateWishlistButton();
-                }
-            }
-        });
-
-        // Set the wishlist button functionality
-        getActivity().findViewById(R.id.addToWishlist).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                User currentUser = ((MainActivity) getActivity()).getCurrentUser();
-                if (isWishlist) {
-                    CollectionReference requestCollectionRef = db.collection("Wishlist");
-                    Query requestQuery = requestCollectionRef.whereEqualTo("user_email", currentUser.getEmail()).whereEqualTo("book_id", mBook.getId());
-                    requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    document.getReference().delete();
-                                }
-                            }
-                        }
-                    });
-
-                    isWishlist = false;
-                    updateWishlistButton();
-
-                } else {
-                    WishList wlist = new WishList("", currentUser.getEmail(), mBook.getId(), mBook.getTitle(), mBook.getAuthor(), Timestamp.now());
-                    DocumentReference newWish = db.collection("Wishlist").document();
-                    wlist.setId(newWish.getId());
-                    newWish.set(wlist);
-
-                    isWishlist = true;
-                    updateWishlistButton();
-                }
-            }
-        });
-    }
-
-    private void updateWishlistButton() {
-
-        final Button wishListBtn = getActivity().findViewById(R.id.addToWishlist);
-        Drawable heart = Utils.getDrawable(getContext(), "heart");
-
-        if (isWishlist) {
-            wishListBtn.setText(getString(R.string.remove_from_wishlist));
-            wishListBtn.setTextColor(getResources().getColor(R.color.lightGrey));
-            wishListBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.grey)));
-            heart.setColorFilter(getResources().getColor(R.color.lightGrey), PorterDuff.Mode.SRC_ATOP);
-            wishListBtn.setCompoundDrawablesWithIntrinsicBounds(null, null, heart, null);
-        } else {
-            wishListBtn.setText(getString(R.string.add_to_wishlist));
-            wishListBtn.setTextColor(getResources().getColor(R.color.white));
-            wishListBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorAccent)));
-            heart.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
-            wishListBtn.setCompoundDrawablesWithIntrinsicBounds(null, null, heart, null);
-        }
-
-        ObjectAnimator.ofPropertyValuesHolder(wishListBtn,
-                PropertyValuesHolder.ofFloat(View.SCALE_X, 1, 1.1f, 1),
-                PropertyValuesHolder.ofFloat(View.SCALE_Y, 1, 1.1f, 1))
-                .setDuration(200)
-                .start();
-    }
-
-
-    private void initRankButton() {
+            countRatersText.setText(mBook.getRaters_count() + " " + getResources().getString(R.string.reviewers));
 
         updateRankButton();
-
-        // Set the rank button functionality
-        Button rankBtn = getActivity().findViewById(R.id.button_read);
-        rankBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                RankBookDialog dialog = new RankBookDialog();
-
-                Bundle args = new Bundle();
-                args.putString("book_id", mBook.getId());
-                args.putString("book_title", mBook.getTitle());
-                args.putString("book_author", mBook.getAuthor());
-                args.putFloat("avg", Float.parseFloat(ratingNum.getText().toString()));
-                args.putFloat("avgAge", mAvgAge);
-                args.putInt("countRaters", countRaters);
-
-                dialog.setArguments(args);
-                dialog.setTargetFragment(BookFragment.this, 202);
-                dialog.show(getActivity().getSupportFragmentManager(), "example dialog");
-            }
-        });
-    }
-
-    private void updateRankButton() {
-
-        final Button rankBtn = getActivity().findViewById(R.id.button_read);
-
-        if (Utils.isAdmin) {
-            return;
-        }
-
-        if (isReviewed) {
-            rankBtn.setVisibility(View.INVISIBLE);
-            getActivity().findViewById(R.id.button_already_read).setVisibility(View.VISIBLE);
-            getView().findViewById(R.id.addToWishlist).setVisibility(View.GONE);
-        } else {
-            rankBtn.setVisibility(View.VISIBLE);
-            getActivity().findViewById(R.id.button_already_read).setVisibility(View.GONE);
-            getView().findViewById(R.id.addToWishlist).setVisibility(View.VISIBLE);
-        }
     }
 
 
-    private void initAlreadyReadButton() {
+    public void sendResult(int result_code) {
+        Intent intent = new Intent();
+        intent.putExtra("book_id", mBook.getId());
 
-        Button alreadyReadButton = getActivity().findViewById(R.id.button_already_read);
-        alreadyReadButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                RankBookDialog dialog = new RankBookDialog();
-
-                Bundle args = new Bundle();
-                args.putString("book_id", mBook.getId());
-                args.putString("book_title", mBook.getTitle());
-                args.putString("book_author", mBook.getAuthor());
-                args.putFloat("avg", Float.parseFloat(ratingNum.getText().toString()));
-                args.putFloat("avgAge", mAvgAge);
-                args.putInt("countRaters", countRaters);
-
-                dialog.setArguments(args);
-                dialog.setTargetFragment(BookFragment.this, 202);
-                dialog.show(getActivity().getSupportFragmentManager(), "example dialog");
-            }
-        });
-
+        if (getTargetFragment() != null)
+            getTargetFragment().onActivityResult(getTargetRequestCode(), result_code, intent);
     }
-
-
-    private String ageString(float avgAge) {
-        int ageInt = (int) avgAge;
-        String ageString = "" + ageInt + "-" + (ageInt + 1) + "";
-        return ageString;
-    }
-
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         switch (resultCode) {
 
+            // add review
             case 202:
                 float avg = data.getFloatExtra("avg", 0);
                 mAvgAge = data.getFloatExtra("avgAge", 0);
 
                 rankRatingBar.setRating(avg);
                 ratingNum.setText(Float.toString(avg));
+                mBook.setRaters_count(mBook.getRaters_count() + 1);
+                ((TextView) getView().findViewById(R.id.reviwersNum)).setText(String.valueOf(mBook.getRaters_count()));
                 lstReviews.clear();
                 getBookReviews(); //overhead
 
@@ -650,44 +789,15 @@ public class BookFragment extends Fragment {
                 int reviewer_age = data.getIntExtra("reviewer_age", 0);
                 updateAfterReviewDeleted(rank, reviewer_age);
                 getBookReviews();
-                //getActivity().onBackPressed();
-
         }
     }
 
-    private void updateAfterReviewDeleted(int rank, int reviewer_age) {
 
-        final float newAvg, newAvgAge;
-        if (mBook.getRaters_count() == 1) {
-            newAvg = 0;
-            newAvgAge = 0;
-        } else {
-            newAvg = ((mBook.getAvg_rating() * mBook.getRaters_count()) - rank) / (mBook.getRaters_count() - 1);
-            newAvgAge = ((mBook.getAvg_age() * mBook.getRaters_count()) - reviewer_age) / (mBook.getRaters_count() - 1);
-        }
-        final int countRaters = mBook.getRaters_count() - 1;
-        db.collection("Books").document(mBook.getId()).update("avg_rating", newAvg, "avg_age", newAvgAge, "raters_count", countRaters);
-        updateUIAfterDeleteReview(newAvg, newAvgAge, countRaters);
-    }
-
-
-    /**
-     * Scrolls the nestedScrollView to the wanted initial position
-     */
-    private void initScrollView() {
-
-        final View view = getActivity().findViewById(R.id.summary);
-        final NestedScrollView scrollView = getActivity().findViewById(R.id.nestedScrollView);
-
-        scrollView.getViewTreeObserver().addOnScrollChangedListener(new ScrollPositionObserver());
-
-        scrollView.post(new Runnable() {
-            @Override
-            public void run() {
-                scrollView.fullScroll(View.FOCUS_UP);
-            }
-        });
-
+    @Override
+    public String toString() {
+        return "BookFragment{" +
+                "mBook=" + mBook +
+                '}';
     }
 
     private class ScrollPositionObserver implements ViewTreeObserver.OnScrollChangedListener {
@@ -718,73 +828,4 @@ public class BookFragment extends Fragment {
             toolbar.setAlpha(alpha);
         }
     }
-
-
-    private void initShelfButton() {
-        Button shelfButton = getActivity().findViewById(R.id.addToShelf);
-        shelfButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AddToShelfDialog dialog = new AddToShelfDialog();
-
-                Bundle args = new Bundle();
-                args.putString("book_title", mBook.getTitle());
-
-                dialog.setArguments(args);
-                dialog.setTargetFragment(BookFragment.this, 404);
-                dialog.show(getActivity().getSupportFragmentManager(), "example dialog");
-            }
-        });
-    }
-
-    private void initInviteButton() {
-        Button inviteButton = getActivity().findViewById(R.id.share_button);
-        inviteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                InviteUserDialog dialog = new InviteUserDialog();
-
-                Bundle args = new Bundle();
-                args.putString("book_title", mBook.getTitle());
-
-                dialog.setArguments(args);
-                dialog.setTargetFragment(BookFragment.this, 505);
-                dialog.show(getActivity().getSupportFragmentManager(), "example dialog");
-            }
-        });
-    }
-
-    private void initChallengeButton() {
-        ImageButton challengeButton = getActivity().findViewById(R.id.challenge_button);
-        challengeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ChallengeUserDialog dialog = new ChallengeUserDialog();
-
-                Bundle args = new Bundle();
-                args.putString("book_title", mBook.getTitle());
-
-                dialog.setArguments(args);
-                dialog.setTargetFragment(BookFragment.this, 606);
-                dialog.show(getActivity().getSupportFragmentManager(), "example dialog");
-            }
-        });
-    }
-
-    public void updateUIAfterDeleteReview(float rank_avg, float age_avg, int count_raters) {
-
-        rankRatingBar.setRating(rank_avg);
-        ratingNum.setText(Float.toString(rank_avg));
-        mAvgAge = age_avg;
-        this.countRaters = count_raters;
-        TextView countRatersText = getActivity().findViewById(R.id.reviwersNum);
-        if (count_raters == 1)
-            countRatersText.setText(getResources().getString(R.string.one_reviewer));
-        else
-            countRatersText.setText(count_raters + " " + getResources().getString(R.string.reviewers));
-
-        updateRankButton();
-    }
-
-
 }

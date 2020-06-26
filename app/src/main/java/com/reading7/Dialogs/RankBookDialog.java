@@ -8,11 +8,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
-import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -32,15 +27,18 @@ import com.reading7.Utils;
 import java.util.HashMap;
 import java.util.Map;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDialogFragment;
+
 public class RankBookDialog extends AppCompatDialogFragment {
 
+    RatingBar avg;
+    int userAge;
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
     private Review mReview;
     private View view;
-    RatingBar avg;
-    int userAge;
-
 
     @NonNull
     @Override
@@ -162,8 +160,6 @@ public class RankBookDialog extends AppCompatDialogFragment {
                         }
                     }
                 });
-
-                //dismiss();
             }
         });
 
@@ -187,7 +183,6 @@ public class RankBookDialog extends AppCompatDialogFragment {
         updates.put("avg_rating", newAvg);
         updates.put("avg_age", newAge);
         updates.put("raters_count", numOfRaters);
-
 
         ref.update(updates).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -227,21 +222,21 @@ public class RankBookDialog extends AppCompatDialogFragment {
         void applyAvg(float newAvg);
     }*/
 
-  public void DeleteFromWishList(String book_title){
-      CollectionReference requestsRef = db.collection("Wishlist");
-      Query requestQuery = requestsRef.whereEqualTo("user_email", mAuth.getCurrentUser().getEmail())
-              .whereEqualTo("book_title", book_title);
-      requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-          @Override
-          public void onComplete(@NonNull Task<QuerySnapshot> task) {
-              if (task.isSuccessful()) {
-                  for (QueryDocumentSnapshot document : task.getResult()) {
-                      document.getReference().delete();
-                  }
-              }
-          }
-      });
+    public void DeleteFromWishList(String book_title) {
+        CollectionReference requestsRef = db.collection("Wishlist");
+        Query requestQuery = requestsRef.whereEqualTo("user_email", mAuth.getCurrentUser().getEmail())
+                .whereEqualTo("book_title", book_title);
+        requestQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        document.getReference().delete();
+                    }
+                }
+            }
+        });
 
-  }
+    }
 
 }

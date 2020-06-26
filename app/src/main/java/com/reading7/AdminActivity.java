@@ -1,12 +1,10 @@
 package com.reading7;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
 import android.view.View;
 
-import com.google.android.material.bottomnavigation.BottomNavigationMenu;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -50,7 +48,7 @@ public class AdminActivity extends MainActivity {
         int count = getSupportFragmentManager().getBackStackEntryCount();
 
         // Customize onBackPressed for specific fragments //
-        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragmant_container);
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         if (fragment instanceof ReviewCommentsFragment)
             ((ReviewCommentsFragment) fragment).sendResult(303, ((ReviewCommentsFragment) fragment).getReviewId());
 

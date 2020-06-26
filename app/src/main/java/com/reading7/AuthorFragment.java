@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.reading7.Adapters.SearchBooksAdapter;
 import com.reading7.Objects.Author;
 import com.reading7.Objects.Book;
@@ -31,13 +30,12 @@ public class AuthorFragment extends Fragment {
         return inflater.inflate(R.layout.author_fragment, null);
     }
 
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        ((TextView) view.findViewById(R.id.toolbar_title)).setText(getString(R.string.authors_books, author.getName()));
         initBooks();
         initBackBtn();
-        ((TextView) view.findViewById(R.id.toolbar_title)).setText("הספרים של " + author.getName());
     }
 
 
@@ -49,7 +47,6 @@ public class AuthorFragment extends Fragment {
             }
         });
     }
-
 
     private void initBooks() {
         ArrayList<Book> books = new ArrayList<Book>();

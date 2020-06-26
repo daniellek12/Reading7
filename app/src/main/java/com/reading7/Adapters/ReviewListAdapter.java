@@ -1,7 +1,6 @@
 package com.reading7.Adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,11 +28,11 @@ import com.reading7.Dialogs.AddCommentDialog;
 import com.reading7.MainActivity;
 import com.reading7.Objects.Avatar;
 import com.reading7.Objects.Book;
-import com.reading7.Objects.Comment;
 import com.reading7.Objects.Review;
 import com.reading7.Objects.User;
 import com.reading7.R;
 import com.reading7.ReviewCommentsFragment;
+import com.reading7.ReviewsFragment;
 import com.reading7.Utils;
 
 import java.util.Date;
@@ -59,7 +58,6 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
 
 
     public ReviewListAdapter(Context context, List<Review> reviews, Fragment fragment) {
-
         this.mContext = context;
         this.mAuth = FirebaseAuth.getInstance();
         this.db = FirebaseFirestore.getInstance();
@@ -85,10 +83,10 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
         final Review review = reviews.get(i);
 
         bindReviewUser(viewHolder, review.getReviewer_email());
+        setupMoreMenu(viewHolder, i);
 
-        if (i == 0 && ((BookFragment) fragment).isReviewedWithContent()) {
+        if (review.getReviewer_email().equals(mAuth.getCurrentUser().getEmail())) {
             viewHolder.relativeLayout.setBackgroundColor(mContext.getResources().getColor(R.color.grey));
-            setupDeleteReview(viewHolder, i);
         }
 
         Date date = review.getReview_time().toDate();
@@ -154,180 +152,27 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
         });
     }
 
-    private void setupDeleteReview(final ReviewListAdapter.ViewHolder holder, final int position) {
+
+    private void setupMoreMenu(final ReviewListAdapter.ViewHolder holder, final int position) {
 
         final Review review = reviews.get(position);
         User user = ((MainActivity) mContext).getCurrentUser();
 
+        holder.more.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (holder.moreLayout.getVisibility() == View.VISIBLE)
+                    holder.moreLayout.setVisibility(View.GONE);
+                else holder.moreLayout.setVisibility(View.VISIBLE);
+            }
+        });
+
         if (review.getReviewer_email().equals(user.getEmail())) {
-            holder.more.setVisibility(View.VISIBLE);
-            holder.more.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (holder.deleteReview.getVisibility() == View.VISIBLE)
-                        holder.deleteReview.setVisibility(View.GONE);
-                    else holder.deleteReview.setVisibility(View.VISIBLE);
-                }
-            });
-
-            RelativeLayout.LayoutParams layoutParams =
-                    (RelativeLayout.LayoutParams)holder.ratingBar.getLayoutParams();
-            layoutParams.addRule(RelativeLayout.RIGHT_OF, R.id.more);
-            layoutParams.removeRule(RelativeLayout.ALIGN_PARENT_LEFT);
-            layoutParams.leftMargin = 0;
-            holder.ratingBar.setLayoutParams(layoutParams);
-
+            holder.deleteReview.setVisibility(View.VISIBLE);
             holder.deleteReview.setOnClickListener(new DeleteReviewOnClick(review, position));
         }
 
-    }
-
-    public class ViewHolder extends RecyclerView.ViewHolder {
-
-        RelativeLayout relativeLayout;
-        RatingBar ratingBar;
-        TextView userName;
-        TextView postTime;
-        TextView reviewTitle;
-        TextView reviewContent;
-        CircleImageView profileImage;
-        ImageButton more;
-        LinearLayout deleteReview;
-        TextView likeNum;
-        TextView commentsNum;
-        RelativeLayout countersLayout;
-        LinearLayout likeBtn;
-        LinearLayout addCommentBtn;
-        LinearLayout reportBtn;
-        RelativeLayout likeLayout;
-        RelativeLayout deleteLayout;
-        LinearLayout adminDeleteBtn;
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            relativeLayout = itemView.findViewById(R.id.review_item);
-            profileImage = itemView.findViewById(R.id.profileImage);
-            ratingBar = itemView.findViewById(R.id.ratingBar);
-            userName = itemView.findViewById(R.id.userName);
-            postTime = itemView.findViewById(R.id.postTime);
-            reviewTitle = itemView.findViewById(R.id.title);
-            reviewContent = itemView.findViewById(R.id.review);
-            likeNum = itemView.findViewById(R.id.likeNum);
-            likeBtn = itemView.findViewById(R.id.likeBtn);
-            more = itemView.findViewById(R.id.more);
-            deleteReview = itemView.findViewById(R.id.deleteReview);
-            commentsNum = itemView.findViewById(R.id.commentsNum);
-            addCommentBtn = itemView.findViewById(R.id.button_add_comment);
-            countersLayout = itemView.findViewById(R.id.activityCountersLayout);
-            likeLayout = itemView.findViewById(R.id.likeLayout);
-            deleteLayout = itemView.findViewById(R.id.deleteLayout);
-            adminDeleteBtn = itemView.findViewById(R.id.adminDeleteBtn);
-            reportBtn = itemView.findViewById(R.id.reportBtn);
-        }
-    }
-
-
-    private class DeleteReviewOnClick implements View.OnClickListener {
-
-        private Review review;
-        private int position;
-
-        public DeleteReviewOnClick(Review review, int position) {
-            this.review = review;
-            this.position = position;
-        }
-
-        @Override
-        public void onClick(View view) {
-            ((BookFragment) fragment).setReviewed(false);
-            ((BookFragment) fragment).setReviewedWithContent(false);
-
-            reviews.remove(position);
-            notifyItemRemoved(position);
-
-            DocumentReference reviewReference = db.collection("Reviews").document(review.getReview_id());
-            reviewReference.delete();
-
-            updateBookParams();
-        }
-
-        private void updateBookParams() {
-
-            Book book = ((BookFragment) fragment).getBook();
-
-            final float newAvg, newAvgAge;
-            if (book.getRaters_count() == 1) {
-                newAvg = 0;
-                newAvgAge = 0;
-            } else {
-                newAvg = ((book.getAvg_rating() * book.getRaters_count()) - review.getRank()) / (book.getRaters_count() - 1);
-                newAvgAge = ((book.getAvg_age() * book.getRaters_count()) - review.getReviewer_age()) / (book.getRaters_count() - 1);
-            }
-            final int countRaters = book.getRaters_count() - 1;
-            db.collection("Books").document(review.getBook_id()).update("avg_rating", newAvg, "avg_age", newAvgAge, "raters_count", countRaters);
-            ((BookFragment) fragment).updateUIAfterDeleteReview(newAvg, newAvgAge, countRaters);
-        }
-    }
-
-
-    private void addNotificationLike(String to_email, String book_title) {
-        if ((!(to_email.equals(mAuth.getCurrentUser().getEmail())))) {
-
-            Map<String, Object> notificationMessegae = new HashMap<>();
-
-            notificationMessegae.put("type", mContext.getResources().getString(R.string.like_notificiation));
-            notificationMessegae.put("from", mAuth.getCurrentUser().getEmail());
-            notificationMessegae.put("book_title", book_title);
-            notificationMessegae.put("time", Timestamp.now());
-
-            db.collection("Users/" + to_email + "/Notifications").add(notificationMessegae);
-        }
-
-    }
-
-    private void addReport(String reviewer_email, String book_title) {
-            Map<String, Object> notificationMessegae = new HashMap<>();
-
-            notificationMessegae.put("type", mContext.getResources().getString(R.string.report_notificiation));
-            notificationMessegae.put("from", mAuth.getCurrentUser().getEmail());
-            notificationMessegae.put("book_title", book_title);
-            notificationMessegae.put("time", Timestamp.now());
-            notificationMessegae.put("reviewer_email", reviewer_email);
-
-            db.collection("Reports").add(notificationMessegae);
-    }
-
-
-    private void setLikeButton(ViewHolder viewHolder, boolean liked) {
-
-        ImageView buttonIcon = viewHolder.likeBtn.findViewById(R.id.likeIcon);
-        TextView buttonText = viewHolder.likeBtn.findViewById(R.id.likeText);
-
-        if (liked) {
-            buttonText.setTextColor(mContext.getResources().getColor(R.color.colorPrimaryDark));
-            buttonIcon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.like_colored));
-        } else {
-            buttonText.setTextColor(mContext.getResources().getColor(R.color.darkGrey));
-            buttonIcon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.like));
-        }
-
-    }
-
-    private void initAddCommentButton(ViewHolder viewHolder, final int i) {
-
-        final Review review = reviews.get(i);
-
-        viewHolder.addCommentBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AddCommentDialog dialog = new AddCommentDialog();
-                Bundle args = new Bundle();
-                args.putString("review_id", review.getReview_id());
-                dialog.setArguments(args);
-                dialog.setTargetFragment(fragment, 303);
-                dialog.show(fragment.getActivity().getSupportFragmentManager(), "example dialog");
-            }
-        });
+        initReportButton(holder, position);
     }
 
     private void initReportButton(final ViewHolder viewHolder, int i) {
@@ -354,6 +199,19 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
             }
         });
     }
+
+    private void addReport(String reviewer_email, String book_title) {
+        Map<String, Object> notificationMessegae = new HashMap<>();
+
+        notificationMessegae.put("type", mContext.getResources().getString(R.string.report_notificiation));
+        notificationMessegae.put("from", mAuth.getCurrentUser().getEmail());
+        notificationMessegae.put("book_title", book_title);
+        notificationMessegae.put("time", Timestamp.now());
+        notificationMessegae.put("reviewer_email", reviewer_email);
+
+        db.collection("Reports").add(notificationMessegae);
+    }
+
 
     private void initLikeMechanics(final ViewHolder viewHolder, int i) {
 
@@ -398,6 +256,54 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
 
     }
 
+    private void setLikeButton(ViewHolder viewHolder, boolean liked) {
+
+        ImageView buttonIcon = viewHolder.likeBtn.findViewById(R.id.likeIcon);
+        TextView buttonText = viewHolder.likeBtn.findViewById(R.id.likeText);
+
+        if (liked) {
+            buttonText.setTextColor(mContext.getResources().getColor(R.color.colorPrimaryDark));
+            buttonIcon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.like_colored));
+        } else {
+            buttonText.setTextColor(mContext.getResources().getColor(R.color.darkGrey));
+            buttonIcon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.like));
+        }
+
+    }
+
+    private void addNotificationLike(String to_email, String book_title) {
+        if ((!(to_email.equals(mAuth.getCurrentUser().getEmail())))) {
+
+            Map<String, Object> notificationMessegae = new HashMap<>();
+
+            notificationMessegae.put("type", mContext.getResources().getString(R.string.like_notificiation));
+            notificationMessegae.put("from", mAuth.getCurrentUser().getEmail());
+            notificationMessegae.put("book_title", book_title);
+            notificationMessegae.put("time", Timestamp.now());
+
+            db.collection("Users/" + to_email + "/Notifications").add(notificationMessegae);
+        }
+
+    }
+
+
+    private void initAddCommentButton(ViewHolder viewHolder, final int i) {
+
+        final Review review = reviews.get(i);
+
+        viewHolder.addCommentBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AddCommentDialog dialog = new AddCommentDialog();
+                Bundle args = new Bundle();
+                args.putString("review_id", review.getReview_id());
+                dialog.setArguments(args);
+                dialog.setTargetFragment(fragment, 303);
+                dialog.show(fragment.getActivity().getSupportFragmentManager(), "example dialog");
+            }
+        });
+    }
+
 
     public void notifyReviewCommentsChanged(String review_id) {
 
@@ -426,6 +332,85 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
 
                 break;
             }
+        }
+    }
+
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+
+        RelativeLayout relativeLayout;
+        RatingBar ratingBar;
+        TextView userName;
+        TextView postTime;
+        TextView reviewTitle;
+        TextView reviewContent;
+        CircleImageView profileImage;
+        ImageButton more;
+        LinearLayout moreLayout;
+        RelativeLayout deleteReview;
+        LinearLayout reportBtn;
+        TextView likeNum;
+        TextView commentsNum;
+        RelativeLayout countersLayout;
+        LinearLayout likeBtn;
+        LinearLayout addCommentBtn;
+        LinearLayout likeLayout;
+        RelativeLayout deleteLayout;
+        LinearLayout adminDeleteBtn;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            relativeLayout = itemView.findViewById(R.id.review_item);
+            profileImage = itemView.findViewById(R.id.profileImage);
+            ratingBar = itemView.findViewById(R.id.ratingBar);
+            userName = itemView.findViewById(R.id.userName);
+            postTime = itemView.findViewById(R.id.postTime);
+            reviewTitle = itemView.findViewById(R.id.title);
+            reviewContent = itemView.findViewById(R.id.review);
+            likeNum = itemView.findViewById(R.id.likeNum);
+            likeBtn = itemView.findViewById(R.id.likeBtn);
+            more = itemView.findViewById(R.id.more);
+            moreLayout = itemView.findViewById(R.id.moreLayout);
+            deleteReview = itemView.findViewById(R.id.deleteReview);
+            commentsNum = itemView.findViewById(R.id.commentsNum);
+            addCommentBtn = itemView.findViewById(R.id.button_add_comment);
+            countersLayout = itemView.findViewById(R.id.activityCountersLayout);
+            likeLayout = itemView.findViewById(R.id.likeLayout);
+            deleteLayout = itemView.findViewById(R.id.deleteLayout);
+            adminDeleteBtn = itemView.findViewById(R.id.adminDeleteBtn);
+            reportBtn = itemView.findViewById(R.id.reportBtn);
+        }
+    }
+
+    private class DeleteReviewOnClick implements View.OnClickListener {
+
+        private Review review;
+        private int position;
+
+        public DeleteReviewOnClick(Review review, int position) {
+            this.review = review;
+            this.position = position;
+        }
+
+        @Override
+        public void onClick(View view) {
+            if (fragment instanceof BookFragment) {
+                ((BookFragment) fragment).setReviewed(false);
+                ((BookFragment) fragment).setReviewedWithContent(false);
+            }
+
+            reviews.remove(position);
+            notifyItemRemoved(position);
+            db.collection("Reviews").document(review.getReview_id()).delete();
+
+            updateBookParams();
+        }
+
+        private void updateBookParams() {
+            if (fragment instanceof BookFragment)
+                ((BookFragment) fragment).updateAfterReviewDeleted(review.getRank(), review.getReviewer_age());
+            if (fragment instanceof ReviewsFragment)
+                ((ReviewsFragment) fragment).updateReviewDeletion(review.getRank(), review.getReviewer_age());
         }
     }
 
