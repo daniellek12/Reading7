@@ -291,7 +291,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                     String email = document.toObject(User.class).getEmail();
-                                    if (!user.getFollowing().contains(email))
+                                    if (!user.getFollowing().contains(email)&&!user.getEmail().equals(email))
                                         emails.add(email);
                                 }
 
