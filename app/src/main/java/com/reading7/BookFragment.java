@@ -108,13 +108,13 @@ public class BookFragment extends Fragment {
         initSimilarBooksSuggestions();
 
         if (Utils.isAdmin) {
-            getActivity().findViewById(R.id.addToWishlist).setVisibility(View.GONE);
-            getActivity().findViewById(R.id.button_read).setVisibility(View.INVISIBLE);
-            getActivity().findViewById(R.id.button_already_read).setVisibility(View.GONE);
-            getActivity().findViewById(R.id.top_buttons_layout).setVisibility(View.GONE);
-            getActivity().findViewById(R.id.share_layout).setVisibility(View.INVISIBLE);
-            getActivity().findViewById(R.id.button_delete_book).setVisibility(View.VISIBLE);
-            getActivity().findViewById(R.id.editButton).setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.addToWishlist).setVisibility(View.GONE);
+            getView().findViewById(R.id.button_read).setVisibility(View.INVISIBLE);
+            getView().findViewById(R.id.button_already_read).setVisibility(View.GONE);
+            getView().findViewById(R.id.top_buttons_layout).setVisibility(View.GONE);
+            getView().findViewById(R.id.share_layout).setVisibility(View.INVISIBLE);
+            getView().findViewById(R.id.button_delete_book).setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.editButton).setVisibility(View.VISIBLE);
             initDeleteButton();
             initEditButton();
             initSaveButton();
@@ -135,8 +135,8 @@ public class BookFragment extends Fragment {
      */
     private void initScrollView() {
 
-        final View view = getActivity().findViewById(R.id.summary);
-        final NestedScrollView scrollView = getActivity().findViewById(R.id.nestedScrollView);
+        final View view = getView().findViewById(R.id.summary);
+        final NestedScrollView scrollView = getView().findViewById(R.id.nestedScrollView);
 
         scrollView.getViewTreeObserver().addOnScrollChangedListener(new ScrollPositionObserver());
 
@@ -153,27 +153,27 @@ public class BookFragment extends Fragment {
 
         setBookGenres();
 
-        rankRatingBar = getActivity().findViewById(R.id.bookRatingBar);
+        rankRatingBar = getView().findViewById(R.id.bookRatingBar);
         rankRatingBar.setRating(mBook.getAvg_rating());
 
-        ratingNum = getActivity().findViewById(R.id.ratingNum);
+        ratingNum = getView().findViewById(R.id.ratingNum);
         ratingNum.setText(Float.toString(mBook.getAvg_rating()));
 
         mAvgAge = mBook.getAvg_age();
 
-        TextView textViewAuthor = getActivity().findViewById(R.id.author);
+        TextView textViewAuthor = getView().findViewById(R.id.author);
         textViewAuthor.setText(mBook.getAuthor() + ", ");
 
-        TextView textViewPublisher = getActivity().findViewById(R.id.publisher);
+        TextView textViewPublisher = getView().findViewById(R.id.publisher);
         textViewPublisher.setText(getResources().getString(R.string.publisher) + " " + mBook.getPublisher());
 
-        TextView textViewTitle = getActivity().findViewById(R.id.book_name);
+        TextView textViewTitle = getView().findViewById(R.id.book_name);
         textViewTitle.setText(mBook.getTitle());
 
-        ImageView coverImage = getActivity().findViewById(R.id.bookCoverImage);
+        ImageView coverImage = getView().findViewById(R.id.bookCoverImage);
         Utils.showImage(mBook.getTitle(), coverImage, getActivity());
 
-        TextView textViewSummary = getActivity().findViewById(R.id.summary);
+        TextView textViewSummary = getView().findViewById(R.id.summary);
         textViewSummary.setText(mBook.getDescription());
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -182,9 +182,9 @@ public class BookFragment extends Fragment {
 
         String pages = Integer.toString(mBook.getNum_pages());
         if (pages.equals("-1")) {
-            getActivity().findViewById(R.id.numPagesLayout).setVisibility(View.GONE);
+            getView().findViewById(R.id.numPagesLayout).setVisibility(View.GONE);
         } else {
-            TextView textViewPages = getActivity().findViewById(R.id.numPages);
+            TextView textViewPages = getView().findViewById(R.id.numPages);
             textViewPages.setText(pages);
         }
 
@@ -207,7 +207,7 @@ public class BookFragment extends Fragment {
             }
         }
 
-        TextView genres = getActivity().findViewById(R.id.genres);
+        TextView genres = getView().findViewById(R.id.genres);
         genres.setText(geners);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             genres.setJustificationMode(JUSTIFICATION_MODE_INTER_WORD);
@@ -216,7 +216,7 @@ public class BookFragment extends Fragment {
 
     private void initOpenSummary() {
 
-        final TextView mSummary = getActivity().findViewById(R.id.summary);
+        final TextView mSummary = getView().findViewById(R.id.summary);
         mSummary.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -232,7 +232,7 @@ public class BookFragment extends Fragment {
     }
 
     private void initBackButton() {
-        getActivity().findViewById(R.id.bookBackButton).setOnClickListener(new View.OnClickListener() {
+        getView().findViewById(R.id.bookBackButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getActivity().onBackPressed();
@@ -244,7 +244,7 @@ public class BookFragment extends Fragment {
     private void initReviews() {
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        reviewsRV = getActivity().findViewById(R.id.reviews);
+        reviewsRV = getView().findViewById(R.id.reviews);
         reviewsRV.setLayoutManager(layoutManager);
         getBookReviews();
     }
@@ -297,7 +297,7 @@ public class BookFragment extends Fragment {
             }
         }
 
-        TextView countRatersText = getActivity().findViewById(R.id.reviwersNum);
+        TextView countRatersText = getView().findViewById(R.id.reviwersNum);
         if (mBook.getRaters_count() == 1)
             countRatersText.setText(getResources().getString(R.string.one_reviewer));
         else
@@ -341,7 +341,7 @@ public class BookFragment extends Fragment {
         updateRankButton();
 
         // Set the rank button functionality
-        Button rankBtn = getActivity().findViewById(R.id.button_read);
+        Button rankBtn = getView().findViewById(R.id.button_read);
         rankBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -364,7 +364,7 @@ public class BookFragment extends Fragment {
 
     private void updateRankButton() {
 
-        final Button rankBtn = getActivity().findViewById(R.id.button_read);
+        final Button rankBtn = getView().findViewById(R.id.button_read);
 
         if (Utils.isAdmin) {
             return;
@@ -372,11 +372,11 @@ public class BookFragment extends Fragment {
 
         if (isReviewed) {
             rankBtn.setVisibility(View.INVISIBLE);
-            getActivity().findViewById(R.id.button_already_read).setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.button_already_read).setVisibility(View.VISIBLE);
             getView().findViewById(R.id.addToWishlist).setVisibility(View.GONE);
         } else {
             rankBtn.setVisibility(View.VISIBLE);
-            getActivity().findViewById(R.id.button_already_read).setVisibility(View.GONE);
+            getView().findViewById(R.id.button_already_read).setVisibility(View.GONE);
             getView().findViewById(R.id.addToWishlist).setVisibility(View.VISIBLE);
         }
     }
@@ -398,7 +398,7 @@ public class BookFragment extends Fragment {
         });
 
         // Set the wishlist button functionality
-        getActivity().findViewById(R.id.addToWishlist).setOnClickListener(new View.OnClickListener() {
+        getView().findViewById(R.id.addToWishlist).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -435,7 +435,7 @@ public class BookFragment extends Fragment {
 
     private void updateWishlistButton() {
 
-        final Button wishListBtn = getActivity().findViewById(R.id.addToWishlist);
+        final Button wishListBtn = getView().findViewById(R.id.addToWishlist);
         Drawable heart = Utils.getDrawable(getContext(), "heart");
 
         if (isWishlist) {
@@ -462,7 +462,7 @@ public class BookFragment extends Fragment {
 
     private void initAlreadyReadButton() {
 
-        Button alreadyReadButton = getActivity().findViewById(R.id.button_already_read);
+        Button alreadyReadButton = getView().findViewById(R.id.button_already_read);
         alreadyReadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -485,7 +485,7 @@ public class BookFragment extends Fragment {
     }
 
     private void initShelfButton() {
-        Button shelfButton = getActivity().findViewById(R.id.addToShelf);
+        Button shelfButton = getView().findViewById(R.id.addToShelf);
         shelfButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -502,7 +502,7 @@ public class BookFragment extends Fragment {
     }
 
     private void initInviteButton() {
-        Button inviteButton = getActivity().findViewById(R.id.share_button);
+        Button inviteButton = getView().findViewById(R.id.share_button);
         inviteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -519,7 +519,7 @@ public class BookFragment extends Fragment {
     }
 
     private void initChallengeButton() {
-        ImageButton challengeButton = getActivity().findViewById(R.id.challenge_button);
+        ImageButton challengeButton = getView().findViewById(R.id.challenge_button);
         challengeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -578,7 +578,7 @@ public class BookFragment extends Fragment {
 // ===================================== Admin Mechanisms ======================================= //
 
     private void initEditButton() {
-        getActivity().findViewById(R.id.editButton).setOnClickListener(new View.OnClickListener() {
+        getView().findViewById(R.id.editButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 setEditMode(true);
@@ -590,48 +590,48 @@ public class BookFragment extends Fragment {
     public void setEditMode(boolean active) {
         if (active) {
             edit_mode = true;
-            getActivity().findViewById(R.id.editButton).setVisibility(View.GONE);
-            getActivity().findViewById(R.id.saveButton).setVisibility(View.VISIBLE);
-            getActivity().findViewById(R.id.author).setVisibility(View.INVISIBLE);
-            getActivity().findViewById(R.id.author_edit).setVisibility(View.VISIBLE);
-            getActivity().findViewById(R.id.publisher).setVisibility(View.INVISIBLE);
-            getActivity().findViewById(R.id.publisher_edit).setVisibility(View.VISIBLE);
-            getActivity().findViewById(R.id.genres).setVisibility(View.INVISIBLE);
-            getActivity().findViewById(R.id.genres_edit).setVisibility(View.VISIBLE);
-            getActivity().findViewById(R.id.bookRatingBar).setVisibility(View.INVISIBLE);
-            getActivity().findViewById(R.id.ratingNum).setVisibility(View.INVISIBLE);
-            getActivity().findViewById(R.id.summary_title).setVisibility(View.INVISIBLE);
-            getActivity().findViewById(R.id.summary).setVisibility(View.INVISIBLE);
-            getActivity().findViewById(R.id.summary_edit).setVisibility(View.VISIBLE);
-            getActivity().findViewById(R.id.numPages).setVisibility(View.GONE);
-            getActivity().findViewById(R.id.numPages_edit).setVisibility(View.VISIBLE);
-            getActivity().findViewById(R.id.button_delete_book).setVisibility(View.GONE);
+            getView().findViewById(R.id.editButton).setVisibility(View.GONE);
+            getView().findViewById(R.id.saveButton).setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.author).setVisibility(View.INVISIBLE);
+            getView().findViewById(R.id.author_edit).setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.publisher).setVisibility(View.INVISIBLE);
+            getView().findViewById(R.id.publisher_edit).setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.genres).setVisibility(View.INVISIBLE);
+            getView().findViewById(R.id.genres_edit).setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.bookRatingBar).setVisibility(View.INVISIBLE);
+            getView().findViewById(R.id.ratingNum).setVisibility(View.INVISIBLE);
+            getView().findViewById(R.id.summary_title).setVisibility(View.INVISIBLE);
+            getView().findViewById(R.id.summary).setVisibility(View.INVISIBLE);
+            getView().findViewById(R.id.summary_edit).setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.numPages).setVisibility(View.GONE);
+            getView().findViewById(R.id.numPages_edit).setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.button_delete_book).setVisibility(View.GONE);
         } else {
             edit_mode = false;
-            getActivity().findViewById(R.id.editButton).setVisibility(View.VISIBLE);
-            getActivity().findViewById(R.id.saveButton).setVisibility(View.GONE);
-            //getActivity().findViewById(R.id.book_name).setVisibility(View.VISIBLE);
-            //getActivity().findViewById(R.id.book_name_edit).setVisibility(View.GONE);
-            getActivity().findViewById(R.id.author).setVisibility(View.VISIBLE);
-            getActivity().findViewById(R.id.author_edit).setVisibility(View.GONE);
-            getActivity().findViewById(R.id.publisher).setVisibility(View.VISIBLE);
-            getActivity().findViewById(R.id.publisher_edit).setVisibility(View.GONE);
-            getActivity().findViewById(R.id.genres).setVisibility(View.VISIBLE);
-            getActivity().findViewById(R.id.genres_edit).setVisibility(View.GONE);
-            getActivity().findViewById(R.id.bookRatingBar).setVisibility(View.VISIBLE);
-            getActivity().findViewById(R.id.ratingNum).setVisibility(View.VISIBLE);
-            getActivity().findViewById(R.id.summary_title).setVisibility(View.VISIBLE);
-            getActivity().findViewById(R.id.summary).setVisibility(View.VISIBLE);
-            getActivity().findViewById(R.id.summary_edit).setVisibility(View.GONE);
-            getActivity().findViewById(R.id.numPages).setVisibility(View.VISIBLE);
-            getActivity().findViewById(R.id.numPages_edit).setVisibility(View.GONE);
-            getActivity().findViewById(R.id.button_delete_book).setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.editButton).setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.saveButton).setVisibility(View.GONE);
+            //getView().findViewById(R.id.book_name).setVisibility(View.VISIBLE);
+            //getView().findViewById(R.id.book_name_edit).setVisibility(View.GONE);
+            getView().findViewById(R.id.author).setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.author_edit).setVisibility(View.GONE);
+            getView().findViewById(R.id.publisher).setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.publisher_edit).setVisibility(View.GONE);
+            getView().findViewById(R.id.genres).setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.genres_edit).setVisibility(View.GONE);
+            getView().findViewById(R.id.bookRatingBar).setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.ratingNum).setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.summary_title).setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.summary).setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.summary_edit).setVisibility(View.GONE);
+            getView().findViewById(R.id.numPages).setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.numPages_edit).setVisibility(View.GONE);
+            getView().findViewById(R.id.button_delete_book).setVisibility(View.VISIBLE);
         }
 
     }
 
     private void initSaveButton() {
-        getActivity().findViewById(R.id.saveButton).setOnClickListener(new View.OnClickListener() {
+        getView().findViewById(R.id.saveButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 setEditMode(false);
@@ -641,22 +641,22 @@ public class BookFragment extends Fragment {
     }
 
     public void updateBook() {
-//        EditText title_edit = getActivity().findViewById(R.id.book_name_edit);
+//        EditText title_edit = getView().findViewById(R.id.book_name_edit);
 //        mBook.setTitle(title_edit.getText().toString());
 
-        EditText author_edit = getActivity().findViewById(R.id.author_edit);
+        EditText author_edit = getView().findViewById(R.id.author_edit);
         mBook.setAuthor(author_edit.getText().toString());
 
-        EditText publisher_edit = getActivity().findViewById(R.id.publisher_edit);
+        EditText publisher_edit = getView().findViewById(R.id.publisher_edit);
         mBook.setPublisher(publisher_edit.getText().toString());
 
-        EditText num_pages_edit = getActivity().findViewById(R.id.numPages_edit);
+        EditText num_pages_edit = getView().findViewById(R.id.numPages_edit);
         mBook.setNum_pages(Integer.parseInt(num_pages_edit.getText().toString()));
 
-        EditText summary_edit = getActivity().findViewById(R.id.summary_edit);
+        EditText summary_edit = getView().findViewById(R.id.summary_edit);
         mBook.setDescription(summary_edit.getText().toString());
 
-        EditText genres_edit = getActivity().findViewById(R.id.genres_edit);
+        EditText genres_edit = getView().findViewById(R.id.genres_edit);
         String genres_new = genres_edit.getText().toString();
         String[] elements = genres_new.split("\\|");
         String[] trimmed = new String[elements.length];
@@ -675,7 +675,7 @@ public class BookFragment extends Fragment {
     }
 
     private void initDeleteButton() {
-        getActivity().findViewById(R.id.button_delete_book).setOnClickListener(new View.OnClickListener() {
+        getView().findViewById(R.id.button_delete_book).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 DeleteBookDialog dialog = new DeleteBookDialog();
@@ -690,27 +690,27 @@ public class BookFragment extends Fragment {
                 dialog.show(getActivity().getSupportFragmentManager(), "example dialog");
 //                Utils.deleteBookFromDB(mBook.getId(), mBook.getTitle());
 //                admin_delete = true;
-//                getActivity().onBackPressed();
+//                getView().onBackPressed();
             }
         });
     }
 
     private void initEditFields() {
 
-        EditText author_edit = getActivity().findViewById(R.id.author_edit);
+        EditText author_edit = getView().findViewById(R.id.author_edit);
         author_edit.setText(mBook.getAuthor());
 
-        EditText publisher_edit = getActivity().findViewById(R.id.publisher_edit);
+        EditText publisher_edit = getView().findViewById(R.id.publisher_edit);
         publisher_edit.setText(mBook.getPublisher());
 
-        TextView genres = getActivity().findViewById(R.id.genres);
-        EditText genres_edit = getActivity().findViewById(R.id.genres_edit);
+        TextView genres = getView().findViewById(R.id.genres);
+        EditText genres_edit = getView().findViewById(R.id.genres_edit);
         genres_edit.setText(genres.getText());
 
-        EditText summary_edit = getActivity().findViewById(R.id.summary_edit);
+        EditText summary_edit = getView().findViewById(R.id.summary_edit);
         summary_edit.setText(mBook.getDescription());
 
-        EditText pages_edit = getActivity().findViewById(R.id.numPages_edit);
+        EditText pages_edit = getView().findViewById(R.id.numPages_edit);
         pages_edit.setText(Integer.toString(mBook.getNum_pages()));
     }
 
@@ -742,7 +742,7 @@ public class BookFragment extends Fragment {
         rankRatingBar.setRating(rank_avg);
         ratingNum.setText(Float.toString(rank_avg));
         mAvgAge = age_avg;
-        TextView countRatersText = getActivity().findViewById(R.id.reviwersNum);
+        TextView countRatersText = getView().findViewById(R.id.reviwersNum);
         if (mBook.getRaters_count() == 1)
             countRatersText.setText(getResources().getString(R.string.one_reviewer));
         else
@@ -809,10 +809,10 @@ public class BookFragment extends Fragment {
         private NestedScrollView scrollView;
 
         public ScrollPositionObserver() {
-            scrollView = getActivity().findViewById(R.id.nestedScrollView);
-            cover = getActivity().findViewById(R.id.bookCoverImage);
+            scrollView = getView().findViewById(R.id.nestedScrollView);
+            cover = getView().findViewById(R.id.bookCoverImage);
             coverHeight = getResources().getDimensionPixelSize(R.dimen.book_fragment_cover_height);
-            toolbar = getActivity().findViewById(R.id.toolBar);
+            toolbar = getView().findViewById(R.id.toolBar);
             toolbarHeight = getResources().getDimensionPixelSize(R.dimen.toolbar_height);
         }
 
