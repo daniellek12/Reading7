@@ -79,8 +79,8 @@ public class PublicProfileFragment extends Fragment {
 
     private void getUserInformation() {
 
-        getActivity().findViewById(R.id.private_alert).setVisibility(View.GONE);
-        getActivity().findViewById(R.id.classified_data).setVisibility(View.GONE);
+        getView().findViewById(R.id.private_alert).setVisibility(View.GONE);
+        getView().findViewById(R.id.classified_data).setVisibility(View.GONE);
 
         DocumentReference userRef = db.collection("Users").document(this.user_email);
         Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), false);
@@ -93,23 +93,23 @@ public class PublicProfileFragment extends Fragment {
 
                         user = document.toObject(User.class);
 
-                        TextView userName = getActivity().findViewById(R.id.publicProfile_userName);
+                        TextView userName = getView().findViewById(R.id.publicProfile_userName);
                         userName.setText(user.getFull_name());
 
-                        TextView birthDate = getActivity().findViewById(R.id.publicProfile_age);
+                        TextView birthDate = getView().findViewById(R.id.publicProfile_age);
                         birthDate.setText("גיל: " + calculateAge(user.getBirth_date()));
 
-                        CircleImageView profileImage = getActivity().findViewById(R.id.publicProfile_profileImage);
+                        CircleImageView profileImage = getView().findViewById(R.id.publicProfile_profileImage);
                         user.getAvatar().loadIntoImage(getContext(), profileImage);
 
-                        TextView followers = getActivity().findViewById(R.id.publicProfile_followers);
+                        TextView followers = getView().findViewById(R.id.publicProfile_followers);
                         followers.setText(Integer.toString(user.getFollowers().size()));
 
-                        TextView following = getActivity().findViewById(R.id.publicProfile_following);
+                        TextView following = getView().findViewById(R.id.publicProfile_following);
                         following.setText(Integer.toString(user.getFollowing().size()));
 
                         if (isAdmin) {
-                            getActivity().findViewById(R.id.follow).setVisibility(View.GONE);
+                            getView().findViewById(R.id.follow).setVisibility(View.GONE);
                         } else {
                             initFollowButton();
                         }
@@ -129,7 +129,7 @@ public class PublicProfileFragment extends Fragment {
 
     private void initCustomShelves() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        final RecyclerView customShelvesRV = getActivity().findViewById(R.id.customShelvesRV);
+        final RecyclerView customShelvesRV = getView().findViewById(R.id.customShelvesRV);
         customShelvesRV.setLayoutManager(layoutManager);
         adapterCustomShelves = new CustomShelvesAdapter(shelfNames, getActivity(), user_email, (ViewGroup) getView(), getActivity());
         customShelvesRV.setAdapter(adapterCustomShelves);
@@ -156,18 +156,18 @@ public class PublicProfileFragment extends Fragment {
 
     private void check_private() {
         if (!user.getIs_private() || user.getFollowers().contains(mAuth.getCurrentUser().getEmail()) || Utils.isAdmin) {
-            getActivity().findViewById(R.id.private_alert).setVisibility(View.GONE);
-            getActivity().findViewById(R.id.classified_data).setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.private_alert).setVisibility(View.GONE);
+            getView().findViewById(R.id.classified_data).setVisibility(View.VISIBLE);
         } else {
-            getActivity().findViewById(R.id.private_alert).setVisibility(View.VISIBLE);
-            getActivity().findViewById(R.id.classified_data).setVisibility(View.GONE);
+            getView().findViewById(R.id.private_alert).setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.classified_data).setVisibility(View.GONE);
         }
     }
 
 
     private void initFollowButton() {
 
-        Button follow = getActivity().findViewById(R.id.follow);
+        Button follow = getView().findViewById(R.id.follow);
         final String follow_string = getResources().getString(R.string.follow_button);
         final String unfollow_string = getResources().getString(R.string.unfollow_button);
         final String request_string = getResources().getString(R.string.request_string);
@@ -189,7 +189,7 @@ public class PublicProfileFragment extends Fragment {
         follow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Button follow = getActivity().findViewById(R.id.follow);
+                Button follow = getView().findViewById(R.id.follow);
                 if (follow.getText().equals(follow_string)) { // follow the user
                     if (user_me.getEmail().equals(user.getEmail()))
                         throw new AssertionError("YOU CANT FOLLOW YOURSELF!!!!");
@@ -258,7 +258,7 @@ public class PublicProfileFragment extends Fragment {
 
                                 ArrayList<String> followers = (ArrayList<String>) document.getData().get("followers");
                                 user.setFollowers(followers);
-                                ((TextView) getActivity().findViewById(R.id.publicProfile_followers)).setText(Integer.toString(followers.size()));
+                                ((TextView) getView().findViewById(R.id.publicProfile_followers)).setText(Integer.toString(followers.size()));
                                 check_private();
 
                             } else
@@ -306,14 +306,14 @@ public class PublicProfileFragment extends Fragment {
         final ShelfFragment wishlistShelf = new ShelfFragment(usersWishListBookNames, title, user.getEmail(), ShelfFragment.ShelfType.WISHLIST);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-        final RecyclerView wishlistRV = getActivity().findViewById(R.id.wishlistRV);
+        final RecyclerView wishlistRV = getView().findViewById(R.id.wishlistRV);
         wishlistRV.setLayoutManager(layoutManager);
         adapterWishList = new ProfileShelfAdapter(getActivity(), usersWishListBookNames, wishlistShelf, (ViewGroup) getView(), getActivity());
         wishlistRV.setAdapter(adapterWishList);
 
         getUserWishList();
 
-        getActivity().findViewById(R.id.wishlistTitle).setOnClickListener(new View.OnClickListener() {
+        getView().findViewById(R.id.wishlistTitle).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ((MainActivity) getActivity()).addFragment(wishlistShelf);
@@ -336,11 +336,11 @@ public class PublicProfileFragment extends Fragment {
                     adapterWishList.notifyDataSetChanged();
 
                     if (usersWishListBookNames.isEmpty()) {
-                        getActivity().findViewById(R.id.wishlistRV).setVisibility(View.INVISIBLE);
-                        getActivity().findViewById(R.id.publicProfile_emptyWishlist).setVisibility(View.VISIBLE);
+                        getView().findViewById(R.id.wishlistRV).setVisibility(View.INVISIBLE);
+                        getView().findViewById(R.id.publicProfile_emptyWishlist).setVisibility(View.VISIBLE);
                     } else {
-                        getActivity().findViewById(R.id.wishlistRV).setVisibility(View.VISIBLE);
-                        getActivity().findViewById(R.id.publicProfile_emptyWishlist).setVisibility(View.INVISIBLE);
+                        getView().findViewById(R.id.wishlistRV).setVisibility(View.VISIBLE);
+                        getView().findViewById(R.id.publicProfile_emptyWishlist).setVisibility(View.INVISIBLE);
                     }
                 }
             }
@@ -352,14 +352,14 @@ public class PublicProfileFragment extends Fragment {
         String title = getString(R.string.public_my_books) + " " + user.getFull_name();
         final ShelfFragment myBooksShelf = new ShelfFragment(usersReviewBookNames, title, user.getEmail(), ShelfFragment.ShelfType.MYBOOKS);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-        RecyclerView myBooksRV = getActivity().findViewById(R.id.myBooksRV);
+        RecyclerView myBooksRV = getView().findViewById(R.id.myBooksRV);
         myBooksRV.setLayoutManager(layoutManager);
         adapterReviews = new ProfileShelfAdapter(getActivity(), usersReviewBookNames, myBooksShelf, (ViewGroup) getView(), getActivity());
         myBooksRV.setAdapter(adapterReviews);
 
         getUserReviews();
 
-        getActivity().findViewById(R.id.mybooksTitle).setOnClickListener(new View.OnClickListener() {
+        getView().findViewById(R.id.mybooksTitle).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ((MainActivity) getActivity()).addFragment(myBooksShelf);
@@ -384,15 +384,15 @@ public class PublicProfileFragment extends Fragment {
 
                     adapterReviews.notifyDataSetChanged();
 
-                    TextView reviews_num = getActivity().findViewById(R.id.publicProfile_recommendations);
+                    TextView reviews_num = getView().findViewById(R.id.publicProfile_recommendations);
                     reviews_num.setText(Integer.toString(usersReviewBookNames.size()));
 
                     if (usersReviewBookNames.isEmpty()) {
-                        getActivity().findViewById(R.id.myBooksRV).setVisibility(View.INVISIBLE);
-                        getActivity().findViewById(R.id.publicProfile_emptyMyBooks).setVisibility(View.VISIBLE);
+                        getView().findViewById(R.id.myBooksRV).setVisibility(View.INVISIBLE);
+                        getView().findViewById(R.id.publicProfile_emptyMyBooks).setVisibility(View.VISIBLE);
                     } else {
-                        getActivity().findViewById(R.id.myBooksRV).setVisibility(View.VISIBLE);
-                        getActivity().findViewById(R.id.publicProfile_emptyMyBooks).setVisibility(View.INVISIBLE);
+                        getView().findViewById(R.id.myBooksRV).setVisibility(View.VISIBLE);
+                        getView().findViewById(R.id.publicProfile_emptyMyBooks).setVisibility(View.INVISIBLE);
                     }
                 }
                 Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), true);

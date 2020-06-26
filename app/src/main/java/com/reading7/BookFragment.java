@@ -567,7 +567,7 @@ public class BookFragment extends Fragment {
                 finalImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        ((MainActivity) getActivity()).loadFragment(new BookFragment(book));
+                        ((MainActivity) getActivity()).addFragment(new BookFragment(book));
                     }
                 });
             }
