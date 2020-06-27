@@ -40,7 +40,6 @@
 
         <ImageView
             android:id="@+id/delete_background"
-            android:visibility="gone"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_alignTop="@id/coverImage"
@@ -48,18 +47,19 @@
             android:layout_marginLeft="-40dp"
             android:layout_marginTop="-40dp"
             android:alpha="0.8"
-            android:background="@drawable/round_button_white" />
+            android:background="@drawable/round_button_white"
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/delete_button"
-            android:visibility="gone"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_alignTop="@id/coverImage"
             android:layout_alignParentLeft="true"
-            android:src="@drawable/delete"
             android:layout_margin="5dp"
-            android:tint="@color/design_default_color_error" />
+            android:src="@drawable/delete"
+            android:tint="@color/design_default_color_error"
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/imageView2"
@@ -71,4 +71,5 @@
             app:srcCompat="@color/black" />
 
     </RelativeLayout>
+
 </androidx.cardview.widget.CardView>

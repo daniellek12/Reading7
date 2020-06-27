@@ -7,7 +7,6 @@ public class User {
     private String full_name;                       // user's name
     private String email;                           // user's email
     private String birth_date;                      // user's birth date
-    // private ArrayList<Integer> avatar_details;      // skin color, eyes color, hair color, hair type, shirt color
     private ArrayList<String> followers;            // Emails list of the followers
     private ArrayList<String> following;            // Emails list of the following
     private ArrayList<String> follow_requests;      // Emails list of the followers requested to follow user
@@ -114,16 +113,16 @@ public class User {
         return birth_date;
     }
 
+    public void setBirth_date(String birth_date) {
+        this.birth_date = birth_date;
+    }
+
     public Boolean getIs_private() {
         return is_private;
     }
 
     public void setIs_private(Boolean is_private) {
         this.is_private = is_private;
-    }
-
-    public void setBirth_date(String birth_date) {
-        this.birth_date = birth_date;
     }
 
     public ArrayList<String> getFollowers() {

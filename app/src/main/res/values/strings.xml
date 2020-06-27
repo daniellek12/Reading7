@@ -213,4 +213,14 @@
     <string name="reports">דיווחים על ביקורות</string>
     <string name="delete_book">מחק ספר</string>
 
+    <!-- Leaderboard -->
+    <string name="most_read_books">הספרים הכי נקראים</string>
+    <string name="max_rated_books">הספרים המדורגים הכי גבוה</string>
+    <string name="max_points_users">מלכי ומלכות הנקודות</string>
+    <string name="x_points">%1$d נקודות</string>
+    <string name="x_readers">%1$d קוראים</string>
+    <string name="genre_by_age_statistics_title">איזה גילאים קראו ספרי</string>
+    <string name="pages_by_age_statistics_title">כמה עמודים בממוצע קוראים בכל גיל?</string>
+
+
 </resources>

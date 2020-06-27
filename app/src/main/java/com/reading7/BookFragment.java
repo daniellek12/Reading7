@@ -105,16 +105,18 @@ public class BookFragment extends Fragment {
         initBackButton();
         initScrollView();
         initShowAllReviewsButton();
-        initSimilarBooksSuggestions();
 
         if (Utils.isAdmin) {
             getView().findViewById(R.id.addToWishlist).setVisibility(View.GONE);
-            getView().findViewById(R.id.button_read).setVisibility(View.INVISIBLE);
+            getView().findViewById(R.id.button_read).setVisibility(View.GONE);
             getView().findViewById(R.id.button_already_read).setVisibility(View.GONE);
             getView().findViewById(R.id.top_buttons_layout).setVisibility(View.GONE);
             getView().findViewById(R.id.share_layout).setVisibility(View.INVISIBLE);
+            getView().findViewById(R.id.share_layout).setScaleY(0);
             getView().findViewById(R.id.button_delete_book).setVisibility(View.VISIBLE);
             getView().findViewById(R.id.editButton).setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.similar_books_layout).setVisibility(View.GONE);
+            getView().findViewById(R.id.divider11).setVisibility(View.GONE);
             initDeleteButton();
             initEditButton();
             initSaveButton();
@@ -125,6 +127,7 @@ public class BookFragment extends Fragment {
             initShelfButton();
             initInviteButton();
             initChallengeButton();
+            initSimilarBooksSuggestions();
         }
 
     }

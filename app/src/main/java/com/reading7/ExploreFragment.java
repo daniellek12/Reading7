@@ -56,7 +56,6 @@ public class ExploreFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ((BottomNavigationView) getActivity().findViewById(R.id.navigation)).setSelectedItemId(R.id.navigation_explore);
 
-
         mGenre = "בשבילך";
         first = 0;
         showProgressBar();
@@ -67,7 +66,6 @@ public class ExploreFragment extends Fragment {
         } else {
             initPlaylists();
         }
-
 
         initExplore();
         first_load_books();
@@ -115,15 +113,16 @@ public class ExploreFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     ((MainActivity) getActivity()).addFragment(new StoreFragment());
-
-
                 }
             });
 
             getActivity().findViewById(R.id.statistics).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ((MainActivity) getActivity()).loadFragment(new StatisticsFragment());}});
+                    StatisticsDialog dialog = new StatisticsDialog();
+                    dialog.show(getActivity().getSupportFragmentManager(), "statistics dialog");
+                }
+            });
         }
     }
 

@@ -83,7 +83,7 @@ public class StoreFragment extends Fragment {
 
         // Mustaches
         for (int i = 1; i < 5; i++) {
-            int hairColor = ((MainActivity)getActivity()).getCurrentUser().getAvatar().getHairColor();
+            int hairColor = ((MainActivity) getActivity()).getCurrentUser().getAvatar().getHairColor();
             products.add(new Product(70, new Avatar.Item(Avatar.ItemType.MUSTACHE, i, hairColor)));
         }
 
@@ -104,7 +104,7 @@ public class StoreFragment extends Fragment {
         getActivity().findViewById(R.id.backButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainActivity)getActivity()).onBackPressed();
+                getActivity().onBackPressed();
             }
         });
     }

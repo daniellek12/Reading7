@@ -51,16 +51,6 @@ public class Utils {
     public static boolean clicksEnabled = true;
     public static boolean isAdmin = false;
 
-    public enum ChallengeState {
-        RIGHT,
-        WRONG,
-        NOT_ANSWERED,
-        OUT_OF_TIME
-    }
-
-
-
-
     /**
      * Loads image of book into an imageView.
      *
@@ -101,7 +91,6 @@ public class Utils {
         }
         return TextUtils.join(" ", r);
     }
-
 
     /**
      * Returns the user's age based on it's birth date.
@@ -222,10 +211,9 @@ public class Utils {
                 enableDisableClicks(activity, (ViewGroup) view, enabled);
             }
         }
-        if (!isAdmin)
+        if (activity instanceof MainActivity && !isAdmin)
             ((MainActivity) activity).setBottomNavigationEnabled(enabled);
     }
-
 
     public static void closeKeyboard(Context context) {
 
@@ -241,7 +229,6 @@ public class Utils {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
     }
-
 
     public static ArrayList<String> MapGenreToBook(Book b) {
         ArrayList<String> genres = new ArrayList<String>();
@@ -603,7 +590,6 @@ public class Utils {
         return !Collections.disjoint(book.getGenres(), generes);
     }
 
-
     public static String RelativeDateDisplay(long timeDifferenceMilliseconds) {
         long diffSeconds = timeDifferenceMilliseconds / 1000;
         long diffMinutes = timeDifferenceMilliseconds / (60 * 1000);
@@ -650,7 +636,6 @@ public class Utils {
         }
     }
 
-
     public static String calcRangeOfAge(double num) {
         if (num >= 0 && num < 7)
             return "0-6";
@@ -667,32 +652,6 @@ public class Utils {
 
         return "";
     }
-
-
-// ==================================== Firebase Functions ====================================== //
-
-    /*   public static void updateBooks() {
-        final FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        db.collection("Books").get()//VERY BAD!!!!!!!!!!!!!!!!!
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (final QueryDocumentSnapshot document : task.getResult()) {
-                                db.collection("Books").document(document.getId()).update("avg_age", 0).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Log.d("Utils", "Updated ".concat(document.get("title").toString()));
-                                    }
-                                });
-                            }
-                        } else {
-                            Log.d("Utils", "Error getting documents: ", task.getException());
-                        }
-                    }
-                });
-    }*/
 
     public static void convertTxtToBook(final Context context) throws IOException {
 
@@ -820,6 +779,32 @@ public class Utils {
         }
 
     }
+
+
+// ==================================== Firebase Functions ====================================== //
+
+    /*   public static void updateBooks() {
+        final FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("Books").get()//VERY BAD!!!!!!!!!!!!!!!!!
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (final QueryDocumentSnapshot document : task.getResult()) {
+                                db.collection("Books").document(document.getId()).update("avg_age", 0).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d("Utils", "Updated ".concat(document.get("title").toString()));
+                                    }
+                                });
+                            }
+                        } else {
+                            Log.d("Utils", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+    }*/
 
     public static void addToEachBookTheFieldGenres() {
 
@@ -987,6 +972,13 @@ public class Utils {
                 }
             }
         });
+    }
+
+    public enum ChallengeState {
+        RIGHT,
+        WRONG,
+        NOT_ANSWERED,
+        OUT_OF_TIME
     }
 
 

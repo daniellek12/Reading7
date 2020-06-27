@@ -365,8 +365,6 @@ public class PublicProfileFragment extends Fragment {
                 ((MainActivity) getActivity()).addFragment(myBooksShelf);
             }
         });
-
-
     }
 
     private void getUserReviews() {

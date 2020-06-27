@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/container_book"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layoutDirection="rtl"
-    android:padding="10dp"
-    android:id="@+id/container_book">
-
-
+    android:padding="10dp">
 
     <RelativeLayout
         android:id="@+id/coverLayout"
-        android:layout_width="40dp"
-        android:layout_height="40dp">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
         <ProgressBar
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/place"
             android:indeterminateTint="@color/lightGrey"
             android:progressTint="@color/lightGrey"
             android:secondaryProgressTint="@color/lightGrey" />
@@ -26,10 +25,25 @@
             android:id="@+id/profileImage_best"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_alignParentRight="true"
+            android:layout_marginRight="-10dp"
+            android:layout_toLeftOf="@id/place"
             android:src="@color/transparent"
             app:civ_border_color="@color/darkGrey"
             app:civ_border_width="0.5dp" />
+
+        <TextView
+            android:id="@+id/place"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/circle"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:gravity="center"
+            android:text="1"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
     </RelativeLayout>
 
     <LinearLayout
@@ -44,15 +58,34 @@
             android:id="@+id/userName_best"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TextView"
+            android:text="גל וינטר"
             android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:src="@drawable/coin" />
 
         <TextView
             android:id="@+id/points_best"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TextView"
-            android:textSize="12sp" />
+            android:layout_marginRight="5dp"
+            android:text="245"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="14sp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 

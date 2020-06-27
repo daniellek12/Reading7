@@ -19,6 +19,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.reading7.Dialogs.SaveEditBookDialog;
+import com.reading7.Objects.Avatar;
 import com.reading7.Objects.Book;
 import com.reading7.Objects.Review;
 import com.reading7.Objects.User;
@@ -57,6 +58,12 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
 
     private void initCurrentUser() {
+
+        if(Utils.isAdmin) {
+            mUser = new User("admin", getString(R.string.admin_email), "01/01/01", new Avatar());
+            return;
+        }
+        
         //Listens to user changes on firebase and updates mUser accordingly.
         FirebaseFirestore.getInstance().collection("Users").document(FirebaseAuth.getInstance().getCurrentUser().getEmail())
                 .addSnapshotListener(new EventListener<DocumentSnapshot>() {

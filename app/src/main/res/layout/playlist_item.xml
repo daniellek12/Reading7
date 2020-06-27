@@ -11,50 +11,50 @@
     cardview:cardCornerRadius="20dp"
     cardview:cardElevation="5dp">
 
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ProgressBar
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerInParent="true"
+            android:indeterminateTint="@color/lightGrey"
+            android:progressTint="@color/lightGrey"
+            android:secondaryProgressTint="@color/lightGrey" />
+
+        <ImageView
+            android:id="@+id/coverImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/transparent"
+            android:scaleType="centerCrop" />
+
         <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:id="@+id/limitLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible">
 
-                <ProgressBar
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_centerInParent="true"
-                    android:indeterminateTint="@color/lightGrey"
-                    android:progressTint="@color/lightGrey"
-                    android:secondaryProgressTint="@color/lightGrey" />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:alpha="0.7"
+                android:background="@color/darkGrey"
+                android:scaleType="centerCrop" />
 
-                <ImageView
-                    android:id="@+id/coverImage"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/transparent"
-                    android:scaleType="centerCrop" />
-
-                <RelativeLayout
-                    android:id="@+id/limitLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:visibility="visible">
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:alpha="0.7"
-                            android:background="@color/darkGrey"
-                            android:scaleType="centerCrop" />
-
-                        <TextView
-                            android:id="@+id/numItemsLeft"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:text="12+"
-                            android:textColor="@color/white"
-                            android:textSize="20sp"
-                            android:textStyle="bold" />
-                </RelativeLayout>
-
+            <TextView
+                android:id="@+id/numItemsLeft"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="12+"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
         </RelativeLayout>
+
+    </RelativeLayout>
 
 
 </androidx.cardview.widget.CardView>

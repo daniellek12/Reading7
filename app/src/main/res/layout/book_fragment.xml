@@ -364,19 +364,17 @@
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="5dp"
                         android:background="@drawable/rounded_button"
-                        android:backgroundTint="@color/design_default_color_error"
+                        android:backgroundTint="@color/red"
                         android:drawableRight="@drawable/delete"
                         android:drawablePadding="5dp"
                         android:drawableTint="@color/white"
-                        android:paddingLeft="15dp"
+                        android:paddingHorizontal="25dp"
                         android:paddingTop="5dp"
-                        android:paddingRight="15dp"
                         android:paddingBottom="5dp"
                         android:text="@string/delete_book"
                         android:textColor="@color/white"
                         android:textSize="12sp"
                         android:visibility="gone" />
-
 
                     <Button
                         android:id="@+id/addToWishlist"
@@ -395,7 +393,7 @@
                         android:paddingBottom="5dp"
                         android:text="@string/add_to_wishlist"
                         android:textColor="@color/white"
-                        android:textSize="12sp" />
+                        android:textSize="12sp"/>
 
                     <Button
                         android:id="@+id/button_read"
@@ -440,7 +438,6 @@
                         android:textColor="@color/black"
                         android:textSize="12sp"
                         android:visibility="gone" />
-
 
                     <RelativeLayout
                         android:id="@+id/share_layout"

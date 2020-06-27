@@ -356,7 +356,7 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
         LinearLayout addCommentBtn;
         LinearLayout likeLayout;
         RelativeLayout deleteLayout;
-        LinearLayout adminDeleteBtn;
+        TextView adminDeleteBtn;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

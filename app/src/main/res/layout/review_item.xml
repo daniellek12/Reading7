@@ -7,6 +7,7 @@
     android:layout_marginBottom="5dp"
     android:background="@color/white"
     android:clipToPadding="false"
+    android:elevation="2dp"
     android:layoutDirection="rtl"
     android:paddingTop="10dp">
 
@@ -196,13 +197,12 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/divider"
         android:layout_alignParentBottom="true"
+        android:elevation="2dp"
         android:gravity="center"
         android:layoutDirection="rtl"
         android:orientation="horizontal"
-        android:paddingLeft="30dp"
-        android:paddingTop="10dp"
-        android:paddingRight="30dp"
-        android:paddingBottom="10dp">
+        android:paddingHorizontal="30dp"
+        android:paddingVertical="10dp">
 
         <LinearLayout
             android:id="@+id/likeBtn"
@@ -270,39 +270,21 @@
         android:gravity="center_vertical"
         android:layoutDirection="rtl"
         android:orientation="horizontal"
-        android:paddingLeft="60dp"
-        android:paddingTop="10dp"
-        android:paddingRight="60dp"
-        android:paddingBottom="10dp"
+        android:padding="12dp"
         android:visibility="gone">
 
-        <LinearLayout
+        <TextView
             android:id="@+id/adminDeleteBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:layoutDirection="rtl"
-            android:orientation="horizontal">
+            android:drawableRight="@drawable/delete"
+            android:drawablePadding="3dp"
+            android:text="@string/delete_review"
+            android:textColor="@color/red"
+            android:textSize="12sp"
+            android:textStyle="bold" />
 
-            <ImageView
-                android:id="@+id/delIcon"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:tint="@color/design_default_color_error"
-                app:srcCompat="@drawable/delete" />
-
-            <TextView
-                android:id="@+id/delText"
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:layout_marginRight="5dp"
-                android:gravity="center_vertical"
-                android:text="@string/delete_review"
-                android:textColor="@color/design_default_color_error"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-
-        </LinearLayout>
     </RelativeLayout>
 
     <View

@@ -3,25 +3,19 @@ package com.reading7;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.reading7.Dialogs.AdminCredentialsDialog;
-import com.reading7.Objects.User;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,18 +39,11 @@ public class LoginActivity extends AppCompatActivity {
         Utils.isAdmin = false;
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser != null && !currentUser.getEmail().equals(getResources().getString(R.string.admin_email))) //fixme: redirect when admin too?
+        if (currentUser != null && !currentUser.getEmail().equals(getResources().getString(R.string.admin_email))) // FIXME: redirect when admin too?
             redirectAgain();
 
         setUpLoginBtn();
         setUpSignupBtn();
-        setAdminBtn();
-
-        /*try {
-            Utils.convertTxtToBook(this);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
     }
 
     protected void redirectAgain() {
@@ -65,7 +52,6 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
-
 
 
     public void redirectToMain() {
@@ -98,43 +84,32 @@ public class LoginActivity extends AppCompatActivity {
 
     private boolean checkEnteredDetails(String email, String password) {
 
-        if (email.equals("")) {
-//            findViewById(R.id.mail_icon).startAnimation(shake);
-//
-//            if(password.equals(""))
-//                findViewById(R.id.password_icon).startAnimation(shake);
-
+        if (email.equals("") || password.equals("")) {
             findViewById(R.id.enter_details).setVisibility(View.VISIBLE);
             return false;
         }
-
-        if (password.equals("")) {
-            //findViewById(R.id.password_icon).startAnimation(shake);
-            findViewById(R.id.enter_details).setVisibility(View.VISIBLE);
-            return false;
-        }
-
         return true;
     }
 
 
     private void setUpLoginBtn() {
-        Button login = findViewById(R.id.login_button);
-        login.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.login_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                findViewById(R.id.wrong_details).setVisibility(View.INVISIBLE);
-                findViewById(R.id.no_internet).setVisibility(View.INVISIBLE);
-                findViewById(R.id.already_logged).setVisibility(View.INVISIBLE);
-                findViewById(R.id.enter_details).setVisibility(View.INVISIBLE);
-
+                hideErrorMessages();
                 showProgressBar();
 
                 String email = ((EditText) findViewById(R.id.email)).getText().toString();
                 String password = ((EditText) findViewById(R.id.password)).getText().toString();
 
                 if (checkEnteredDetails(email, password)) {
+
+                    if (isAdminDetails(email)) {
+                        loginAdmin(email, password);
+                        return;
+                    }
+
                     mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
@@ -142,24 +117,11 @@ public class LoginActivity extends AppCompatActivity {
                                 redirectToMain();
                             } else {
                                 hideProgressBar();
-
-                                if (task.getException().getMessage().equals("There is no user record corresponding to this identifier. The user may have been deleted.")
-                                        || task.getException().getMessage().equals("The email address is badly formatted.")
-                                        || task.getException().getMessage().equals("The password is invalid or the user does not have a password."))
-                                    findViewById(R.id.wrong_details).setVisibility(View.VISIBLE);
-
-                                else if (task.getException().getMessage().equals("A network error (such as timeout, interrupted connection or unreachable host) has occurred.")
-                                        || task.getException().getMessage().equals("An internal error has occurred. [7:]"))
-                                    findViewById(R.id.no_internet).setVisibility(View.VISIBLE);
-
-
-                                else
-                                    Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                showErrorMessage(task.getException());
                             }
                         }
                     });
                 } else hideProgressBar();
-
             }
         });
     }
@@ -178,43 +140,66 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void setAdminBtn() {
-        Button admin_button = findViewById(R.id.admin_button);
-        admin_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AdminCredentialsDialog dialog = new AdminCredentialsDialog();
-                dialog.show(LoginActivity.this.getSupportFragmentManager(), "admin credentials");
-            }
-        });
+
+    private boolean isAdminDetails(String email) {
+        return email.equals(getString(R.string.admin_email));
+    }
+
+    private void loginAdmin(String email, String password) {
+
+        if (!isAdminDetails(email))
+            throw new AssertionError("Wrong Admin Details");
+
+        mAuth.signInWithEmailAndPassword(getResources().getString(R.string.admin_email), password)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Utils.isAdmin = true;
+                            redirectToMain();
+                        } else {
+                            findViewById(R.id.wrong_details).setVisibility(View.VISIBLE);
+                            hideProgressBar();
+                        }
+                    }
+                });
     }
 
 
-    private void disableClicks() {
-
-        findViewById(R.id.email).setEnabled(false);
-        findViewById(R.id.password).setEnabled(false);
-        findViewById(R.id.signup_btn).setEnabled(false);
+    private void showErrorMessage(Exception exception) {
+        switch (exception.getMessage()) {
+            case "There is no user record corresponding to this identifier. The user may have been deleted.":
+            case "The email address is badly formatted.":
+            case "The password is invalid or the user does not have a password.":
+                findViewById(R.id.wrong_details).setVisibility(View.VISIBLE);
+                break;
+            case "A network error (such as timeout, interrupted connection or unreachable host) has occurred.":
+            case "An internal error has occurred. [7:]":
+                findViewById(R.id.no_internet).setVisibility(View.VISIBLE);
+                break;
+            default:
+                Toast.makeText(LoginActivity.this, exception.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
-    private void enableClicks() {
-
-        findViewById(R.id.email).setEnabled(true);
-        findViewById(R.id.password).setEnabled(true);
-        findViewById(R.id.signup_btn).setEnabled(true);
+    private void hideErrorMessages() {
+        findViewById(R.id.wrong_details).setVisibility(View.INVISIBLE);
+        findViewById(R.id.no_internet).setVisibility(View.INVISIBLE);
+        findViewById(R.id.already_logged).setVisibility(View.INVISIBLE);
+        findViewById(R.id.enter_details).setVisibility(View.INVISIBLE);
     }
 
 
     private void showProgressBar() {
+        Utils.enableDisableClicks(this, (ViewGroup) findViewById(android.R.id.content).getRootView(), false);
         findViewById(R.id.login_button).setVisibility(View.GONE);
-        disableClicks();
         findViewById(R.id.progress_background).setVisibility(View.VISIBLE);
         findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
     }
 
     private void hideProgressBar() {
+        Utils.enableDisableClicks(this, (ViewGroup) findViewById(android.R.id.content).getRootView(), true);
         findViewById(R.id.login_button).setVisibility(View.VISIBLE);
-        enableClicks();
         findViewById(R.id.progress_background).setVisibility(View.GONE);
         findViewById(R.id.progressBar).setVisibility(View.GONE);
     }
@@ -227,12 +212,7 @@ public class LoginActivity extends AppCompatActivity {
 
         Map<String, Object> tokenMap = new HashMap<>();
         tokenMap.put("token_id", token_id);
-        db.collection("Users").document(user_email).update(tokenMap).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-
-            }
-        });
+        db.collection("Users").document(user_email).update(tokenMap);
 
     }
 

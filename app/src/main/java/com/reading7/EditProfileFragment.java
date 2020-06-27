@@ -62,7 +62,7 @@ public class EditProfileFragment extends Fragment {
         userBirthday.setText(user.getBirth_date());
 
         CircleImageView profileImage = getActivity().findViewById(R.id.profile_image);
-        user.getAvatar().loadIntoImage(getContext(),profileImage);
+        user.getAvatar().loadIntoImage(getContext(), profileImage);
     }
 
 
@@ -181,7 +181,7 @@ public class EditProfileFragment extends Fragment {
         user.setBirth_date(newBirthday);
         user.setFull_name(newName);
         user.setAvatar(avatar);
-        ((MainActivity)getActivity()).setCurrentUser(user);
+        ((MainActivity) getActivity()).setCurrentUser(user);
 
         DocumentReference userRef = FirebaseFirestore.getInstance().collection("Users").document(user.getEmail());
         userRef.update("full_name", newName, "birth_date", newBirthday, "avatar", user.getAvatar());
@@ -191,8 +191,8 @@ public class EditProfileFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Make sure fragment codes match up
         if (requestCode == 100) {
-            avatar = (Avatar)data.getSerializableExtra("Avatar");
-            avatar.loadIntoImage(getContext(),(CircleImageView)getView().findViewById(R.id.profile_image));
+            avatar = (Avatar) data.getSerializableExtra("Avatar");
+            avatar.loadIntoImage(getContext(), (CircleImageView) getView().findViewById(R.id.profile_image));
         }
     }
 
@@ -204,13 +204,13 @@ public class EditProfileFragment extends Fragment {
 
     private void setLoadingMode(Boolean isLoading) {
 
-        if(isLoading){
-            Utils.enableDisableClicks(getActivity(), (ViewGroup)getView(), false);
+        if (isLoading) {
+            Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), false);
             dissapearErrorMasseges();
             getView().findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
             getView().findViewById(R.id.save).setVisibility(View.GONE);
         } else {
-            Utils.enableDisableClicks(getActivity(), (ViewGroup)getView(), true);
+            Utils.enableDisableClicks(getActivity(), (ViewGroup) getView(), true);
             getView().findViewById(R.id.progressBar).setVisibility(View.GONE);
             getView().findViewById(R.id.save).setVisibility(View.VISIBLE);
         }
