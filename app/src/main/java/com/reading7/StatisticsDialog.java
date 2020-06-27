@@ -91,6 +91,9 @@ public class StatisticsDialog extends AppCompatDialogFragment {
         Animation slide_up = AnimationUtils.loadAnimation(getContext(), R.anim.slide_up);
         dialogView.findViewById(R.id.scrollView).startAnimation(slide_up);
 
+        ((BarChart) dialogView.findViewById(R.id.chartBar1)).setNoDataText("");
+        ((PieChart) dialogView.findViewById(R.id.pieBar2)).setNoDataText("");
+
         initLists();
         getStatistics();
 
@@ -146,18 +149,22 @@ public class StatisticsDialog extends AppCompatDialogFragment {
             entry.setValue(avg);
         }
 
+        dialogView.findViewById(R.id.maxUsersProgressBar).setVisibility(View.GONE);
+        dialogView.findViewById(R.id.maxRatedProgressBar).setVisibility(View.GONE);
+        dialogView.findViewById(R.id.maxReadsProgressBar).setVisibility(View.GONE);
+        dialogView.findViewById(R.id.piaBar2ProgressBar).setVisibility(View.GONE);
+        dialogView.findViewById(R.id.chartBar1ProgressBar).setVisibility(View.GONE);
+
         initBestBooks();
         initBestUsers();
 
         setUpBarChart(numPagesHist, R.id.titleBar1, getString(R.string.pages_by_age_statistics_title), R.id.chartBar1);
 
         final Spinner spinner = dialogView.findViewById(R.id.spinner);
-
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
                 R.array.genres, R.layout.genre_spinner_style);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
-
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
@@ -218,7 +225,6 @@ public class StatisticsDialog extends AppCompatDialogFragment {
                     }
 
                     initUI();
-
 
                     Utils.enableDisableClicks(getActivity(), (ViewGroup) dialogView, true);
                 }
@@ -306,6 +312,7 @@ public class StatisticsDialog extends AppCompatDialogFragment {
 
         //Get the Chart
         PieChart chart = dialogView.findViewById(chart_id);
+        chart.setNoDataText("");
         chart.setDrawHoleEnabled(false);
         chart.setEntryLabelColor(Color.BLACK);
         chart.setData(data);
@@ -324,7 +331,6 @@ public class StatisticsDialog extends AppCompatDialogFragment {
         Collections.sort(labels, new SortRange());
 
         for (int i = 0; i < labels.size(); i++) {
-            int label = getLabel(labels.get(i));
             int value = hist.get(labels.get(i));
             if (value > 0) {
                 barEntries.add(new BarEntry(i, value));
@@ -336,10 +342,9 @@ public class StatisticsDialog extends AppCompatDialogFragment {
                 getResources().getColor(R.color.colorPrimaryDark),
                 getResources().getColor(R.color.textPrimary),
                 getResources().getColor(R.color.transparentPrimaryDark));
-        Description description = new Description();
         BarChart barChart = dialogView.findViewById(chart_id);
-        barChart.setDescription(description);
         BarData barData = new BarData(barDataSet);
+        barChart.setDescription(null);
         barChart.setData(barData);
         barChart.getLegend().setEnabled(false);
         XAxis xAxis = barChart.getXAxis();
@@ -352,7 +357,6 @@ public class StatisticsDialog extends AppCompatDialogFragment {
         barChart.getAxisRight().setDrawAxisLine(false);
         barChart.getAxisRight().setDrawGridLines(false);
         barChart.getAxisLeft().setDrawGridLines(false);
-        //xAxis.setLabelRotationAngle(270);
         barChart.animateY(2000);
         barChart.invalidate();
     }
@@ -412,7 +416,8 @@ public class StatisticsDialog extends AppCompatDialogFragment {
         maxUsersRV.setAdapter(adapterUsers);
     }
 
-    class SortbyCountReads implements Comparator<Book> {
+
+    static class SortbyCountReads implements Comparator<Book> {
         // Used for sorting in ascending order of
         // roll number
         public int compare(Book a, Book b) {
@@ -422,7 +427,7 @@ public class StatisticsDialog extends AppCompatDialogFragment {
         }
     }
 
-    class SortRange implements Comparator<String> {
+    static class SortRange implements Comparator<String> {
         // Used for sorting in ascending order of
         // roll number
         public int compare(String a, String b) {
@@ -449,13 +454,12 @@ public class StatisticsDialog extends AppCompatDialogFragment {
         }
     }
 
-    class SortbyRate implements Comparator<Book> {
+    static class SortbyRate implements Comparator<Book> {
         // Used for sorting in ascending order of
         // roll name
         public int compare(Book a, Book b) {
             return (int) (b.getAvg_rating() - (a.getAvg_rating()));
         }
     }
-
 
 }

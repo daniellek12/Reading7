@@ -39,15 +39,30 @@
                     android:textColor="@color/black"
                     android:textStyle="bold" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/maxUsersRV"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:background="@drawable/rounded_corners"
-                    android:elevation="5dp"
-                    android:layoutDirection="rtl" />
+                    android:layout_height="wrap_content">
+
+                    <ProgressBar
+                        android:id="@+id/maxUsersProgressBar"
+                        android:layout_width="20dp"
+                        android:layout_height="30dp"
+                        android:layout_centerInParent="true"
+                        android:elevation="10dp"
+                        android:indeterminateTint="@color/lightGrey" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/maxUsersRV"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/rounded_corners"
+                        android:elevation="5dp"
+                        android:layoutDirection="rtl"
+                        android:minHeight="180dp" />
+
+                </RelativeLayout>
 
             </LinearLayout>
 
@@ -70,15 +85,30 @@
                     android:textColor="@color/black"
                     android:textStyle="bold" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/maxReadsRV"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:background="@drawable/rounded_corners"
-                    android:elevation="5dp"
-                    android:layoutDirection="rtl" />
+                    android:layout_height="wrap_content">
+
+                    <ProgressBar
+                        android:id="@+id/maxReadsProgressBar"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_centerInParent="true"
+                        android:elevation="10dp"
+                        android:indeterminateTint="@color/lightGrey" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/maxReadsRV"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/rounded_corners"
+                        android:elevation="5dp"
+                        android:layoutDirection="rtl"
+                        android:minHeight="180dp" />
+
+                </RelativeLayout>
 
             </LinearLayout>
 
@@ -101,15 +131,30 @@
                     android:textColor="@color/black"
                     android:textStyle="bold" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/maxRatedRV"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:background="@drawable/rounded_corners"
-                    android:elevation="5dp"
-                    android:layoutDirection="rtl" />
+                    android:layout_height="wrap_content">
+
+                    <ProgressBar
+                        android:id="@+id/maxRatedProgressBar"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_centerInParent="true"
+                        android:elevation="10dp"
+                        android:indeterminateTint="@color/lightGrey" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/maxRatedRV"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/rounded_corners"
+                        android:elevation="5dp"
+                        android:layoutDirection="rtl"
+                        android:minHeight="180dp" />
+
+                </RelativeLayout>
 
             </LinearLayout>
 
@@ -148,16 +193,30 @@
 
                 </LinearLayout>
 
-                <com.github.mikephil.charting.charts.PieChart
-                    android:id="@+id/pieBar2"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="170dp"
-                    android:layout_gravity="center"
-                    android:layout_marginHorizontal="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:background="@drawable/rounded_corners"
-                    android:elevation="5dp"
-                    android:paddingVertical="15dp" />
+                    android:layout_height="wrap_content">
+
+                    <ProgressBar
+                        android:id="@+id/piaBar2ProgressBar"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_centerInParent="true"
+                        android:elevation="10dp"
+                        android:indeterminateTint="@color/lightGrey" />
+
+                    <com.github.mikephil.charting.charts.PieChart
+                        android:id="@+id/pieBar2"
+                        android:layout_width="match_parent"
+                        android:layout_height="170dp"
+                        android:layout_gravity="center"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/rounded_corners"
+                        android:elevation="5dp"
+                        android:paddingVertical="15dp" />
+
+                </RelativeLayout>
 
             </LinearLayout>
 
@@ -180,15 +239,29 @@
                     android:textColor="@color/black"
                     android:textStyle="bold" />
 
-                <com.github.mikephil.charting.charts.BarChart
-                    android:id="@+id/chartBar1"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="170dp"
-                    android:layout_gravity="center"
-                    android:layout_marginHorizontal="10dp"
-                    android:layout_marginBottom="20dp"
-                    android:background="@drawable/rounded_corners"
-                    android:elevation="5dp" />
+                    android:layout_height="wrap_content">
+
+                    <ProgressBar
+                        android:id="@+id/chartBar1ProgressBar"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_centerInParent="true"
+                        android:elevation="10dp"
+                        android:indeterminateTint="@color/lightGrey" />
+
+                    <com.github.mikephil.charting.charts.BarChart
+                        android:id="@+id/chartBar1"
+                        android:layout_width="match_parent"
+                        android:layout_height="170dp"
+                        android:layout_gravity="center"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginBottom="20dp"
+                        android:background="@drawable/rounded_corners"
+                        android:elevation="5dp"/>
+
+                </RelativeLayout>
 
             </LinearLayout>
 
