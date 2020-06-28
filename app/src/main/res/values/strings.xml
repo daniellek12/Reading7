@@ -217,10 +217,18 @@
     <string name="most_read_books">הספרים הכי נקראים</string>
     <string name="max_rated_books">הספרים המדורגים הכי גבוה</string>
     <string name="max_points_users">מלכי ומלכות הנקודות</string>
-    <string name="x_points">%1$d נקודות</string>
     <string name="x_readers">%1$d קוראים</string>
     <string name="genre_by_age_statistics_title">איזה גילאים קראו ספרי</string>
     <string name="pages_by_age_statistics_title">כמה עמודים בממוצע קוראים בכל גיל?</string>
+    <string name="choose_shelf_name">איך לקרוא למדף החדש שלך?</string>
+    <string name="shelf_name">שם המדף</string>
+    <string name="create_shelf">יצירת מדף</string>
+    <string name="send_challenge">שלח אתגר</string>
+    <string name="challenge_sent">האתגר נשלח!</string>
+    <string name="good_choise">בחירה טובה!</string>
+    <string name="item_added_to_closet">הפריט התווסף לארון שלך.</string>
+    <string name="go_to_closet">מעבר לארון</string>
+    <string name="close">סגירה</string>
 
 
 </resources>

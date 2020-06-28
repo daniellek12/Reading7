@@ -31,6 +31,15 @@ public class EditProfileFragment extends Fragment {
     private User user;
     private Avatar avatar;
 
+    private boolean openCloset;
+
+
+    public EditProfileFragment() {}
+
+    public EditProfileFragment(boolean openCloset) {
+            this.openCloset = openCloset;
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -49,6 +58,9 @@ public class EditProfileFragment extends Fragment {
         initDatePicker();
         initChangePasswordDialog();
         initSaveButton();
+
+        if(openCloset)
+            showEditAvatarDialog();
     }
 
     private void getUserDetails() {
@@ -109,11 +121,15 @@ public class EditProfileFragment extends Fragment {
         getView().findViewById(R.id.profile_image).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EditAvatarDialog dialog = new EditAvatarDialog(avatar);
-                dialog.setTargetFragment(EditProfileFragment.this, 100);
-                dialog.show(getActivity().getSupportFragmentManager(), "edit avater");
+                showEditAvatarDialog();
             }
         });
+    }
+
+    public void showEditAvatarDialog() {
+        EditAvatarDialog dialog = new EditAvatarDialog(avatar);
+        dialog.setTargetFragment(EditProfileFragment.this, 100);
+        dialog.show(getActivity().getSupportFragmentManager(), "edit avater");
     }
 
     private void initDatePicker() {

@@ -5,52 +5,130 @@
     android:layout_height="wrap_content"
     android:padding="10dp">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/profileImage"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        android:elevation="3dp"
-        android:src="@color/white"
-        app:civ_border_color="@color/white"
-        app:civ_border_width=".5dp"
-        app:civ_circle_background_color="@color/white" />
-
-    <Button
-        android:id="@+id/buyButton"
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
-        android:layout_below="@id/profileImage"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="@drawable/rounded_button"
-        android:backgroundTint="@color/colorPrimaryDark"
-        android:drawableRight="@drawable/coin"
-        android:drawablePadding="3dp"
-        android:fontFamily="sans-serif"
-        android:layoutDirection="rtl"
-        android:paddingLeft="50dp"
-        android:paddingRight="50dp"
-        android:text="1000"
-        android:textColor="@color/white"
-        android:textSize="14sp" />
-
-    <Button
-        android:id="@+id/cancelButton"
+    <RelativeLayout
+        android:id="@+id/showProductLayout"
         android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:layout_below="@id/profileImage"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_toRightOf="@id/buyButton"
-        android:background="@drawable/rounded_button"
-        android:backgroundTint="@color/grey"
-        android:text="@string/cancel"
-        android:textColor="@color/darkGrey"
-        android:textSize="14sp" />
+        android:layout_height="wrap_content"
+        android:visibility="visible">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profileImage"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:elevation="3dp"
+            android:src="@color/white"
+            app:civ_border_color="@color/white"
+            app:civ_border_width=".5dp"
+            app:civ_circle_background_color="@color/white" />
+
+        <Button
+            android:id="@+id/buyButton"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_below="@id/profileImage"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/rounded_button"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:drawableRight="@drawable/coin"
+            android:drawablePadding="3dp"
+            android:fontFamily="sans-serif"
+            android:layoutDirection="rtl"
+            android:paddingLeft="50dp"
+            android:paddingRight="50dp"
+            android:text="1000"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/cancelButton"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_below="@id/profileImage"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_toRightOf="@id/buyButton"
+            android:background="@drawable/rounded_button"
+            android:backgroundTint="@color/grey"
+            android:text="@string/cancel"
+            android:textColor="@color/darkGrey"
+            android:textSize="14sp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/boughtLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginVertical="30dp"
+        android:elevation="10dp"
+        android:layoutDirection="rtl"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/goodChoice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="@string/good_choise"
+            android:textColor="@color/lightGrey"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/addedToCloset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/goodChoice"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            android:text="@string/item_added_to_closet"
+            android:textColor="@color/darkGrey"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/addedToCloset"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/dismiss"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:layout_marginBottom="10dp"
+                android:layout_marginHorizontal="5dp"
+                android:background="@drawable/rounded_button"
+                android:backgroundTint="@color/grey"
+                android:text="@string/close"
+                android:textColor="@color/lightGrey"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/goToCloset"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:layout_marginBottom="10dp"
+                android:layout_marginHorizontal="5dp"
+                android:background="@drawable/rounded_button"
+                android:backgroundTint="@color/colorPrimaryDark"
+                android:text="@string/go_to_closet"
+                android:textColor="@color/white"
+                android:textStyle="bold"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
 
 </RelativeLayout>

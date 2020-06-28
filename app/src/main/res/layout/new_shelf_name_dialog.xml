@@ -1,50 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/white"
     android:layoutDirection="rtl"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="20dp">
 
-
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        app:srcCompat="@color/colorPrimaryDark" />
-
-    <ImageView
-        android:id="@+id/bookmark"
+    <TextView
+        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
-        app:srcCompat="@drawable/bookmark"
-        android:scaleX="2.5"
-        android:scaleY="2.5"
-        android:tint="@color/darkGrey"
-        android:foregroundTint="@color/white"/>
-
-    <TextView
-        android:id="@+id/ratingBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/bookmark"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp"
-        android:text="איך לקרוא למדף החדש שלך?"/>
+        android:text="@string/choose_shelf_name"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <EditText
         android:id="@+id/shelf_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/ratingBar"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_below="@id/title"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginVertical="30dp"
         android:background="@drawable/edittext_border_background_light"
-        android:hint="שם המדף"
+        android:hint="@string/shelf_name"
         android:inputType="text"
         android:lines="1"
         android:paddingLeft="10dp"
@@ -54,38 +34,40 @@
         android:textColorHint="@color/lightGrey"
         android:textSize="14sp" />
 
-    <Button
-        android:id="@+id/ok"
-        android:layout_width="130dp"
-        android:layout_height="40dp"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@id/shelf_name"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/rounded_button"
-        android:backgroundTint="@color/colorPrimaryDark"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:text="יצירת מדף"
-        android:textColor="@color/white" />
+        android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/cancel"
-        android:layout_width="130dp"
-        android:layout_height="40dp"
-        android:layout_below="@id/shelf_name"
-        android:layout_alignParentRight="true"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/rounded_button"
-        android:backgroundTint="@color/grey"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:text="@string/cancel"
-        android:textColor="@color/darkGrey" />
+        <Button
+            android:id="@+id/cancel"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/rounded_button"
+            android:backgroundTint="@color/grey"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:text="@string/cancel"
+            android:textColor="@color/darkGrey" />
 
+        <Button
+            android:id="@+id/ok"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/rounded_button"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:text="@string/create_shelf"
+            android:textColor="@color/white" />
+
+    </LinearLayout>
 
 </RelativeLayout>

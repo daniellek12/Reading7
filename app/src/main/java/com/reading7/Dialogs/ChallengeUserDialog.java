@@ -17,16 +17,15 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -411,6 +410,7 @@ public class ChallengeUserDialog extends AppCompatDialogFragment {
 // =================================== SelectRightAnswerLayout ================================== //
 
     private void setupFinishButton() {
+        ((Button) dialogView.findViewById(R.id.ok)).setText(getString(R.string.send_challenge));
         dialogView.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -423,7 +423,7 @@ public class ChallengeUserDialog extends AppCompatDialogFragment {
                 }
 
                 addNotificationChallengeUser(to_email, book_title, question, possibleAnswers, right_answer);
-                dismiss();
+                showFinishLayout();
             }
         });
     }
@@ -482,6 +482,20 @@ public class ChallengeUserDialog extends AppCompatDialogFragment {
         });
     }
 
+    private void showFinishLayout() {
+        dialogView.findViewById(R.id.title_layout).setVisibility(View.GONE);
+        dialogView.findViewById(R.id.ok).setVisibility(View.GONE);
+        dialogView.findViewById(R.id.linear).setVisibility(View.GONE);
+        dialogView.findViewById(R.id.correctLayout).setVisibility(View.VISIBLE);
+        ((TextView) dialogView.findViewById(R.id.points)).setText(String.valueOf(10));
+
+        dialogView.findViewById(R.id.dismiss).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+            }
+        });
+    }
 
 
     private void hideErrorMessages() {
@@ -514,12 +528,7 @@ public class ChallengeUserDialog extends AppCompatDialogFragment {
             notificationMessegae.put("possible_answers", possible_answers);
             notificationMessegae.put("right_answer", right_answer);
 
-            db.collection("Users/" + to_email + "/Notifications").add(notificationMessegae).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                @Override
-                public void onSuccess(DocumentReference documentReference) {
-                    dismiss();
-                }
-            });
+            db.collection("Users/" + to_email + "/Notifications").add(notificationMessegae);
         }
     }
 

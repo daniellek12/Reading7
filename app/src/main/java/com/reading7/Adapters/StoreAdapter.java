@@ -1,13 +1,6 @@
 package com.reading7.Adapters;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.res.ColorStateList;
-import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,16 +8,12 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.reading7.BookFragment;
 import com.reading7.Dialogs.BuyProductDialog;
-import com.reading7.Dialogs.RankBookDialog;
 import com.reading7.MainActivity;
 import com.reading7.Objects.Avatar;
 import com.reading7.Objects.Product;
 import com.reading7.Objects.User;
 import com.reading7.R;
-import com.reading7.Utils;
 
 import java.util.List;
 
@@ -59,15 +48,12 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.ViewHolder> 
 
         holder.productImage.setImageDrawable(item.findDisplayDrawable(mContext));
 
-        if(isAlreadyPurchased(product)) {
+        if (isAlreadyPurchased(product)) {
             holder.priceLayout.setVisibility(View.GONE);
             holder.purchasedLayout.setVisibility(View.VISIBLE);
             holder.productImage.setOnClickListener(null);
-            //holder.background.setBackgroundTintList(ColorStateList.valueOf(Utils.getColor(mContext,"grey")));
             holder.background.setElevation(0);
-        }
-
-        else {
+        } else {
             holder.priceLayout.setVisibility(View.VISIBLE);
             holder.purchasedLayout.setVisibility(View.GONE);
             //holder.background.setBackgroundTintList(ColorStateList.valueOf(Utils.getColor(mContext,"white")));
@@ -87,6 +73,21 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.ViewHolder> 
         return products.size();
     }
 
+    private void showBuyProductDialog(Product product) {
+
+        BuyProductDialog dialog = new BuyProductDialog(product);
+        dialog.setTargetFragment(mFragment, 404);
+        dialog.show(((MainActivity) mContext).getSupportFragmentManager(), "buy_product");
+
+    }
+
+    private boolean isAlreadyPurchased(Product product) {
+
+        User user = ((MainActivity) mContext).getCurrentUser();
+        return user.getAvatar().getUnlockedItems().contains(product.getItem());
+
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView productPrice;
@@ -104,21 +105,6 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.ViewHolder> 
             priceLayout = itemView.findViewById(R.id.priceLayout);
             purchasedLayout = itemView.findViewById(R.id.purchasedLayout);
         }
-    }
-
-    private void showBuyProductDialog(Product product) {
-
-        BuyProductDialog dialog = new BuyProductDialog(product);
-        dialog.setTargetFragment(mFragment, 404);
-        dialog.show(((MainActivity)mContext).getSupportFragmentManager(), "buy_product");
-
-    }
-
-    private boolean isAlreadyPurchased(Product product) {
-
-        User user = ((MainActivity)mContext).getCurrentUser();
-        return user.getAvatar().getUnlockedItems().contains(product.getItem());
-
     }
 
 }

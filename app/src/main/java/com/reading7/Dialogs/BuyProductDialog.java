@@ -8,21 +8,25 @@ import android.view.View;
 import android.widget.Button;
 
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.reading7.EditProfileFragment;
 import com.reading7.MainActivity;
 import com.reading7.Objects.Avatar;
 import com.reading7.Objects.Product;
 import com.reading7.Objects.User;
+import com.reading7.ProfileFragment;
 import com.reading7.R;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
+import androidx.fragment.app.Fragment;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class BuyProductDialog extends AppCompatDialogFragment {
 
-    Avatar avatar;
-    Product product;
+    private Avatar avatar;
+    private Product product;
+    private View dialogView;
 
     public BuyProductDialog(Product product) {
         this.product = product;
@@ -33,32 +37,32 @@ public class BuyProductDialog extends AppCompatDialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        View view = getActivity().getLayoutInflater().inflate(R.layout.buy_product_dialog, null);
+        dialogView = getActivity().getLayoutInflater().inflate(R.layout.buy_product_dialog, null);
 
-        initAvatarImage(view);
-        initOkButton(view);
-        initCancelButton(view);
+        initAvatarImage();
+        initOkButton();
+        initCancelButton();
 
-        return builder.setView(view).create();
+        return builder.setView(dialogView).create();
     }
 
 
-    private void initAvatarImage(View view) {
+    private void initAvatarImage() {
 
-        avatar = new Avatar(((MainActivity)getActivity()).getCurrentUser().getAvatar());
+        avatar = new Avatar(((MainActivity) getActivity()).getCurrentUser().getAvatar());
         updateAvatar(product.getItem());
-        avatar.loadIntoImage(getContext(), (CircleImageView) view.findViewById(R.id.profileImage));
+        avatar.loadIntoImage(getContext(), (CircleImageView) dialogView.findViewById(R.id.profileImage));
 
     }
 
-    private void initOkButton(View view) {
+    private void initOkButton() {
 
-        ((Button)view.findViewById(R.id.buyButton)).setText(String.valueOf(product.getPrice()));
-        view.findViewById(R.id.buyButton).setOnClickListener(new View.OnClickListener() {
+        ((Button) dialogView.findViewById(R.id.buyButton)).setText(String.valueOf(product.getPrice()));
+        dialogView.findViewById(R.id.buyButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                User user = ((MainActivity)getActivity()).getCurrentUser();
-                if(user.getPoints() >= product.getPrice()) {
+                User user = ((MainActivity) getActivity()).getCurrentUser();
+                if (user.getPoints() >= product.getPrice()) {
                     Avatar avatar = user.getAvatar();
                     avatar.unlockItem(product.getItem());
                     user.setAvatar(avatar);
@@ -67,15 +71,34 @@ public class BuyProductDialog extends AppCompatDialogFragment {
                     ((MainActivity) getActivity()).setCurrentUser(user);
                     FirebaseFirestore.getInstance().collection("Users").document(user.getEmail()).update("avatar", avatar, "points", user.getPoints());
                     sendResult(404);
+                    showConfirmationLayout();
                 }
-                dismiss();
             }
         });
     }
 
-    private void initCancelButton(View view) {
+    private void showConfirmationLayout() {
+        dialogView.findViewById(R.id.boughtLayout).setVisibility(View.VISIBLE);
+        dialogView.findViewById(R.id.showProductLayout).setVisibility(View.GONE);
 
-        view.findViewById(R.id.cancelButton).setOnClickListener(new View.OnClickListener() {
+        dialogView.findViewById(R.id.dismiss).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+            }
+        });
+
+        dialogView.findViewById(R.id.goToCloset).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+                ((MainActivity)getActivity()).addFragment(new EditProfileFragment(true));
+            }
+        });
+    }
+
+    private void initCancelButton() {
+        dialogView.findViewById(R.id.cancelButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dismiss();
