@@ -72,13 +72,12 @@ public class AddToShelfDialog extends AppCompatDialogFragment {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 document.getReference().update("book_names", FieldValue.arrayUnion(book_title));
-                                Toast.makeText(getContext(), "הספר נוסף למדף", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getActivity(), "הספר נוסף למדף", Toast.LENGTH_LONG).show();
+                                dismiss();
                             }
                         }
                     }
                 });
-
-                dismiss();
             }
         });
 
