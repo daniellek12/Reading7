@@ -48,9 +48,9 @@ public class MainActivityTest {
         assertThat(viewById,notNullValue());
         assertThat(viewById, instanceOf(View.class));
         View view = (View) viewById;
-        view.getWidth();
-        view.getBackground();
-        view.getHeight();
+        assertNotEquals(0, view.getWidth());
+        assertNotEquals(0, view.getBackground());
+        assertNotEquals(0,view.getHeight());
     }
 
     @Test
@@ -60,8 +60,8 @@ public class MainActivityTest {
         assertThat(viewById,notNullValue());
         assertThat(viewById, instanceOf(FrameLayout.class));
         FrameLayout frameLayout = (FrameLayout) viewById;
-        frameLayout.getWidth();
-        frameLayout.getBackground();
-        frameLayout.getHeight();
+        assertNotEquals(0,frameLayout.getWidth());
+        assertNotEquals(0,frameLayout.getBackground());
+        assertNotEquals(0,frameLayout.getHeight());
     }
 }
