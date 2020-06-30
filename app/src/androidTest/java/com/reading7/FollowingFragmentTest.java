@@ -1,10 +1,10 @@
 package com.reading7;
 
-import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
 import androidx.test.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
@@ -14,52 +14,55 @@ import androidx.test.uiautomator.UiSelector;
 
 import org.junit.Before;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 @RunWith(AndroidJUnit4.class)
-public class LoginActivityTest {
-    private Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
+public class FollowingFragmentTest {
 
     @Rule
-    public ActivityTestRule<LoginActivity> activityRule = new ActivityTestRule<>(LoginActivity.class);
-
+    public ActivityTestRule<MainActivity> activityRule
+            = new ActivityTestRule<>(MainActivity.class);
     @Before
-    public void setUp() throws Exception {
+    public void setUp()  {
         UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         UiObject uiObject = mDevice.findObject(new UiSelector().text("Reading7"));
         if (uiObject.exists()) {  mDevice.pressBack(); }
+        Fragment followingFragment = new FollowingFragment(FollowingFragment.FollowingFragmentType.FOLLOWING);
+        activityRule.getActivity().getSupportFragmentManager().beginTransaction().
+                replace(R.id.fragment_container, followingFragment, followingFragment.toString())
+                .commit();
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        assertNotEquals(0, appContext.fileList().length);
+    }
+
+    @Test
+    public void TextViewTest() {
+        MainActivity activity = activityRule.getActivity();
+        View viewById = activity.findViewById(R.id.my_title);
+        assertThat(viewById,notNullValue());
+        assertThat(viewById, instanceOf(TextView.class));
+        TextView textView = (TextView) viewById;
+        assertNotEquals(0, textView.getWidth());
+        assertNotEquals(0, textView.getBackground());
+        assertNotEquals(0,textView.getHeight());
     }
 
     public void ImageViewTest() {
-        LoginActivity activity = activityRule.getActivity();
-        View viewById = activity.findViewById(R.id.logo);
+        MainActivity activity = activityRule.getActivity();
+        View viewById = activity.findViewById(R.id.followingBackButton);
         assertThat(viewById,notNullValue());
         assertThat(viewById, instanceOf(ImageView.class));
         ImageView imageView = (ImageView) viewById;
         assertNotEquals(0,imageView.getWidth());
         assertNotEquals(0,imageView.getBackground());
         assertNotEquals(0,imageView.getHeight());
-    }
-
-    public void LinearLayoutTest() {
-        LoginActivity activity = activityRule.getActivity();
-        View viewById = activity.findViewById(R.id.enter_details);
-        assertThat(viewById,notNullValue());
-        assertThat(viewById, instanceOf(LinearLayout.class));
-        LinearLayout linearLayout = (LinearLayout) viewById;
-        assertNotEquals(0,linearLayout.getWidth());
-        assertNotEquals(0,linearLayout.getBackground());
-        assertNotEquals(0,linearLayout.getHeight());
     }
 }

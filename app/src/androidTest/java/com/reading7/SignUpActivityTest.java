@@ -2,7 +2,6 @@ package com.reading7;
 
 import android.content.Context;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
@@ -46,7 +45,7 @@ public class SignUpActivityTest {
         SignUpActivity activity = activityRule.getActivity();
         View viewById = activity.findViewById(R.id.backButton);
         assertThat(viewById,notNullValue());
-        assertThat(viewById, instanceOf(FrameLayout.class));
+        assertThat(viewById, instanceOf(ImageButton.class));
         ImageButton imageButton = (ImageButton) viewById;
         assertNotEquals(0,imageButton.getWidth());
         assertNotEquals(0,imageButton.getBackground());
@@ -57,7 +56,7 @@ public class SignUpActivityTest {
         SignUpActivity activity = activityRule.getActivity();
         View viewById = activity.findViewById(R.id.email_exists);
         assertThat(viewById,notNullValue());
-        assertThat(viewById, instanceOf(FrameLayout.class));
+        assertThat(viewById, instanceOf(LinearLayout.class));
         LinearLayout linearLayout = (LinearLayout) viewById;
         assertNotEquals(0,linearLayout.getWidth());
         assertNotEquals(0,linearLayout.getBackground());
